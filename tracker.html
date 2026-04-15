@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+<meta name="theme-color" content="#17C5E8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="耳で覚える宅建2026">
+<title>耳で覚える宅建2026 | 進捗トラッカー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=RocknRoll+One&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#17C5E8;
+    --cyan-dark:#0EA2C2;
+    --cyan-soft:#D8F3FA;
+    --bg:#C3CDD5;
+    --bg-dots:#D3DCE3;
+    --surface:#F4F7F9;
+    --card:#FFFFFF;
+    --text:#2B3A46;
+    --muted:#73818D;
+    --line:#D9E0E6;
+    --yellow:#F5B841;
+    --yellow-soft:#FFF3D6;
+    --gray-pill:#EEF2F5;
+    --shadow:0 2px 8px rgba(43,58,70,.08);
+    --shadow-lg:0 6px 20px rgba(43,58,70,.12);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Noto Sans JP",system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;
+    color:var(--text);
+    background:var(--surface);
+    line-height:1.6;
+    overflow-x:hidden;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 20%, #fff 1.5px, transparent 2px),
+      radial-gradient(circle at 70% 60%, #fff 1px, transparent 1.5px),
+      radial-gradient(circle at 40% 85%, #fff 2px, transparent 2.5px),
+      radial-gradient(circle at 85% 15%, #fff 1px, transparent 1.5px),
+      radial-gradient(circle at 25% 55%, #fff 1px, transparent 1.5px),
+      radial-gradient(circle at 60% 30%, #fff 1.5px, transparent 2px);
+    background-size:120px 120px, 80px 80px, 160px 160px, 90px 90px, 110px 110px, 140px 140px;
+    padding:28px 20px 26px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero-title{
+    font-family:"RocknRoll One",sans-serif;
+    margin:0;
+    line-height:0.95;
+    color:#fff;
+    text-shadow:
+      2px 2px 0 #6C7985, -2px 2px 0 #6C7985, 2px -2px 0 #6C7985, -2px -2px 0 #6C7985,
+      0 2px 0 #6C7985, 0 -2px 0 #6C7985, 2px 0 0 #6C7985, -2px 0 0 #6C7985;
+    letter-spacing:0.04em;
+  }
+  .hero-title .row1{font-size:30px;display:block;margin-bottom:2px}
+  .hero-title .row2{
+    font-size:74px;display:block;color:var(--cyan);margin:4px 0 2px;
+    text-shadow:
+      3px 3px 0 #fff, -3px 3px 0 #fff, 3px -3px 0 #fff, -3px -3px 0 #fff,
+      0 3px 0 #fff, 0 -3px 0 #fff, 3px 0 0 #fff, -3px 0 0 #fff,
+      4px 5px 0 #6C7985;
+  }
+  .hero-title .row3{font-size:32px;display:block;margin-top:6px}
+  .hero-sub{
+    margin-top:14px;font-size:12px;color:#fff;
+    background:rgba(43,58,70,.25);display:inline-block;padding:4px 12px;border-radius:999px;
+    backdrop-filter:blur(4px);
+  }
+
+  /* ---------- Countdown ---------- */
+  .countdown{
+    margin:-18px 16px 0;background:#fff;border-radius:16px;padding:14px 18px;
+    display:flex;align-items:center;justify-content:space-between;
+    box-shadow:var(--shadow-lg);position:relative;z-index:2;
+  }
+  .countdown-label{font-size:12px;color:var(--muted);font-weight:500}
+  .countdown-days{
+    font-family:"RocknRoll One",sans-serif;
+    font-size:30px;color:var(--cyan);line-height:1;margin-top:2px
+  }
+  .countdown-days .unit{font-size:13px;color:var(--text);margin-left:4px;font-family:"Noto Sans JP"}
+  .countdown-date{font-size:11px;color:var(--muted);text-align:right}
+
+  /* ---------- Progress ring ---------- */
+  .ring-wrap{
+    display:flex;align-items:center;gap:18px;
+    background:#fff;margin:16px;border-radius:16px;padding:18px;
+    box-shadow:var(--shadow);
+  }
+  .ring-svg{flex-shrink:0;width:110px;height:110px}
+  .ring-bg{stroke:#EDF1F4;fill:none;stroke-width:10}
+  .ring-fg{stroke:var(--cyan);fill:none;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+  .ring-text{
+    font-family:"RocknRoll One",sans-serif;fill:var(--text);
+    font-size:26px;text-anchor:middle;dominant-baseline:central
+  }
+  .ring-text .small{font-size:11px;fill:var(--muted);font-family:"Noto Sans JP"}
+  .stats{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+  .stat{display:flex;flex-direction:column;gap:2px}
+  .stat-val{font-family:"RocknRoll One",sans-serif;font-size:20px;line-height:1}
+  .stat-lbl{font-size:11px;color:var(--muted)}
+  .stat.listened .stat-val{color:var(--cyan)}
+  .stat.review .stat-val{color:var(--yellow)}
+  .stat.left .stat-val{color:var(--muted)}
+  .stat.total .stat-val{color:var(--text)}
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    position:sticky;top:0;z-index:10;background:var(--surface);
+    padding:10px 10px 8px;border-bottom:1px solid var(--line);
+    display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex-shrink:0;border:2px solid var(--line);background:#fff;border-radius:999px;
+    padding:7px 14px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;
+    display:flex;align-items:center;gap:6px;transition:all .15s;
+    font-family:inherit;
+  }
+  .tab .tab-pct{
+    font-size:10px;background:var(--gray-pill);color:var(--muted);
+    padding:2px 6px;border-radius:999px;font-weight:700;
+  }
+  .tab.active{background:var(--cyan);border-color:var(--cyan);color:#fff}
+  .tab.active .tab-pct{background:rgba(255,255,255,.25);color:#fff}
+  .tab.done{border-color:var(--cyan)}
+  .tab.done .tab-pct{background:var(--cyan-soft);color:var(--cyan-dark)}
+
+  /* ---------- Episode list ---------- */
+  .episodes{padding:12px 12px 20px}
+  .ep{
+    background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:10px;
+    box-shadow:var(--shadow);display:flex;gap:12px;align-items:center;
+    border-left:4px solid transparent;transition:all .2s;
+  }
+  .ep.state-listened{border-left-color:var(--cyan);background:#F6FDFF}
+  .ep.state-review{border-left-color:var(--yellow);background:#FFFBF0}
+  .ep-num{
+    font-family:"RocknRoll One",sans-serif;font-size:20px;color:var(--cyan);
+    min-width:42px;text-align:center;line-height:1;
+  }
+  .ep-num .hash{font-size:11px;color:var(--muted);display:block;font-family:"Noto Sans JP"}
+  .ep-main{flex:1;min-width:0}
+  .ep-title{font-size:13.5px;font-weight:700;line-height:1.4;margin:0 0 4px}
+  .ep-meta{font-size:11px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .ep-meta a{color:var(--cyan-dark);text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+  .ep-meta a:active{opacity:.6}
+  .ep-state{
+    flex-shrink:0;width:54px;height:54px;border-radius:50%;border:2px solid var(--line);
+    background:#fff;cursor:pointer;font-family:"RocknRoll One",sans-serif;font-size:11px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+    color:var(--muted);transition:all .2s;padding:0;line-height:1;
+  }
+  .ep-state .icon{font-size:20px;line-height:1}
+  .ep-state.listened{background:var(--cyan);border-color:var(--cyan);color:#fff;transform:scale(1.05)}
+  .ep-state.review{background:var(--yellow);border-color:var(--yellow);color:#fff}
+  .ep-state:active{transform:scale(.92)}
+  .ep-state.listened:active{transform:scale(.97)}
+
+  /* ---------- Section title ---------- */
+  .section{margin:24px 16px 8px;display:flex;align-items:center;justify-content:space-between}
+  .section h2{
+    font-family:"RocknRoll One",sans-serif;font-size:18px;margin:0;
+    display:flex;align-items:center;gap:8px;
+  }
+  .section .helper{font-size:11px;color:var(--muted)}
+
+  /* ---------- Badges ---------- */
+  .badges{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+    padding:0 12px 20px;
+  }
+  .badge{
+    background:#fff;border-radius:12px;padding:12px 6px;text-align:center;
+    box-shadow:var(--shadow);opacity:.38;transition:all .3s;
+    position:relative;overflow:hidden;
+  }
+  .badge.earned{opacity:1}
+  .badge.earned::after{
+    content:"";position:absolute;inset:0;border:2px solid var(--cyan);border-radius:12px;
+    animation:badgeGlow 2s ease-out;
+  }
+  @keyframes badgeGlow{
+    0%{box-shadow:0 0 0 0 rgba(23,197,232,.7)}
+    70%{box-shadow:0 0 0 10px rgba(23,197,232,0)}
+    100%{box-shadow:0 0 0 0 rgba(23,197,232,0)}
+  }
+  .badge-icon{font-size:28px;line-height:1;display:block;margin-bottom:4px;filter:grayscale(.6)}
+  .badge.earned .badge-icon{filter:none}
+  .badge-name{font-size:10.5px;font-weight:700;line-height:1.25;color:var(--text)}
+
+  /* ---------- Product link (subtle) ---------- */
+  .product-link{
+    margin:28px 16px 12px;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;display:flex;gap:12px;align-items:center;
+    text-decoration:none;color:inherit;
+    box-shadow:var(--shadow);
+    transition:all .2s;
+  }
+  .product-link:active{transform:scale(.985);box-shadow:var(--shadow-lg)}
+  .product-link .pl-icon{
+    flex-shrink:0;width:40px;height:40px;border-radius:10px;
+    background:var(--cyan-soft);color:var(--cyan-dark);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+  }
+  .product-link .pl-main{flex:1;min-width:0}
+  .product-link .pl-label{
+    font-size:10px;color:var(--muted);letter-spacing:.08em;margin-bottom:2px;
+  }
+  .product-link .pl-title{font-size:13px;font-weight:700;line-height:1.35}
+  .product-link .pl-sub{font-size:11px;color:var(--muted);margin-top:2px}
+  .product-link .pl-arrow{flex-shrink:0;color:var(--muted);font-size:18px}
+
+  /* ---------- Footer actions ---------- */
+  .footer{padding:8px 16px 40px;color:var(--muted);font-size:11px;text-align:center}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+  .btn{
+    font-family:inherit;font-weight:700;font-size:12px;
+    padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);
+    background:#fff;color:var(--text);cursor:pointer;
+  }
+  .btn.primary{background:var(--cyan);border-color:var(--cyan);color:#fff}
+  .btn.danger{color:#C14747;border-color:#F1D2D2}
+  .btn:active{transform:scale(.97)}
+
+  /* ---------- Share banner ---------- */
+  .share-card{
+    margin:8px 16px 16px;background:linear-gradient(135deg,var(--cyan),var(--cyan-dark));
+    color:#fff;border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:center;
+    box-shadow:var(--shadow);
+  }
+  .share-card .emoji{font-size:28px}
+  .share-card .txt{flex:1;font-size:12.5px;line-height:1.4}
+  .share-card .btn{background:rgba(255,255,255,.22);border:none;color:#fff;font-weight:700;font-size:12px;padding:7px 13px}
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(120%);
+    background:rgba(43,58,70,.94);color:#fff;padding:12px 22px;border-radius:999px;
+    font-size:13px;font-weight:700;z-index:100;transition:transform .35s cubic-bezier(.2,1.2,.3,1);
+    box-shadow:var(--shadow-lg);white-space:nowrap;max-width:92vw;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  /* ---------- Confetti ---------- */
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+
+  /* ---------- Responsive tweaks ---------- */
+  @media (max-width:360px){
+    .hero-title .row2{font-size:60px}
+    .hero-title .row1{font-size:26px}
+    .hero-title .row3{font-size:28px}
+    .badges{grid-template-columns:repeat(3,1fr)}
+    .ep-num{min-width:36px;font-size:18px}
+  }
+  @media (min-width:640px){
+    .hero-title .row2{font-size:90px}
+    body{max-width:720px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,.05)}
+    .badges{grid-template-columns:repeat(6,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <h1 class="hero-title" aria-label="耳で覚える宅建2026">
+    <span class="row1">耳で覚える</span>
+    <span class="row2">宅建</span>
+    <span class="row3">2026</span>
+  </h1>
+  <div class="hero-sub">学習進捗トラッカー</div>
+</header>
+
+<!-- COUNTDOWN -->
+<div class="countdown">
+  <div>
+    <div class="countdown-label">本試験まで</div>
+    <div class="countdown-days"><span id="daysLeft">—</span><span class="unit">日</span></div>
+  </div>
+  <div class="countdown-date">
+    試験日（予定）<br>
+    <b style="color:var(--text);font-size:13px">2026年10月18日(日)</b>
+  </div>
+</div>
+
+<!-- PROGRESS RING -->
+<section class="ring-wrap" aria-label="全体進捗">
+  <svg class="ring-svg" viewBox="0 0 120 120">
+    <circle class="ring-bg" cx="60" cy="60" r="50"/>
+    <circle class="ring-fg" id="ringFg" cx="60" cy="60" r="50"
+      stroke-dasharray="314.159" stroke-dashoffset="314.159"
+      transform="rotate(-90 60 60)"/>
+    <text class="ring-text" x="60" y="56" id="ringPct">0%</text>
+    <text class="ring-text small" x="60" y="76">完了</text>
+  </svg>
+  <div class="stats">
+    <div class="stat listened"><span class="stat-val" id="nListened">0</span><span class="stat-lbl">聴いた</span></div>
+    <div class="stat review"><span class="stat-val" id="nReview">0</span><span class="stat-lbl">復習したい</span></div>
+    <div class="stat left"><span class="stat-val" id="nLeft">33</span><span class="stat-lbl">未聴</span></div>
+    <div class="stat total"><span class="stat-val" id="nTotal">/33</span><span class="stat-lbl">全エピソード</span></div>
+  </div>
+</section>
+
+<!-- TABS -->
+<nav class="tabs" id="tabs" aria-label="分野切替"></nav>
+
+<!-- EPISODES -->
+<main class="episodes" id="episodes"></main>
+
+<!-- SHARE -->
+<div class="share-card">
+  <div class="emoji">🎧</div>
+  <div class="txt">
+    <b>進捗をシェアしよう</b><br>
+    <span style="opacity:.9;font-size:11.5px">#耳で覚える宅建 でXに投稿すると仲間が増えるよ</span>
+  </div>
+  <button class="btn" id="shareBtn">シェア</button>
+</div>
+
+<!-- BADGES -->
+<div class="section">
+  <h2>🏅 バッジ</h2>
+  <span class="helper" id="badgeHelper">0 / 9</span>
+</div>
+<div class="badges" id="badges"></div>
+
+<!-- NOTE MAGAZINE (free) -->
+<a class="product-link" href="https://note.com/fond_bison5155/m/mcf943547a586" target="_blank" rel="noopener">
+  <div class="pl-icon" style="background:#FFF3D6;color:#B8860B">📝</div>
+  <div class="pl-main">
+    <div class="pl-label">READ</div>
+    <div class="pl-title">文字で復習</div>
+    <div class="pl-sub">各回の内容を記事で読み返せる・noteマガジン</div>
+  </div>
+  <div class="pl-arrow">›</div>
+</a>
+
+<!-- PRODUCT LINK (paid) -->
+<a class="product-link" href="https://note.com/fond_bison5155" target="_blank" rel="noopener" style="margin-top:10px">
+  <div class="pl-icon">📘</div>
+  <div class="pl-main">
+    <div class="pl-label">MORE</div>
+    <div class="pl-title">完全図解PDF教材</div>
+    <div class="pl-sub">図解＋一問一答で深掘りしたい人向け・noteで販売中</div>
+  </div>
+  <div class="pl-arrow">›</div>
+</a>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="actions">
+    <button class="btn" id="exportBtn">進捗を書き出す</button>
+    <button class="btn" id="importBtn">読み込み</button>
+    <button class="btn danger" id="resetBtn">全リセット</button>
+  </div>
+  <div>端末内に保存（サーバー送信なし）・機種変時は「書き出し」で保存推奨</div>
+  <div style="margin-top:6px;opacity:.7">© 耳で覚える宅建2026</div>
+  <input type="file" id="importFile" accept="application/json" style="display:none">
+</footer>
+
+<div class="toast" id="toast"></div>
+<canvas id="confetti"></canvas>
+
+<script>
+// ============ データ ============
+const EXAM_DATE = new Date("2026-10-18T09:00:00+09:00");
+const STANDFM_BASE = "https://stand.fm/channels/69b1fa4b75c28fe6990cf326";
+
+const FIELDS = [
+  {key:"業法", full:"宅建業法", color:"#17C5E8"},
+  {key:"権利", full:"権利関係", color:"#6BCB77"},
+  {key:"制限", full:"法令上の制限", color:"#F59E0B"},
+  {key:"税他", full:"税・その他", color:"#E879A8"},
+  {key:"直前", full:"直前対策", color:"#8B7BF7"},
+];
+
+const EPISODES = [
+  {n:1, date:"3/12", field:"宅建業法", title:"宅建業法は「最強の防具」── なぜ業法だけで20点取れるのか"},
+  {n:2, date:"3/19", field:"宅建業法", title:"ここ間違えたら4点失う ── 35条書面と37条書面の決定的な違い"},
+  {n:3, date:"3/26", field:"宅建業法", title:"不動産屋を本気にさせる媒介契約 ── 3種の契約を使いこなす方法"},
+  {n:4, date:"3/30", field:"宅建業法", title:"プロが素人に負ける8つのルール ── 自ら売主の8種制限"},
+  {n:5, date:"4/6",  field:"宅建業法", title:"5年ごとに届けないと免許が消える ── 更新と大臣免許・知事免許"},
+  {n:6, date:"4/10", field:"宅建業法", title:"名簿が2つあるのはなぜ？ ── 業者名簿と従業者名簿の違いを3分で"},
+  {n:7, date:"4/13", field:"宅建業法", title:"暴行の罰金で不動産免許は消える ── 欠格事由の「5年の壁」"},
+  {n:8, date:"4/20", field:"宅建業法", title:"「許可予定」と書いたらアウト ── 不動産広告に嘘が許されない理由"},
+  {n:9, date:"4/27", field:"宅建業法", title:"免許取消は一発退場 ── 消費者を守る処分の3段階ロジック"},
+  {n:10,date:"5/4",  field:"宅建業法", title:"1000万円 vs 60万円の差 ── 営業保証金と保証協会どっちが得か"},
+  {n:11,date:"5/11", field:"宅建業法", title:"3%+6万円だけ覚えても解けない ── 報酬計算の落とし穴と瑕疵担保"},
+  {n:12,date:"5/18", field:"権利関係", title:"騙されたのに契約が有効？ ── 意思表示（詐欺・強迫・錯誤）の恐い話"},
+  {n:13,date:"5/25", field:"権利関係", title:"頼んでないのに契約された ── 代理と無権代理・表見代理の境界線"},
+  {n:14,date:"6/1",  field:"権利関係", title:"放っておくと権利が消える ── 取得時効と消滅時効を完全整理"},
+  {n:15,date:"6/8",  field:"権利関係", title:"登記しないと負ける ── 不動産物権変動と「第三者」の正体"},
+  {n:16,date:"6/15", field:"権利関係", title:"家を担保に取られるとどうなる ── 抵当権を図で理解する"},
+  {n:17,date:"6/22", field:"権利関係", title:"友人の借金を肩代わり？ ── 連帯債務と保証の違いが命取り"},
+  {n:18,date:"6/29", field:"権利関係", title:"30年住んでも出ていけと言われる？ ── 借地権の存続期間と更新"},
+  {n:19,date:"7/6",  field:"権利関係", title:"大家に「出てけ」と言われたら ── 借家権と正当事由・定期借家"},
+  {n:20,date:"7/13", field:"権利関係", title:"相続で揉めないための法定ルール ── 配偶者居住権と不法行為"},
+  {n:21,date:"7/20", field:"権利関係", title:"マンション住民の多数決 ── 管理組合と決議要件の急所"},
+  {n:22,date:"7/27", field:"法令上の制限", title:"ここには家が建てられない ── 13種の用途地域を攻略する"},
+  {n:23,date:"8/3",  field:"法令上の制限", title:"開発許可が要る？要らない？ ── 面積要件の数字を一発暗記"},
+  {n:24,date:"8/10", field:"法令上の制限", title:"木造3階建ては建てられる？ ── 単体規定と用途制限の基本"},
+  {n:25,date:"8/17", field:"法令上の制限", title:"なぜ狭い土地に大きな家が建たないのか ── 建ぺい率・容積率"},
+  {n:26,date:"8/24", field:"法令上の制限", title:"田んぼを駐車場にしたら違法？ ── 農地法3条・4条・5条を完全理解"},
+  {n:27,date:"8/31", field:"法令上の制限", title:"届出だけでOK？許可が必要？ ── 国土法・区画整理・宅造法まとめ"},
+  {n:28,date:"9/7",  field:"税・その他", title:"家を買ったら税金が4回来る ── 不動産取得税と固定資産税"},
+  {n:29,date:"9/14", field:"税・その他", title:"契約書の印紙、金額間違えてない？ ── 印紙税・登録免許税・譲渡所得"},
+  {n:30,date:"9/21", field:"税・その他", title:"この土地いくら？に答える3つの方法 ── 鑑定評価基準と地価公示法"},
+  {n:31,date:"9/28", field:"税・その他", title:"ラスト3点を拾う ── 住宅金融支援機構・景品表示法・統計"},
+  {n:32,date:"10/5", field:"直前対策", title:"試験1週間前に聴く回 ── 宅建業法・頻出論点ベスト10"},
+  {n:33,date:"10/12",field:"直前対策", title:"これだけは忘れるな ── 全分野・間違えやすいポイント最終チェック"},
+];
+
+const BADGES = [
+  {id:"first",   icon:"🎧", name:"はじめの一歩",   check:s => s.listened >= 1},
+  {id:"ten",     icon:"📻", name:"10回達成",        check:s => s.listened >= 10},
+  {id:"half",    icon:"🌓", name:"折り返し",        check:s => s.listened >= 17},
+  {id:"gyoho",   icon:"🏢", name:"業法マスター",    check:s => s.byField["宅建業法"] === 11},
+  {id:"kenri",   icon:"⚖️", name:"権利マスター",    check:s => s.byField["権利関係"] === 10},
+  {id:"seigen",  icon:"🏗️", name:"制限マスター",    check:s => s.byField["法令上の制限"] === 6},
+  {id:"zei",     icon:"💴", name:"税他マスター",    check:s => s.byField["税・その他"] === 4},
+  {id:"chokuzen",icon:"🎯", name:"直前完走",        check:s => s.byField["直前対策"] === 2},
+  {id:"all",     icon:"👑", name:"全33回制覇",      check:s => s.listened >= 33},
+];
+
+// ============ 状態管理 ============
+const STORAGE_KEY = "takken2026_progress_v1";
+const STATE = { episodes:{}, earnedBadges:[], firstVisit:Date.now() };
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ Object.assign(STATE, JSON.parse(raw)); }
+  }catch(e){}
+  // 初期化
+  EPISODES.forEach(ep => {
+    if(!(ep.n in STATE.episodes)) STATE.episodes[ep.n] = 0; // 0:未 1:聴 2:復
+  });
+}
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE));
+}
+
+// ============ 集計 ============
+function computeStats(){
+  const s = {listened:0, review:0, left:0, total:EPISODES.length, byField:{}};
+  FIELDS.forEach(f => s.byField[f.full] = 0);
+  EPISODES.forEach(ep => {
+    const v = STATE.episodes[ep.n];
+    if(v === 1){ s.listened++; s.byField[ep.field]++; }
+    else if(v === 2){ s.review++; }
+    else { s.left++; }
+  });
+  s.pct = Math.round(s.listened / s.total * 100);
+  return s;
+}
+
+// ============ 描画 ============
+let currentField = "宅建業法";
+
+function renderTabs(){
+  const s = computeStats();
+  const el = document.getElementById("tabs");
+  const fieldCount = {};
+  FIELDS.forEach(f => fieldCount[f.full] = EPISODES.filter(e => e.field === f.full).length);
+  el.innerHTML = FIELDS.map(f => {
+    const done = s.byField[f.full];
+    const total = fieldCount[f.full];
+    const isActive = f.full === currentField;
+    const isDone = done === total;
+    return `<button class="tab ${isActive?"active":""} ${isDone?"done":""}" data-field="${f.full}">
+      ${f.full}<span class="tab-pct">${done}/${total}</span>
+    </button>`;
+  }).join("");
+  el.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentField = btn.dataset.field;
+      renderTabs();
+      renderEpisodes();
+      document.getElementById("episodes").scrollIntoView({behavior:"smooth",block:"start"});
+    });
+  });
+}
+
+function renderEpisodes(){
+  const el = document.getElementById("episodes");
+  const list = EPISODES.filter(e => e.field === currentField);
+  el.innerHTML = list.map(ep => {
+    const st = STATE.episodes[ep.n];
+    const stateCls = st === 1 ? "state-listened" : st === 2 ? "state-review" : "";
+    const btnCls = st === 1 ? "listened" : st === 2 ? "review" : "";
+    const icon = st === 1 ? "✓" : st === 2 ? "↻" : "";
+    const label = st === 1 ? "聴了" : st === 2 ? "復習" : "未聴";
+    return `
+    <article class="ep ${stateCls}" data-n="${ep.n}">
+      <div class="ep-num">${ep.n}<span class="hash">#</span></div>
+      <div class="ep-main">
+        <p class="ep-title">${ep.title}</p>
+        <div class="ep-meta">
+          <span>📅 ${ep.date}</span>
+          <a href="${STANDFM_BASE}" target="_blank" rel="noopener">▶ Stand.fmで聴く</a>
+        </div>
+      </div>
+      <button class="ep-state ${btnCls}" aria-label="状態を切替" data-n="${ep.n}">
+        <span class="icon">${icon || "—"}</span>
+        <span>${label}</span>
+      </button>
+    </article>`;
+  }).join("");
+  el.querySelectorAll(".ep-state").forEach(btn => {
+    btn.addEventListener("click", () => cycleState(Number(btn.dataset.n)));
+  });
+}
+
+function renderStats(){
+  const s = computeStats();
+  document.getElementById("nListened").textContent = s.listened;
+  document.getElementById("nReview").textContent = s.review;
+  document.getElementById("nLeft").textContent = s.left;
+  document.getElementById("nTotal").textContent = "/" + s.total;
+  const CIRC = 2 * Math.PI * 50;
+  const offset = CIRC * (1 - s.listened / s.total);
+  document.getElementById("ringFg").setAttribute("stroke-dashoffset", offset);
+  document.getElementById("ringPct").textContent = s.pct + "%";
+}
+
+function renderBadges(){
+  const s = computeStats();
+  const newEarned = [];
+  BADGES.forEach(b => { if(b.check(s)) newEarned.push(b.id); });
+  const freshly = newEarned.filter(id => !STATE.earnedBadges.includes(id));
+  STATE.earnedBadges = newEarned;
+  const el = document.getElementById("badges");
+  el.innerHTML = BADGES.map(b => `
+    <div class="badge ${newEarned.includes(b.id)?"earned":""}">
+      <span class="badge-icon">${b.icon}</span>
+      <span class="badge-name">${b.name}</span>
+    </div>
+  `).join("");
+  document.getElementById("badgeHelper").textContent = `${newEarned.length} / ${BADGES.length}`;
+  return freshly;
+}
+
+function renderCountdown(){
+  const now = new Date();
+  const diff = Math.ceil((EXAM_DATE - now) / (1000 * 60 * 60 * 24));
+  document.getElementById("daysLeft").textContent = diff > 0 ? diff : 0;
+}
+
+// ============ 状態サイクル ============
+function cycleState(n){
+  const prev = STATE.episodes[n] || 0;
+  const next = (prev + 1) % 3; // 未→聴→復→未
+  STATE.episodes[n] = next;
+  // 前回からの全体%
+  const prevStats = computeStats();
+  // 保存と再描画
+  saveState();
+  renderStats();
+  renderTabs();
+  renderEpisodes();
+  const freshBadges = renderBadges();
+  const s = computeStats();
+  // ---- サプライズ演出 ----
+  // マイルストーン%
+  [25, 50, 75, 100].forEach(m => {
+    const prevPctActual = Math.round(prevStats.listened / prevStats.total * 100);
+    if(prevPctActual < m && s.pct >= m){
+      setTimeout(() => {
+        confetti(m === 100 ? 180 : 100);
+        showToast(m === 100 ? "🎉 全エピソード制覇！おめでとう！" : `✨ ${m}%到達！いいペース`);
+      }, 120);
+    }
+  });
+  // バッジ獲得通知
+  if(freshBadges.length){
+    setTimeout(() => {
+      const b = BADGES.find(x => x.id === freshBadges[0]);
+      showToast(`${b.icon} バッジ獲得「${b.name}」`);
+      if(freshBadges[0].includes("master") || b.id === "all" || b.id === "gyoho" || b.id === "kenri" || b.id === "seigen" || b.id === "zei" || b.id === "chokuzen"){
+        confetti(60);
+      }
+    }, s.pct % 25 === 0 ? 1200 : 120);
+  }
+  saveState();
+}
+
+// ============ トースト ============
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+// ============ 紙吹雪 ============
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+function resizeCanvas(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+resizeCanvas(); addEventListener("resize", resizeCanvas);
+const CONF_COLORS = ["#17C5E8","#F5B841","#6BCB77","#E879A8","#fff","#8B7BF7"];
+let particles = [];
+function confetti(count = 80){
+  for(let i = 0; i < count; i++){
+    particles.push({
+      x: innerWidth / 2 + (Math.random() - .5) * 60,
+      y: innerHeight / 3,
+      vx: (Math.random() - .5) * 8,
+      vy: Math.random() * -9 - 4,
+      g: 0.22,
+      size: 5 + Math.random() * 5,
+      color: CONF_COLORS[(Math.random() * CONF_COLORS.length) | 0],
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - .5) * .3,
+      life: 180 + Math.random() * 60,
+    });
+  }
+  if(!running) runConfetti();
+}
+let running = false;
+function runConfetti(){
+  running = true;
+  function step(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size * 0.5);
+      ctx.restore();
+    });
+    particles = particles.filter(p => p.life > 0 && p.y < canvas.height + 20);
+    if(particles.length){ requestAnimationFrame(step); }
+    else { ctx.clearRect(0, 0, canvas.width, canvas.height); running = false; }
+  }
+  step();
+}
+
+// ============ データ書き出し/読み込み/リセット ============
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(STATE, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `takken2026_progress_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("📥 進捗を書き出したよ");
+});
+document.getElementById("importBtn").addEventListener("click", () => {
+  document.getElementById("importFile").click();
+});
+document.getElementById("importFile").addEventListener("change", (e) => {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try{
+      const data = JSON.parse(ev.target.result);
+      if(data.episodes){
+        Object.assign(STATE, data);
+        saveState(); renderAll();
+        showToast("✅ 読み込み完了");
+      }
+    }catch(err){ showToast("⚠️ ファイル形式が違うかも"); }
+  };
+  reader.readAsText(file);
+});
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if(confirm("進捗を全部消します。本当にいい？")){
+    localStorage.removeItem(STORAGE_KEY);
+    STATE.episodes = {}; STATE.earnedBadges = [];
+    EPISODES.forEach(ep => STATE.episodes[ep.n] = 0);
+    renderAll();
+    showToast("🔄 リセットしたよ");
+  }
+});
+
+// ============ シェア ============
+document.getElementById("shareBtn").addEventListener("click", () => {
+  const s = computeStats();
+  const text = `宅建勉強、${s.listened}/${s.total}回 聴き終わった！(${s.pct}%) #耳で覚える宅建 #宅建2026\n${STANDFM_BASE}`;
+  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+  window.open(url, "_blank");
+});
+
+// ============ 起動 ============
+function renderAll(){
+  renderCountdown();
+  renderStats();
+  renderTabs();
+  renderEpisodes();
+  renderBadges();
+}
+loadState();
+renderAll();
+// 日数は毎分更新
+setInterval(renderCountdown, 60000);
+</script>
+</body>
+</html>
