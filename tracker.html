@@ -244,6 +244,38 @@
   .badge.earned .badge-icon{filter:none}
   .badge-name{font-size:10.5px;font-weight:700;line-height:1.25;color:var(--text)}
 
+  /* ---------- Column card (inline in episode list) ---------- */
+  .col-ep{
+    background:var(--yellow-soft);border-radius:14px;padding:14px 16px;
+    margin:6px 0 14px;display:flex;gap:12px;align-items:center;
+    border:1px dashed #E8C86A;position:relative;
+  }
+  .col-ep.locked{opacity:.72;background:#F6F2E8;border-color:#D9D2BF}
+  .col-ep .col-num{
+    font-family:"RocknRoll One",sans-serif;font-size:12px;
+    background:#fff;color:#B8860B;
+    padding:4px 10px;border-radius:999px;flex-shrink:0;letter-spacing:.02em;
+    border:1.5px solid #E8C86A;
+  }
+  .col-ep.locked .col-num{color:var(--muted);border-color:#C9C3B0;background:#EFEAD8}
+  .col-ep .col-main{flex:1;min-width:0}
+  .col-ep .col-title{
+    font-size:13.5px;font-weight:700;line-height:1.4;margin:0 0 3px;color:var(--text);
+  }
+  .col-ep .col-status{line-height:1.35}
+  .col-ep .col-en{
+    font-family:"RocknRoll One",sans-serif;
+    font-size:13px;letter-spacing:.08em;color:#B8860B;
+    display:block;margin-top:2px;
+  }
+  .col-ep .col-jp{
+    display:block;margin-top:1px;
+    font-size:10.5px;color:var(--muted);font-weight:500;letter-spacing:.02em;
+  }
+  .col-ep .col-locked{
+    font-size:11px;color:var(--muted);font-weight:700;
+  }
+
   /* ---------- Product link (subtle) ---------- */
   .product-link{
     margin:28px 16px 12px;
@@ -380,8 +412,8 @@
     <circle class="ring-fg" id="ringFg" cx="60" cy="60" r="50"
       stroke-dasharray="314.159" stroke-dashoffset="314.159"
       transform="rotate(-90 60 60)"/>
-    <text class="ring-text" x="60" y="56" id="ringPct">0%</text>
-    <text class="ring-text small" x="60" y="76">完了</text>
+    <text class="ring-text" x="60" y="52" id="ringPct">0%</text>
+    <text class="ring-text small" x="60" y="78">完了</text>
   </svg>
   <div class="stats">
     <div class="stat listened"><span class="stat-val" id="nListened">0</span><span class="stat-lbl">聴いた</span></div>
@@ -459,8 +491,7 @@ const STANDFM_BASE = "https://stand.fm/channels/69b1fa4b75c28fe6990cf326";
 const FIELDS = [
   {key:"業法", full:"宅建業法", color:"#17C5E8"},
   {key:"権利", full:"権利関係", color:"#6BCB77"},
-  {key:"制限", full:"法令上の制限", color:"#F59E0B"},
-  {key:"税他", full:"税・その他", color:"#E879A8"},
+  {key:"法令税", full:"法令・税その他", color:"#F59E0B"},
   {key:"直前", full:"直前対策", color:"#8B7BF7"},
 ];
 
@@ -486,18 +517,25 @@ const EPISODES = [
   {n:19,date:"7/6",  field:"権利関係", title:"大家に「出てけ」と言われたら ── 借家権と正当事由・定期借家"},
   {n:20,date:"7/13", field:"権利関係", title:"相続で揉めないための法定ルール ── 配偶者居住権と不法行為"},
   {n:21,date:"7/20", field:"権利関係", title:"マンション住民の多数決 ── 管理組合と決議要件の急所"},
-  {n:22,date:"7/27", field:"法令上の制限", title:"ここには家が建てられない ── 13種の用途地域を攻略する"},
-  {n:23,date:"8/3",  field:"法令上の制限", title:"開発許可が要る？要らない？ ── 面積要件の数字を一発暗記"},
-  {n:24,date:"8/10", field:"法令上の制限", title:"木造3階建ては建てられる？ ── 単体規定と用途制限の基本"},
-  {n:25,date:"8/17", field:"法令上の制限", title:"なぜ狭い土地に大きな家が建たないのか ── 建ぺい率・容積率"},
-  {n:26,date:"8/24", field:"法令上の制限", title:"田んぼを駐車場にしたら違法？ ── 農地法3条・4条・5条を完全理解"},
-  {n:27,date:"8/31", field:"法令上の制限", title:"届出だけでOK？許可が必要？ ── 国土法・区画整理・宅造法まとめ"},
-  {n:28,date:"9/7",  field:"税・その他", title:"家を買ったら税金が4回来る ── 不動産取得税と固定資産税"},
-  {n:29,date:"9/14", field:"税・その他", title:"契約書の印紙、金額間違えてない？ ── 印紙税・登録免許税・譲渡所得"},
-  {n:30,date:"9/21", field:"税・その他", title:"この土地いくら？に答える3つの方法 ── 鑑定評価基準と地価公示法"},
-  {n:31,date:"9/28", field:"税・その他", title:"ラスト3点を拾う ── 住宅金融支援機構・景品表示法・統計"},
+  {n:22,date:"7/27", field:"法令・税その他", title:"ここには家が建てられない ── 13種の用途地域を攻略する"},
+  {n:23,date:"8/3",  field:"法令・税その他", title:"開発許可が要る？要らない？ ── 面積要件の数字を一発暗記"},
+  {n:24,date:"8/10", field:"法令・税その他", title:"木造3階建ては建てられる？ ── 単体規定と用途制限の基本"},
+  {n:25,date:"8/17", field:"法令・税その他", title:"なぜ狭い土地に大きな家が建たないのか ── 建ぺい率・容積率"},
+  {n:26,date:"8/24", field:"法令・税その他", title:"田んぼを駐車場にしたら違法？ ── 農地法3条・4条・5条を完全理解"},
+  {n:27,date:"8/31", field:"法令・税その他", title:"届出だけでOK？許可が必要？ ── 国土法・区画整理・宅造法まとめ"},
+  {n:28,date:"9/7",  field:"法令・税その他", title:"家を買ったら税金が4回来る ── 不動産取得税と固定資産税"},
+  {n:29,date:"9/14", field:"法令・税その他", title:"契約書の印紙、金額間違えてない？ ── 印紙税・登録免許税・譲渡所得"},
+  {n:30,date:"9/21", field:"法令・税その他", title:"この土地いくら？に答える3つの方法 ── 鑑定評価基準と地価公示法"},
+  {n:31,date:"9/28", field:"法令・税その他", title:"ラスト3点を拾う ── 住宅金融支援機構・景品表示法・統計"},
   {n:32,date:"10/5", field:"直前対策", title:"試験1週間前に聴く回 ── 宅建業法・頻出論点ベスト10"},
   {n:33,date:"10/12",field:"直前対策", title:"これだけは忘れるな ── 全分野・間違えやすいポイント最終チェック"},
+];
+
+// コラム：各科目の折り返し地点に差し込む。半分まで進むと「解放」
+const COLUMNS = [
+  {num:1, field:"宅建業法",      afterEp:6,  title:"コラム：宅建メンタル道場 その1"},
+  {num:2, field:"権利関係",      afterEp:16, title:"コラム：宅建メンタル道場 その2"},
+  {num:3, field:"法令・税その他", afterEp:26, title:"コラム：宅建メンタル道場 その3"},
 ];
 
 const BADGES = [
@@ -506,8 +544,7 @@ const BADGES = [
   {id:"half",    icon:"🌓", name:"折り返し",        check:s => s.listened >= 17},
   {id:"gyoho",   icon:"🏢", name:"業法マスター",    check:s => s.byField["宅建業法"] === 11},
   {id:"kenri",   icon:"⚖️", name:"権利マスター",    check:s => s.byField["権利関係"] === 10},
-  {id:"seigen",  icon:"🏗️", name:"制限マスター",    check:s => s.byField["法令上の制限"] === 6},
-  {id:"zei",     icon:"💴", name:"税他マスター",    check:s => s.byField["税・その他"] === 4},
+  {id:"houzei",  icon:"🏗️", name:"法令・税マスター",check:s => s.byField["法令・税その他"] === 10},
   {id:"chokuzen",icon:"🎯", name:"直前完走",        check:s => s.byField["直前対策"] === 2},
   {id:"all",     icon:"👑", name:"全33回制覇",      check:s => s.listened >= 33},
 ];
@@ -574,13 +611,35 @@ function renderTabs(){
 function renderEpisodes(){
   const el = document.getElementById("episodes");
   const list = EPISODES.filter(e => e.field === currentField);
+  const s = computeStats();
+  const fieldTotal = list.length;
+  const fieldDone = s.byField[currentField] || 0;
+  const halfThreshold = Math.ceil(fieldTotal / 2);
+  const unlocked = fieldDone >= halfThreshold;
+  const column = COLUMNS.find(c => c.field === currentField);
+
+  const renderColumnCard = () => {
+    if(!column) return "";
+    const status = unlocked
+      ? `<span class="col-en">Coming&nbsp;soon ✨</span><span class="col-jp">ただいま執筆中・公開までもう少しお待ちください</span>`
+      : `<span class="col-locked">🔒 あと${Math.max(0, halfThreshold - fieldDone)}本で解放</span>`;
+    return `
+    <div class="col-ep ${unlocked ? "" : "locked"}" aria-label="コラム">
+      <div class="col-num">その${column.num}</div>
+      <div class="col-main">
+        <p class="col-title">${column.title}</p>
+        <div class="col-status">${status}</div>
+      </div>
+    </div>`;
+  };
+
   el.innerHTML = list.map(ep => {
     const st = STATE.episodes[ep.n];
     const stateCls = st === 1 ? "state-listened" : st === 2 ? "state-review" : "";
     const btnCls = st === 1 ? "listened" : st === 2 ? "review" : "";
     const icon = st === 1 ? "✓" : st === 2 ? "↻" : "";
     const label = st === 1 ? "聴了" : st === 2 ? "復習" : "未聴";
-    return `
+    const epHtml = `
     <article class="ep ${stateCls}" data-n="${ep.n}">
       <div class="ep-num">${ep.n}<span class="hash">#</span></div>
       <div class="ep-main">
@@ -595,6 +654,11 @@ function renderEpisodes(){
         <span>${label}</span>
       </button>
     </article>`;
+    // このエピソードのあとにコラムを差し込む
+    if(column && ep.n === column.afterEp){
+      return epHtml + renderColumnCard();
+    }
+    return epHtml;
   }).join("");
   el.querySelectorAll(".ep-state").forEach(btn => {
     btn.addEventListener("click", () => cycleState(Number(btn.dataset.n)));
