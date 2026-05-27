@@ -248,9 +248,10 @@
   .col-ep{
     background:var(--yellow-soft);border-radius:14px;padding:14px 16px;
     margin:6px 0 14px;display:flex;gap:12px;align-items:center;
-    border:1px dashed #E8C86A;position:relative;
+    border:1px solid #E8C86A;position:relative;
+    box-shadow:var(--shadow);
   }
-  .col-ep.locked{opacity:.72;background:#F6F2E8;border-color:#D9D2BF}
+  .col-ep.locked{opacity:.72;background:#F6F2E8;border-color:#D9D2BF;box-shadow:none}
   .col-ep .col-num{
     font-family:"RocknRoll One",sans-serif;font-size:12px;
     background:#fff;color:#B8860B;
@@ -274,6 +275,17 @@
   }
   .col-ep .col-locked{
     font-size:11px;color:var(--muted);font-weight:700;
+  }
+  a.col-ep.col-link{
+    text-decoration:none;color:inherit;cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  a.col-ep.col-link:hover{
+    background:#FBF1CF;transform:translateY(-1px);
+    box-shadow:0 4px 12px rgba(184,134,11,.15);
+  }
+  a.col-ep.col-link:focus-visible{
+    outline:2px solid #B8860B;outline-offset:2px;
   }
 
   /* ---------- Product link (subtle) ---------- */
@@ -458,7 +470,7 @@
 </a>
 
 <!-- PRODUCT LINK (paid) -->
-<a class="product-link" href="https://note.com/fond_bison5155" target="_blank" rel="noopener" style="margin-top:10px">
+<a class="product-link" href="https://note.com/fond_bison5155/m/m81b6c01b758f" target="_blank" rel="noopener" style="margin-top:10px">
   <div class="pl-icon">📘</div>
   <div class="pl-main">
     <div class="pl-label">MORE</div>
@@ -533,7 +545,7 @@ const EPISODES = [
 
 // コラム：各科目の折り返し地点に差し込む。半分まで進むと「解放」
 const COLUMNS = [
-  {num:1, field:"宅建業法",      afterEp:6,  title:"コラム：宅建メンタル道場 その1"},
+  {num:1, field:"宅建業法",      afterEp:6,  title:"コラム：宅建メンタル道場 その1", url:"https://note.com/fond_bison5155/n/n3d5c6bba6b30"},
   {num:2, field:"権利関係",      afterEp:16, title:"コラム：宅建メンタル道場 その2"},
   {num:3, field:"法令・税その他", afterEp:26, title:"コラム：宅建メンタル道場 その3"},
 ];
@@ -620,17 +632,22 @@ function renderEpisodes(){
 
   const renderColumnCard = () => {
     if(!column) return "";
-    const status = unlocked
-      ? `<span class="col-en">Coming&nbsp;soon ✨</span><span class="col-jp">ただいま執筆中・公開までもう少しお待ちください</span>`
-      : `<span class="col-locked">🔒 あと${Math.max(0, halfThreshold - fieldDone)}本で解放</span>`;
-    return `
-    <div class="col-ep ${unlocked ? "" : "locked"}" aria-label="コラム">
+    const hasLink = unlocked && column.url;
+    const status = !unlocked
+      ? `<span class="col-locked">🔒 あと${Math.max(0, halfThreshold - fieldDone)}本で解放</span>`
+      : hasLink
+        ? `<span class="col-en">📖 noteで読む</span><span class="col-jp">読み終えたらまた音声へ戻ってきてください</span>`
+        : `<span class="col-en">Coming&nbsp;soon ✨</span><span class="col-jp">ただいま執筆中・公開までもう少しお待ちください</span>`;
+    const inner = `
       <div class="col-num">その${column.num}</div>
       <div class="col-main">
         <p class="col-title">${column.title}</p>
         <div class="col-status">${status}</div>
-      </div>
-    </div>`;
+      </div>`;
+    if(hasLink){
+      return `<a class="col-ep col-link" href="${column.url}" target="_blank" rel="noopener" aria-label="${column.title}（noteで読む）">${inner}</a>`;
+    }
+    return `<div class="col-ep ${unlocked ? "" : "locked"}" aria-label="コラム">${inner}</div>`;
   };
 
   el.innerHTML = list.map(ep => {
