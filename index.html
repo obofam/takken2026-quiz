@@ -2,496 +2,1200 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>耳で覚える宅建2026 ─ 一問一答クイズ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>宅建 MASTER BLUEPRINT — Web Quiz</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body {
-    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
-    background: #07172e;
-    color: #e8f1ff;
-    min-height: 100vh;
-    overflow-x: hidden;
-    background:
-      linear-gradient(rgba(100,180,255,0.04) 1px, transparent 1px) 0 0 / 28px 28px,
-      linear-gradient(90deg, rgba(100,180,255,0.04) 1px, transparent 1px) 0 0 / 28px 28px,
-      radial-gradient(ellipse at 20% 0%, #15335c 0%, #0a1f3a 45%, #07172e 100%);
-    background-attachment: fixed;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Helvetica Neue', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    background: #070f20; color: #dde6f0;
+    min-height: 100dvh; line-height: 1.7;
   }
-  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-  .app { max-width: 560px; margin: 0 auto; min-height: 100vh; padding: 16px; display: flex; flex-direction: column; }
+  .container { max-width: 480px; margin: 0 auto; padding: 20px 16px 60px; }
 
-  /* header */
-  .header { padding: 4px 0 16px; border-bottom: 1px solid rgba(76,201,255,0.25); margin-bottom: 16px; }
-  .brand { color: #4cc9ff; font-size: 11px; letter-spacing: 3px; margin-bottom: 6px; }
-  .h-title { color: #fff; font-size: 22px; font-weight: 900; letter-spacing: 1px; }
-  .h-title .em { color: #ffd64d; }
-  .h-sub { color: #9fc6ef; font-size: 12px; margin-top: 4px; letter-spacing: 1px; }
+  /* ── PAGE SWITCHER ── */
+  .page { display: none; }
+  .page.active { display: block; }
 
-  /* login screen */
-  .login { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: stretch; gap: 18px; padding: 40px 8px; }
-  .login h2 { color: #fff; font-size: 20px; font-weight: 900; text-align: center; letter-spacing: 1px; }
-  .login .lead { color: #9fc6ef; font-size: 13px; text-align: center; line-height: 1.7; margin-bottom: 10px; }
-  .login input {
-    background: rgba(14,38,72,0.6); border: 1.5px solid #2a5a8c; color: #fff;
-    padding: 14px 16px; border-radius: 10px; font-size: 16px; letter-spacing: 2px; outline: none;
+  /* ── HEADER ── */
+  .site-header {
+    text-align: center;
+    padding: 24px 0 20px;
+    border-bottom: 1px solid rgba(0,180,220,.2);
+    margin-bottom: 24px;
+  }
+  .site-header h1 {
+    font-size: 1.1rem; font-weight: 700;
+    letter-spacing: .08em; color: #00d4ff;
+  }
+  .site-header p {
+    font-size: .72rem; color: #6a8cba; margin-top: 6px;
+  }
+
+  /* ── SECTION CARDS (TOP) ── */
+  .section-card {
+    background: linear-gradient(170deg, #0e1f38, #091428);
+    border: 1px solid rgba(0,180,220,.2);
+    border-radius: 12px;
+    padding: 18px 18px 14px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    transition: border-color .2s, transform .15s;
+  }
+  .section-card:hover { border-color: rgba(0,180,220,.5); transform: translateY(-1px); }
+  .section-card.locked { opacity: .85; }
+  .section-card.unlocked { border-color: rgba(0,220,160,.35); }
+
+  .sc-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 10px; gap: 10px;
+  }
+  .sc-title-wrap { flex: 1; min-width: 0; }
+  .sc-kicker {
+    font-size: .62rem; font-weight: 700;
+    color: #00d4ff; letter-spacing: .2em;
+    margin-bottom: 4px;
+  }
+  .section-card.coming .sc-kicker { color: #a87cff; }
+  .sc-title {
+    font-size: 1.35rem; font-weight: 900;
+    letter-spacing: .02em; line-height: 1.25;
+  }
+  .sc-badge {
+    font-size: .62rem; font-weight: 700;
+    padding: 2px 10px; border-radius: 20px;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .badge-locked { background: rgba(255,255,255,.08); color: #6a8cba; }
+  .badge-unlocked { background: rgba(0,220,160,.15); color: #00dca0; }
+  .badge-coming { background: rgba(168,124,255,.12); color: #a87cff; }
+
+  .section-card.coming {
+    border-color: rgba(168,124,255,.25);
+    cursor: default;
+  }
+  .section-card.coming:hover {
+    border-color: rgba(168,124,255,.25);
+    transform: none;
+  }
+  .sc-coming-hint {
+    font-size: .68rem; color: #a87cff;
+    padding-top: 10px; border-top: 1px solid rgba(168,124,255,.15);
     text-align: center;
   }
-  .login input:focus { border-color: #4cc9ff; background: rgba(14,38,72,0.9); }
-  .login .go {
-    background: linear-gradient(135deg, #4cc9ff 0%, #2188c9 100%);
-    color: #07172e; font-weight: 900; padding: 14px; border-radius: 10px; font-size: 16px; letter-spacing: 2px;
-  }
-  .login .go:active { transform: scale(0.98); }
-  .login .err { color: #ff6a3d; font-size: 13px; text-align: center; min-height: 18px; letter-spacing: 1px; }
-  .login .hint { color: #6ba7dd; font-size: 11px; text-align: center; letter-spacing: 1px; opacity: 0.75; margin-top: 18px; line-height: 1.6; border-top: 1px dashed rgba(76,201,255,0.2); padding-top: 14px; }
 
-  /* menu / progress */
-  .menu { flex: 1; padding: 12px 0; }
-  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-  .stat-card { background: rgba(14,38,72,0.5); border: 1px solid #2a5a8c; padding: 12px 8px; border-radius: 10px; text-align: center; }
-  .stat-card .lab { color: #6ba7dd; font-size: 10px; letter-spacing: 1.5px; margin-bottom: 4px; }
-  .stat-card .val { color: #fff; font-size: 20px; font-weight: 900; }
-  .stat-card .val.ok { color: #4cdc8c; }
-  .stat-card .val.ng { color: #ff6a3d; }
-  .menu-btn {
-    display: block; width: 100%; margin-bottom: 10px; padding: 16px; text-align: left;
-    background: rgba(14,38,72,0.5); border: 1px solid #2a5a8c; border-radius: 12px;
-    color: #cfe4ff; font-size: 15px; letter-spacing: 1px; font-weight: 700;
-    display: flex; justify-content: space-between; align-items: center;
-    transition: all 0.15s;
-  }
-  .menu-btn:active { transform: scale(0.98); background: rgba(14,38,72,0.9); border-color: #4cc9ff; }
-  .menu-btn .arrow { color: #4cc9ff; font-size: 20px; }
-  .menu-btn.primary { background: linear-gradient(135deg, rgba(76,201,255,0.18) 0%, rgba(33,136,201,0.12) 100%); border-color: #4cc9ff; color: #fff; }
-  .menu-btn.primary .arrow { color: #ffd64d; }
-  .menu-btn .sub { display: block; color: #6ba7dd; font-size: 11px; font-weight: 400; letter-spacing: 0.5px; margin-top: 3px; }
+  .sc-desc { font-size: .74rem; color: #8aa4c8; margin-bottom: 10px; }
 
-  /* quiz card */
-  .quiz { flex: 1; display: flex; flex-direction: column; }
-  .progress-bar { height: 4px; background: rgba(76,201,255,0.15); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
-  .progress-bar .fill { height: 100%; background: linear-gradient(90deg, #4cc9ff, #ffd64d); transition: width 0.3s; }
-  .progress-info { display: flex; justify-content: space-between; font-size: 11px; color: #6ba7dd; letter-spacing: 1px; margin-bottom: 18px; }
-  .progress-info .score { color: #4cdc8c; font-weight: 700; }
+  .sc-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,180,220,.1);
+  }
+  .sc-stat { text-align: center; }
+  .sc-stat-val {
+    font-size: 1rem; font-weight: 800;
+    color: #00d4ff; letter-spacing: 0;
+  }
+  .sc-stat-lbl {
+    font-size: .6rem; color: #5a7a9e; margin-top: 2px;
+  }
+  .sc-locked-hint {
+    font-size: .68rem; color: #6a8cba;
+    padding-top: 10px; border-top: 1px solid rgba(0,180,220,.1);
+    text-align: center;
+  }
+
+  /* ── SECTION DETAIL ── */
+  .back-btn {
+    background: none; border: 1px solid rgba(0,180,220,.3);
+    color: #00d4ff; border-radius: 8px;
+    padding: 6px 12px; font-size: .75rem;
+    cursor: pointer; transition: background .15s;
+    margin-bottom: 16px;
+  }
+  .back-btn:hover { background: rgba(0,180,220,.1); }
+
+  .subj-head {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(0,180,220,.2);
+    margin-bottom: 20px;
+  }
+  .subj-head h2 {
+    font-size: 1.05rem; font-weight: 700;
+    color: #00d4ff; letter-spacing: .05em;
+  }
+
+  .subj-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .subj-stat-card {
+    background: linear-gradient(170deg, #0e1f38, #091428);
+    border: 1px solid rgba(0,180,220,.15);
+    border-radius: 10px;
+    padding: 12px 6px;
+    text-align: center;
+  }
+  .subj-stat-val {
+    font-size: 1.3rem; font-weight: 900;
+    color: #00d4ff;
+  }
+  .subj-stat-lbl {
+    font-size: .62rem; color: #6a8cba; margin-top: 4px;
+  }
+
+  .mode-section-label {
+    font-size: .72rem; color: #6a8cba;
+    letter-spacing: .1em; margin: 0 0 10px 2px;
+    font-weight: 600;
+  }
+
+  .mode-card {
+    background: linear-gradient(170deg, #0e1f38, #091428);
+    border: 1px solid rgba(0,180,220,.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color .2s, transform .15s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .mode-card:hover { border-color: rgba(0,180,220,.5); transform: translateY(-1px); }
+  .mode-card.disabled {
+    opacity: .4; cursor: not-allowed;
+  }
+  .mode-card.disabled:hover { border-color: rgba(0,180,220,.2); transform: none; }
+
+  .mode-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(0,180,220,.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 900;
+    color: #00d4ff; flex-shrink: 0;
+  }
+  .mode-icon.review { background: rgba(168,124,255,.1); color: #a87cff; }
+  .mode-icon.mistake { background: rgba(255,170,60,.1); color: #ffaa3c; }
+
+  .mode-body { flex: 1; min-width: 0; }
+  .mode-title {
+    font-size: .88rem; font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .mode-desc {
+    font-size: .7rem; color: #8aa4c8;
+  }
+  .mode-badge {
+    font-size: .6rem; font-weight: 700;
+    color: #ffaa3c;
+    background: rgba(255,170,60,.1);
+    padding: 2px 8px; border-radius: 20px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #0e1f38;
+    border: 1px solid rgba(0,180,220,.3);
+    border-radius: 14px;
+    padding: 26px 22px;
+    width: 90%; max-width: 340px;
+    text-align: center;
+  }
+  .modal h3 { font-size: .9rem; margin-bottom: 14px; color: #00d4ff; }
+  .modal input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(0,180,220,.3);
+    border-radius: 8px;
+    background: #091428; color: #dde6f0;
+    font-size: .9rem; text-align: center;
+    letter-spacing: .15em; outline: none;
+  }
+  .modal input:focus { border-color: #00d4ff; }
+  .modal .error {
+    color: #ff6b6b; font-size: .72rem;
+    margin-top: 8px; min-height: 1.2em;
+  }
+  .modal .btn-row { margin-top: 14px; display: flex; gap: 10px; }
+  .modal button {
+    flex: 1; padding: 10px;
+    border-radius: 8px; border: none;
+    font-size: .82rem; font-weight: 600;
+    cursor: pointer; transition: opacity .15s;
+  }
+  .modal button:hover { opacity: .85; }
+  .btn-unlock { background: #00d4ff; color: #070f20; }
+  .btn-cancel { background: rgba(255,255,255,.08); color: #8aa4c8; }
+
+  /* ── QUIZ PAGE ── */
+  .quiz-head {
+    margin-bottom: 16px;
+  }
+  .quiz-breadcrumb {
+    font-size: .7rem; color: #6a8cba;
+    margin-bottom: 8px;
+  }
+  .quiz-mode-label {
+    font-size: .92rem; font-weight: 700;
+    color: #00d4ff;
+  }
+
+  .progress-wrap {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 20px;
+  }
+  .progress-bar {
+    flex: 1; height: 4px;
+    background: rgba(255,255,255,.06);
+    border-radius: 2px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00d4ff, #00dca0);
+    transition: width .3s;
+  }
+  .progress-txt {
+    font-size: .68rem; color: #6a8cba;
+    min-width: 40px; text-align: right;
+  }
 
   .q-card {
-    background: rgba(14,38,72,0.6); border: 1px solid #2a5a8c; border-left: 4px solid #4cc9ff;
-    padding: 22px 18px; border-radius: 14px; margin-bottom: 18px;
+    background: linear-gradient(170deg, #0e1f38, #091428);
+    border: 1px solid rgba(0,180,220,.15);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
   }
-  .q-tag { color: #4cc9ff; font-size: 11px; letter-spacing: 2px; margin-bottom: 8px; font-weight: 700; }
-  .q-text { color: #fff; font-size: 17px; line-height: 1.65; font-weight: 700; letter-spacing: 0.3px; }
-
-  .answer-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .ans-btn {
-    padding: 22px 12px; border-radius: 14px; font-size: 28px; font-weight: 900;
-    border: 2px solid; transition: all 0.15s;
+  .q-meta {
+    display: flex; justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
   }
-  .ans-btn.maru { color: #4cdc8c; border-color: #4cdc8c; background: rgba(76,220,140,0.08); }
-  .ans-btn.batsu { color: #ff6a3d; border-color: #ff6a3d; background: rgba(255,106,61,0.08); }
-  .ans-btn:active { transform: scale(0.95); }
-  .ans-btn.maru:active { background: rgba(76,220,140,0.25); }
-  .ans-btn.batsu:active { background: rgba(255,106,61,0.25); }
-  .ans-btn .lbl { display: block; font-size: 11px; font-weight: 700; letter-spacing: 2px; margin-top: 4px; opacity: 0.85; }
-
-  /* feedback */
-  .feedback { margin-top: 16px; padding: 18px 16px; border-radius: 12px; animation: slidein 0.3s ease-out; }
-  @keyframes slidein { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .feedback.correct { background: rgba(76,220,140,0.15); border: 1px solid #4cdc8c; }
-  .feedback.wrong { background: rgba(255,106,61,0.15); border: 1px solid #ff6a3d; }
-  .feedback .verdict { font-size: 22px; font-weight: 900; letter-spacing: 2px; margin-bottom: 8px; }
-  .feedback.correct .verdict { color: #4cdc8c; }
-  .feedback.wrong .verdict { color: #ff6a3d; }
-  .feedback .expl { color: #e8f1ff; font-size: 14px; line-height: 1.7; }
-  .feedback .expl b { color: #ffd64d; }
-
-  .next-btn { margin-top: 16px; padding: 14px; width: 100%; background: linear-gradient(135deg, #4cc9ff, #2188c9); color: #07172e; font-weight: 900; border-radius: 12px; font-size: 15px; letter-spacing: 2px; }
-  .next-btn:active { transform: scale(0.98); }
-
-  /* result */
-  .result { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px 8px; }
-  .result .ring {
-    width: 180px; height: 180px; border-radius: 50%;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    background: conic-gradient(from 0deg, #4cdc8c var(--pct,50%), rgba(76,201,255,0.15) 0);
-    position: relative; margin-bottom: 20px;
+  .q-num {
+    font-size: .68rem; font-weight: 700;
+    color: #00d4ff; letter-spacing: .05em;
   }
-  .result .ring::before {
-    content: ''; position: absolute; inset: 14px; background: #0a1f3a; border-radius: 50%;
+  .q-status {
+    font-size: .6rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px;
   }
-  .result .ring .score-num { position: relative; font-size: 52px; font-weight: 900; color: #fff; line-height: 1; }
-  .result .ring .score-lbl { position: relative; color: #9fc6ef; font-size: 12px; letter-spacing: 2px; margin-top: 6px; }
-  .result h2 { color: #fff; font-size: 24px; font-weight: 900; letter-spacing: 1px; margin-bottom: 10px; }
-  .result .rank { font-size: 18px; font-weight: 900; letter-spacing: 3px; padding: 6px 16px; border-radius: 8px; margin-bottom: 14px; }
-  .result .rank.s { color: #ffd64d; background: rgba(255,214,77,0.15); border: 1.5px solid #ffd64d; }
-  .result .rank.a { color: #4cdc8c; background: rgba(76,220,140,0.15); border: 1.5px solid #4cdc8c; }
-  .result .rank.b { color: #4cc9ff; background: rgba(76,201,255,0.15); border: 1.5px solid #4cc9ff; }
-  .result .rank.c { color: #ff6a3d; background: rgba(255,106,61,0.15); border: 1.5px solid #ff6a3d; }
-  .result .comment { color: #cfe4ff; font-size: 14px; line-height: 1.7; margin-bottom: 24px; max-width: 380px; }
-  .result .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 380px; }
-  .result .action-btn { padding: 14px; border-radius: 12px; font-weight: 700; letter-spacing: 1.5px; font-size: 14px; }
-  .result .action-btn.retry { background: linear-gradient(135deg, #4cc9ff, #2188c9); color: #07172e; }
-  .result .action-btn.home { background: rgba(14,38,72,0.8); color: #cfe4ff; border: 1px solid #2a5a8c; }
-
-  /* review list */
-  .review { flex: 1; padding-bottom: 40px; }
-  .review-item { background: rgba(14,38,72,0.45); border: 1px solid #2a5a8c; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
-  .review-item.wrong { border-left: 3px solid #ff6a3d; }
-  .review-item.correct { border-left: 3px solid #4cdc8c; }
-  .review-item .rq { font-size: 13px; color: #e8f1ff; line-height: 1.55; margin-bottom: 6px; }
-  .review-item .rq .n { color: #4cc9ff; font-weight: 700; margin-right: 6px; }
-  .review-item .ra { font-size: 12px; color: #9fc6ef; line-height: 1.6; }
-  .review-item .ra b { color: #ffd64d; }
-  .review-item .tag { display: inline-block; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; margin-right: 6px; }
-  .review-item.correct .tag { background: rgba(76,220,140,0.2); color: #4cdc8c; }
-  .review-item.wrong .tag { background: rgba(255,106,61,0.2); color: #ff6a3d; }
-
-  .footer { text-align: center; color: #6ba7dd; font-size: 10px; letter-spacing: 2px; padding: 20px 0 10px; border-top: 1px dashed rgba(76,201,255,0.2); margin-top: 24px; }
-
-  .hide { display: none !important; }
-
-  @media (max-width: 360px) {
-    .h-title { font-size: 18px; }
-    .q-text { font-size: 15px; }
-    .ans-btn { font-size: 24px; padding: 18px 10px; }
+  .q-status.miss {
+    background: rgba(255,170,60,.1); color: #ffaa3c;
   }
+  .q-status.almost {
+    background: rgba(0,220,160,.1); color: #00dca0;
+  }
+
+  .q-text { font-size: .85rem; line-height: 1.75; margin-bottom: 14px; }
+
+  .q-buttons { display: flex; gap: 12px; }
+  .q-btn {
+    flex: 1; padding: 18px 12px;
+    border-radius: 10px;
+    border: 2px solid rgba(0,180,220,.3);
+    background: rgba(0,180,220,.05);
+    color: #dde6f0;
+    font-size: 2.4rem; font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .q-btn:hover { border-color: rgba(0,180,220,.5); background: rgba(0,180,220,.1); }
+  .q-btn.selected-correct {
+    border-color: #00dca0; background: rgba(0,220,160,.15); color: #00dca0;
+  }
+  .q-btn.selected-wrong {
+    border-color: #ff6b6b; background: rgba(255,107,107,.12); color: #ff6b6b;
+  }
+  .q-btn.show-correct {
+    border-color: rgba(0,220,160,.4); background: rgba(0,220,160,.06);
+  }
+  .q-btn:disabled { cursor: default; }
+
+  .q-answer {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: .76rem; line-height: 1.75;
+  }
+  .q-answer.visible { display: block; }
+  .q-answer.correct { background: rgba(0,220,160,.08); border-left: 3px solid #00dca0; }
+  .q-answer.wrong { background: rgba(255,107,107,.08); border-left: 3px solid #ff6b6b; }
+  .q-answer.review { background: rgba(168,124,255,.06); border-left: 3px solid #a87cff; }
+  .q-answer .ans-label {
+    font-weight: 700; margin-bottom: 4px;
+    font-size: .72rem;
+  }
+  .q-answer.correct .ans-label { color: #00dca0; }
+  .q-answer.wrong .ans-label { color: #ff6b6b; }
+  .q-answer.review .ans-label { color: #a87cff; }
+
+  .q-grad-notice {
+    margin-top: 8px;
+    font-size: .68rem;
+    color: #00dca0;
+    padding: 6px 10px;
+    background: rgba(0,220,160,.08);
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  /* ── RESULT SCREEN ── */
+  .result {
+    background: linear-gradient(170deg, #0e1f38, #091428);
+    border: 1px solid rgba(0,180,220,.3);
+    border-radius: 14px;
+    padding: 24px 20px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .result-title {
+    font-size: .78rem; color: #6a8cba;
+    margin-bottom: 8px; letter-spacing: .08em;
+  }
+  .result-score {
+    font-size: 2.4rem; font-weight: 900;
+    color: #00d4ff; line-height: 1;
+  }
+  .result-pct {
+    font-size: .9rem; color: #8aa4c8; margin-top: 4px;
+  }
+  .result-msg {
+    margin-top: 14px; padding: 10px 14px;
+    background: rgba(0,220,160,.08);
+    border-radius: 8px;
+    font-size: .78rem; color: #00dca0;
+  }
+  .result-msg.warn {
+    background: rgba(255,170,60,.08); color: #ffaa3c;
+  }
+  .result-actions {
+    display: flex; gap: 10px; margin-top: 16px;
+  }
+  .result-btn {
+    flex: 1; padding: 11px;
+    border-radius: 8px; border: none;
+    font-size: .82rem; font-weight: 700;
+    cursor: pointer; transition: opacity .15s;
+  }
+  .result-btn:hover { opacity: .85; }
+  .result-btn.primary { background: #00d4ff; color: #070f20; }
+  .result-btn.secondary { background: rgba(255,255,255,.08); color: #dde6f0; }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    text-align: center; padding: 24px 0 0;
+    font-size: .62rem; color: #3a5a7e;
+    border-top: 1px solid rgba(0,180,220,.1);
+    margin-top: 32px;
+  }
+
+  /* ── HELPER TEXT ── */
+  .mode-help {
+    font-size: .68rem; color: #6a8cba;
+    background: rgba(0,180,220,.04);
+    border-left: 2px solid rgba(0,180,220,.2);
+    padding: 10px 12px;
+    border-radius: 4px;
+    margin-top: 16px;
+    line-height: 1.75;
+  }
+  .mode-help b { color: #00d4ff; }
 </style>
 </head>
 <body>
-<div class="app">
 
-  <!-- LOGIN -->
-  <div id="login" class="login">
-    <div>
-      <div class="brand">MASTER BLUEPRINT / 2026</div>
-      <h2>耳で覚える宅建<br>一問一答クイズ</h2>
+<div class="container">
+  <!-- ========== TOP PAGE ========== -->
+  <div id="topPage" class="page active">
+    <div class="site-header">
+      <h1>MASTER BLUEPRINT</h1>
+      <p>宅建 一問一答 Web Quiz</p>
     </div>
-    <div class="lead">
-      PDF教材に記載のパスワードを入力<br>
-      30問 ○×形式 / 所要時間 約10分
-    </div>
-    <input id="pw" type="password" placeholder="パスワード" inputmode="text" autocomplete="off">
-    <div id="err" class="err"></div>
-    <button class="go" onclick="tryLogin()">入室</button>
-    <div class="hint">
-      このクイズは購入者限定です。<br>
-      パスワードはPDF P.16 または P.17 に記載されています。
+    <div id="sectionList"></div>
+    <div class="site-footer">
+      &copy; 2026 耳で覚える宅建 &mdash; MASTER BLUEPRINT シリーズ
     </div>
   </div>
 
-  <!-- MENU -->
-  <div id="menu" class="menu hide">
-    <div class="header">
-      <div class="brand">MASTER BLUEPRINT / QUIZ</div>
-      <div class="h-title">○×で<span class="em">3秒判定</span></div>
-      <div class="h-sub">宅建業法 一問一答 全30問</div>
+  <!-- ========== SECTION DETAIL ========== -->
+  <div id="sectionPage" class="page">
+    <button class="back-btn" onclick="showTop()">&larr; TOPに戻る</button>
+    <div class="subj-head">
+      <h2 id="subjTitle"></h2>
     </div>
+    <div class="subj-stats" id="subjStats"></div>
 
-    <div class="stat-grid">
-      <div class="stat-card"><div class="lab">挑戦数</div><div class="val" id="stat-tries">0</div></div>
-      <div class="stat-card"><div class="lab">正答率</div><div class="val ok" id="stat-rate">—</div></div>
-      <div class="stat-card"><div class="lab">ベスト</div><div class="val" id="stat-best">—</div></div>
+    <div class="mode-section-label">モードを選択</div>
+    <div id="modeList"></div>
+
+    <div class="mode-help">
+      <b>「間違えた問題だけ」について：</b><br>
+      間違えた問題は履歴に残ります。<b>2回連続で正解すると卒業</b>し、履歴から消えます。途中で間違えるとカウントはリセット。しっかり定着するまで繰り返しましょう。
     </div>
-
-    <button class="menu-btn primary" onclick="startQuiz('all')">
-      <div><strong>全30問チャレンジ</strong><span class="sub">初見は必ずこれから。全問通しで挑む。</span></div>
-      <span class="arrow">›</span>
-    </button>
-
-    <button class="menu-btn" onclick="startQuiz('random10')">
-      <div><strong>ランダム10問</strong><span class="sub">スキマ時間の小テスト。</span></div>
-      <span class="arrow">›</span>
-    </button>
-
-    <button class="menu-btn" onclick="startQuiz('mistakes')">
-      <div><strong>間違えた問題だけ</strong><span class="sub" id="mistake-count">—</span></div>
-      <span class="arrow">›</span>
-    </button>
-
-    <button class="menu-btn" onclick="showReview()">
-      <div><strong>全問レビュー</strong><span class="sub">解答と解説を通して読む。</span></div>
-      <span class="arrow">›</span>
-    </button>
-
-    <div class="footer">© 2026 MIMI-TAKKEN / BLUEPRINT</div>
   </div>
 
-  <!-- QUIZ -->
-  <div id="quiz" class="quiz hide">
-    <div class="progress-bar"><div class="fill" id="fill"></div></div>
-    <div class="progress-info">
-      <span id="prog-text">Q 1 / 30</span>
-      <span class="score">正解 <span id="prog-score">0</span></span>
+  <!-- ========== QUIZ PAGE ========== -->
+  <div id="quizPage" class="page">
+    <button class="back-btn" onclick="confirmExitQuiz()">&larr; 戻る</button>
+    <div class="quiz-head">
+      <div class="quiz-breadcrumb" id="quizBreadcrumb"></div>
+      <div class="quiz-mode-label" id="quizModeLabel"></div>
     </div>
-    <div class="q-card">
-      <div class="q-tag" id="q-tag">QUESTION 01</div>
-      <div class="q-text" id="q-text"></div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-txt" id="progressTxt">0/0</div>
     </div>
-    <div class="answer-row" id="answer-row">
-      <button class="ans-btn maru" onclick="answer(true)">○<span class="lbl">正しい</span></button>
-      <button class="ans-btn batsu" onclick="answer(false)">×<span class="lbl">誤り</span></button>
-    </div>
-    <div id="feedback" class="hide"></div>
+    <div id="quizBody"></div>
+    <div id="resultArea"></div>
   </div>
+</div>
 
-  <!-- RESULT -->
-  <div id="result" class="result hide">
-    <div class="ring" id="ring">
-      <div class="score-num" id="final-score">0</div>
-      <div class="score-lbl">/ <span id="final-total">30</span></div>
+<!-- ========== PASSWORD MODAL ========== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">パスワードを入力</h3>
+    <input type="text" id="modalInput" placeholder="パスワード" autocomplete="off">
+    <div class="error" id="modalError"></div>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-unlock" onclick="tryUnlock()">解除</button>
     </div>
-    <h2 id="result-title">お疲れさま！</h2>
-    <div class="rank" id="result-rank">RANK B</div>
-    <div class="comment" id="result-comment"></div>
-    <div class="actions">
-      <button class="action-btn retry" onclick="startQuiz(lastMode)">もう一度</button>
-      <button class="action-btn home" onclick="showMenu()">メニューへ</button>
-    </div>
-    <div class="footer">MASTER BLUEPRINT / QUIZ</div>
   </div>
-
-  <!-- REVIEW -->
-  <div id="review" class="review hide">
-    <div class="header">
-      <div class="brand">REVIEW / ALL QUESTIONS</div>
-      <div class="h-title">全30問<span class="em"> 解答&解説</span></div>
-      <div class="h-sub">各問の○×と解説を通して読む</div>
-    </div>
-    <div id="review-list"></div>
-    <button class="menu-btn" onclick="showMenu()" style="margin-top:16px;"><div><strong>メニューへ戻る</strong></div><span class="arrow">‹</span></button>
-    <div class="footer">MASTER BLUEPRINT / QUIZ</div>
-  </div>
-
 </div>
 
 <script>
-/* ========= PASSWORD =========
-  クイズのパスワード。PDFに記載してある文字列と同じにしてね。
-  変更したい場合はこの PASSWORD の値だけ書き換えればOK。
-*/
-const PASSWORD = "takken2026";
+/* ================================================================
+   DATA
+   ================================================================ */
+const SECTIONS = {
+  gyouhou: {
+    title: "宅建業法",
+    desc: "免許・宅建士・媒介契約・35/37条・8種制限・監督処分・広告・履行法 ほか",
+    password: "juusetsu",
+    questions: [
+      { q: "宅建業者Aは、死亡したCの相続人Dから、Cの死亡を知った日から35日目に廃業の届出をした。適法である。", a: false, exp: "死亡の届出は知った日から30日以内です（業法11条）。35日目は期間超過で違法となります。" },
+      { q: "法人の合併消滅の届出は、消滅会社の代表役員「であった者」が、合併「により消滅した日」から30日以内に行う。", a: true, exp: "正しい。起算点は「その日」から。死亡以外の届出事由は「その日」起算です。届出義務者が「であった者」である点にも注意。" },
+      { q: "免許の有効期間満了の90日前から30日前までに更新申請を行わなければ、当該免許は失効する。", a: false, exp: "更新申請期間内に申請しなかった場合でも、処分があるまで従前の免許は有効です。申請期間と失効は直結しません。" },
+      { q: "2以上の都道府県に事務所を設置して宅建業を営もうとする者は、国土交通大臣の免許を受けなければならない。", a: true, exp: "正しい。事務所の所在地による区分で、本店所在地ではなく事務所の設置場所が基準です（業法3条1項）。" },
+      { q: "事務所には、従業者5人に1人以上の割合で成年の専任の宅建士を置かなければならない。", a: true, exp: "正しい（業法31条の3第1項）。案内所等の場合は最低1人の設置で足ります。" },
+      { q: "宅建士は、37条書面を交付する際に当該書面の記載事項を説明しなければならない。", a: false, exp: "37条書面には説明義務はありません。宅建士の記名のみが必要です。説明義務があるのは35条書面（重要事項説明）です。" },
+      { q: "35条書面の記載事項として、飲用水・電気・ガスの供給施設の整備状況は挙げられている。", a: true, exp: "正しい。物件情報系の代表例で、35条のみの記載事項です。生活インフラの整備状況は買主・借主の判断に直結します。" },
+      { q: "代金の支払時期・支払方法は、定めがあるときに37条書面に記載する任意的記載事項である。", a: false, exp: "代金の額・支払時期・支払方法は必要的記載事項です（業法37条1項）。定めの有無にかかわらず必ず記載しなければなりません。" },
+      { q: "宅建業者が自ら売主で買主が一般人の場合、損害賠償額の予定・違約金の合計は、代金の額の3/10を超えることができない。", a: false, exp: "2/10（20%）以内です（業法38条）。超えた部分は無効となります。3/10ではなく2/10が正しい数字です。" },
+      { q: "クーリングオフは、申込みまたは契約をした場所が事務所等以外であれば、買主の属性を問わず無条件で発動する。", a: false, exp: "買主の自宅・勤務先で買主が自ら申し出て契約した場合は「事務所等」扱いとなり、クーリングオフは適用されません。" },
+      { q: "クーリングオフの書面告知を受けた日を含めて9日目に解除の書面を発信しても有効である。", a: false, exp: "告知日を含めて8日以内が期限です。発信主義ですが、9日目は期間徒過で無効となります。" },
+      { q: "クーリングオフの期間を書面告知から5日間とする特約は有効である。", a: false, exp: "買主に不利な特約は無効です（業法37条の2第4項）。8日間より短縮する特約は認められません。" },
+      { q: "手付金等の保全措置において、完成物件については指定保管機関による保管が認められる。", a: true, exp: "正しい。指定保管機関による保管は完成物件のみに認められます。未完成物件は銀行保証・保証保険の2種のみです。" },
+      { q: "宅建業者が自ら売主の場合、瑕疵（契約不適合）担保の通知期間を「引渡しから2年以上」とする特約は有効である。", a: true, exp: "正しい。民法より不利な特約は原則無効ですが、通知期間を引渡しから2年以上とする特約は例外的に有効です（業法40条）。" },
+      { q: "営業保証金は、主たる事務所につき1,000万円、その他の事務所1か所につき500万円を供託する。", a: true, exp: "正しい（施行令2条の4）。金額は政令で定められた数字で、宅建試験の頻出ポイントです。" },
+      { q: "保証協会の社員は、社員となった日から1か月以内に、弁済業務保証金分担金を協会に納付すればよい。", a: false, exp: "2週間以内です。期限超過で社員資格を喪失します（業法64条の9第1項）。1か月ではなく2週間が正しい期限です。" },
+      { q: "保証協会の分担金は、主たる事務所60万円、その他の事務所1か所30万円で、協会が供託所へ供託する。", a: true, exp: "正しい（業法64条の9第2項・施行令7条）。営業保証金と比べると大幅に少額で、中小業者の負担軽減が目的です。" },
+      { q: "宅建業者間の取引により生じた債権でも、営業保証金から還付を受けることができる。", a: false, exp: "宅建業者間取引は還付対象外です（業法27条第1項かっこ書）。保護対象は一般消費者に限られます。" },
+      { q: "営業保証金の還付により不足が生じた場合、通知を受けた日から2週間以内に不足額を供託しなければならない。", a: true, exp: "正しい（業法28条第1項）。供託後2週間以内に免許権者に届出も必要です。" },
+      { q: "報酬の上限は、売買価額400万円超の部分につき、価額×3%+6万円（税抜）である。", a: true, exp: "正しい。告示の速算式で、依頼者の一方からの上限額です。400万円以下の部分は別の料率が適用されます。" },
+      { q: "売買の代理を行う場合、依頼者から受ける報酬は、媒介の場合の3倍が上限である。", a: false, exp: "代理は2倍が上限です。相手方から受ける分と合わせても2倍以内に収めなければなりません。3倍ではなく2倍が正しい数字です。" },
+      { q: "居住用建物の貸借の媒介では、依頼者の承諾がなくても、依頼者の一方から借賃1か月分を報酬として受領できる。", a: false, exp: "原則は0.5か月分ずつです。一方から1か月分を受領するには、依頼者の承諾が必要です。" },
+      { q: "宅建業者は、事務所ごとに標識・報酬額・帳簿・従業者名簿を備え付けなければならない。", a: true, exp: "正しい（業法48条・49条・50条）。事務所の「4点セット」として暗記必須です。" },
+      { q: "宅建業者は、取引の関係者から事務所に備え置く帳簿の閲覧を求められたときは、これを拒んではならない。", a: false, exp: "帳簿には閲覧義務はありません。閲覧義務があるのは従業者名簿です（業法48条第4項）。帳簿と名簿の扱いの違いに注意。" },
+      { q: "8種制限は、宅建業者が自ら売主となる売買契約についてのみ適用される。", a: true, exp: "正しい。かつ買主が宅建業者でないことも条件です。媒介・代理には適用されません。" },
+      { q: "他人物売買は原則禁止だが、宅建業者が当該物件の所有者と取得する契約を締結している場合は、契約できる。", a: true, exp: "正しい（業法33条の2）。取得の確実性が要件です。なお、停止条件付契約では取得の確実性が認められず不可です。" },
+      { q: "既存建物の売買では、建物の構造耐力上主要な部分等について当事者の双方が確認した事項は、35条書面の記載事項である。", a: false, exp: "これは37条書面の必要的記載事項です（R2改正）。35条ではなく37条に記載する点がひっかけポイントです。" },
+      { q: "水害ハザードマップにおける宅地建物の所在地は、35条書面の記載事項である。", a: true, exp: "正しい（R2.8施行）。売買・貸借とも対象です。近年の法改正で追加された重要事項です。" },
+      { q: "監督処分のうち「指示処分」「業務停止処分」は免許権者が行うが、「免許取消処分」は国土交通大臣のみが行える。", a: false, exp: "免許取消処分も免許権者が行います（業法66条）。国土交通大臣のみという限定は誤りです。" },
+      { q: "宅建士が事務禁止処分を受けたときは、速やかに宅建士証を交付を受けた都道府県知事に提出しなければならない。", a: true, exp: "正しい（業法22条の2第7項）。「返納」ではなく「提出」である点がポイント。処分期間が終了すると返還されます。" },
+      { q: "専属専任媒介契約の有効期間は、3ヶ月を超えることができない。", a: true, exp: "正しい（業法34条の2第3項）。3ヶ月が上限で、超える特約は3ヶ月に短縮されます。専任媒介も同様です。" },
+      { q: "専任媒介契約を締結した宅建業者は、契約日から7日以内（休業日を除く）に指定流通機構に登録しなければならない。", a: true, exp: "正しい（施行規則15条の10）。専任は7日、専属専任は5日です。いずれも休業日を除く点に注意。" },
+      { q: "専属専任媒介契約における業務処理状況の報告義務は、2週間に1回以上である。", a: false, exp: "専属専任は1週間に1回以上です（業法34条の2第9項）。2週間に1回以上は専任媒介の頻度。両者の混同は頻出ひっかけ。" },
+      { q: "一般媒介契約には、有効期間の法定上限はない。", a: true, exp: "正しい。業法34条の2の3ヶ月上限は専任・専属専任にのみ適用。一般媒介は当事者の合意に委ねられます。" },
+      { q: "媒介契約書（34条の2書面）には、宅建業者が記名する必要がある。", a: true, exp: "正しい（業法34条の2第1項）。宅建業者の記名が必要です。宅建士の記名ではない点がひっかけ──35条・37条書面は宅建士の記名です。" },
+      { q: "著しく事実に相違する広告や、著しく優良と誤認させる表示は、監督処分の対象となるだけで罰則は科されない。", a: false, exp: "誇大広告の禁止違反は6ヶ月以下の懲役または100万円以下の罰金が科されます（業法32条・81条）。監督処分と罰則の両方があります。" },
+      { q: "宅建業者は、広告をするときのみ取引態様を明示すればよく、注文を受けたときの明示は不要である。", a: false, exp: "広告時と注文受時の両方で取引態様（売主/代理/媒介）の明示が必要です（業法34条）。片方だけでは足りません。" },
+      { q: "破産手続開始の決定を受けて復権を得ない者は、宅建業の免許を受けることができない。", a: true, exp: "正しい（業法5条1項1号）。復権を得れば欠格事由は即解除されます。『復権から5年』は誤り──ひっかけに注意。" },
+      { q: "禁錮以上の刑に処せられ執行猶予期間が満了した者は、その日から5年を経過しないと免許を受けることができない。", a: false, exp: "執行猶予期間が満了した翌日から即座に免許を受けられます（業法5条1項5号反対解釈）。「満了から5年」は誤りです。" },
+      { q: "宅建士証の有効期間は5年であり、更新にあたっては交付申請前6ヶ月以内に行われる法定講習を受講する必要がある。", a: true, exp: "正しい（業法22条の2第3項・22条の3第1項）。5年更新・6ヶ月以内の講習受講が要件です。" },
+      { q: "宅建士が現在の登録先と異なる都道府県に事務所を置く宅建業者の従業者となったときは、登録の移転をしなければならない。", a: false, exp: "登録の移転は申請することができる（任意）です（業法19条の2）。義務ではありません。" },
+      { q: "新築住宅を自ら売主として販売した宅建業者は、買主への10年間の瑕疵担保責任を担保するため、住宅販売瑕疵担保保証金の供託または住宅販売瑕疵担保責任保険の締結が義務付けられる。", a: true, exp: "正しい（住宅瑕疵担保履行法11条）。供託または保険のいずれかを選択。買主が宅建業者の場合は適用外です。" },
+      { q: "住宅瑕疵担保履行法の保証金の供託状況は、基準日から3週間以内に免許権者に届け出なければならない。", a: true, exp: "正しい（住宅瑕疵担保履行法12条）。基準日は3月31日と9月30日の年2回。届出を怠ると新たな新築住宅の販売が禁止されます。" },
+      { q: "宅建業者は、正当な理由なく、業務上知り得た秘密を他に漏らしてはならず、業を営まなくなった後も同様である。", a: true, exp: "正しい（業法45条）。守秘義務は廃業後も継続します。違反すると50万円以下の罰金が科されます（業法83条1項2号）。" },
+      { q: "宅建業者の相手方に対し、利益を生ずる断定的判断を提供することは禁止されている。", a: true, exp: "正しい（業法47条の2第1項）。「必ず値上がりする」等の断定的判断の提供は禁止されます。契約誘引の不当勧誘規制です。" },
+      { q: "一団の分譲の案内所を設置する場合、業務開始の10日前までに免許権者と所在地を管轄する知事に届け出なければならない。", a: true, exp: "正しい（業法50条2項・施行規則19条3項）。業務開始10日前までに両方の権者へ届出が必要です。" },
+      { q: "専任の宅建士が欠けた場合、2週間以内に新たに設置しなければ、業法違反となる。", a: true, exp: "正しい（業法31条の3第3項）。2週間以内に補充が必要。補充しないと業務停止や免許取消の対象になります。" },
+      { q: "買主が宅建業者の場合、自ら売主となる宅建業者は35条書面を交付する必要はない。", a: false, exp: "買主が宅建業者の場合、説明は省略可ですが書面の交付は必要です（業法35条6項）。交付義務自体は残ります。" },
+      { q: "保証協会の社員が社員資格を喪失したときは、1週間以内に営業保証金を供託しなければ、宅建業を営むことができない。", a: true, exp: "正しい（業法64条の15）。1週間以内の供託が必要。その後の届出を怠ると業務継続不可となります。" },
+      { q: "宅建業者が業法に違反して業務停止処分を受けたにもかかわらず、その期間中に業務を行った場合、免許権者は当該業者の免許を取り消さなければならない。", a: true, exp: "正しい（業法66条1項9号）。業務停止処分中の業務遂行は必要的免許取消事由です。裁量の余地なく免許取消となります。" }
+    ]
+  },
+  kenri: {
+    title: "権利関係",
+    desc: "意思表示・代理・物権変動・借地借家・相続・2026年改正 ほか",
+    password: "souhoudairi",
+    questions: [
+      { q: "心裡留保による意思表示は、相手方が悪意または有過失のときに限り無効となる。", a: true, exp: "民法93条1項ただし書のとおり。原則は有効で、例外的に無効。相手方が善意無過失なら有効となります。虚偽表示（94条）との違いを押さえましょう。" },
+      { q: "虚偽表示の無効は、善意の第三者に対抗できない。", a: true, exp: "民法94条2項。過失の有無は問いません。善意なら無過失でも過失ありでも両方対抗不可。心裡留保と異なり、悪意なら対抗可です。" },
+      { q: "強迫による意思表示の取消しは、善意無過失の第三者には対抗できない。", a: false, exp: "強迫には第三者保護規定がありません。善意無過失でも対抗できます。詐欺（96条3項）と混同させる出題が頻出です。" },
+      { q: "錯誤による意思表示は、表意者に重大な過失があれば、いかなる場合も取消しができない。", a: false, exp: "民法95条3項で3つの例外が認められます。相手方が悪意、重過失、または共通錯誤なら取消可。表意者の重大な過失でも完全に不可ではありません。" },
+      { q: "詐欺による意思表示の取消しは、善意でかつ過失がない第三者に対抗できない。", a: true, exp: "民法96条3項。善意無過失の第三者は保護対象です。ただし第三者詐欺の場合は96条2項で相手方の認識が問題になります。" },
+      { q: "第三者が詐欺を行った場合、相手方の善意・悪意にかかわらず取消しができる。", a: false, exp: "相手方がその事実を知り、又は知ることができたときに限り取消可です（民法96条2項）。相手方が善意無過失なら取消不可。" },
+      { q: "無権代理において、相手方の催告権は善意・悪意を問わず行使できる。", a: true, exp: "民法114条。催告権は善意・悪意を問いません。本人が確答を返さなければ追認拒絶とみなされる点が重要です。" },
+      { q: "制限行為能力者が無権代理行為をした場合、相手方は無権代理人の責任を追及できない。", a: true, exp: "民法117条2項3号。制限行為能力者は保護されます。責任追及の要件を満たせないため不可。本人への追認催告に切り替える必要があります。" },
+      { q: "代理人が相手方に対して詐欺を行った場合でも、本人が善意であれば相手方は取消しできない。", a: false, exp: "意思表示の瑕疵は代理人について判断します（民法101条1項）。本人の善意・悪意は関係ありません。" },
+      { q: "双方代理は例外なく無権代理とみなされる。", a: false, exp: "民法108条1項で2つの例外があります。債務の履行と本人の事前許諾があれば有効。「事前」がカギで、事後許諾は認められません。" },
+      { q: "取得時効で10年の短期取得時効が認められるには、占有期間中ずっと善意無過失でなければならない。", a: false, exp: "占有開始時に善意無過失であれば足り、途中で悪意になっても10年で取得できます（民法162条2項）。" },
+      { q: "催告による時効の完成猶予中に再度催告をしても、さらに6ヶ月の猶予は得られない。", a: true, exp: "民法150条2項。催告の繰り返しは不可。初回6ヶ月のみ。その間に裁判上の請求など別の更新事由が必要です。" },
+      { q: "時効の更新事由である「権利の承認」をするには、行為能力が必要である。", a: false, exp: "承認には行為能力・処分権限は不要です（民法152条2項）。管理能力さえあれば足ります。" },
+      { q: "不動産の物権変動は、登記をしなければ効力が発生しない。", a: false, exp: "当事者の意思表示のみで効力発生します（民法176条）。登記は対抗要件にすぎず、効力発生要件ではありません。" },
+      { q: "詐欺により登記の申請を妨げた者に対しては、登記がなくても対抗できる。", a: true, exp: "不動産登記法5条1項。登記申請を妨害した者の自己矛盾を禁止する規定です。「背信的悪意者」とは別の制度です。" },
+      { q: "抵当権者は、利息について満期となった最後の2年分に限り優先弁済を受けられる。", a: true, exp: "民法375条1項。最後の2年分のみ。元本と期限切れ利息は優先弁済対象外です。この数字を間違えると本試験で失点します。" },
+      { q: "土地に抵当権を設定した場合、その効力は当然に地上の建物にも及ぶ。", a: false, exp: "民法370条で建物は除外と明記されています。だからこそ法定地上権の制度が必要になります。" },
+      { q: "抵当権設定時に土地と建物が別々の所有者に属していた場合でも、競売により別々の所有者になると法定地上権が成立する。", a: false, exp: "設定時に土地と建物が同一の所有者に属していることが要件です（民法388条）。設定時に別々なら法定地上権は成立しません。" },
+      { q: "根抵当権の元本確定期日は、設定日から5年以内で定めなければならない。", a: true, exp: "民法398条の6。定めた日から5年以内。定めなければ3年で自動確定します（民法398条の10）。" },
+      { q: "連帯債務者の一人に対する免除は、他の連帯債務者の債務額も減少させる。", a: false, exp: "免除は相対効です（民法441条）。絶対効は更改・相殺・混同の3つだけ。改正民法で相対効に統一された点が重要。" },
+      { q: "連帯保証人には、催告の抗弁権はないが、検索の抗弁権はある。", a: false, exp: "連帯保証人には催告の抗弁権も検索の抗弁権もありません（民法454条）。分別の利益もなし。普通保証との重要な違いです。" },
+      { q: "個人根保証契約は、極度額を定めなければ無効となる。", a: true, exp: "民法465条の2第2項。極度額を書面で定めないと無効。事業用保証は公正証書必須です（民法465条の4）。" },
+      { q: "普通借地権の存続期間を20年と定めた場合、その定めは無効となり30年に引き上げられる。", a: true, exp: "借地借家法3条・9条。契約自体は有効で、期間が30年に強制引上げ。「定めが無効」ではなく「期間が変更」される点が重要です。" },
+      { q: "事業用定期借地権の設定契約は、公正証書でなくても書面であれば有効である。", a: false, exp: "公正証書必須です（借地借家法23条3項）。一般定期は公正証書等の書面でOKですが、事業用は保護規定が少ないため厳格です。" },
+      { q: "1階が店舗、2階が居住用の建物でも、事業用定期借地権を設定できる。", a: false, exp: "借地借家法23条1項で「専ら事業の用」と限定されています。居住部分が1平方メートルでもあれば設定不可です。" },
+      { q: "一般定期借地権の存続期間は、30年以上で設定しなければならない。", a: false, exp: "一般定期は50年以上です（借地借家法22条）。30年以上は普通借地権の最低期間。混同に注意してください。" },
+      { q: "普通借地権の最初の更新後の期間は、当事者の合意がなければ20年である。", a: true, exp: "借地借家法4条。初回は20年、2回目以降は10年。最初が長い理由は再築投資の保護のためです。" },
+      { q: "普通借家契約で存続期間を6ヶ月と定めた場合、その定めは無効となり期間の定めのない賃貸借となる。", a: true, exp: "借地借家法29条1項。1年未満は自動的に「期間の定めなし」にみなされます。借家人保護が趣旨です。" },
+      { q: "定期建物賃貸借では、更新がない旨を契約書に記載するだけでは足りない。", a: true, exp: "借地借家法38条3項・5項。契約書と別紙書面で事前説明が必須です。怠ると「更新なし」の定めが無効になります。" },
+      { q: "定期建物賃貸借の期間が1年以上の場合、期間満了の1年前から6ヶ月前までに終了通知が必要である。", a: true, exp: "借地借家法38条6項。通知期間は1年前〜6ヶ月前。通知がなければ通知後6ヶ月で終了。期間1年未満なら通知不要です。" },
+      { q: "造作買取請求権を排除する特約は、借主に不利なため無効である。", a: false, exp: "造作買取請求権は強行規定に含まれません。排除特約は有効です。これは借主保護の限界を示す論点です。" },
+      { q: "定期建物賃貸借の借主からの中途解約は、200平方メートル未満の居住用建物に限り認められる。", a: true, exp: "借地借家法38条7項。200平方メートル未満の居住用でやむを得ない事情があれば可。申入れから1ヶ月で終了します。" },
+      { q: "貸主からの解約申入れがあった場合、正当事由がなくても6ヶ月の経過で賃貸借が終了する。", a: false, exp: "正当事由がなければ解約申入れは認められません（借地借家法28条）。正当事由＋6ヶ月経過の両方が必要です。" },
+      { q: "配偶者と子が相続人の場合、配偶者の法定相続分は2分の1である。", a: true, exp: "民法900条1号。配偶者＋子は1/2ずつ。子が複数なら子側は1/2を等分します。相続分の基本です。" },
+      { q: "被相続人の兄弟姉妹には遺留分が認められない。", a: true, exp: "民法1042条1項。兄弟姉妹には遺留分なし。遺留分があるのは配偶者・子・直系尊属のみ。この区別が宅建頻出です。" },
+      { q: "半血の兄弟姉妹の相続分は、全血の兄弟姉妹と同じである。", a: false, exp: "民法900条4号ただし書。半血は全血の1/2です。例えば全血兄妹と半血兄が相続する場合、割合が異なります。" },
+      { q: "相続の承認又は放棄は、自己のために相続の開始があったことを知った時から3ヶ月以内にしなければならない。", a: true, exp: "民法915条1項。熟慮期間は3ヶ月。「知った時から」が起算点で、実際の開始時ではありません。家裁に延長申立ても可能です。" },
+      { q: "遺言による遺産の分割禁止は、期間の制限なく設定できる。", a: false, exp: "民法908条1項。相続開始から5年を超えない範囲で設定可。期間満了後は強制分割可で、無期限禁止は無効です。" },
+      { q: "公正証書遺言の作成には、証人2人以上の立会いが必要である。", a: true, exp: "民法969条1号。証人は2人以上。公証人・証人・遺言者の3者が関与します。自筆証書遺言には証人不要です。" },
+      { q: "不法行為による損害賠償請求権は、被害者が損害及び加害者を知った時から5年で時効消滅する。", a: false, exp: "原則は知った時から3年です（民法724条1号）。5年は生命身体を害する場合の特則（民法724条の2）。数字の混同に注意。" },
+      { q: "使用者は、被用者が第三者に損害を与えた場合でも、被用者に対して求償できる。", a: true, exp: "民法715条3項。使用者責任で賠償後、被用者への求償は原則可能です。ただし信義則上の制限がある場合もあります。" },
+      { q: "被相続人の子の配偶者は、子が相続開始前に死亡していた場合、代襲相続人となる。", a: false, exp: "民法887条2項ただし書。代襲相続人は直系卑属のみ。配偶者は代襲相続人になれません。孫・曾孫のみが代襲可です。" },
+      { q: "区分所有法上の建替え決議は、区分所有者及び議決権の各5分の4以上の多数で行う。", a: true, exp: "区分所有法62条1項。5分の4が最高要件。3/4は規約変更・著しい変更。過半数は普通決議。要件の階段を整理しましょう。" },
+      { q: "共用部分の著しい変更は、規約で区分所有者の頭数も議決権も過半数まで減らすことができる。", a: false, exp: "減額できるのは頭数のみです（区分所有法17条1項）。議決権の定数（3/4以上）は規約でも変更できません。" },
+      { q: "規約の設定・変更・廃止の決議要件は、規約で別段の定めをすることができない。", a: true, exp: "区分所有法31条1項。3/4以上の要件は絶対的で、規約でも引き下げ不可。強行規定の典型です。" },
+      { q: "規約共用部分は、登記をしなければ第三者に対抗できない。", a: true, exp: "区分所有法4条2項。規約共用部分は登記が対抗要件です。法定共用部分（外壁等）は登記不要という違いがあります。" },
+      { q: "規約の変更が一部の区分所有者の権利に特別の影響を及ぼすときは、3/4以上の決議のみで変更できる。", a: false, exp: "区分所有法31条1項後段。3/4決議に加え当事者の承諾が必須です。決議だけでは足りません。" },
+      { q: "共用部分の持分は、専有部分と分離して処分できない。", a: true, exp: "区分所有法15条2項。共用部分の持分は専有部分に結合しており、分離売却・相続は不可。一体として扱う仕組みです。" },
+      { q: "遺留分侵害額請求権は、相続の開始及び遺留分を侵害する贈与等があったことを知った時から1年で時効消滅する。", a: true, exp: "民法1048条。相対的期限1年と絶対的期限10年の両建て。先に到来した方で時効消滅します。" },
+      { q: "抵当権の順位の変更は、各抵当権者の合意のみで効力が生じる。", a: false, exp: "民法374条2項。合意に加え登記が必須です。登記がなければ順位変更は無効。要式行為であることを忘れずに。" },
+      { q: "2026年4月施行の改正区分所有法では、耐震性の不足等の客観的事由があれば、建替え決議の要件は区分所有者及び議決権の各3/4以上に緩和される。", a: true, exp: "改正区分所有法62条。原則4/5は維持されたまま、客観的事由（①耐震性不足②火災安全性不足③外壁剥落のおそれ④給排水管腐食等⑤バリアフリー基準不適合）のいずれかに該当する場合に限り、3/4以上に緩和されます。2026年試験の新論点。" },
+      { q: "2026年4月施行の改正区分所有法では、建替え決議後に補償金の提供を受けてから6ヶ月の経過によって専有部分の賃貸借が終了し、その際には借地借家法の正当事由規定が適用される。", a: false, exp: "改正区分所有法64条の2〜4（新設）。補償金提供後6ヶ月経過で終了する点は正しいのですが、借地借家法26〜28条の正当事由規定は適用されません。正当事由の排除が新設特則のキモ。従来は借家人が1人でも拒否すると建替えが止まる問題への対応です。" }
+    ]
+  },
+  houreizei: {
+    title: "法令上の制限＋税その他",
+    desc: "都市計画法・建築基準法・国土利用計画法・農地法・盛土規制法・不動産取得税・固定資産税・印紙税・登録免許税・譲渡所得・鑑定評価・地価公示・機構法・景表法・土地・建物（5問免除含む）",
+    password: "yousekiritsu",
+    questions: [
+      { q: "市街化区域は、すでに市街地を形成している区域、およびおおむね10年以内に優先的かつ計画的に市街化を図るべき区域である。", a: true, exp: "都計法7条2項のとおり。「おおむね10年以内」が頻出。調整区域（市街化を抑制すべき区域）との対比で押さえる。" },
+      { q: "用途地域は、市街化区域・市街化調整区域・非線引き区域いずれにも、必ず定めなければならない。", a: false, exp: "市街化区域には必ず定めるが、市街化調整区域は原則定めない（法13条1項7号）。非線引き・準都計は定めることができる。" },
+      { q: "準都市計画区域は、都市計画区域の中で、用途地域を補完するために指定される区域である。", a: false, exp: "準都市計画区域は都市計画区域【外】に指定する（法5条の2）。「都計区域の中の一部」は誤り。" },
+      { q: "市街化区域内において1,000㎡未満の開発行為を行う場合は、原則として知事の許可は不要である。", a: true, exp: "都計法29条1項1号・令19条。市街化区域は1,000㎡未満なら許可不要。三大都市圏は500㎡未満（令19条2項）。" },
+      { q: "市街化調整区域内では、500㎡の開発行為であっても、知事の許可は不要である。", a: false, exp: "市街化調整区域は面積無関係で原則すべて許可必要（法29条1項）。「面積が小さければ不要」は誤り。" },
+      { q: "ゴルフコースの建設は、面積が1ヘクタール未満であれば開発行為に該当しない。", a: false, exp: "ゴルフコースは面積無関係で第2種特定工作物（令1条2項）。1ha以上の制限があるのは野球場・テニスコート等。" },
+      { q: "建築基準法の単体規定は、原則として日本全国に適用される。", a: true, exp: "法19〜41条の単体規定は全国適用。集団規定（法41条の2〜）は原則都計区域内のみ。" },
+      { q: "建築物の敷地は、原則として幅員4m以上の道路に2m以上接していなければならない。", a: true, exp: "道路の定義は幅員4m以上（法42条）、接道義務は2m以上（法43条1項）。条例で接道要件は強化可能。" },
+      { q: "建蔽率は、角地と防火地域内の耐火建築物の両方の条件を満たす場合、+20%緩和される。", a: true, exp: "法53条3項。角地で+10%、防火＋耐火で+10%、両方該当で+20%。指定80%＋防火＋耐火なら制限なし（100%）。" },
+      { q: "前面道路幅員が12m未満の場合、容積率の計算では、住居系用途地域で道路幅員に0.6を乗じる。", a: false, exp: "住居系は0.4、その他（商業・工業系）は0.6（法52条2項）。乗数を入れ替えるひっかけ頻出。" },
+      { q: "国土利用計画法の事後届出は、契約締結の日から2週間以内に売主と買主が共同で行う必要がある。", a: false, exp: "届出義務者は権利取得者（買主）のみ（法23条1項）。「共同で」は誤り。期限の2週間は正しい。" },
+      { q: "市街化区域内で1,500㎡の土地を売買により取得した買主は、契約から2週間以内に事後届出をしなければならない。", a: false, exp: "市街化区域の事後届出は2,000㎡以上（法23条2項1号イ）。1,500㎡なら届出不要。" },
+      { q: "国土利用計画法の事後届出を怠った契約は、無効となる。", a: false, exp: "無届でも契約は有効（法47条）。ただし6月以下の拘禁刑又は100万円以下の罰金あり。「契約無効」は規制区域（許可制）の話。" },
+      { q: "農地法3条の許可は、市街化区域内であっても農業委員会への届出に代えることはできない。", a: true, exp: "3条は市街化区域でも許可必要（届出特例なし）。4条・5条のみ届出特例あり（法4条1項7号・5条1項6号）。" },
+      { q: "農地を相続により取得した者は、農地法3条の許可は不要だが、農業委員会への届出は必要である。", a: true, exp: "法3条の3。相続は許可不要だが、遅滞なく農業委員会へ届出が必要。「手続一切不要」は誤り。" },
+      { q: "土地区画整理組合を設立しようとする者は、3人以上で共同して定款・事業計画を作成する。", a: false, exp: "組合設立は7人以上必要（法14条1項）。「3人」「5人」は誤り。" },
+      { q: "土地区画整理組合の設立認可には、施行地区内の所有者・借地権者それぞれの3分の2以上の同意が必要である。", a: true, exp: "法18条。人数と地積の両方で2/3以上の同意が必要。「どちらか一方」は誤り。" },
+      { q: "土地区画整理事業の換地処分は、公告があった日からその効力を生じる。", a: false, exp: "換地処分の効力は公告の日の翌日から（法104条1項）。「公告の日に発生」は誤り。" },
+      { q: "盛土規制法では、宅地造成等工事規制区域内で行う盛土により崖が生じる場合、その崖の高さが2mを超えるものが許可対象である。", a: false, exp: "盛土は崖の高さ1m超（令3条1号）、切土は2m超。盛土の方が基準が厳しい。" },
+      { q: "盛土規制法における許可権者は、原則として国土交通大臣である。", a: false, exp: "許可権者は都道府県知事（指定都市・中核市は市長）。「国土交通大臣」は誤り。" },
+      { q: "不動産取得税は、相続による不動産の取得には課税されない。", a: true, exp: "相続は非課税（地方税法73条の7）。ただし死因贈与は課税。「贈与は無償だから非課税」は誤り（贈与は3%課税）。" },
+      { q: "不動産取得税の標準税率は4%だが、住宅および土地の取得については令和9年3月31日まで3%に軽減される。", a: true, exp: "地方税法附則。住宅・土地は3%、事務所・店舗等は本則4%のまま。" },
+      { q: "新築住宅の不動産取得税の課税標準特例は、認定長期優良住宅の場合、令和13年3月31日まで1,300万円控除を受けられる。", a: true, exp: "令和8年度税制改正で5年延長＋床面積要件50㎡以上→40㎡以上に緩和。一般の新築住宅控除（1,200万円）より100万円加算。" },
+      { q: "固定資産税の納税義務者は、毎年4月1日現在の固定資産課税台帳上の所有者である。", a: false, exp: "賦課期日は1月1日（法343条）。「4月1日」は誤り。年度途中で売却しても、1月1日の所有者が全額納税。" },
+      { q: "固定資産税の小規模住宅用地（200㎡以下の部分）は、課税標準を6分の1にする特例が適用される。", a: true, exp: "地方税法附則。200㎡以下=1/6、超部分=1/3。都市計画税は1/3・2/3（固定の倍）。" },
+      { q: "新築住宅の固定資産税減額措置は、床面積120㎡相当部分までの税額を2分の1に減額し、一般住宅は3年間、3階建以上の耐火住宅は5年間適用される。", a: true, exp: "地方税法附則15条の6。認定長期優良住宅はそれぞれ5年・7年に延長。要件は床面積50〜280㎡（貸家40㎡以上）。" },
+      { q: "印紙税法上、建物の賃貸借契約書は1号文書として課税される。", a: false, exp: "建物の賃貸借契約書は非課税（別表第一に該当なし）。一方、土地の賃借権設定は1号の2で課税。混同必至。" },
+      { q: "贈与契約書は、対価の記載がないため印紙税は課税されない。", a: false, exp: "贈与契約書は「金額の記載なし」扱いで200円課税。「対価がないから非課税」は誤り。" },
+      { q: "契約金額の増額変更契約書は、変更後の総額が記載金額となる。", a: false, exp: "増額分（差額）が記載金額（通則4のニ）。減額変更は「金額の記載なし」扱いで200円。" },
+      { q: "不動産売買契約書の印紙税の軽減措置は、令和9年3月31日までに作成されるものに適用される。", a: true, exp: "租税特別措置法91条。1号文書は10万円超、2号文書は100万円超のものに適用。本則の半額相当に軽減。" },
+      { q: "登録免許税の所有権移転登記の本則税率は、相続による移転も売買による移転も2.0%である。", a: false, exp: "相続による移転は0.4%（登免税法別表第1）。売買は2.0%。保存と相続が同じ0.4%である点が定番。" },
+      { q: "住宅用家屋を売買で取得した場合の所有権移転登記には、令和9年3月31日まで0.3%の軽減税率が適用される。", a: true, exp: "租特法73条。住宅軽減は売買のみ、贈与・交換・相続は対象外。床面積50㎡以上・取得後1年以内に登記が要件。" },
+      { q: "登録免許税の抵当権設定登記の課税標準は、不動産の価額（固定資産税評価額）である。", a: false, exp: "抵当権設定は債権金額（根抵当は極度額）が課税標準。所有権は不動産の価額。混同必至。" },
+      { q: "土地の所有権移転登記（売買）の軽減税率1.5%は、令和8年3月31日で終了した。", a: false, exp: "令和8年度税制改正で3年延長 → 令和11年3月31日まで。終了していない。最新の改正状況に注意。" },
+      { q: "譲渡所得の短期・長期の区分は、譲渡した日において所有期間が5年を超えているかで判定する。", a: false, exp: "判定は譲渡した年の1月1日時点（措置法31条2項）。実際は5年超でも、1月1日基準では5年以下になる場合あり（6回お正月を迎える必要）。" },
+      { q: "居住用財産の3,000万円特別控除は、所有期間が10年を超えていなければ適用できない。", a: false, exp: "3,000万円控除は所有期間制限なし（措置法35条1項）。10年超は軽減税率の特例（14.21%）の要件。" },
+      { q: "居住用財産の3,000万円特別控除と軽減税率の特例は、併用することができる。", a: true, exp: "3,000万円控除＋軽減税率は併用可。買換特例とは選択制（併用不可）。住宅ローン控除との併用も原則不可（入居年とその前後2年）。" },
+      { q: "特定居住用財産の買換特例の譲渡資産の対価は、1億円以下でなければならない。", a: true, exp: "措置法36条の2第1項。1億円超は適用なし。分割売却した場合の合算判定も重要。" },
+      { q: "被相続人居住用家屋の譲渡（空き家3,000万円控除）は、令和6年1月1日以降の譲渡で相続人が3人以上の場合、1人あたり3,000万円の控除が受けられる。", a: false, exp: "令和5年度改正で、相続人3人以上の場合は1人2,000万円が限度に変更。「3人以上でも3,000万円」は誤り。" },
+      { q: "不動産鑑定評価基準において、文化財に指定された建造物の評価は、特定価格として求める。", a: false, exp: "文化財等の市場性のないものは特殊価格（総論第5章第3節）。特定価格は市場性あり（証券化対象等）で別物。" },
+      { q: "不動産鑑定評価の三手法のうち、収益還元法は賃貸用不動産にのみ適用される。", a: false, exp: "収益還元法は文化財等の市場性なしを除き原則すべての不動産に適用すべき。自用不動産にも基本的に適用。" },
+      { q: "原価法による減価修正では、物理的・機能的・経済的の3要因による減価を考慮する。", a: true, exp: "原価法は再調達原価 − 減価修正。3要因はそれぞれ経年劣化／陳腐化／周辺環境変化を表す。" },
+      { q: "地価公示は、毎年7月1日を基準日として、土地鑑定委員会が公示する。", a: false, exp: "地価公示の基準日は1月1日。「7月1日」は都道府県地価調査の基準日（国土法）。混同必至。" },
+      { q: "地価公示の標準地の鑑定評価は、1人の不動産鑑定士が行えば足りる。", a: false, exp: "地価公示は2人以上の不動産鑑定士が個別に鑑定（法2条1項）。1人以上は都道府県地価調査の要件。" },
+      { q: "公示価格は、一般の土地の取引において、その指標として取引を行うよう努めなければならない。", a: true, exp: "法1条の2のとおり。一般取引は努力義務（指標）。一方、鑑定士・公共事業の用地取得は義務（規準）。" },
+      { q: "住宅金融支援機構は、フラット35として、住宅取得者に対し長期固定金利の住宅資金を直接貸し付ける。", a: false, exp: "フラット35は機構が債権の買取or保証（法13条1項）。直接貸付ではない。「直接融資」は災害復興・高齢者・財形等の例外のみ。" },
+      { q: "住宅金融支援機構は、災害により住宅が滅失した者に対し、災害復興住宅の建設または購入に必要な資金を直接貸し付けることができる。", a: true, exp: "災害復興は法13条1項5号の直接融資の例外。原則の証券化支援とは別枠。" },
+      { q: "住宅金融支援機構の業務には、高齢者向けの返済特例（毎月の返済は利息のみ、元金は死亡時に一括返済）が含まれる。", a: true, exp: "シルバー返済特例。高齢者が自ら居住する住宅の改良等に適用される直接融資のメニュー。" },
+      { q: "公正競争規約上、徒歩による所要時間は、道路距離80mにつき1分として算出し、1分未満の端数が生じた場合は切り捨てる。", a: false, exp: "道路距離80m＝1分は正しいが、端数は切り上げ（規則9条(9)）。10mであっても1分と表示。" },
+      { q: "建築後1年を経過していなくても、一度でも居住の用に供された住宅は「新築」と表示することができない。", a: true, exp: "「新築」は建築後1年未満かつ未使用（規約18条(1)）。一度でも入居すれば中古扱い。" },
+      { q: "おとり広告とは、取引する意思がないにもかかわらず広告に掲載する物件をいい、存在しない物件や売約済の物件も含まれる。", a: true, exp: "おとり広告の3類型：①存在しない物件、②売約済等、③取引意思なし（規約21条）。誇大広告（情報の誇張）とは別。" },
+      { q: "公園や旧跡等の名称を物件名に使用する場合、その公園等から直線距離500m以内であれば使用できる。", a: false, exp: "公園・旧跡等は直線距離300m以内（規約19条(3)）。500mは誤り。街道・道路の坂名は50m以内、別荘地の駅名は5,000m以内。" },
+      { q: "二重価格表示で過去の販売価格を比較対象とする場合、その価格は変更前2か月以上公表され、かつ変更後6か月以内であることが必要である。", a: true, exp: "規則12条。「2か月以上＋6か月以内」の2セットが要件。「1週間だけ」「変更後1年」は誤り。" },
+      { q: "三角州や後背湿地は、地盤が軟弱で液状化のリスクがあるため、宅地として不適とされる。", a: true, exp: "三角州・後背湿地・旧河道・谷底低地は軟弱地盤で宅地不適。台地・段丘・自然堤防が宅地適。" },
+      { q: "扇状地は、その全域において土石流のリスクが高く、宅地として一律不適である。", a: false, exp: "扇状地は砂礫質で安定。扇頂は土石流リスクあるが、扇央〜扇端は宅地に適。「全域不適」は誤り。" },
+      { q: "切土地と盛土地は、いずれも地盤の安定性に大きな差はなく、宅地として同程度に適している。", a: false, exp: "切土＝元の地盤で安定／盛土＝地震時に沈下・崩壊リスク。大地震時の崩壊事例（東日本・熊本地震）あり。" },
+      { q: "鉄筋コンクリート造は、コンクリートが圧縮力を、鉄筋が引張力を負担することで成り立つ構造である。", a: true, exp: "コンクリ＝圧縮、鉄筋＝引張の役割分担。アルカリ性のコンクリートが鉄筋の錆を防ぐ（中性化すると鉄筋腐食）。かぶり厚が重要。" },
+      { q: "建築基準法の新耐震基準は、平成元年6月1日以降に建築確認を受けた建築物に適用される。", a: false, exp: "新耐震基準は昭和56年6月1日以降の建築確認に適用。「平成元年」は誤り。震度6強〜7で倒壊しない設計。" },
+      { q: "免震構造は、建物の基礎と建物本体の間に免震装置を設けることで、地震の揺れを建物に伝えにくくする構造である。", a: true, exp: "免震＝揺れを絶縁、制震＝揺れを吸収、耐震＝揺れに耐える。3種の仕組みは別物。" },
+      { q: "杭基礎は、地盤が良好な場所において、建物の荷重を浅い位置の固い地層で支えるために用いられる。", a: false, exp: "杭基礎は軟弱地盤で杭を深く打ち、固い支持層で支える基礎。良好地盤では直接基礎（独立基礎・布基礎・ベタ基礎）で十分。" }
+    ]
+  },
+  chokuzen: {
+    title: "直前対策",
+    desc: "横断まとめ・頻出数字・ひっかけパターン",
+    comingSoon: true,
+    questions: []
+  }
+};
 
-/* ========= QUESTIONS ========= */
-const QUESTIONS = [
-  {q: "宅建業者Aは、死亡したCの相続人Dから、Cの死亡を知った日から35日目に廃業の届出をした。適法である。", a: false, e: "死亡の届出は<b>知った日から30日以内</b>。35日目は期間超過。"},
-  {q: "法人の合併消滅の届出は、消滅会社の代表役員「であった者」が、合併「により消滅した日」から30日以内に行う。", a: true, e: "起算点は「その日」から。死亡以外の届出事由は<b>「その日」起算</b>。"},
-  {q: "免許の有効期間満了の90日前から30日前までに更新申請を行わなければ、当該免許は失効する。", a: false, e: "更新申請期間であって、申請しなかった場合でも<b>処分があるまで従前の免許は有効</b>。"},
-  {q: "2以上の都道府県に事務所を設置して宅建業を営もうとする者は、国土交通大臣の免許を受けなければならない。", a: true, e: "<b>事務所の所在地</b>による区分。本店所在地ではない。"},
-  {q: "事務所には、従業者5人に1人以上の割合で成年の専任の宅建士を置かなければならない。", a: true, e: "§31の3①。案内所等は最低1人。"},
-  {q: "宅建士は、37条書面を交付する際に当該書面の記載事項を説明しなければならない。", a: false, e: "37条書面には<b>説明義務はない</b>。記名のみ。説明義務は35条。"},
-  {q: "35条書面の記載事項として、飲用水・電気・ガスの供給施設の整備状況は挙げられている。", a: true, e: "物件情報系の代表例。<b>35条のみ</b>の記載事項。"},
-  {q: "代金の支払時期・支払方法は、定めがあるときに37条書面に記載する任意的記載事項である。", a: false, e: "代金の額・支払時期・支払方法は<b>必要的記載事項</b>。必ず記載。"},
-  {q: "宅建業者が自ら売主で買主が一般人の場合、損害賠償額の予定・違約金の合計は、代金の額の3/10を超えることができない。", a: false, e: "<b>2/10（20%）</b>以内。超えた部分は無効。"},
-  {q: "クーリングオフは、申込みまたは契約をした場所が事務所等以外であれば、買主の属性を問わず無条件で発動する。", a: false, e: "<b>買主の自宅・勤務先で買主が自ら申し出て</b>契約した場合は「事務所等」扱い → 発動しない。"},
-  {q: "クーリングオフの書面告知を受けた日を含めて9日目に解除の書面を発信しても有効である。", a: false, e: "告知日を含めて<b>8日以内</b>。発信主義なので9日目は期間徒過。"},
-  {q: "クーリングオフの期間を書面告知から5日間とする特約は有効である。", a: false, e: "買主に不利な特約は無効。<b>8日より短縮</b>は無効。"},
-  {q: "手付金等の保全措置において、完成物件については指定保管機関による保管が認められる。", a: true, e: "指定保管機関による保管は<b>完成物件のみ</b>。未完成は銀行保証・保証保険の2種のみ。"},
-  {q: "宅建業者が自ら売主の場合、瑕疵（契約不適合）担保の通知期間を「引渡しから2年以上」とする特約は有効である。", a: true, e: "民法より不利な特約は無効だが、<b>通知期間を引渡しから2年以上とする特約のみ例外</b>。"},
-  {q: "営業保証金は、主たる事務所につき1,000万円、その他の事務所1か所につき500万円を供託する。", a: true, e: "施行令2の4。金額は政令の数字。"},
-  {q: "保証協会の社員は、社員となった日から1か月以内に、弁済業務保証金分担金を協会に納付すればよい。", a: false, e: "<b>2週間以内</b>。期限超過で社員資格喪失（§64の9①）。"},
-  {q: "保証協会の分担金は、主たる事務所60万円、その他の事務所1か所30万円で、協会が供託所へ供託する。", a: true, e: "§64の9②・施行令7。"},
-  {q: "宅建業者間の取引により生じた債権でも、営業保証金から還付を受けることができる。", a: false, e: "宅建業者間取引は<b>還付対象外</b>（§27①かっこ書）。"},
-  {q: "営業保証金の還付により不足が生じた場合、通知を受けた日から2週間以内に不足額を供託しなければならない。", a: true, e: "§28①。供託後<b>2週間以内に免許権者に届出</b>も必要。"},
-  {q: "報酬の上限は、売買価額400万円超の部分につき、価額×3%+6万円（税抜）である。", a: true, e: "告示の速算式。依頼者の一方からの上限。"},
-  {q: "売買の代理を行う場合、依頼者から受ける報酬は、媒介の場合の3倍が上限である。", a: false, e: "代理は<b>2倍</b>が上限。相手方から受ける分と合わせても2倍以内。"},
-  {q: "居住用建物の貸借の媒介では、依頼者の承諾がなくても、依頼者の一方から借賃1か月分を報酬として受領できる。", a: false, e: "原則は<b>0.5か月分ずつ</b>。一方から1か月分は承諾必要。"},
-  {q: "宅建業者は、事務所ごとに標識・報酬額・帳簿・従業者名簿を備え付けなければならない。", a: true, e: "§48・49・50。事務所の「4点セット」。"},
-  {q: "宅建業者は、取引の関係者から事務所に備え置く帳簿の閲覧を求められたときは、これを拒んではならない。", a: false, e: "<b>帳簿は閲覧義務なし</b>。閲覧義務があるのは<b>従業者名簿</b>（§48④）。"},
-  {q: "8種制限は、宅建業者が自ら売主となる売買契約についてのみ適用される。", a: true, e: "かつ買主が宅建業者でないことも条件。媒介・代理には適用されない。"},
-  {q: "他人物売買は原則禁止だが、宅建業者が当該物件の所有者と取得する契約を締結している場合は、契約できる。", a: true, e: "§33の2。取得の確実性が要件。<b>停止条件付契約は不可</b>。"},
-  {q: "既存建物の売買では、建物の構造耐力上主要な部分等について当事者の双方が確認した事項は、35条書面の記載事項である。", a: false, e: "これは<b>37条書面の必要的記載事項</b>（R2改正）。"},
-  {q: "水害ハザードマップにおける宅地建物の所在地は、35条書面の記載事項である。", a: true, e: "R2.8施行。売買・貸借とも対象。"},
-  {q: "監督処分のうち「指示処分」「業務停止処分」は免許権者が行うが、「免許取消処分」は国土交通大臣のみが行える。", a: false, e: "免許取消処分も<b>免許権者</b>が行う（§66）。"},
-  {q: "宅建士が事務禁止処分を受けたときは、速やかに宅建士証を交付を受けた都道府県知事に提出しなければならない。", a: true, e: "§22の2⑦。返納でなく「提出」。処分が終わると返還される。"},
-];
-
-/* ========= STATE ========= */
-let state = { mode: "all", queue: [], idx: 0, correct: 0, answers: [], lastResult: null };
-let lastMode = "all";
+/* ================================================================
+   PERSISTENT STATE
+   ================================================================ */
 const STORAGE_KEY = "takken_quiz_v1";
 
-function loadStats() {
-  try {
-    const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    return { tries: s.tries || 0, best: s.best || null, totalCorrect: s.totalCorrect || 0, totalAnswered: s.totalAnswered || 0, mistakes: s.mistakes || [] };
-  } catch { return { tries: 0, best: null, totalCorrect: 0, totalAnswered: 0, mistakes: [] }; }
+function _lsOK() {
+  try { localStorage.setItem("_t","1"); localStorage.removeItem("_t"); return true; }
+  catch(e) { return false; }
 }
-function saveStats(s) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch {} }
+const LS_AVAILABLE = _lsOK();
 
-function updateStatsDisplay() {
-  const s = loadStats();
-  document.getElementById("stat-tries").textContent = s.tries;
-  document.getElementById("stat-rate").textContent = s.totalAnswered ? Math.round(100*s.totalCorrect/s.totalAnswered) + "%" : "—";
-  document.getElementById("stat-best").textContent = s.best != null ? (s.best + "/30") : "—";
-  document.getElementById("mistake-count").textContent = s.mistakes.length ? ("未解消 " + s.mistakes.length + " 問") : "ミス記録なし";
+function makeEmptyState() {
+  const state = { unlocked: {}, stats: {}, mistakes: {} };
+  for (const k of Object.keys(SECTIONS)) {
+    if (SECTIONS[k].comingSoon) continue;
+    state.stats[k] = { attempts: 0, bestPct: 0, totalCorrect: 0, totalAnswered: 0 };
+    state.mistakes[k] = {};
+  }
+  return state;
 }
 
-/* ========= LOGIN ========= */
-function tryLogin() {
-  const pw = document.getElementById("pw").value.trim();
-  const err = document.getElementById("err");
-  if (pw === PASSWORD) {
-    err.textContent = "";
-    sessionStorage.setItem("takken_auth", "1");
-    showMenu();
-  } else {
-    err.textContent = "パスワードが違います";
-    document.getElementById("pw").value = "";
+function loadState() {
+  if (LS_AVAILABLE) {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        // Fill in any missing sections
+        const base = makeEmptyState();
+        parsed.unlocked = parsed.unlocked || {};
+        parsed.stats = { ...base.stats, ...(parsed.stats||{}) };
+        parsed.mistakes = { ...base.mistakes, ...(parsed.mistakes||{}) };
+        return parsed;
+      }
+    } catch(e) {}
+  }
+  return makeEmptyState();
+}
+
+function saveState() {
+  if (LS_AVAILABLE) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); } catch(e) {}
   }
 }
-document.getElementById("pw").addEventListener("keydown", e => { if (e.key === "Enter") tryLogin(); });
 
-function checkAuth() {
-  if (sessionStorage.getItem("takken_auth") === "1") { showMenu(); }
-}
+let STATE = loadState();
 
-function showMenu() {
-  document.getElementById("login").classList.add("hide");
-  document.getElementById("quiz").classList.add("hide");
-  document.getElementById("result").classList.add("hide");
-  document.getElementById("review").classList.add("hide");
-  document.getElementById("menu").classList.remove("hide");
-  updateStatsDisplay();
+/* ================================================================
+   PAGE CONTROL
+   ================================================================ */
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
   window.scrollTo(0, 0);
 }
 
-/* ========= QUIZ ========= */
-function startQuiz(mode) {
-  lastMode = mode;
-  let indices = [];
-  if (mode === "all") { indices = QUESTIONS.map((_,i) => i); }
-  else if (mode === "random10") {
-    const pool = QUESTIONS.map((_,i) => i).sort(() => Math.random() - 0.5);
-    indices = pool.slice(0, 10);
-  } else if (mode === "mistakes") {
-    const s = loadStats();
-    if (!s.mistakes.length) { alert("ミス記録がありません。全30問チャレンジから始めよう。"); return; }
-    indices = s.mistakes.slice();
+function showTop() {
+  renderTop();
+  showPage("topPage");
+}
+
+function showSection(key) {
+  currentSection = key;
+  renderSection(key);
+  showPage("sectionPage");
+}
+
+/* ================================================================
+   TOP PAGE
+   ================================================================ */
+function renderTop() {
+  const el = document.getElementById("sectionList");
+  el.innerHTML = "";
+  for (const [key, sec] of Object.entries(SECTIONS)) {
+    const card = document.createElement("div");
+
+    // ── Coming Soon ──
+    if (sec.comingSoon) {
+      card.className = "section-card coming";
+      card.innerHTML = `
+        <div class="sc-head">
+          <div class="sc-title-wrap">
+            <div class="sc-kicker">一問一答</div>
+            <div class="sc-title">${sec.title}</div>
+          </div>
+          <span class="sc-badge badge-coming">近日公開</span>
+        </div>
+        <div class="sc-desc">${sec.desc}</div>
+        <div class="sc-coming-hint">Coming Soon</div>
+      `;
+      el.appendChild(card);
+      continue;
+    }
+
+    // ── Normal section ──
+    const unlocked = !!STATE.unlocked[key];
+    const s = STATE.stats[key];
+    const acc = s.totalAnswered > 0 ? Math.round(s.totalCorrect / s.totalAnswered * 100) : 0;
+    card.className = "section-card " + (unlocked ? "unlocked" : "locked");
+
+    let statsHtml = "";
+    if (unlocked) {
+      statsHtml = `
+        <div class="sc-stats">
+          <div class="sc-stat">
+            <div class="sc-stat-val">${s.attempts}</div>
+            <div class="sc-stat-lbl">挑戦数</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-val">${acc}<span style="font-size:.7em">%</span></div>
+            <div class="sc-stat-lbl">正答率</div>
+          </div>
+          <div class="sc-stat">
+            <div class="sc-stat-val">${s.bestPct}<span style="font-size:.7em">%</span></div>
+            <div class="sc-stat-lbl">ベスト</div>
+          </div>
+        </div>
+      `;
+    } else {
+      statsHtml = `<div class="sc-locked-hint">タップしてパスワード入力</div>`;
+    }
+
+    card.innerHTML = `
+      <div class="sc-head">
+        <div class="sc-title-wrap">
+          <div class="sc-kicker">一問一答</div>
+          <div class="sc-title">${sec.title}</div>
+        </div>
+        <span class="sc-badge ${unlocked ? 'badge-unlocked' : 'badge-locked'}">
+          ${unlocked ? '解除済み' : 'ロック中'}
+        </span>
+      </div>
+      <div class="sc-desc">${sec.desc} ・ ${sec.questions.length}問</div>
+      ${statsHtml}
+    `;
+    card.onclick = () => unlocked ? showSection(key) : openModal(key);
+    el.appendChild(card);
   }
-  state = { mode, queue: indices, idx: 0, correct: 0, answers: [] };
-  showQuizUI();
-  renderQuestion();
 }
 
-function showQuizUI() {
-  document.getElementById("menu").classList.add("hide");
-  document.getElementById("result").classList.add("hide");
-  document.getElementById("review").classList.add("hide");
-  document.getElementById("quiz").classList.remove("hide");
-  document.getElementById("feedback").classList.add("hide");
-  document.getElementById("answer-row").classList.remove("hide");
-  window.scrollTo(0, 0);
+/* ================================================================
+   PASSWORD MODAL
+   ================================================================ */
+let pendingKey = null;
+let currentSection = null;
+
+function openModal(key) {
+  pendingKey = key;
+  document.getElementById("modalTitle").textContent = SECTIONS[key].title + " のパスワード";
+  document.getElementById("modalInput").value = "";
+  document.getElementById("modalError").textContent = "";
+  document.getElementById("modalOverlay").classList.add("active");
+  setTimeout(() => document.getElementById("modalInput").focus(), 100);
 }
 
-function renderQuestion() {
-  const total = state.queue.length;
-  const cur = state.idx;
-  const qIdx = state.queue[cur];
-  const Q = QUESTIONS[qIdx];
-  document.getElementById("fill").style.width = (100 * cur / total) + "%";
-  document.getElementById("prog-text").textContent = "Q " + (cur+1) + " / " + total;
-  document.getElementById("prog-score").textContent = state.correct;
-  document.getElementById("q-tag").textContent = "QUESTION " + String(qIdx+1).padStart(2,"0");
-  document.getElementById("q-text").textContent = Q.q;
-  document.getElementById("feedback").classList.add("hide");
-  document.getElementById("feedback").innerHTML = "";
-  document.getElementById("answer-row").classList.remove("hide");
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("active");
+  pendingKey = null;
 }
 
-function answer(userAns) {
-  const qIdx = state.queue[state.idx];
-  const Q = QUESTIONS[qIdx];
-  const correct = (userAns === Q.a);
-  state.answers.push({ qIdx, userAns, correct });
-  if (correct) state.correct++;
-
-  const fb = document.getElementById("feedback");
-  fb.className = "feedback " + (correct ? "correct" : "wrong");
-  const verdict = correct ? "正解 ○" : "不正解 ×";
-  const truth = Q.a ? "正しい（○）" : "誤り（×）";
-  fb.innerHTML = '<div class="verdict">' + verdict + '</div>' +
-    '<div class="expl">正しい答えは <b>' + truth + '</b><br>' + Q.e + '</div>' +
-    '<button class="next-btn" onclick="nextQuestion()">' + (state.idx+1 < state.queue.length ? "次の問題 →" : "結果を見る →") + '</button>';
-  fb.classList.remove("hide");
-  document.getElementById("answer-row").classList.add("hide");
-  document.getElementById("prog-score").textContent = state.correct;
-  fb.scrollIntoView({ behavior: "smooth", block: "center" });
-}
-
-function nextQuestion() {
-  state.idx++;
-  if (state.idx < state.queue.length) {
-    renderQuestion();
+function tryUnlock() {
+  const input = document.getElementById("modalInput").value.trim();
+  if (!pendingKey) return;
+  if (input === SECTIONS[pendingKey].password) {
+    STATE.unlocked[pendingKey] = true;
+    saveState();
+    const k = pendingKey;
+    closeModal();
+    showSection(k);
   } else {
+    document.getElementById("modalError").textContent = "パスワードが違います";
+    document.getElementById("modalInput").value = "";
+    document.getElementById("modalInput").focus();
+  }
+}
+
+document.getElementById("modalInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") tryUnlock();
+});
+document.getElementById("modalOverlay").addEventListener("click", (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+/* ================================================================
+   SECTION DETAIL
+   ================================================================ */
+function renderSection(key) {
+  const sec = SECTIONS[key];
+  const s = STATE.stats[key];
+  const acc = s.totalAnswered > 0 ? Math.round(s.totalCorrect / s.totalAnswered * 100) : 0;
+  const mistakeCount = Object.keys(STATE.mistakes[key]).length;
+
+  document.getElementById("subjTitle").textContent = sec.title;
+  document.getElementById("subjStats").innerHTML = `
+    <div class="subj-stat-card">
+      <div class="subj-stat-val">${s.attempts}</div>
+      <div class="subj-stat-lbl">挑戦数</div>
+    </div>
+    <div class="subj-stat-card">
+      <div class="subj-stat-val">${acc}<span style="font-size:.65em">%</span></div>
+      <div class="subj-stat-lbl">正答率</div>
+    </div>
+    <div class="subj-stat-card">
+      <div class="subj-stat-val">${s.bestPct}<span style="font-size:.65em">%</span></div>
+      <div class="subj-stat-lbl">ベスト</div>
+    </div>
+  `;
+
+  const modes = [
+    {
+      id: "full",
+      icon: "◆", iconClass: "",
+      title: "全問チャレンジ",
+      desc: `全${sec.questions.length}問を通しで挑戦。初見はこれから。`,
+      disabled: false
+    },
+    {
+      id: "random",
+      icon: "R", iconClass: "",
+      title: "ランダム10問",
+      desc: "スキマ時間の小テスト。出題順はランダム。",
+      disabled: false
+    },
+    {
+      id: "mistakes",
+      icon: "!", iconClass: "mistake",
+      title: "間違えた問題だけ",
+      desc: mistakeCount > 0
+        ? `現在 ${mistakeCount}問。2回連続正解で卒業。`
+        : "間違いがまだありません。",
+      badge: mistakeCount > 0 ? `${mistakeCount}問` : null,
+      disabled: mistakeCount === 0
+    },
+    {
+      id: "review",
+      icon: "▼", iconClass: "review",
+      title: "全問レビュー",
+      desc: "解答と解説を通して読むだけ。記録なし。",
+      disabled: false
+    }
+  ];
+
+  const ml = document.getElementById("modeList");
+  ml.innerHTML = "";
+  modes.forEach(m => {
+    const card = document.createElement("div");
+    card.className = "mode-card " + (m.disabled ? "disabled" : "");
+    card.innerHTML = `
+      <div class="mode-icon ${m.iconClass}">${m.icon}</div>
+      <div class="mode-body">
+        <div class="mode-title">${m.title}</div>
+        <div class="mode-desc">${m.desc}</div>
+      </div>
+      ${m.badge ? `<div class="mode-badge">${m.badge}</div>` : ""}
+    `;
+    if (!m.disabled) {
+      card.onclick = () => startQuiz(key, m.id);
+    }
+    ml.appendChild(card);
+  });
+}
+
+/* ================================================================
+   QUIZ ENGINE
+   ================================================================ */
+let currentMode = null;
+let currentQuestions = []; // array of { qIdx, q, a, exp }
+let currentAnswers = {};   // qIdx → bool (user's answer)
+let sessionCorrect = 0;
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuestionList(key, mode) {
+  const qs = SECTIONS[key].questions;
+  const all = qs.map((q, idx) => ({ qIdx: idx, ...q }));
+
+  if (mode === "full") return all;
+  if (mode === "review") return all;
+  if (mode === "random") return shuffle(all).slice(0, 10);
+  if (mode === "mistakes") {
+    const idxs = Object.keys(STATE.mistakes[key]).map(Number);
+    return shuffle(all.filter(q => idxs.includes(q.qIdx)));
+  }
+  return all;
+}
+
+function startQuiz(key, mode) {
+  currentSection = key;
+  currentMode = mode;
+  currentQuestions = buildQuestionList(key, mode);
+  currentAnswers = {};
+  sessionCorrect = 0;
+
+  const modeLabels = {
+    full: "全問チャレンジ",
+    random: "ランダム10問",
+    mistakes: "間違えた問題だけ",
+    review: "全問レビュー"
+  };
+  document.getElementById("quizBreadcrumb").textContent = SECTIONS[key].title;
+  document.getElementById("quizModeLabel").textContent = modeLabels[mode];
+  document.getElementById("resultArea").innerHTML = "";
+
+  updateProgress();
+  renderQuestions();
+  showPage("quizPage");
+}
+
+function confirmExitQuiz() {
+  const answered = Object.keys(currentAnswers).length;
+  const total = currentQuestions.length;
+  if (currentMode === "review" || answered === 0 || answered === total) {
+    showSection(currentSection);
+    return;
+  }
+  if (confirm("途中で戻りますか？\n（ここまでの結果は記録されません）")) {
+    showSection(currentSection);
+  }
+}
+
+function updateProgress() {
+  const total = currentQuestions.length;
+  const done = currentMode === "review" ? total : Object.keys(currentAnswers).length;
+  document.getElementById("progressFill").style.width = (done / total * 100) + "%";
+  document.getElementById("progressTxt").textContent = `${done}/${total}`;
+}
+
+function renderQuestions() {
+  const body = document.getElementById("quizBody");
+  body.innerHTML = "";
+
+  currentQuestions.forEach((q, i) => {
+    const card = document.createElement("div");
+    card.className = "q-card";
+
+    // Status tag for mistake mode
+    let statusHtml = "";
+    if (currentMode === "mistakes") {
+      const m = STATE.mistakes[currentSection][q.qIdx];
+      if (m) {
+        if (m.consecCorrect === 1) {
+          statusHtml = `<div class="q-status almost">あと1回で卒業</div>`;
+        } else {
+          statusHtml = `<div class="q-status miss">ミス${m.missCount}回</div>`;
+        }
+      }
+    }
+
+    if (currentMode === "review") {
+      // Review mode: show answer + explanation directly, no interaction
+      const ansMark = q.a ? "○" : "×";
+      card.innerHTML = `
+        <div class="q-meta">
+          <div class="q-num">Q${String(i + 1).padStart(2, '0')}</div>
+        </div>
+        <div class="q-text">${q.q}</div>
+        <div class="q-answer visible review">
+          <div class="ans-label">正解：${ansMark}</div>
+          <div class="ans-text">${q.exp}</div>
+        </div>
+      `;
+    } else {
+      card.innerHTML = `
+        <div class="q-meta">
+          <div class="q-num">Q${String(i + 1).padStart(2, '0')}</div>
+          ${statusHtml}
+        </div>
+        <div class="q-text">${q.q}</div>
+        <div class="q-buttons">
+          <button class="q-btn" id="btn-o-${i}" onclick="answer(${i}, true)">○</button>
+          <button class="q-btn" id="btn-x-${i}" onclick="answer(${i}, false)">×</button>
+        </div>
+        <div class="q-answer" id="ans-${i}">
+          <div class="ans-label"></div>
+          <div class="ans-text">${q.exp}</div>
+          <div class="q-grad-notice" id="grad-${i}" style="display:none"></div>
+        </div>
+      `;
+    }
+    body.appendChild(card);
+  });
+
+  // Review mode: no scoring, show back-to-section button
+  if (currentMode === "review") {
+    document.getElementById("resultArea").innerHTML = `
+      <div class="result">
+        <div class="result-title">レビュー完了</div>
+        <div style="font-size:.8rem; color:#8aa4c8; padding:4px 0 12px">
+          じっくり目を通したら戻ってテストモードで確認しましょう。
+        </div>
+        <div class="result-actions">
+          <button class="result-btn primary" onclick="showSection(currentSection)">戻る</button>
+        </div>
+      </div>
+    `;
+    updateProgress();
+  }
+}
+
+function answer(i, userAnswer) {
+  const q = currentQuestions[i];
+  if (currentAnswers[i] !== undefined) return;
+
+  const correct = userAnswer === q.a;
+  currentAnswers[i] = userAnswer;
+  if (correct) sessionCorrect++;
+
+  // Update UI
+  const btnO = document.getElementById("btn-o-" + i);
+  const btnX = document.getElementById("btn-x-" + i);
+  btnO.disabled = true;
+  btnX.disabled = true;
+
+  if (userAnswer === true) {
+    btnO.className = "q-btn " + (correct ? "selected-correct" : "selected-wrong");
+    if (!correct) btnX.className = "q-btn show-correct";
+  } else {
+    btnX.className = "q-btn " + (correct ? "selected-correct" : "selected-wrong");
+    if (!correct) btnO.className = "q-btn show-correct";
+  }
+
+  const ansDiv = document.getElementById("ans-" + i);
+  ansDiv.className = "q-answer visible " + (correct ? "correct" : "wrong");
+  ansDiv.querySelector(".ans-label").textContent = correct ? "正解！" : "不正解";
+
+  // ── Update mistake tracking ──
+  // (updates happen immediately per-question; results page shows summary)
+  const mistakes = STATE.mistakes[currentSection];
+  let gradMsg = null;
+
+  if (correct) {
+    if (mistakes[q.qIdx]) {
+      mistakes[q.qIdx].consecCorrect = (mistakes[q.qIdx].consecCorrect || 0) + 1;
+      if (mistakes[q.qIdx].consecCorrect >= 2) {
+        delete mistakes[q.qIdx];
+        gradMsg = "◎ 卒業！ 間違い履歴から消えました";
+      } else {
+        gradMsg = "○ あと1回正解で卒業";
+      }
+    }
+  } else {
+    if (mistakes[q.qIdx]) {
+      mistakes[q.qIdx].missCount += 1;
+      mistakes[q.qIdx].consecCorrect = 0;
+    } else {
+      mistakes[q.qIdx] = { missCount: 1, consecCorrect: 0 };
+    }
+  }
+
+  if (gradMsg) {
+    const g = document.getElementById("grad-" + i);
+    g.textContent = gradMsg;
+    g.style.display = "block";
+  }
+
+  updateProgress();
+
+  // End of session?
+  const total = currentQuestions.length;
+  if (Object.keys(currentAnswers).length === total) {
     finishQuiz();
   }
 }
 
 function finishQuiz() {
-  const total = state.queue.length;
-  const score = state.correct;
+  const total = currentQuestions.length;
+  const pct = Math.round(sessionCorrect / total * 100);
 
-  // save stats
-  const s = loadStats();
-  s.tries += 1;
+  // Update stats (only for scored modes: full, random, mistakes)
+  const s = STATE.stats[currentSection];
+  s.attempts += 1;
   s.totalAnswered += total;
-  s.totalCorrect += score;
-  if (state.mode === "all") {
-    if (s.best == null || score > s.best) s.best = score;
+  s.totalCorrect += sessionCorrect;
+  if (pct > s.bestPct) s.bestPct = pct;
+
+  saveState();
+
+  // Result display
+  let msg, msgClass;
+  if (pct === 100) {
+    msg = "◎ 全問正解！ お見事です";
+    msgClass = "";
+  } else if (pct >= 80) {
+    msg = "○ 合格ライン突破！";
+    msgClass = "";
+  } else if (pct >= 60) {
+    msg = "△ もう一歩。間違えた問題を繰り返しましょう";
+    msgClass = "warn";
+  } else {
+    msg = "! 要復習。全問レビューでじっくり読み直しを";
+    msgClass = "warn";
   }
-  // update mistakes
-  const wrongSet = new Set(s.mistakes);
-  state.answers.forEach(a => {
-    if (a.correct) wrongSet.delete(a.qIdx);
-    else wrongSet.add(a.qIdx);
-  });
-  s.mistakes = Array.from(wrongSet).sort((a,b)=>a-b);
-  saveStats(s);
 
-  state.lastResult = { total, score };
-  showResult();
+  document.getElementById("resultArea").innerHTML = `
+    <div class="result">
+      <div class="result-title">結果</div>
+      <div class="result-score">${sessionCorrect} / ${total}</div>
+      <div class="result-pct">正答率 ${pct}%</div>
+      <div class="result-msg ${msgClass}">${msg}</div>
+      <div class="result-actions">
+        <button class="result-btn secondary" onclick="showSection(currentSection)">科目TOPへ</button>
+        <button class="result-btn primary" onclick="startQuiz(currentSection, currentMode)">もう一度</button>
+      </div>
+    </div>
+  `;
+  document.getElementById("resultArea").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-function showResult() {
-  document.getElementById("quiz").classList.add("hide");
-  document.getElementById("result").classList.remove("hide");
-  const { total, score } = state.lastResult;
-  const pct = Math.round(100 * score / total);
-  document.getElementById("final-score").textContent = score;
-  document.getElementById("final-total").textContent = total;
-  document.getElementById("ring").style.setProperty("--pct", pct + "%");
-
-  let rank, cls, comment;
-  if (pct >= 90) { rank = "RANK S"; cls = "s"; comment = "完璧！業法は合格圏。横断数字の細部までもう一度通しておけば、本番で迷う場面はほぼないはず。"; }
-  else if (pct >= 75) { rank = "RANK A"; cls = "a"; comment = "合格ラインは明確に超えている。間違えた問題だけ復習して、該当テーマのページに戻って穴を埋めよう。"; }
-  else if (pct >= 50) { rank = "RANK B"; cls = "b"; comment = "ベースはできている。ひっかけ系（35条vs37条・クーリングオフ・保全措置）を重点的に戻って再読。"; }
-  else { rank = "RANK C"; cls = "c"; comment = "もう1周PDFを通し読み。「試験委員の標的」のコールアウトだけでも拾い直すと、次のトライで一気に伸びる。"; }
-  document.getElementById("result-title").textContent = "お疲れさま！";
-  const rankEl = document.getElementById("result-rank");
-  rankEl.className = "rank " + cls; rankEl.textContent = rank;
-  document.getElementById("result-comment").textContent = comment;
-}
-
-/* ========= REVIEW ========= */
-function showReview() {
-  document.getElementById("menu").classList.add("hide");
-  document.getElementById("review").classList.remove("hide");
-  const list = document.getElementById("review-list");
-  const s = loadStats();
-  const wrongSet = new Set(s.mistakes);
-  list.innerHTML = QUESTIONS.map((Q, i) => {
-    const isWrong = wrongSet.has(i);
-    const truth = Q.a ? "正しい（○）" : "誤り（×）";
-    return '<div class="review-item ' + (isWrong ? "wrong" : "correct") + '">' +
-      '<span class="tag">' + (isWrong ? "要復習" : "OK") + '</span>' +
-      '<div class="rq"><span class="n">Q' + String(i+1).padStart(2,"0") + '</span>' + Q.q + '</div>' +
-      '<div class="ra">答え：<b>' + truth + '</b> — ' + Q.e + '</div>' +
-    '</div>';
-  }).join("");
-  window.scrollTo(0, 0);
-}
-
-/* init */
-checkAuth();
+/* ================================================================
+   INIT
+   ================================================================ */
+renderTop();
 </script>
 </body>
 </html>
