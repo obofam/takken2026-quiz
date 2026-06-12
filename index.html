@@ -33,12 +33,41 @@
     box-shadow: 0 4px 16px rgba(0,180,220,.25);
   }
   .site-header h1 {
-    font-size: 1.15rem; font-weight: 700;
-    letter-spacing: .08em; color: #00d4ff;
+    font-size: 1.55rem; font-weight: 900;
+    letter-spacing: .06em; color: #eef4fb;
+    text-shadow: 0 1px 4px rgba(0,0,0,.55);
   }
   .site-header p {
-    font-size: .72rem; color: #6a8cba; margin-top: 6px;
+    font-size: .95rem; color: #a8c4e0; margin-top: 8px;
   }
+  .site-header .sub-add {
+    font-size: .82rem; font-weight: 600; color: #00d4ff; margin-top: 4px;
+  }
+
+  .top-tip {
+    margin: 22px auto 4px; max-width: 560px;
+    padding: 4px 8px;
+    font-size: .92rem; line-height: 1.7;
+    color: #a8c4e0; text-align: center;
+  }
+
+  .link-cards {
+    display: flex; gap: 10px;
+    max-width: 640px; margin: 18px auto 4px;
+  }
+  .link-card {
+    flex: 1; min-width: 0;
+    background: linear-gradient(170deg, #0e1f38, #091428);
+    border: 1px solid rgba(0,180,220,.25);
+    border-radius: 12px;
+    padding: 14px 8px;
+    text-align: center; text-decoration: none;
+    transition: border-color .15s, transform .15s;
+  }
+  .link-card:hover { border-color: rgba(0,180,220,.55); transform: translateY(-2px); }
+  .lc-icon { font-size: 1.5rem; line-height: 1; }
+  .lc-label { font-size: .92rem; font-weight: 800; color: #eef4fb; margin-top: 6px; }
+  .lc-sub { font-size: .68rem; color: #9db8d6; margin-top: 2px; }
 
   /* ── SECTION CARDS (TOP) ── */
   .section-card {
@@ -70,7 +99,7 @@
     letter-spacing: .02em; line-height: 1.25;
   }
   .sc-badge {
-    font-size: .62rem; font-weight: 700;
+    font-size: .70rem; font-weight: 700;
     padding: 2px 10px; border-radius: 20px;
     flex-shrink: 0; margin-top: 2px;
   }
@@ -92,7 +121,7 @@
     text-align: center;
   }
 
-  .sc-desc { font-size: .74rem; color: #8aa4c8; margin-bottom: 10px; }
+  .sc-desc { font-size: .82rem; color: #8aa4c8; margin-bottom: 10px; }
 
   .sc-stats {
     display: grid;
@@ -103,14 +132,14 @@
   }
   .sc-stat { text-align: center; }
   .sc-stat-val {
-    font-size: 1rem; font-weight: 800;
+    font-size: 1.08rem; font-weight: 800;
     color: #00d4ff; letter-spacing: 0;
   }
   .sc-stat-lbl {
-    font-size: .6rem; color: #5a7a9e; margin-top: 2px;
+    font-size: .68rem; color: #9db8d6; margin-top: 2px;
   }
   .sc-locked-hint {
-    font-size: .68rem; color: #6a8cba;
+    font-size: .84rem; color: #6a8cba;
     padding-top: 10px; border-top: 1px solid rgba(0,180,220,.1);
     text-align: center;
   }
@@ -119,7 +148,7 @@
   .back-btn {
     background: none; border: 1px solid rgba(0,180,220,.3);
     color: #00d4ff; border-radius: 8px;
-    padding: 6px 12px; font-size: .75rem;
+    padding: 6px 12px; font-size: .85rem;
     cursor: pointer; transition: background .15s;
     margin-bottom: 16px;
   }
@@ -132,7 +161,7 @@
     margin-bottom: 20px;
   }
   .subj-head h2 {
-    font-size: 1.05rem; font-weight: 700;
+    font-size: 1.18rem; font-weight: 700;
     color: #00d4ff; letter-spacing: .05em;
   }
 
@@ -154,11 +183,11 @@
     color: #00d4ff;
   }
   .subj-stat-lbl {
-    font-size: .62rem; color: #6a8cba; margin-top: 4px;
+    font-size: .7rem; color: #9db8d6; margin-top: 4px;
   }
 
   .mode-section-label {
-    font-size: .72rem; color: #6a8cba;
+    font-size: .84rem; color: #6a8cba;
     letter-spacing: .1em; margin: 0 0 10px 2px;
     font-weight: 600;
   }
@@ -192,14 +221,14 @@
 
   .mode-body { flex: 1; min-width: 0; }
   .mode-title {
-    font-size: .88rem; font-weight: 700;
+    font-size: 1.0rem; font-weight: 700;
     margin-bottom: 2px;
   }
   .mode-desc {
-    font-size: .7rem; color: #8aa4c8;
+    font-size: .94rem; color: #8aa4c8;
   }
   .mode-badge {
-    font-size: .6rem; font-weight: 700;
+    font-size: .7rem; font-weight: 700;
     color: #ffaa3c;
     background: rgba(255,170,60,.1);
     padding: 2px 8px; border-radius: 20px;
@@ -255,7 +284,7 @@
     margin-bottom: 16px;
   }
   .quiz-breadcrumb {
-    font-size: .7rem; color: #6a8cba;
+    font-size: .82rem; color: #6a8cba;
     margin-bottom: 8px;
   }
   .quiz-mode-label {
@@ -278,7 +307,7 @@
     transition: width .3s;
   }
   .progress-txt {
-    font-size: .68rem; color: #6a8cba;
+    font-size: .8rem; color: #6a8cba;
     min-width: 40px; text-align: right;
   }
 
@@ -295,7 +324,7 @@
     margin-bottom: 10px;
   }
   .q-num {
-    font-size: .68rem; font-weight: 700;
+    font-size: .8rem; font-weight: 700;
     color: #00d4ff; letter-spacing: .05em;
   }
   .q-status {
@@ -309,7 +338,7 @@
     background: rgba(0,220,160,.1); color: #00dca0;
   }
 
-  .q-text { font-size: .85rem; line-height: 1.75; margin-bottom: 14px; }
+  .q-text { font-size: 1.0rem; line-height: 1.75; margin-bottom: 14px; }
 
   .q-buttons { display: flex; gap: 12px; }
   .q-btn {
@@ -340,7 +369,7 @@
     margin-top: 12px;
     padding: 12px 14px;
     border-radius: 8px;
-    font-size: .76rem; line-height: 1.75;
+    font-size: .9rem; line-height: 1.75;
   }
   .q-answer.visible { display: block; }
   .q-answer.correct { background: rgba(0,220,160,.08); border-left: 3px solid #00dca0; }
@@ -348,7 +377,7 @@
   .q-answer.review { background: rgba(168,124,255,.06); border-left: 3px solid #a87cff; }
   .q-answer .ans-label {
     font-weight: 700; margin-bottom: 4px;
-    font-size: .72rem;
+    font-size: .84rem;
   }
   .q-answer.correct .ans-label { color: #00dca0; }
   .q-answer.wrong .ans-label { color: #ff6b6b; }
@@ -356,7 +385,7 @@
 
   .q-grad-notice {
     margin-top: 8px;
-    font-size: .68rem;
+    font-size: .8rem;
     color: #00dca0;
     padding: 6px 10px;
     background: rgba(0,220,160,.08);
@@ -374,7 +403,7 @@
     margin-top: 8px;
   }
   .result-title {
-    font-size: .78rem; color: #6a8cba;
+    font-size: .9rem; color: #6a8cba;
     margin-bottom: 8px; letter-spacing: .08em;
   }
   .result-score {
@@ -388,7 +417,7 @@
     margin-top: 14px; padding: 10px 14px;
     background: rgba(0,220,160,.08);
     border-radius: 8px;
-    font-size: .78rem; color: #00dca0;
+    font-size: .9rem; color: #00dca0;
   }
   .result-msg.warn {
     background: rgba(255,170,60,.08); color: #ffaa3c;
@@ -399,7 +428,7 @@
   .result-btn {
     flex: 1; padding: 11px;
     border-radius: 8px; border: none;
-    font-size: .82rem; font-weight: 700;
+    font-size: .94rem; font-weight: 700;
     cursor: pointer; transition: opacity .15s;
   }
   .result-btn:hover { opacity: .85; }
@@ -416,7 +445,7 @@
 
   /* ── HELPER TEXT ── */
   .mode-help {
-    font-size: .68rem; color: #6a8cba;
+    font-size: .9rem; color: #6a8cba;
     background: rgba(0,180,220,.04);
     border-left: 2px solid rgba(0,180,220,.2);
     padding: 10px 12px;
@@ -436,8 +465,27 @@
       <img class="site-logo" src="data:image/webp;base64,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" alt="耳で覚える宅建2026">
       <h1>耳で覚える宅建2026</h1>
       <p>スマホで解ける〇×問題集</p>
+      <p class="sub-add">問題は試験本番まで随時追加中！</p>
     </div>
     <div id="sectionList"></div>
+    <div class="top-tip">📚 繰り返し問題を解いて自信を付けたら、過去問にチャレンジして何度も繰り返すのがおすすめです！</div>
+    <div class="link-cards">
+      <a class="link-card" href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener">
+        <div class="lc-icon">📻</div>
+        <div class="lc-label">Stand.fm</div>
+        <div class="lc-sub">音声で聴く</div>
+      </a>
+      <a class="link-card" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener">
+        <div class="lc-icon">💬</div>
+        <div class="lc-label">LINE</div>
+        <div class="lc-sub">図解を受け取る</div>
+      </a>
+      <a class="link-card" href="https://note.com/fond_bison5155" target="_blank" rel="noopener">
+        <div class="lc-icon">📝</div>
+        <div class="lc-label">note</div>
+        <div class="lc-sub">記事・コラム一覧</div>
+      </a>
+    </div>
     <div class="site-footer">
       &copy; 2026 耳で覚える宅建2026 &mdash; スマホで解ける〇×問題集
     </div>
@@ -495,6 +543,7 @@
    ================================================================ */
 const SECTIONS = {
   gyouhou: {
+    emoji: "🏢",
     title: "宅建業法",
     desc: "免許・宅建士・媒介契約・35/37条・8種制限・監督処分・広告・履行法 ほか",
     password: "juusetsu",
@@ -552,6 +601,7 @@ const SECTIONS = {
     ]
   },
   kenri: {
+    emoji: "⚖️",
     title: "権利関係",
     desc: "意思表示・代理・物権変動・借地借家・相続・2026年改正 ほか",
     password: "souhoudairi",
@@ -611,6 +661,7 @@ const SECTIONS = {
     ]
   },
   houreizei: {
+    emoji: "🏗️",
     title: "法令上の制限＋税その他",
     desc: "都市計画法・建築基準法・国土利用計画法・農地法・盛土規制法・不動産取得税・固定資産税・印紙税・登録免許税・譲渡所得・鑑定評価・地価公示・機構法・景表法・土地・建物（5問免除含む）",
     password: "yousekiritsu",
@@ -678,10 +729,82 @@ const SECTIONS = {
     ]
   },
   chokuzen: {
+    emoji: "🎯",
     title: "直前対策",
-    desc: "横断まとめ・頻出数字・ひっかけパターン",
-    comingSoon: true,
-    questions: []
+    desc: "全分野の頻出数字・横断ひっかけ・横断まとめ（業法→権利→法令制限→税その他の科目順・全70問）",
+    password: "goukaku36",
+    questions: [
+      { q: "未完成物件の売買で、宅建業者が自ら売主となる場合、受領する手付金等が代金の10%以下かつ1,000万円以下であれば保全措置は不要である。", a: false, exp: "未完成物件は5%以下かつ1,000万円以下。10%は完成物件の基準。（業法41条・41条の2、施行令3条の5）" },
+      { q: "完成物件の売買では、指定保管機関による手付金等寄託契約を保全措置として利用できる。", a: true, exp: "寄託が使えるのは完成物件のみ。未完成物件は保証委託・保証保険の2種。（業法41条の2第1項）" },
+      { q: "手付金等の保全措置を講ずべき政令で定める額は、未完成物件の場合500万円である。", a: false, exp: "未完成・完成を問わず1,000万円。（施行令3条の5）" },
+      { q: "宅建業者が自ら売主となる売買で、代金の2/10を超える手付を定めた場合、超える部分のみが無効となる。", a: false, exp: "手付は2/10を「超えて受領できない」。「超える部分が無効」となるのは損害賠償額の予定・違約金の合計（業法38条）の方。（業法39条1項）" },
+      { q: "損害賠償額の予定と違約金を合算して代金の2/10を超える定めをした場合、その定め全体が無効となる。", a: false, exp: "超える部分が無効。全体無効ではない。（業法38条2項）" },
+      { q: "宅建業者が受領する支払金又は預り金について、受領額が50万円未満であれば保全措置を要しない。", a: true, exp: "50万円未満は「支払金又は預り金」の定義から除外される。（施行規則16条の3第1号）" },
+      { q: "営業保証金は、主たる事務所につき1,000万円、その他の事務所ごとに500万円を供託する。", a: true, exp: "（施行令2条の4）" },
+      { q: "弁済業務保証金分担金は、主たる事務所につき100万円である。", a: false, exp: "本店60万円、支店ごとに30万円。（施行令7条）" },
+      { q: "宅建業者の帳簿と従業者名簿は、いずれも10年間保存しなければならない。", a: false, exp: "帳簿は閉鎖後5年（自ら売主の新築住宅のみ10年）、名簿は最終記載から10年。（施行規則18条3項・17条の2第4項）" },
+      { q: "従業者名簿の保存期間は、名簿を閉鎖した日から起算する。", a: false, exp: "最終の記載をした日から10年。起算点のひっかけ。（施行規則17条の2第4項）" },
+      { q: "契約締結を行う案内所には、業務従事者5人に1人以上の割合で専任の宅建士を置かなければならない。", a: false, exp: "案内所は従業者数にかかわらず1人以上。5人に1人は事務所。（施行規則15条の5の3）" },
+      { q: "事務所に標識を掲示しなかった宅建業者は、10万円以下の過料に処される。", a: false, exp: "標識・報酬額の不掲示は50万円以下の罰金（刑罰）。（業法83条）" },
+      { q: "宅建業法における10万円以下の過料は、宅建士証の返納・提出・重要事項説明時の提示の義務違反をした宅建士に科される。", a: true, exp: "過料の対象は宅建士個人のみ。（業法86条）" },
+      { q: "低廉な空家等の売買媒介の特例は、代金400万円以下の物件に適用される。", a: false, exp: "令和6年改正で800万円以下に拡大。400万円は改正前。（報酬告示第7）" },
+      { q: "代金800万円以下の宅地の売買媒介では、特例により常に税込33万円の報酬を受領できる。", a: false, exp: "33万円は上限。あらかじめ説明し合意することも必要。（報酬告示第7）" },
+      { q: "居住用建物の賃貸借の媒介報酬は、依頼者の一方からは原則として借賃の0.55月分以内である。", a: true, exp: "依頼を受けるまでに承諾を得れば1.1月分まで可（双方合計1.1月分は不変）。（報酬告示第4）" },
+      { q: "長期の空家等の貸借の媒介では、貸主・借主双方から合計で借賃の2.2月分まで受領できる。", a: true, exp: "現地調査等の費用を貸主側報酬に反映させる場合の特例。増やせるのは貸主側のみで、借主側は通常規制のまま。（報酬告示第9）" },
+      { q: "貸借の代理の報酬上限は、媒介の2倍である借賃の2.2月分である。", a: false, exp: "貸借の代理は借賃の1.1月分が上限。「代理＝2倍」は売買の発想。（報酬告示第5）" },
+      { q: "免税事業者である宅建業者は、課税事業者と同じ税込率（5.5%等）で報酬を受領できる。", a: false, exp: "110分の100を乗じた額に仕入れ消費税相当額を加算した額が上限。（報酬告示第11(2)）" },
+      { q: "媒介契約書面（業法34条の2）には、宅地建物取引士の記名が必要である。", a: false, exp: "媒介契約書は宅建業者の記名押印。宅建士の記名が必要なのは35条書面・37条書面。（業法34条の2第1項）" },
+      { q: "35条書面と37条書面には、いずれも宅地建物取引士の記名が必要である。", a: true, exp: "ただし説明義務があるのは35条のみ。37条書面は交付（電磁的方法含む）だけでよい。（業法35条・37条）" },
+      { q: "専任媒介契約の有効期間は3か月を超えることができず、これより長い期間を定めたときは契約自体が無効となる。", a: false, exp: "契約は無効にならず、期間が3か月に短縮される。（業法34条の2第3項）" },
+      { q: "専属専任媒介契約では、業務処理状況を2週間に1回以上報告しなければならない。", a: false, exp: "専属専任は1週間に1回以上。2週間に1回以上は専任。登録（5日/7日）と逆に覚えない。（業法34条の2第9項）" },
+      { q: "宅建業者が死亡した場合、相続人は死亡の日から30日以内に免許権者へ届け出なければならない。", a: false, exp: "死亡だけは「死亡の事実を知った日から」30日以内。その他の廃業等は「その日から」。（業法11条1項）" },
+      { q: "保証協会の社員となった宅建業者は、社員となった日から1か月以内に弁済業務保証金分担金を納付しなければならない。", a: false, exp: "社員となろうとする日までに納付（加入前）。なお新事務所設置時の追加納付は2週間以内。（業法64条の9）" },
+      { q: "誇大広告等の禁止に違反した場合、監督処分の対象にはなるが罰則の適用はない。", a: false, exp: "6月以下の拘禁刑もしくは100万円以下の罰金（または併科）。「罰則なし」が定番ひっかけ。（業法32条・81条）" },
+      { q: "改正区分所有法では、共用部分の重大変更は、出席した区分所有者及びその議決権の各4分の3以上の多数で決する。", a: true, exp: "出席者ベースへの改正が最大のポイント。定足数は各過半数の出席。（区分所有法17条1項）" },
+      { q: "規約の変更は、区分所有者全員の議決権の4分の3以上の賛成がなければできない。", a: false, exp: "改正後は「出席した」区分所有者及び議決権の各4分の3以上。全員ベースではない。（区分所有法31条1項）" },
+      { q: "バリアフリー化のために必要な共用部分の変更は、出席者の各3分の2以上の多数で決することができる。", a: true, exp: "4分の3を3分の2に読み替える特例。（区分所有法17条5項）" },
+      { q: "建替え決議を目的とする集会の招集通知は、会日の少なくとも1月前に発しなければならない。", a: false, exp: "2月前。1月は所在等不明区分所有者除外裁判の公告期間の下限。（区分所有法62条6項・86条2項）" },
+      { q: "建替え決議後、区分所有者が専有部分の賃借人に賃貸借の終了を請求した場合、賃貸借は請求の日から6月の経過によって終了する。", a: true, exp: "通常生ずる損失の補償金支払いが必要。（区分所有法64条の2）" },
+      { q: "規約を保管しなかった管理者は、改正後の区分所有法では20万円以下の過料に処される。", a: true, exp: "条文は71条から91条に移動。金額も引き上げ。（区分所有法91条）" },
+      { q: "建替え決議は、区分所有者及び議決権の各5分の4以上の多数による。", a: true, exp: "原則は4/5のまま。出席者ベースの多数決は建替え決議には適用されない（処分を伴う決議は全体ベース）。（区分所有法62条1項）" },
+      { q: "2026年4月施行の改正により、耐震性の不足など客観的事由がある場合、建替え決議の要件は4分の3以上に緩和された。", a: true, exp: "改正初年度の最重要論点。原則4/5と緩和3/4をセットで。（改正区分所有法）" },
+      { q: "存続期間を20年と定めた普通借地権は、その定めが無効となり存続期間は30年となる。", a: true, exp: "借地は短い定めを30年に引き上げる。（借地借家法3条・9条)" },
+      { q: "期間を1年未満と定めた建物賃貸借（定期建物賃貸借を除く）は、期間1年の建物賃貸借とみなされる。", a: false, exp: "「期間の定めがない」ものとみなされる。借地（30年への引上げ）との違い。（借地借家法29条1項）" },
+      { q: "一般定期借地権の存続期間は30年以上で定めることができる。", a: false, exp: "一般定期借地は50年以上。30年は普通借地の法定期間。（借地借家法22条）" },
+      { q: "所有の意思をもって平穏かつ公然と他人の物を占有した者は、占有開始時に善意無過失であれば、その後に悪意となっても10年で所有権を時効取得できる。", a: true, exp: "善意無過失は占有開始時点だけで判定。途中の悪意は影響しない。（民法162条2項）" },
+      { q: "不法行為による損害賠償請求権は、被害者が損害および加害者を知った時から3年で時効消滅するが、人の生命または身体を害する不法行為では5年となる。", a: true, exp: "行為時からは20年。人身侵害は3年→5年に伸長。（民法724条・724条の2）" },
+      { q: "抵当権者は、満期となった最後の3年分の利息について、抵当権を行使できる。", a: false, exp: "最後の2年分。後順位抵当権者等の保護のため。（民法375条）" },
+      { q: "相続の承認または放棄は、自己のために相続の開始があったことを知った時から3か月以内にしなければならない。", a: true, exp: "この期間（熟慮期間）は伸長を請求できる。（民法915条）" },
+      { q: "遺留分侵害額の請求権は、相続開始および侵害の事実を知った時から1年、相続開始から10年で消滅する。", a: true, exp: "1年と10年のセットで。（民法1048条）" },
+      { q: "一般定期借地権は、存続期間を30年以上として設定することができる。", a: false, exp: "一般定期借地は50年以上。30年は普通借地の法定期間。事業用定期借地は10年以上50年未満。（借地借家法22条）" },
+      { q: "建物の賃貸借で期間を6か月と定めた場合、期間の定めがない建物賃貸借とみなされる。", a: true, exp: "1年未満の定めは期間の定めなしとみなす。借地の「30年に引上げ」と直し方が違う。（借地借家法29条1項）" },
+      { q: "市街化区域内で1,500㎡の開発行為を行う場合、開発許可は不要である。", a: false, exp: "市街化区域は1,000㎡以上で許可必要。（都計法29条、施行令19条1項）" },
+      { q: "市街化区域内で1,500㎡の土地売買契約を締結した場合、国土法の事後届出が必要である。", a: false, exp: "市街化区域の届出基準は2,000㎡以上。開発許可の1,000㎡との取り違え注意。（国土法23条2項1号イ）" },
+      { q: "都市計画区域外では、10,000㎡以上の開発行為に開発許可が必要であり、10,000㎡以上の土地売買に事後届出が必要である。", a: true, exp: "都市計画区域外でだけ両法の数字が一致する。（都計法29条2項／国土法23条2項1号ハ）" },
+      { q: "国土法の事後届出は、契約締結日から起算して3週間以内にしなければならない。", a: false, exp: "届出は2週間以内。3週間は知事の勧告期限。（国土法23条1項・24条2項)" },
+      { q: "注視区域内で事前届出をした者は、届出から6週間を経過するまで契約を締結できないのが原則である。", a: true, exp: "不勧告通知があれば6週間を待たずに締結可。（国土法27条の4第3項）" },
+      { q: "市街化区域内の農地を耕作目的で取得する場合、あらかじめ農業委員会に届け出れば3条許可は不要である。", a: false, exp: "届出特例は4条・5条のみ。3条は常に許可必要。（農地法3条）" },
+      { q: "4ヘクタールを超える農地を転用する場合、農林水産大臣の許可が必要である。", a: false, exp: "許可権者は都道府県知事等のまま。知事が大臣に協議する。（農地法附則2条）" },
+      { q: "相続により農地を取得した者は、3条許可は不要だが、農業委員会への届出が必要である。", a: true, exp: "（農地法3条1項12号・3条の3第1項）" },
+      { q: "準耐火構造の主要構造部は、屋根・階段を含めすべて45分間の耐火性能が必要である。", a: false, exp: "壁・柱・床・はりは45分間、屋根（軒裏除く）・階段は30分間。（施行令107条の2）" },
+      { q: "住宅の居室には、原則として床面積の7分の1以上の採光に有効な開口部が必要である。", a: true, exp: "（建基法28条1項、施行令19条3項）" },
+      { q: "住宅の居室の採光割合は、いかなる場合も7分の1未満にすることはできない。", a: false, exp: "令和5年改正により、床面50ルックス以上の照明設備の設置で10分の1まで緩和可。（施行令19条3項ただし書）" },
+      { q: "幼稚園の教室に必要な採光割合は、大学の教室と同じ10分の1である。", a: false, exp: "幼稚園〜高校等の教室は5分の1。10分の1は大学等の教室。（施行令19条3項）" },
+      { q: "免許証の記載事項である商号や役員に変更があった場合、30日以内に変更の届出をしなければならない。", a: true, exp: "変更の届出も30日以内。国土法の事後届出2週間と混同しない。（業法9条）" },
+      { q: "居室には、原則として床面積の20分の1以上の換気に有効な開口部が必要である。", a: true, exp: "採光1/7（住宅）と換気1/20をセットで覚える。（建基法28条2項）" },
+      { q: "固定資産税の小規模住宅用地（200㎡以下の部分）は、課税標準が6分の1に軽減される。", a: true, exp: "200㎡超の部分は3分の1。都市計画税は1/3・2/3。（地方税法附則）" },
+      { q: "建蔽率は、街区の角地等で特定行政庁が指定するもの＋防火地域内の耐火建築物の両方を満たすと、合わせて20%緩和される。", a: true, exp: "各+10%で合計+20%。指定80%＋防火＋耐火なら制限なし。（建基法53条）" },
+      { q: "盛土規制法の宅地造成等工事規制区域内では、盛土により高さ2mを超える崖を生じる場合に許可が必要であり、切土は1m超で許可対象となる。", a: false, exp: "逆。盛土は崖1m超、切土は2m超。盛土の方が基準が厳しい。（盛土規制法施行令3条）" },
+      { q: "土地区画整理組合を設立するには、宅地の所有者・借地権者が7人以上で共同して定款・事業計画を定め、知事の認可を受ける。", a: true, exp: "設立は7人以上。「3人」「5人」は誤り。（区画整理法14条）" },
+      { q: "専属専任媒介契約では、契約締結の日から休業日を除き5日以内に指定流通機構へ登録しなければならない。", a: true, exp: "専任7日・専属専任5日、休業日不算入。（施行規則15条の10）" },
+      { q: "不動産広告で徒歩所要時間を表示する場合、道路距離80mにつき1分として計算し、端数は切り捨てる。", a: false, exp: "端数は切り上げ。1分未満の端数を捨てると実際より近く見えるため。（表示規約）" },
+      { q: "公園・庭園等の名称を物件名に使用できるのは、当該施設から直線距離300m以内にある場合である。", a: true, exp: "徒歩の「道路距離80m」との使い分け（こちらは直線距離）。（表示規約）" },
+      { q: "相続による所有権移転登記の登録免許税の税率は、1,000分の4（0.4%）である。", a: true, exp: "本則2.0%・住宅用家屋の売買移転0.3%との3点セットで。（登免税法）" },
+      { q: "居住用財産の3,000万円特別控除の適用を受けるには、所有期間が10年を超えていなければならない。", a: false, exp: "3,000万円控除に所有期間要件はない。10年超が要るのは軽減税率（14.21%）の方。両者は併用可。（租特法35条・31条の3）" },
+      { q: "不動産取得税の標準税率は4%だが、住宅および土地の取得は令和9年3月31日まで3%に軽減される。", a: true, exp: "事務所・店舗等は本則4%のまま。（地方税法附則）" },
+      { q: "新築住宅の固定資産税は、床面積120㎡相当部分まで税額が2分の1に減額され、一般住宅は3年間、3階建以上の耐火住宅は5年間適用される。", a: true, exp: "床面積要件は50〜280㎡（賃貸40㎡以上）。（地方税法附則15条の6）" },
+      { q: "建物の賃貸借契約書は、印紙税の課税文書である。", a: false, exp: "建物の賃貸借契約書は非課税。土地の賃借権設定契約書は1号文書として課税。（印紙税法）" },
+    ]
   }
 };
 
@@ -767,8 +890,8 @@ function renderTop() {
       card.innerHTML = `
         <div class="sc-head">
           <div class="sc-title-wrap">
-            <div class="sc-kicker">一問一答</div>
-            <div class="sc-title">${sec.title}</div>
+            
+            <div class="sc-title">${sec.emoji ? sec.emoji + " " : ""}${sec.title}</div>
           </div>
           <span class="sc-badge badge-coming">近日公開</span>
         </div>
@@ -810,8 +933,8 @@ function renderTop() {
     card.innerHTML = `
       <div class="sc-head">
         <div class="sc-title-wrap">
-          <div class="sc-kicker">一問一答</div>
-          <div class="sc-title">${sec.title}</div>
+          
+          <div class="sc-title">${sec.emoji ? sec.emoji + " " : ""}${sec.title}</div>
         </div>
         <span class="sc-badge ${unlocked ? 'badge-unlocked' : 'badge-locked'}">
           ${unlocked ? '解除済み' : 'ロック中'}
@@ -896,21 +1019,21 @@ function renderSection(key) {
   const modes = [
     {
       id: "full",
-      icon: "◆", iconClass: "",
+      icon: "📝", iconClass: "",
       title: "全問チャレンジ",
       desc: `全${sec.questions.length}問を通しで挑戦。初見はこれから。`,
       disabled: false
     },
     {
       id: "random",
-      icon: "R", iconClass: "",
+      icon: "🎲", iconClass: "",
       title: "ランダム10問",
       desc: "スキマ時間の小テスト。出題順はランダム。",
       disabled: false
     },
     {
       id: "mistakes",
-      icon: "!", iconClass: "mistake",
+      icon: "🔁", iconClass: "mistake",
       title: "間違えた問題だけ",
       desc: mistakeCount > 0
         ? `現在 ${mistakeCount}問。2回連続正解で卒業。`
@@ -920,7 +1043,7 @@ function renderSection(key) {
     },
     {
       id: "review",
-      icon: "▼", iconClass: "review",
+      icon: "📖", iconClass: "review",
       title: "全問レビュー",
       desc: "解答と解説を通して読むだけ。記録なし。",
       disabled: false

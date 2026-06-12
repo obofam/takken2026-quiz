@@ -16,9 +16,9 @@ Vercel CLIでデプロイ運用中（obocks-projects/takken2026-quiz）。
 
 ### 毎回の更新手順
 
-1. ターミナルで `quiz_site` フォルダに入る
+1. ターミナルで `7_クイズと進捗トラッカー` フォルダに入る（⚠旧 `有料PDF\quiz_site` は2026-06-08に廃止・アーカイブ済み）
    ```
-   cd C:\Claude\宅建\有料PDF\quiz_site
+   cd C:\Claude\宅建\7_クイズと進捗トラッカー
    ```
 
 2. （初回or未ログイン時のみ）Vercelにログイン
@@ -47,7 +47,7 @@ Vercel CLIでデプロイ運用中（obocks-projects/takken2026-quiz）。
 
 ### トラブル時
 
-- `vercel link` をやり直したい → `quiz_site` 内の `.vercel` フォルダを削除してから再実行
+- `vercel link` をやり直したい → `7_クイズと進捗トラッカー` 内の `.vercel` フォルダを削除してから再実行
 - ログインし直し → `vercel logout` → `vercel login`
 - 何がデプロイされてるか確認 → `vercel ls`
 

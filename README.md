@@ -6,18 +6,24 @@
 - クイズ：https://takken2026-quiz.vercel.app/
 - トラッカー：https://takken2026-quiz.vercel.app/tracker.html
 
-## ファイル構成
-- `index.html` … クイズ本体（1ファイル完結、ロゴ・favicon埋め込み済み）
-- `tracker.html` … 進捗トラッカー
+## ファイル構成（⚠ここを間違えやすい）
+| ファイル | 役割 | URL |
+|---|---|---|
+| `index.html` | **クイズ本体**（〇×問題集。Vercelの仕様でこの名前のまま＝サイトのトップページ） | https://takken2026-quiz.vercel.app/ |
+| `tracker.html` | **進捗トラッカー**（学習進捗の見える化） | https://takken2026-quiz.vercel.app/tracker.html |
 - `SITE_GUIDE.md` … 設計思想・パスワード一覧・デザイン仕様（詳細はこちら）
 - `README.md` … このファイル
 
 ## デプロイ手順（これ一本）
 ```
-cd C:\Claude\宅建\6_quiz-site
+cd C:\Claude\宅建\7_クイズと進捗トラッカー
 vercel --prod
 ```
-git は履歴管理用。編集→デプロイ→`git add -A && git commit` の順で記録を残す。
+デプロイ後、履歴記録用にgitコミット（⚠PowerShellは `&&` 非対応なので1行ずつ実行）：
+```
+git add -A
+git commit -m "変更内容のメモ"
+```
 git push は GitHub バックアップ用（Vercel自動デプロイの有無に関わらず、フォルダが1つなので巻き戻り事故は起きない）。
 
 ## やってはいけないこと

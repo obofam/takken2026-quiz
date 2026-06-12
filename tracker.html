@@ -512,18 +512,23 @@ const EPISODES = [
   {n:2, date:"3/19", field:"宅建業法", title:"ここ間違えたら4点失う ── 35条書面と37条書面の決定的な違い", url:"https://stand.fm/episodes/69b204778578fadedda0f194"},
   {n:3, date:"3/26", field:"宅建業法", title:"不動産屋を本気にさせる媒介契約 ── 3種の契約を使いこなす方法", url:"https://stand.fm/episodes/69b76b1a4bc43e4bf61a187d"},
   {n:4, date:"3/30", field:"宅建業法", title:"プロが素人に負ける8つのルール ── 自ら売主の8種制限", url:"https://stand.fm/episodes/69b79335c129adda736f5f3f"},
-  {n:5, date:"4/6",  field:"宅建業法", title:"5年ごとに届けないと免許が消える ── 更新と大臣免許・知事免許", url:"https://stand.fm/episodes/69b7939dc129adda736f5f49"},
+  {n:5, date:"4/6",  field:"宅建業法", title:"5年ごとに申請しないと免許が消える ── 更新と大臣免許・知事免許", url:"https://stand.fm/episodes/69b7939dc129adda736f5f49"},
   {n:6, date:"4/10", field:"宅建業法", title:"名簿が2つあるのはなぜ？ ── 業者名簿と従業者名簿の違いを3分で", url:"https://stand.fm/episodes/69bb567bf697d1ea812e862d"},
   {n:7, date:"4/13", field:"宅建業法", title:"暴行の罰金で不動産免許は消える ── 欠格事由の「5年の壁」", url:"https://stand.fm/episodes/69bb56f603722b9667206135"},
   {n:8, date:"4/20", field:"宅建業法", title:"「許可予定」と書いたらアウト ── 不動産広告に嘘が許されない理由", url:"https://stand.fm/episodes/69bb65505ee2021acaaacb44"},
   {n:9, date:"4/27", field:"宅建業法", title:"免許取消は一発退場 ── 消費者を守る処分の3段階ロジック", url:"https://stand.fm/episodes/69bb66c503722b96672062a0"},
   {n:10,date:"5/4",  field:"宅建業法", title:"1000万円 vs 60万円の差 ── 営業保証金と保証協会どっちが得か", url:"https://stand.fm/episodes/69dc7ba498eff95c436a4549"},
   {n:11,date:"5/11", field:"宅建業法", title:"3%+6万円だけ覚えても解けない ── 報酬計算の落とし穴と瑕疵担保", url:"https://stand.fm/episodes/69dc7c44f87676817ebf104a"},
+  {n:34,label:"補1",date:"6/15", field:"宅建業法", title:"合格しても、まだ宅建士じゃない ── 登録・宅建士証・「移転の罠」"},
+  {n:35,label:"補2",date:"6/22", field:"宅建業法", title:"8日間なら、なかったことにできる──クーリングオフは場所と書面で決まる"},
+  {n:36,label:"補3",date:"6/29", field:"宅建業法", title:"業者が倒れても手付金は戻る ─ 保全措置5%・10%・1000万円の壁"},
+  {n:37,label:"補4",date:"7/6",  field:"宅建業法", title:"テントの案内所にも標識はいる──5人に1人・1人以上・10日前"},
+  {n:38,label:"補5",date:"7/13", field:"宅建業法", title:"「必ず値上がりします」は一発アウト──禁止行為と届出を一問一答で"},
   {n:12,date:"5/18", field:"権利関係", title:"騙されたのに契約が有効？ ── 意思表示（詐欺・強迫・錯誤）の恐い話", url:"https://stand.fm/episodes/69dc7c7af87676817ebf104d"},
   {n:13,date:"5/25", field:"権利関係", title:"頼んでないのに契約された ── 代理と無権代理・表見代理の境界線", url:"https://stand.fm/episodes/69dc7cb6a3cd112547af1093"},
   {n:14,date:"6/1",  field:"権利関係", title:"放っておくと権利が消える ── 取得時効と消滅時効を完全整理"},
   {n:15,date:"6/8",  field:"権利関係", title:"登記しないと負ける ── 不動産物権変動と「第三者」の正体"},
-  {n:16,date:"6/15", field:"権利関係", title:"家を担保に取られるとどうなる ── 抵当権を図で理解する"},
+  {n:16,date:"6/15", field:"権利関係", title:"家は住んだまま担保になる ── 抵当権の設定・順位・法定地上権"},
   {n:17,date:"6/22", field:"権利関係", title:"友人の借金を肩代わり？ ── 連帯債務と保証の違いが命取り"},
   {n:18,date:"6/29", field:"権利関係", title:"30年住んでも出ていけと言われる？ ── 借地権の存続期間と更新"},
   {n:19,date:"7/6",  field:"権利関係", title:"大家に「出てけ」と言われたら ── 借家権と正当事由・定期借家"},
@@ -553,8 +558,8 @@ const COLUMNS = [
 const BADGES = [
   {id:"first",   icon:"🎧", name:"はじめの一歩",   check:s => s.listened >= 1},
   {id:"ten",     icon:"📻", name:"10回達成",        check:s => s.listened >= 10},
-  {id:"half",    icon:"🌓", name:"折り返し",        check:s => s.listened >= 17},
-  {id:"gyoho",   icon:"🏢", name:"業法マスター",    check:s => s.byField["宅建業法"] === 11},
+  {id:"half",    icon:"🌓", name:"折り返し",        check:s => s.listened >= 19},
+  {id:"gyoho",   icon:"🏢", name:"業法マスター",    check:s => s.byField["宅建業法"] === 16},
   {id:"kenri",   icon:"⚖️", name:"権利マスター",    check:s => s.byField["権利関係"] === 10},
   {id:"houzei",  icon:"🏗️", name:"法令・税マスター",check:s => s.byField["法令・税その他"] === 10},
   {id:"chokuzen",icon:"🎯", name:"直前完走",        check:s => s.byField["直前対策"] === 2},
@@ -658,7 +663,7 @@ function renderEpisodes(){
     const label = st === 1 ? "聴了" : st === 2 ? "復習" : "未聴";
     const epHtml = `
     <article class="ep ${stateCls}" data-n="${ep.n}">
-      <div class="ep-num">${ep.n}<span class="hash">#</span></div>
+      <div class="ep-num">${ep.label||ep.n}<span class="hash">#</span></div>
       <div class="ep-main">
         <p class="ep-title">${ep.title}</p>
         <div class="ep-meta">
