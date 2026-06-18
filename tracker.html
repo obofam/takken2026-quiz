@@ -310,6 +310,19 @@
   .product-link .pl-title{font-size:13px;font-weight:700;line-height:1.35}
   .product-link .pl-sub{font-size:11px;color:var(--muted);margin-top:2px}
   .product-link .pl-arrow{flex-shrink:0;color:var(--muted);font-size:18px}
+  .product-link.product-inline{margin:14px 16px 6px}
+  /* ---------- Field nav (前後の分野へ) ---------- */
+  .field-nav{
+    display:flex;justify-content:space-between;gap:10px;
+    margin:6px 16px 4px;
+  }
+  .field-nav .fnav{
+    font-family:inherit;font-weight:700;font-size:12.5px;
+    padding:10px 15px;border-radius:999px;border:1.5px solid var(--line);
+    background:#fff;color:var(--text);cursor:pointer;
+  }
+  .field-nav .fnav:active{transform:scale(.97)}
+  .field-nav .fnav-spacer{flex:0 0 auto}
 
   /* ---------- Footer actions ---------- */
   .footer{padding:8px 16px 40px;color:var(--muted);font-size:11px;text-align:center}
@@ -473,9 +486,9 @@
 <a class="product-link" href="https://note.com/fond_bison5155/m/m81b6c01b758f" target="_blank" rel="noopener" style="margin-top:10px">
   <div class="pl-icon">📘</div>
   <div class="pl-main">
-    <div class="pl-label">MORE</div>
-    <div class="pl-title">直前対策：重要ポイント総まとめ</div>
-    <div class="pl-sub">テキスト解説＋一問一答で仕上げたい人向け・noteで販売中</div>
+    <div class="pl-label">3分野まとめ</div>
+    <div class="pl-title">3分野のポイント総まとめ＋○×問題集</div>
+    <div class="pl-sub">業法・権利・法令税を1つのマガジンで・noteで販売中</div>
   </div>
   <div class="pl-arrow">›</div>
 </a>
@@ -506,6 +519,34 @@ const FIELDS = [
   {key:"法令税", full:"法令・税その他", color:"#F59E0B"},
   {key:"直前", full:"直前対策", color:"#8B7BF7"},
 ];
+
+// 分野別の有料教材（ポイント総まとめ＋○×問題集）。進捗の母数には含めない。
+const PRODUCTS = {
+  "宅建業法": {
+    label:"重要ポイント総まとめ教材", icon:"🏢",
+    title:"宅建業法 ポイント総まとめ＋○×問題集",
+    sub:"比較表＋登場人物図＋○×全50問で業法20点を固める・noteで販売中",
+    url:"https://note.com/fond_bison5155/n/n21bbbcab9add?magazine_key=m81b6c01b758f"
+  },
+  "権利関係": {
+    label:"重要ポイント総まとめ教材", icon:"⚖️",
+    title:"権利関係 ポイント総まとめ＋○×問題集",
+    sub:"図解＋○×全52問で権利関係14点を拾う・noteで販売中",
+    url:"https://note.com/fond_bison5155/n/n10bb0e89fe64?magazine_key=m81b6c01b758f"
+  },
+  "法令・税その他": {
+    label:"重要ポイント総まとめ教材", icon:"🏗️",
+    title:"法令制限＋税その他 ポイント総まとめ＋○×問題集",
+    sub:"令和8年度税制改正対応・○×全60問・noteで販売中",
+    url:"https://note.com/fond_bison5155/n/nd131a0a57d4b?magazine_key=m81b6c01b758f"
+  },
+  "直前対策": {
+    label:"3分野まとめ", icon:"📦",
+    title:"3分野のポイント総まとめ＋○×問題集",
+    sub:"業法・権利・法令税をまとめて読める・noteマガジン",
+    url:"https://note.com/fond_bison5155/m/m81b6c01b758f"
+  },
+};
 
 const EPISODES = [
   {n:1, date:"3/12", field:"宅建業法", title:"宅建業法は「最強の防具」── なぜ業法だけで20点取れるのか", url:"https://stand.fm/episodes/69b1fdb3507312ea8122dbaf"},
@@ -655,6 +696,35 @@ function renderEpisodes(){
     return `<div class="col-ep ${unlocked ? "" : "locked"}" aria-label="コラム">${inner}</div>`;
   };
 
+  // その分野の教材リンク（母数には含めない・任意の深掘り）
+  const renderProductCard = () => {
+    const p = PRODUCTS[currentField];
+    if(!p) return "";
+    return `<a class="product-link product-inline" href="${p.url}" target="_blank" rel="noopener" aria-label="${p.title}（noteを開く）">
+      <div class="pl-icon">${p.icon}</div>
+      <div class="pl-main">
+        <div class="pl-label">${p.label}</div>
+        <div class="pl-title">${p.title}</div>
+        <div class="pl-sub">${p.sub}</div>
+      </div>
+      <div class="pl-arrow">›</div>
+    </a>`;
+  };
+
+  // 前後の分野へ移動するナビ
+  const renderFieldNav = () => {
+    const idx = FIELDS.findIndex(f => f.full === currentField);
+    const prev = idx > 0 ? FIELDS[idx - 1] : null;
+    const next = idx < FIELDS.length - 1 ? FIELDS[idx + 1] : null;
+    const prevBtn = prev
+      ? `<button class="fnav fnav-prev" data-field="${prev.full}">← ${prev.full}</button>`
+      : `<span class="fnav-spacer"></span>`;
+    const nextBtn = next
+      ? `<button class="fnav fnav-next" data-field="${next.full}">${next.full} →</button>`
+      : `<span class="fnav-spacer"></span>`;
+    return `<nav class="field-nav" aria-label="分野を移動">${prevBtn}${nextBtn}</nav>`;
+  };
+
   el.innerHTML = list.map(ep => {
     const st = STATE.episodes[ep.n];
     const stateCls = st === 1 ? "state-listened" : st === 2 ? "state-review" : "";
@@ -681,9 +751,17 @@ function renderEpisodes(){
       return epHtml + renderColumnCard();
     }
     return epHtml;
-  }).join("");
+  }).join("") + renderProductCard() + renderFieldNav();
   el.querySelectorAll(".ep-state").forEach(btn => {
     btn.addEventListener("click", () => cycleState(Number(btn.dataset.n)));
+  });
+  el.querySelectorAll(".fnav").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentField = btn.dataset.field;
+      renderTabs();
+      renderEpisodes();
+      document.getElementById("episodes").scrollIntoView({behavior:"smooth",block:"start"});
+    });
   });
 }
 
