@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宅建おみくじ｜耳で覚える宅建</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --washi:#F2EBDC;
+    --card:#FBF8F0;
+    --sumi:#221F1A;
+    --shu:#C0392B;
+    --shu-bright:#D8463A;
+    --gold:#B28C4D;
+    --ai:#2F4858;
+    --line-faint:rgba(34,31,26,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Zen Kaku Gothic New",sans-serif;
+    color:var(--sumi);
+    background:
+      radial-gradient(circle at 20% 15%, rgba(178,140,77,.06), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(192,57,43,.05), transparent 40%),
+      var(--washi);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .stage{width:100%;max-width:440px}
+
+  /* ── 額（写真／梅鉢紋）── */
+  .crest-frame{
+    width:108px;height:108px;margin:0 auto 14px;
+    border-radius:50%;
+    background:var(--card);
+    border:2px solid var(--shu);
+    box-shadow:0 0 0 5px var(--washi),0 0 0 6px var(--line-faint),0 8px 22px rgba(34,31,26,.12);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+  /* 写真を入れる時はこの img の src を差し替えるだけ。
+     例: <img class="shrine-photo" src="tenmangu.jpg" alt="天満宮">
+     src を入れると自動で紋より前面に出ます。 */
+  .shrine-photo{width:100%;height:100%;object-fit:cover;display:none}
+  .shrine-photo[src]:not([src=""]){display:block}
+  .shrine-photo[src]:not([src=""]) ~ .umebachi{display:none}
+  .umebachi{width:62px;height:62px}
+
+  header{text-align:center;margin-bottom:6px}
+  .eyebrow{
+    font-family:"Shippori Mincho B1",serif;
+    letter-spacing:.32em;font-size:12px;color:var(--shu);
+    margin-bottom:4px;padding-left:.32em;
+  }
+  h1{
+    font-family:"Shippori Mincho B1",serif;font-weight:800;
+    font-size:30px;letter-spacing:.14em;line-height:1.25;
+  }
+  .sub{
+    font-size:11.5px;color:var(--gold);letter-spacing:.18em;
+    margin-top:8px;padding-left:.18em;
+  }
+  .rule{
+    width:46px;height:1px;background:var(--shu);
+    margin:16px auto 22px;position:relative;opacity:.6;
+  }
+  .rule::before,.rule::after{
+    content:"";position:absolute;top:-2px;width:5px;height:5px;border-radius:50%;
+    background:var(--shu);
+  }
+  .rule::before{left:-9px}.rule::after{right:-9px}
+
+  /* ── 引く前：筒 ── */
+  .draw-zone{text-align:center}
+  .tutu-wrap{height:150px;display:flex;align-items:flex-end;justify-content:center;margin-bottom:22px}
+  .tutu{transform-origin:50% 100%}
+  .tutu.shaking{animation:shake .5s ease-in-out 2}
+  @keyframes shake{
+    0%,100%{transform:rotate(0)}
+    20%{transform:rotate(-9deg)}
+    40%{transform:rotate(8deg)}
+    60%{transform:rotate(-6deg)}
+    80%{transform:rotate(5deg)}
+  }
+  button{
+    font-family:"Shippori Mincho B1",serif;cursor:pointer;border:none;
+    transition:transform .12s ease,box-shadow .2s ease,background .2s ease;
+  }
+  .draw-btn{
+    background:var(--shu);color:#FBF8F0;
+    font-size:18px;font-weight:700;letter-spacing:.4em;padding:15px 38px 15px 42px;
+    border-radius:2px;box-shadow:0 5px 0 #8f2a20,0 10px 18px rgba(143,42,32,.28);
+  }
+  .draw-btn:hover{background:var(--shu-bright)}
+  .draw-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #8f2a20,0 3px 8px rgba(143,42,32,.28)}
+
+  /* ── 引いた後：御籤 ── */
+  .slip{
+    display:none;background:var(--card);
+    border:1px solid var(--line-faint);
+    border-top:4px solid var(--shu);
+    border-radius:3px;padding:30px 26px 26px;
+    box-shadow:0 14px 36px rgba(34,31,26,.13);
+    position:relative;
+  }
+  .slip.show{display:block;animation:rise .55s cubic-bezier(.16,.84,.44,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
+  .slip::after{
+    content:"耳で覚える宅建";position:absolute;bottom:12px;right:16px;
+    font-size:9.5px;letter-spacing:.24em;color:var(--gold);opacity:.7;
+  }
+
+  .verdict-row{display:flex;gap:22px;align-items:flex-start;margin-bottom:6px}
+  .rank{
+    writing-mode:vertical-rl;font-family:"Shippori Mincho B1",serif;font-weight:800;
+    font-size:58px;line-height:1;letter-spacing:.05em;color:var(--shu-bright);
+    text-shadow:1px 1px 0 rgba(216,70,58,.12);
+  }
+  .rank.kyou{color:var(--ai)}
+  .hitokoto{
+    writing-mode:vertical-rl;font-family:"Shippori Mincho B1",serif;font-weight:500;
+    font-size:16px;line-height:1.9;letter-spacing:.08em;color:var(--sumi);
+    max-height:185px;
+  }
+  .reading{
+    writing-mode:vertical-rl;font-size:10px;letter-spacing:.2em;color:var(--gold);
+    align-self:flex-start;margin-top:4px;
+  }
+
+  .cats{
+    border-top:1px dashed var(--line-faint);margin-top:18px;padding-top:14px;
+    display:grid;gap:9px;
+  }
+  .cat{display:flex;gap:12px;font-size:13px;line-height:1.5}
+  .cat dt{
+    font-family:"Shippori Mincho B1",serif;font-weight:700;color:var(--shu);
+    flex:0 0 76px;letter-spacing:.04em;
+  }
+  .cat dd{color:#3a352d}
+
+  .actions{display:flex;gap:10px;margin-top:22px}
+  .again-btn{
+    flex:1;background:var(--card);color:var(--shu);border:1.5px solid var(--shu);
+    font-size:14px;font-weight:700;letter-spacing:.18em;padding:13px;border-radius:2px;
+  }
+  .again-btn:hover{background:#fff}
+  .again-btn:active{transform:translateY(2px)}
+  .line-btn{
+    flex:1.2;background:var(--ai);color:#FBF8F0;font-family:"Zen Kaku Gothic New",sans-serif;
+    font-size:13px;font-weight:700;letter-spacing:.06em;padding:13px;border-radius:2px;
+    text-decoration:none;display:flex;align-items:center;justify-content:center;
+  }
+  .line-btn:hover{background:#3a5468}
+  .line-btn:active{transform:translateY(2px)}
+
+  .footnote{text-align:center;font-size:10.5px;color:var(--gold);margin-top:20px;letter-spacing:.1em;opacity:.85}
+  .note-link{
+    display:block;width:fit-content;margin:9px auto 0;
+    font-size:11px;letter-spacing:.12em;color:var(--ai);text-decoration:none;
+    border-bottom:1px dotted var(--gold);padding-bottom:1px;opacity:.85;
+  }
+  .note-link:hover{color:var(--shu);opacity:1}
+
+  @media (prefers-reduced-motion:reduce){
+    .tutu.shaking{animation:none}
+    .slip.show{animation:none}
+  }
+  @media (max-width:380px){
+    h1{font-size:26px}
+    .rank{font-size:50px}
+  }
+</style>
+</head>
+<body>
+  <main class="stage">
+    <div class="crest-frame">
+      <!-- ▼ 撮ってきた天満宮の写真を入れる時はここの src を埋めるだけ ▼ -->
+      <img class="shrine-photo" src="" alt="天満宮">
+      <!-- 梅鉢紋（天満宮の御神紋）。写真を入れると自動で隠れます -->
+      <svg class="umebachi" viewBox="0 0 100 100" aria-hidden="true">
+        <g fill="#C0392B">
+          <circle cx="50" cy="50" r="11"/>
+          <circle cx="50" cy="22" r="11"/>
+          <circle cx="76.6" cy="41.3" r="11"/>
+          <circle cx="66.5" cy="72.6" r="11"/>
+          <circle cx="33.5" cy="72.6" r="11"/>
+          <circle cx="23.4" cy="41.3" r="11"/>
+        </g>
+        <g stroke="#C0392B" stroke-width="2" opacity=".55">
+          <line x1="50" y1="50" x2="50" y2="33"/>
+          <line x1="50" y1="50" x2="65.7" y2="38.6"/>
+          <line x1="50" y1="50" x2="59.7" y2="68.4"/>
+          <line x1="50" y1="50" x2="40.3" y2="68.4"/>
+          <line x1="50" y1="50" x2="34.3" y2="38.6"/>
+        </g>
+      </svg>
+    </div>
+
+    <header>
+      <div class="eyebrow">学問の神 菅原道真公</div>
+      <h1>宅建おみくじ</h1>
+      <div class="sub">耳で覚える宅建 ・ 合格祈願</div>
+    </header>
+    <div class="rule"></div>
+
+    <section class="draw-zone" id="drawZone">
+      <div class="tutu-wrap">
+        <svg class="tutu" id="tutu" width="86" height="138" viewBox="0 0 86 138" aria-hidden="true">
+          <!-- 六角の御籤筒 -->
+          <polygon points="20,18 66,18 78,128 8,128" fill="#C0392B"/>
+          <polygon points="20,18 43,18 43,128 8,128" fill="#A82f24"/>
+          <rect x="6" y="10" width="74" height="12" rx="3" fill="#B28C4D"/>
+          <rect x="3" y="120" width="80" height="14" rx="3" fill="#8f2a20"/>
+          <!-- 飛び出した籤 -->
+          <rect x="38" y="0" width="9" height="26" rx="2" fill="#FBF8F0" stroke="#B28C4D" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <button class="draw-btn" id="drawBtn">引 く</button>
+    </section>
+
+    <section class="slip" id="slip" aria-live="polite">
+      <div class="verdict-row">
+        <div class="rank" id="rank">大吉</div>
+        <div class="hitokoto" id="hitokoto"></div>
+        <div class="reading">うらない</div>
+      </div>
+      <dl class="cats" id="cats"></dl>
+      <div class="actions">
+        <button class="again-btn" id="againBtn">もう一度</button>
+        <!-- ▼ Stand.fm チャンネルへの導線 ▼ -->
+        <a class="line-btn" href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" id="lineBtn">耳で復習（Stand.fm）→</a>
+      </div>
+    </section>
+
+    <p class="footnote">※ おみくじは何度でも引けます。最後に効くのは過去問です。</p>
+    <!-- note記事「このおみくじができるまで」（湯島天神・合格祈願）。公開後に有効化される ▼ -->
+    <a class="note-link" href="https://note.com/fond_bison5155/n/n9b5f6dd9441b" target="_blank" rel="noopener" id="noteLink">▸ このおみくじができるまで（note）</a>
+  </main>
+
+<script>
+  // ── ランクごとの一言（各5種からランダム）──
+  const FORTUNES = [
+    { rank:"大大吉", w:5, lines:[
+      "合格確定。……と油断した者が、毎年落ちる。",
+      "出来すぎな引き。こういう日ほど、過去問で足元を確かめておく。",
+      "今日のあなたは無敵。ただし無敵と過去問は別物である。",
+      "神様も太鼓判。あとは机に座るだけ。",
+      "最高の籤。運は使うものではなく、積み上げの上に乗るもの。",
+    ]},
+    { rank:"大吉", w:18, lines:[
+      "今年、受かる。三大書面で気を抜かなければ。",
+      "流れは来ている。今日の30分を、いつもより丁寧に。",
+      "実力は十分。あとは本番までこの調子を切らさないこと。",
+      "迷いが晴れる日。手が止まっていた論点に、もう一度。",
+      "追い風。調子のいい日こそ、苦手科目に一歩寄せておく。",
+    ]},
+    { rank:"中吉", w:18, lines:[
+      "実力は足りている。敵はケアレスミスだけ。",
+      "伸びている。設問の「誤っているもの」を読み飛ばさない。",
+      "あと一歩。正答率より、間違えた理由のメモを大事に。",
+      "悪くない日。基礎の取りこぼしを、今日ひとつ。",
+      "着実。派手さはなくても、線は確実に上を向いている。",
+    ]},
+    { rank:"小吉", w:15, lines:[
+      "過去問3周目で化ける。今は耐えどき。",
+      "地味な日。でも、こういう日の積み重ねが本番で効く。",
+      "焦らない。点数が伸びない時期は、誰にでも必ずある。",
+      "小さく前進。今日の1問は、昨日より確かに身についている。",
+      "静かに継続。結果は後からついてくる。",
+    ]},
+    { rank:"吉", w:15, lines:[
+      "民法に時間をかけすぎ。業法へ帰る。",
+      "時間配分の日。配点の大きい科目から手をつける。",
+      "深追い注意。満点はいらない、合格点でいい。",
+      "ほどほどに。完璧を狙うより、取れる問題を確実に。",
+      "区切りをつける日。わからない論点は付箋を貼って先へ。",
+    ]},
+    { rank:"末吉", w:12, lines:[
+      "模試の点に一喜一憂しない者が、受かる。",
+      "ゆっくりでいい。続けていること自体が、もう力になっている。",
+      "焦りは禁物。今日わからなくても、本番までに間に合う。",
+      "反復の日。同じ問題を、もう一度だけ。",
+      "点数は、本番の一回だけ気にすればいい。",
+    ]},
+    { rank:"平", w:9, lines:[
+      "可もなく不可もなし。淡々とやる日が一番伸びる。",
+      "平らな日。期待も落胆もせず、ただ1問ずつ。",
+      "いつも通り。特別なことはしなくていい、続けるだけ。",
+      "凪の日。波がない日こそ、地力が静かに育つ。",
+      "淡々と。地味な一日が、合格の土台になる。",
+    ]},
+    { rank:"凶", w:8, lines:[
+      "今日は勉強しなくていい。明日2倍やれば帳消し。",
+      "調子が出ない日。無理に詰め込まず、早めに休む。",
+      "うまくいかない日もある。それでも続ける人が、受かる人。",
+      "今日は撤退でいい。睡眠も立派な勉強のうち。",
+      "一回休み。明日のあなたに、今日のぶんを託していい。",
+    ]},
+  ];
+
+  // ── 科目別アドバイス（ランク非依存・各科目8種からランダム）──
+  const SUBJECT_ADVICE = {
+    "権利関係":[
+      "「善意・無過失」を読み飛ばさない",
+      "抵当権は、登場人物を図にすると見える",
+      "相続は家系図を描けば迷わない",
+      "「第三者」が誰を指すか、毎回確認する",
+      "制限行為能力者は、取り消せる範囲を整理",
+      "借地借家法は、期間の数字を表にする",
+      "意思表示は、原則から例外の順で",
+      "深追い禁物。満点ではなく合格点を狙う",
+    ],
+    "宅建業法":[
+      "35条と37条、記載事項を取り違えない",
+      "クーリングオフは起算日に注意",
+      "報酬計算は、消費税を最後に忘れない",
+      "8種制限は「自ら売主」の場面だけ",
+      "営業保証金と保証協会、数字を混ぜない",
+      "ここで8割取れれば、合格はぐっと近い",
+      "重要事項説明は、誰が誰にするかを明確に",
+      "監督処分と罰則、軽い順に並べて整理",
+    ],
+    "法令制限":[
+      "用途地域は、何が建てられるかを一覧で",
+      "建蔽率・容積率は、計算を手で繰り返す",
+      "開発許可は、面積の数字を覚える",
+      "防火地域・準防火地域、一度きちんと整理",
+      "暗記科目。寝る前に表を一周回す",
+      "数字は表にして、壁に貼っておく",
+      "農地法は3条・4条・5条の違いだけ押さえる",
+      "退屈でも、毎日少しずつ触れておく",
+    ],
+    "税その他":[
+      "課税主体が国か地方か、まず分ける",
+      "軽減の特例は、要件を一行ずつ確認",
+      "固定資産税は、納税義務者に注意",
+      "印紙税は、記載金額の読み方がカギ",
+      "捨てすぎ注意、2問は取りにいける",
+      "統計は直前期に最新の数字を詰め込む",
+      "不動産取得税と登録免許税を混同しない",
+      "後回しでいい。ただし完全には捨てない",
+    ],
+    "学問":[
+      "朝の30分が、いちばん頭に入る",
+      "間違えた問題こそ、いちばんの教材",
+      "焦りは、正答率を静かに下げる",
+      "続けている時点で、もう勝ち筋にいる",
+      "睡眠も勉強のうち。休む日があっていい",
+      "配点を見て、時間を配る",
+      "派手な勉強より、地味な反復が効く",
+      "本番まで、慌てず一歩ずつでいい",
+    ],
+  };
+
+  function sample(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  const totalW = FORTUNES.reduce((s,f)=>s+f.w,0);
+  function pick(){
+    let r = Math.random()*totalW, f = FORTUNES[0];
+    for(const x of FORTUNES){ if((r-=x.w)<0){ f=x; break; } }
+    const cats = {};
+    for(const k of Object.keys(SUBJECT_ADVICE)){ cats[k] = sample(SUBJECT_ADVICE[k]); }
+    return { rank:f.rank, line:sample(f.lines), cats };
+  }
+
+  const drawZone=document.getElementById("drawZone");
+  const tutu=document.getElementById("tutu");
+  const drawBtn=document.getElementById("drawBtn");
+  const slip=document.getElementById("slip");
+  const rankEl=document.getElementById("rank");
+  const hitokotoEl=document.getElementById("hitokoto");
+  const catsEl=document.getElementById("cats");
+  const againBtn=document.getElementById("againBtn");
+  const reduce=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  function render(f){
+    rankEl.textContent=f.rank;
+    rankEl.classList.toggle("kyou", f.rank==="凶");
+    hitokotoEl.textContent=f.line;
+    catsEl.innerHTML="";
+    for(const [k,v] of Object.entries(f.cats)){
+      const div=document.createElement("div"); div.className="cat";
+      const dt=document.createElement("dt"); dt.textContent=k;
+      const dd=document.createElement("dd"); dd.textContent=v;
+      div.append(dt,dd); catsEl.append(div);
+    }
+    slip.classList.remove("show"); void slip.offsetWidth; slip.classList.add("show");
+  }
+
+  function draw(){
+    const f=pick();
+    if(reduce){ drawZone.style.display="none"; render(f); return; }
+    tutu.classList.add("shaking"); drawBtn.disabled=true;
+    setTimeout(()=>{
+      tutu.classList.remove("shaking"); drawBtn.disabled=false;
+      drawZone.style.display="none"; render(f);
+    },560);
+  }
+
+  drawBtn.addEventListener("click",draw);
+  againBtn.addEventListener("click",()=>{
+    slip.classList.remove("show");
+    drawZone.style.display="block";
+    window.scrollTo({top:0,behavior:reduce?"auto":"smooth"});
+  });
+</script>
+</body>
+</html>
