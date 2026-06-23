@@ -703,7 +703,7 @@ function renderEpisodes(){
   const renderProductCard = () => {
     const p = PRODUCTS[currentField];
     if(!p) return "";
-    return `<a class="product-link product-inline" href="${p.url}" target="_blank" rel="noopener" aria-label="${p.title}（noteを開く）">
+    return `<a class="product-link product-inline" href="${p.url}" target="_blank" rel="noopener" data-umami-event="product" data-umami-event-field="${currentField}" aria-label="${p.title}（noteを開く）">
       <div class="pl-icon">${p.icon}</div>
       <div class="pl-main">
         <div class="pl-label">${p.label}</div>
@@ -741,8 +741,8 @@ function renderEpisodes(){
         <p class="ep-title">${ep.title}</p>
         <div class="ep-meta">
           <span>📅 ${ep.date}</span>
-          <a href="${ep.url || STANDFM_BASE}" target="_blank" rel="noopener">▶ Stand.fmで聴く</a>
-          ${ep.note ? `<a class="ep-note" href="${ep.note}" target="_blank" rel="noopener" aria-label="${ep.title}の要約・図解（noteを開く）">📝 要約・図解</a>` : ""}
+          <a href="${ep.url || STANDFM_BASE}" target="_blank" rel="noopener" data-umami-event="stand_fm" data-umami-event-ep="${ep.label||ep.n}">▶ Stand.fmで聴く</a>
+          ${ep.note ? `<a class="ep-note" href="${ep.note}" target="_blank" rel="noopener" data-umami-event="note_summary" data-umami-event-ep="${ep.label||ep.n}" aria-label="${ep.title}の要約・図解（noteを開く）">📝 要約・図解</a>` : ""}
         </div>
       </div>
       <button class="ep-state ${btnCls}" aria-label="状態を切替" data-n="${ep.n}">
@@ -809,6 +809,8 @@ function cycleState(n){
   const prev = STATE.episodes[n] || 0;
   const next = (prev + 1) % 3; // 未→聴→復→未
   STATE.episodes[n] = next;
+  // 進捗ボタンを使っているか（クッキー無し・押した瞬間に状態だけ送信）
+  if(window.umami) umami.track("progress_toggle", { to: next === 1 ? "聴了" : next === 2 ? "復習" : "未聴" });
   // 前回からの全体%
   const prevStats = computeStats();
   // 保存と再描画
