@@ -9,6 +9,28 @@
 <title>耳で覚える宅建2026 | 進捗トラッカー</title>
 <!-- Umami analytics -->
 <script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<!-- Phase2 再訪計測：localStorageに初回日を記憶し、再訪をカスタムイベントで送信（Events/Goalsで集計・無料枠内）。
+     ※LINEアプリ内ブラウザはstorageが揮発しやすく、再訪は実数より少なめ＝下限値として読む -->
+<script>
+  window.addEventListener('load', function () {
+    try {
+      if (typeof umami === 'undefined') return;
+      var FK = 'takken_first_seen', VK = 'takken_visits';
+      var first = localStorage.getItem(FK), now = Date.now();
+      if (!first) {                                   // 初回訪問
+        localStorage.setItem(FK, String(now));
+        localStorage.setItem(VK, '1');
+        umami.track('visit_new');
+      } else {                                        // 再訪
+        var days = Math.floor((now - Number(first)) / 86400000);
+        var visits = Number(localStorage.getItem(VK) || '1') + 1;
+        localStorage.setItem(VK, String(visits));
+        var bucket = days >= 30 ? 'd30plus' : days >= 7 ? 'd7' : days >= 1 ? 'd1' : 'same_day';
+        umami.track('revisit', { bucket: bucket, days_since_first: days, total_visits: visits });
+      }
+    } catch (e) { /* private mode / storage無効でも本体は動かす */ }
+  });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=RocknRoll+One&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -566,7 +588,7 @@ const EPISODES = [
   {n:34,label:"補1",date:"6/15", field:"宅建業法", title:"合格しても、まだ宅建士じゃない ── 登録・宅建士証・「移転の罠」", url:"https://stand.fm/episodes/6a2b7a0d87ef761937377a38", note:"https://note.com/fond_bison5155/n/n95caaeae73b0"},
   {n:35,label:"補2",date:"6/22", field:"宅建業法", title:"8日間なら、なかったことにできる──クーリングオフは場所と書面で決まる", url:"https://stand.fm/episodes/6a2b7adc87ef761937377a43", note:"https://note.com/fond_bison5155/n/n6d6ac9bdbaab"},
   {n:36,label:"補3",date:"6/29", field:"宅建業法", title:"業者が倒れても手付金は戻る ─ 保全措置5%・10%・1000万円の壁", url:"https://stand.fm/episodes/6a2b7a8904c78e086cf58c52", note:"https://note.com/fond_bison5155/n/n4878a1b6df27"},
-  {n:37,label:"補4",date:"7/6",  field:"宅建業法", title:"テントの案内所にも標識はいる──5人に1人・1人以上・10日前"},
+  {n:37,label:"補4",date:"7/6",  field:"宅建業法", title:"テントの案内所にも標識はいる──5人に1人・1人以上・10日前", url:"https://stand.fm/episodes/6a2b7b59ee6c4785c97930bb", note:"https://note.com/fond_bison5155/n/n6f378118bcbc"},
   {n:38,label:"補5",date:"7/13", field:"宅建業法", title:"「必ず値上がりします」は一発アウト──禁止行為と届出を一問一答で"},
   {n:12,date:"5/18", field:"権利関係", title:"騙されたのに契約が有効？ ── 意思表示（詐欺・強迫・錯誤）の恐い話", url:"https://stand.fm/episodes/69dc7c7af87676817ebf104d", note:"https://note.com/fond_bison5155/n/n0cc154db5524"},
   {n:13,date:"5/25", field:"権利関係", title:"頼んでないのに契約された ── 代理と無権代理・表見代理の境界線", url:"https://stand.fm/episodes/69dc7cb6a3cd112547af1093", note:"https://note.com/fond_bison5155/n/n95621065d93a"},
@@ -575,7 +597,7 @@ const EPISODES = [
   {n:16,date:"6/15", field:"権利関係", title:"家は住んだまま担保になる ── 抵当権の設定・順位・法定地上権", url:"https://stand.fm/episodes/69ddd8f0a46200ccc5f4ace0", note:"https://note.com/fond_bison5155/n/n755e2c7f92d6"},
   {n:17,date:"6/22", field:"権利関係", title:"友人の借金を肩代わり？ ── 連帯債務と保証の違いが命取り", url:"https://stand.fm/episodes/69ddd922a46200ccc5f4ace2", note:"https://note.com/fond_bison5155/n/nc93252697fe8"},
   {n:18,date:"6/29", field:"権利関係", title:"30年住んでも出ていけと言われる？ ── 借地権の存続期間と更新", url:"https://stand.fm/episodes/69ddd9e3e60f6035692bb3ee", note:"https://note.com/fond_bison5155/n/n425c40b46027"},
-  {n:19,date:"7/6",  field:"権利関係", title:"大家に「出てけ」と言われたら ── 借家権と正当事由・定期借家"},
+  {n:19,date:"7/6",  field:"権利関係", title:"大家に「出てけ」と言われたら ── 借家権と正当事由・定期借家", url:"https://stand.fm/episodes/6a166cf4b20c34ca3ce00f37", note:"https://note.com/fond_bison5155/n/n24925645546f"},
   {n:20,date:"7/13", field:"権利関係", title:"相続で揉めないための法定ルール ── 配偶者居住権と不法行為"},
   {n:21,date:"7/20", field:"権利関係", title:"マンション住民の多数決 ── 管理組合と決議要件の急所"},
   {n:22,date:"7/27", field:"法令・税その他", title:"ここには家が建てられない ── 13種の用途地域を攻略する"},
