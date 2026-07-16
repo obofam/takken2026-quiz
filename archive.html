@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>名作アーカイブ｜耳で覚える宅建</title>
+
+<!-- Umami analytics (トラッカー等と同一ID・パス/ホスト名で分離) -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+
+<!-- ============================================================
+     ★ エピソード表（ここだけ直せば全反映）★
+     ・各回 = { catch:キャッチ(中), title:タイトル(大), desc:説明(小), url:聴く先, note:図解・要点 }
+     ・url を書き換えれば配信ハブを差し替えできます（来年Spotify移行もここだけ）。
+     ・※いまは実在タイトルで「仮選定」。データ確定後に正式な回へ入れ替えてください。
+     ============================================================ -->
+<script>
+  const HUB = "Stand.fm"; // 将来 "Spotify" に変更予定（urlを差し替える）
+  const SFM  = "https://stand.fm/episodes/";
+  const NOTE = "https://note.com/fond_bison5155/n/";
+  const TRACKER_URL = "https://obofam.github.io/takken2026-quiz/tracker.html";
+  const MERUMAGA_URL = "#"; // ★2027年度版メルマガ登録フォームのURLが決まったらここに入れる
+
+  // ── 1. リスナーが選んだ神回 TOP3（データ＝再生率/熱心率で選定）──
+  const TOP3 = [
+    { catch:"ここを間違えると4点失う", title:"35条書面と37条書面の決定的な違い",
+      desc:"毎年問われる頻出。混同しがちな2つの書面を、一本で整理します。",
+      url:SFM+"69b204778578fadedda0f194", note:NOTE+"ne9697c36489a" },
+    { catch:"なぜ業法だけで20点取れるのか", title:"宅建業法は「最強の防具」",
+      desc:"番組の入口。まず全体像をつかむと、あとがぐっと楽になります。",
+      url:SFM+"69b1fdb3507312ea8122dbaf", note:NOTE+"n8f0d21ce9d22" },
+    { catch:"頼んでないのに契約された", title:"代理・無権代理・表見代理の境界線",
+      desc:"独学でこぼれやすい定番。権利関係の得点源です。",
+      url:SFM+"69dc7cb6a3cd112547af1093", note:NOTE+"n95621065d93a" },
+  ];
+
+  // ── 1.5 合格者が選んだ、心に残った回（体験談アンケートから）──
+  //  voice = 合格者コメント（試験後アンケートの「印象に残った回」設問から拾う）
+  const GOUKAKU = [
+    { catch:"放っておくと権利が消える", title:"取得時効と消滅時効を完全整理",
+      desc:"混同しやすい2つの時効を、耳で一気に整理。",
+      voice:"（仮）何度やっても混ざっていたのが、この回で腑に落ちました。",
+      url:SFM+"69ddd886e60f6035692bb3d4", note:NOTE+"ne3ba3679ce35" },
+    { catch:"5年ごとに申請しないと免許が消える", title:"更新と大臣免許・知事免許",
+      desc:"細かい数字が多い分野を、流れで覚えられる回。",
+      voice:"（仮）通勤中に流していたら、自然と頭に入っていました。",
+      url:SFM+"69b7939dc129adda736f5f49", note:NOTE+"n4bff461d9613" },
+  ];
+
+  // ── 2. 独学者がつまずく「権利関係」の重要回 ──
+  const KENRI = [
+    { catch:"騙されたのに契約が有効？", title:"意思表示（詐欺・強迫・錯誤）",
+      desc:"毎年の出題テーマ。最初に押さえておきたい基礎です。",
+      url:SFM+"69dc7c7af87676817ebf104d", note:NOTE+"n0cc154db5524" },
+    { catch:"登記しないと負ける", title:"不動産物権変動と「第三者」の正体",
+      desc:"超頻出。図ではなく耳で入れると、定着が速いところ。",
+      url:SFM+"69ddd8b7e60f6035692bb3dd", note:NOTE+"n8d0e42f0d1e1" },
+    { catch:"家は住んだまま担保になる", title:"抵当権の設定・順位・法定地上権",
+      desc:"苦手にする人が多い分、ここを通すと差がつきます。",
+      url:SFM+"69ddd8f0a46200ccc5f4ace0", note:NOTE+"n755e2c7f92d6" },
+  ];
+
+  // ── 3. 配点が大きい「宅建業法」のはずせない回 ──
+  const GYOHO = [
+    { catch:"3%+6万円だけでは解けない", title:"報酬計算の落とし穴",
+      desc:"覚えれば確実に取れる。差がつく計算問題です。",
+      url:SFM+"69dc7c44f87676817ebf104a", note:NOTE+"nc3ba012bba47" },
+    { catch:"プロが素人に負ける8つのルール", title:"自ら売主の8種制限",
+      desc:"出題定番。横断で理解しておきたいところ。",
+      url:SFM+"69b79335c129adda736f5f3f", note:NOTE+"n9582ca21adb4" },
+    { catch:"1000万円 vs 60万円の差", title:"営業保証金と保証協会、どっちが得か",
+      desc:"仕組みで理解すれば、丸暗記が減ります。",
+      url:SFM+"69dc7ba498eff95c436a4549", note:NOTE+"na01f99a07f41" },
+  ];
+</script>
+
+<style>
+  :root{
+    --bg:#f7f4ef; --card:#ffffff; --ink:#2c2b29; --sub:#6f6a62;
+    --line:#e7e1d8; --accent:#3a5a78; --accent-soft:#eef2f6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
+    line-height:1.8;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:600px;margin:0 auto;padding:32px 20px 64px;}
+
+  header{padding:6px 0 14px;}
+  .kicker{font-size:.78rem;letter-spacing:.08em;color:var(--accent);font-weight:700;margin:0 0 8px;}
+  h1{font-size:1.42rem;font-weight:700;margin:0 0 10px;letter-spacing:.01em;line-height:1.5;}
+  .lead{color:var(--sub);font-size:.92rem;margin:0;}
+
+  .evergreen{
+    background:var(--accent-soft);border-radius:12px;padding:13px 16px;
+    font-size:.84rem;color:#3f4a55;margin:18px 0 0;line-height:1.7;
+  }
+  .evergreen b{color:var(--accent);font-weight:700;}
+
+  .section{margin-top:38px;}
+  .section-head{margin:0 0 4px;font-size:1.08rem;font-weight:700;}
+  .section-sub{margin:0 0 16px;font-size:.85rem;color:var(--sub);}
+
+  .ep{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 18px;margin-bottom:12px;
+  }
+  .ep.top{display:flex;gap:14px;align-items:flex-start;}
+  .rank{
+    flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);
+    color:var(--accent);font-weight:700;font-size:.95rem;
+    display:flex;align-items:center;justify-content:center;margin-top:3px;
+  }
+  .ep-body{flex:1;}
+  .ep-catch{font-size:.82rem;color:var(--accent);font-weight:700;margin:0 0 2px;}
+  .ep-title{font-size:1.06rem;font-weight:700;line-height:1.45;margin:0;}
+  .ep-desc{font-size:.84rem;color:var(--sub);margin:6px 0 0;}
+  .ep-voice{
+    font-size:.84rem;color:#3f4a55;margin:10px 0 0;padding:9px 13px;
+    background:var(--accent-soft);border-radius:9px;line-height:1.65;
+  }
+  .ep-voice::before{content:"合格者の声　";font-weight:700;color:var(--accent);font-size:.76rem;}
+
+  .ep-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+  .ep-actions a{
+    text-decoration:none;font-size:.85rem;font-weight:700;border-radius:9px;
+    padding:7px 14px;transition:opacity .15s ease;
+  }
+  .btn-listen{background:var(--accent);color:#fff;}
+  .btn-note{background:#fff;color:var(--accent);border:1px solid var(--accent);}
+  .ep-actions a:active{opacity:.8;}
+
+  .tracker-box{
+    margin-top:40px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:18px;text-align:center;
+  }
+  .tracker-box p{margin:0 0 10px;font-size:.9rem;color:var(--sub);}
+  .tracker-box a{
+    display:inline-block;text-decoration:none;font-weight:700;font-size:.9rem;
+    color:var(--accent);border:1px solid var(--accent);border-radius:10px;padding:9px 18px;
+  }
+
+  .news-box{
+    margin-top:14px;background:var(--accent-soft);border:1px solid var(--line);
+    border-radius:14px;padding:18px;text-align:center;
+  }
+  .news-box>p:first-child{margin:0 0 10px;font-size:.9rem;color:#3f4a55;}
+  .news-box a{
+    display:inline-block;text-decoration:none;font-weight:700;font-size:.9rem;
+    color:#fff;background:var(--accent);border-radius:10px;padding:10px 20px;
+  }
+  .news-note{margin:10px 0 0;font-size:.76rem;color:var(--sub);}
+
+  hr.div{border:none;border-top:1px solid var(--line);margin:38px 0 0;}
+  footer{margin-top:22px;font-size:.78rem;color:var(--sub);line-height:1.7;}
+  footer .small{font-size:.74rem;color:#9a948b;margin-top:12px;display:block;}
+  .proto{background:#fff6e9;border:1px dashed #d9b88a;border-radius:10px;padding:11px 14px;font-size:.8rem;color:#8a6d3b;margin:16px 0 0;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <p class="kicker">耳で覚える宅建　名作アーカイブ</p>
+      <h1>ずっと使える、宅建の名回。</h1>
+      <p class="lead">今年の復習にも、来年の予習にも。続けている人がよく聴いている回と、独学でこぼれやすい回を、静かに選んで並べました。迷ったら、まずはこの数本から。</p>
+    </header>
+
+    <div class="evergreen">
+      ここで選んだのは、<b>法改正がない限り毎年通用する“骨組み”の回</b>です。年ごとに変わる税の数字・統計・改正点は、あえて入れていません。来年も再来年も、最初の一歩に使えます。
+    </div>
+
+    <div class="proto">⚠ これは仮ページです。掲載する回・URLは、ファイル先頭の「エピソード表」を編集すると差し替わります（実在タイトルで仮選定中）。</div>
+
+    <section class="section">
+      <h2 class="section-head">リスナーが選んだ神回 TOP3</h2>
+      <p class="section-sub">よく聴かれている順に。最初の一本にどうぞ。</p>
+      <div id="top3"></div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-head">合格者が選んだ、心に残った回</h2>
+      <p class="section-sub">受かった人が「これが効いた」と挙げてくれた回です。</p>
+      <div id="goukaku"></div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-head">配点が大きい「宅建業法」のはずせない回</h2>
+      <p class="section-sub">いちばん点になる科目。ここを固めると安定します。</p>
+      <div id="gyoho"></div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-head">独学者がつまずく「権利関係」の重要回</h2>
+      <p class="section-sub">差がつくところ。耳で先に通しておくと、後がラクです。</p>
+      <div id="kenri"></div>
+    </section>
+
+    <div class="tracker-box">
+      <p>その年の全エピソードを記録しながら回したい方へ</p>
+      <a id="trackerLink" href="#" target="_blank" rel="noopener" data-umami-event="to_tracker">2026年のアーカイブ（進捗トラッカー）へ →</a>
+    </div>
+
+    <div class="news-box">
+      <p>来年に向けて、いちはやく動きたい方へ</p>
+      <a id="newsLink" href="#" target="_blank" rel="noopener" data-umami-event="to_newsletter">2027年度版の超・先行案内を受け取る →</a>
+      <p class="news-note">登録した方にだけ、静かにお知らせします。</p>
+    </div>
+
+    <hr class="div">
+    <footer>
+      耳で覚える宅建　名作アーカイブ（仮）<br>
+      <span class="small">選定は配信データ（再生率・熱心度など）をもとにしています。</span>
+    </footer>
+  </div>
+
+<script>
+  function actions(e, section){
+    return `<div class="ep-actions">
+      <a class="btn-listen" href="${e.url}" target="_blank" rel="noopener"
+         data-umami-event="shinkai_listen" data-umami-event-section="${section}" data-umami-event-title="${e.title}">▶ 聴く</a>
+      <a class="btn-note" href="${e.note}" target="_blank" rel="noopener"
+         data-umami-event="shinkai_note" data-umami-event-section="${section}" data-umami-event-title="${e.title}">📝 図解・要点</a>
+    </div>`;
+  }
+  function card(e, section){
+    const d = document.createElement('div');
+    d.className = 'ep';
+    const voice = e.voice ? `<p class="ep-voice">${e.voice}</p>` : "";
+    d.innerHTML = `<p class="ep-catch">${e.catch}</p>
+                   <p class="ep-title">${e.title}</p>
+                   <p class="ep-desc">${e.desc}</p>
+                   ${voice}
+                   ${actions(e, section)}`;
+    return d;
+  }
+  function topCard(e, rank){
+    const d = document.createElement('div');
+    d.className = 'ep top';
+    d.innerHTML = `<div class="rank">${rank}</div>
+                   <div class="ep-body">
+                     <p class="ep-catch">${e.catch}</p>
+                     <p class="ep-title">${e.title}</p>
+                     <p class="ep-desc">${e.desc}</p>
+                     ${actions(e, 'top3')}
+                   </div>`;
+    return d;
+  }
+  TOP3.forEach((e,i) => document.getElementById('top3').appendChild(topCard(e, i+1)));
+  GOUKAKU.forEach(e => document.getElementById('goukaku').appendChild(card(e,'goukaku')));
+  KENRI.forEach(e => document.getElementById('kenri').appendChild(card(e,'kenri')));
+  GYOHO.forEach(e => document.getElementById('gyoho').appendChild(card(e,'gyoho')));
+  document.getElementById('trackerLink').href = TRACKER_URL;
+  document.getElementById('newsLink').href = MERUMAGA_URL;
+</script>
+</body>
+</html>

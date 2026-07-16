@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Umamiの見かた チートシート</title>
+<style>
+  :root{
+    --ink:#2b2b2b; --sub:#6b6b6b; --line:#e6e2da; --paper:#fbf9f5;
+    --accent:#b5476a;        /* 役割は1つ＝見出し／強調だけ */
+    --accent-soft:#f6e8ee;
+    --card:#ffffff; --note:#f4f1ea;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    line-height:1.75; font-size:15.5px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:28px 20px 60px;}
+  header{border-bottom:2px solid var(--accent); padding-bottom:14px; margin-bottom:8px;}
+  h1{font-size:22px; margin:0 0 4px; letter-spacing:.02em;}
+  .lead{color:var(--sub); font-size:13.5px; margin:0;}
+  h2{
+    font-size:16px; margin:30px 0 12px; padding-left:10px;
+    border-left:5px solid var(--accent); line-height:1.4;
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px; margin:12px 0;
+  }
+  .step{display:flex; gap:12px; margin:10px 0;}
+  .num{
+    flex:0 0 26px; height:26px; border-radius:50%; background:var(--accent);
+    color:#fff; font-size:13px; font-weight:700; display:flex;
+    align-items:center; justify-content:center;
+  }
+  .step div:last-child{padding-top:1px;}
+  table{width:100%; border-collapse:collapse; margin:6px 0; font-size:14.5px;}
+  th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{background:var(--accent-soft); color:var(--ink); font-weight:700; white-space:nowrap;}
+  td.k{white-space:nowrap; font-weight:700;}
+  .en{color:var(--sub); font-size:12.5px; font-weight:400;}
+  .note{
+    background:var(--note); border:1px dashed #cdc6b8; border-radius:8px;
+    padding:12px 14px; margin:12px 0; font-size:14px;
+  }
+  .note b{color:var(--accent);}
+  code{background:#efece5; padding:1px 6px; border-radius:4px; font-size:13px;}
+  ul{margin:6px 0 6px; padding-left:20px;}
+  li{margin:4px 0;}
+  .pill{display:inline-block; background:var(--accent-soft); color:var(--accent);
+    border-radius:20px; padding:2px 10px; font-size:12.5px; font-weight:700; margin:2px 4px 2px 0;}
+  footer{margin-top:36px; padding-top:14px; border-top:1px solid var(--line);
+    color:var(--sub); font-size:12px;}
+  .big{font-size:15px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Umamiの見かた ／ チートシート</h1>
+    <p class="lead">進捗トラッカー・〇×問題集のアクセス解析　｜　迷ったらここだけ見ればOK</p>
+  </header>
+
+  <h2>① まず開く</h2>
+  <div class="card">
+    <div class="step"><div class="num">1</div><div><code>cloud.umami.is</code> にログイン</div></div>
+    <div class="step"><div class="num">2</div><div>ダッシュボードから <b>「進捗トラッカー」</b> を選ぶ（website-id は <code>99a5370c…</code>）</div></div>
+    <div class="step"><div class="num">3</div><div>右上の期間を <b>Last 7 days</b> に。毎週これで見る</div></div>
+    <div class="note big">💡 <b>翻訳オフ</b>で使う（ブラウザの自動翻訳が数字表示を崩すことがある）。Chromeなら右クリック→「日本語に翻訳しない」。</div>
+  </div>
+
+  <h2>② 上に並ぶ4つの数字（ここが本体）</h2>
+  <div class="card">
+    <table>
+      <tr><th>表示</th><th>意味</th><th>ざっくり</th></tr>
+      <tr><td class="k">Visitors<br><span class="en">ビジターズ</span></td><td>来た<b>人数</b>（同じ人は1）</td><td>「何人来たか」</td></tr>
+      <tr><td class="k">Visits<br><span class="en">ビジッツ</span></td><td>訪問した<b>回数</b>（同じ人が2回なら2）</td><td>「何回開かれたか」</td></tr>
+      <tr><td class="k">Views<br><span class="en">ビューズ／PV</span></td><td>見られた<b>ページ数</b></td><td>「延べ表示回数」</td></tr>
+      <tr><td class="k">Bounce<br><span class="en">直帰率</span></td><td>1ページだけ見て<b>すぐ離脱</b>した割合</td><td>低いほど回遊あり</td></tr>
+    </table>
+    <div class="note">読む順番は <b>Visitors（人）→ Visits（回）→ Views（PV）</b>。週次ログもこの3つ＋直帰率を記録しています。数字の下の <b>▲/▼％</b> は前期間比。ただし前期間と<b>日付が重なっていると盛られて出る</b>ので、実数は週次ログの前行と比べるのが正確。</div>
+  </div>
+
+  <h2>③ トラッカーと〇×問題集を分ける</h2>
+  <div class="card">
+    同じwebsite-idで両方を計測しているので、<b>ホスト名／パスで振り分けて</b>見ます。左メニューの下の方にある表を使います。
+    <ul>
+      <li><span class="pill">Pages</span> パス（URLの後半）で分ける。<code>/</code> が<b>〇×問題集</b>、トラッカーのパスが<b>進捗トラッカー</b></li>
+      <li><span class="pill">Hosts / Referrers</span> どこから来たか。うちは<b>LINE一本</b>なので基本 LINE／note.com が出ればOK</li>
+      <li><b>除外するもの：</b> <code>C:/Claude…</code> や localhost はKei自身のローカル検証。人数に数えない</li>
+    </ul>
+  </div>
+
+  <h2>④ ボタンの押され方（Events）</h2>
+  <div class="card">
+    左メニューの <span class="pill">Events</span> で、サイト内でどのボタンが押されたかが分かります。うちで仕込んでいるのはこれ。
+    <table>
+      <tr><th>イベント名</th><th>意味</th></tr>
+      <tr><td class="k">progress_toggle</td><td>トラッカーで「未聴→聴了→復習」を切り替えた</td></tr>
+      <tr><td class="k">product</td><td>教材（note）リンクが押された</td></tr>
+      <tr><td class="k">stand_fm</td><td>「Stand.fmで聴く」が押された</td></tr>
+      <tr><td class="k">note_summary</td><td>「要約・図解」note が押された</td></tr>
+      <tr><td class="k">visit_new / revisit</td><td>初回訪問／再訪（継続を見る指標）</td></tr>
+    </table>
+    <div class="note">「来た人が<b>ちゃんと使ったか</b>」を見たいときはここ。特に <b>revisit</b>（再訪）と <b>product</b>（教材クリック）が伸びると、見た→使った→買うの流れが効いているサイン。</div>
+  </div>
+
+  <h2>⑤ 毎週月曜のルーティン</h2>
+  <div class="card">
+    <div class="step"><div class="num">1</div><div>「進捗トラッカー」を <b>Last 7 days</b> で開く</div></div>
+    <div class="step"><div class="num">2</div><div>Visitors／Visits／Views／直帰率をメモ</div></div>
+    <div class="step"><div class="num">3</div><div>Pagesでトラッカー人数と〇×問題集(/)人数を分けて確認</div></div>
+    <div class="step"><div class="num">4</div><div><code>umami_週次ログ.md</code> に1行追記（前行と実数で比較）</div></div>
+  </div>
+
+  <h2>⑥ 読み違えないための注意</h2>
+  <div class="card">
+    <ul>
+      <li><b>母数が小さいうちは週次の上下は誤差。</b>1桁〜数十人の段階では、1週ごとの増減で一喜一憂しない。傾向・施策の判断は<b>月次とあわせて</b>行う</li>
+      <li><b>前期間比％は当てにしすぎない。</b>日付が重なると膨らむ。実数は週次ログで見る</li>
+      <li><b>リファラ分析は基本しない。</b>流入はLINE一本なので。note.com や Gmail が混ざったら「そこから来た人がいた」程度に</li>
+      <li><b>ローカル検証(C:/Claude…)は必ず除外。</b>Kei自身のアクセスは人数に入れない</li>
+    </ul>
+  </div>
+
+  <footer>
+    耳で覚える宅建2026 ／ 進捗トラッカー・〇×問題集 アクセス解析メモ　｜　website-id: 99a5370c　｜　同IDでホスト・パス分離計測
+  </footer>
+
+</div>
+</body>
+</html>

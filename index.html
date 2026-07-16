@@ -475,6 +475,20 @@
   }
   .mode-help b { color: #00d4ff; }
 
+  /* ===== 千本ノック（直前30日パック限定・ミステリーカード） ===== */
+  .knock-card {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 26px 2px 0; padding: 10px 14px;
+    border: 1px dashed rgba(157,184,214,.35); border-radius: 10px;
+    cursor: pointer; opacity: .6; transition: opacity .2s;
+  }
+  .knock-card:active, .knock-card:hover { opacity: .9; }
+  .knock-card.unlocked { border-style: solid; border-color: rgba(0,220,160,.35); opacity: .85; }
+  .knock-title { font-size: .85rem; color: #9db8d6; letter-spacing: .08em; font-weight: 600; }
+  .knock-go { font-size: .75rem; color: #5a7396; }
+  .knock-desc { font-size: .72rem; color: #8aa4c8; margin-top: 4px; line-height: 1.6; }
+  .knock-set-meta { font-size: .8rem; color: #9db8d6; padding: 2px 0 10px; text-align: center; line-height: 1.7; }
+
   /* ===== 無料おためし ===== */
   .sample-card {
     background: linear-gradient(170deg, #0c2032, #0a1726);
@@ -540,7 +554,7 @@
     <div class="sample-card" onclick="startSample()">
       <div class="sample-card-l">
         <span class="sample-kicker">無料おためし</span>
-        <span class="sample-card-text">3科目ミックス15問</span>
+        <span class="sample-card-text">3科目ミックス5問・1分</span>
       </div>
       <span class="sample-go">解く →</span>
     </div>
@@ -571,18 +585,25 @@
       </button>
       <div class="buy-panel">
         <div class="buy-inner">
-          この〇×問題集は、各科目の<b>総まとめPDF教材</b>とセットになっています。教材を入手すると、その科目の<b>解除パスワード</b>が付いてきます。
+          この〇×問題集は、各科目の<a href="https://note.com/fond_bison5155/m/m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="buyguide_pdf_inline"><b>総まとめPDF教材</b></a>とセットになっています。教材を入手すると、その科目の<b>解除パスワード</b>が付いてきます。
           <ol class="buy-steps">
             <li>下の「教材一覧（note）」から、解きたい科目の教材を選ぶ</li>
             <li>TOPでその科目を選び、表示されるパスワード欄に入力する</li>
             <li>その科目の全問題が解けるようになります（成績も記録されます）</li>
           </ol>
           パスワードは<b>科目ごと</b>に分かれています（宅建業法／権利関係／法令・税その他）。
-          <div class="buy-relax">「教材は不要で、問題集だけ解きたい」などのご希望があれば、<a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="buyguide_line">LINEでご相談ください</a>。</div>
+          <div class="buy-relax">「教材は不要で、問題集だけ解きたい」という方には、この○×問題集だけを切り出した<a href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" target="_blank" rel="noopener" data-umami-event="buyguide_tantai">単体版（note）</a>があります。3科目ぶんのパスワードが、まとめて付いてきます。</div>
           <a class="sample-outro-cta" href="https://note.com/fond_bison5155/m/m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="buyguide_cta_note">教材一覧を見てみる（note）</a>
           <div class="buy-note">無料おためしは登録不要で、いつでも何度でも解けます。</div>
         </div>
       </div>
+    </div>
+    <div class="knock-card" id="knockCard" onclick="knockCardTap()">
+      <div>
+        <span class="knock-title" id="knockTitle">🔒 千本ノック</span>
+        <div class="knock-desc" id="knockDesc" style="display:none"></div>
+      </div>
+      <span class="knock-go" id="knockGo">…？</span>
     </div>
     <div class="site-footer">
       &copy; 2026 耳で覚える宅建2026 &mdash; スマホで解ける〇×問題集
@@ -748,7 +769,7 @@ const SECTIONS = {
       { q: "使用者は、被用者が第三者に損害を与えた場合でも、被用者に対して求償できる。", a: true, exp: "民法715条3項。使用者責任で賠償後、被用者への求償は原則可能です。ただし信義則上の制限がある場合もあります。" },
       { q: "被相続人の子の配偶者は、子が相続開始前に死亡していた場合、代襲相続人となる。", a: false, exp: "民法887条2項ただし書。代襲相続人は直系卑属のみ。配偶者は代襲相続人になれません。孫・曾孫のみが代襲可です。" },
       { q: "区分所有法上の建替え決議は、区分所有者及び議決権の各5分の4以上の多数で行う。", a: true, exp: "区分所有法62条1項。5分の4が最高要件。3/4は規約変更・著しい変更。過半数は普通決議。要件の階段を整理しましょう。" },
-      { q: "共用部分の著しい変更は、規約で区分所有者の頭数も議決権も過半数まで減らすことができる。", a: false, exp: "減額できるのは頭数のみです（区分所有法17条1項）。議決権の定数（3/4以上）は規約でも変更できません。" },
+      { q: "共用部分の著しい変更は、規約で区分所有者の頭数も議決権も過半数まで減らすことができる。", a: true, exp: "2026年4月施行の改正で、頭数・議決権とも規約で過半数まで引下げ可能になりました（区分所有法17条1項）。旧法は「頭数のみ減額可」だったので、古い解説に注意。" },
       { q: "規約の設定・変更・廃止の決議要件は、規約で別段の定めをすることができない。", a: true, exp: "区分所有法31条1項。3/4以上の要件は絶対的で、規約でも引き下げ不可。強行規定の典型です。" },
       { q: "規約共用部分は、登記をしなければ第三者に対抗できない。", a: true, exp: "区分所有法4条2項。規約共用部分は登記が対抗要件です。法定共用部分（外壁等）は登記不要という違いがあります。" },
       { q: "規約の変更が一部の区分所有者の権利に特別の影響を及ぼすときは、3/4以上の決議のみで変更できる。", a: false, exp: "区分所有法31条1項後段。3/4決議に加え当事者の承諾が必須です。決議だけでは足りません。" },
@@ -908,7 +929,9 @@ const SECTIONS = {
 };
 
 /* ================================================================
-   FREE SAMPLE (no password, no stats) — 全体おためし15問
+   FREE SAMPLE (no password, no stats) — 全体おためし5問
+   プール15問（業法5／権利5／法令税5）から、科目枠を固定して5問を抽出する。
+   単純ランダムだと科目が偏り「3科目ミックス」の看板が崩れるため層化抽出。
    ================================================================ */
 const SAMPLE_QUESTIONS = [
   // ── 宅建業法 ──
@@ -931,6 +954,233 @@ const SAMPLE_QUESTIONS = [
   { cat: "法令制限・税", q: "公正競争規約上、徒歩による所要時間は、道路距離80mにつき1分として算出し、1分未満の端数が生じた場合は切り捨てる。", a: false, exp: "道路距離80m＝1分は正しいが、端数は切り上げ（規則9条(9)）。10mであっても1分と表示。" }
 ];
 
+/* ================================================================
+   千本ノック（直前30日パック限定）
+   - KNOCK.reveal を true にすると説明文・限定表記が表示される（ローンチ時に切替）
+   - パスワードは KNOCK.password の1か所で変更
+   ================================================================ */
+const KNOCK = {
+  password: "knock232",
+  reveal: false,   // ← ローンチ時に true へ
+  title: "千本ノック",
+  badge: "直前30日パック限定",
+  desc: "全232問から順不同で1問ずつ、エンドレスに。区切りは10問ごと、やめ時は自分で。パックをお持ちの方はパスワードでどうぞ。",
+  setSize: 10
+};
+
+function knockAccessible() {
+  // パックのPW解除、または全4セクション解除済み（全冊コンプのご褒美）で開く
+  if (STATE.unlocked.__knock) return true;
+  return KNOCK_SECTION_KEYS.every(k => !!STATE.unlocked[k]);
+}
+
+function renderKnockCard() {
+  const card = document.getElementById("knockCard");
+  if (!card) return;
+  const unlocked = knockAccessible();
+  card.className = "knock-card" + (unlocked ? " unlocked" : "");
+  document.getElementById("knockTitle").textContent = (unlocked ? "🔓 " : "🔒 ") + KNOCK.title;
+  document.getElementById("knockGo").textContent = unlocked ? "解く →" : "…？";
+  const desc = document.getElementById("knockDesc");
+  if (KNOCK.reveal) {
+    desc.style.display = "block";
+    desc.innerHTML = `<b>（${KNOCK.badge}）</b>${KNOCK.desc}`;
+  } else {
+    desc.style.display = "none";
+  }
+}
+
+function knockCardTap() {
+  if (knockAccessible()) startKnock();
+  else openModal("__knock");
+}
+
+/* ── エンドレスエンジン ── */
+const KNOCK_SECTION_KEYS = ["gyouhou", "kenri", "houreizei", "chokuzen"];
+let knockQueue = [];
+let knockPos = 0;
+let knockSession = null; // { answered, correct, setAnswered, setCorrect, sets }
+
+function buildKnockQueue() {
+  const unseen = [], seen = [];
+  for (const sec of KNOCK_SECTION_KEYS) {
+    if (!SECTIONS[sec]) continue;
+    SECTIONS[sec].questions.forEach((q, idx) => {
+      const item = { sec: sec, qIdx: idx, q: q.q, a: q.a, exp: q.exp };
+      if (STATE.coverage[sec] && STATE.coverage[sec].seen[idx]) seen.push(item);
+      else unseen.push(item);
+    });
+  }
+  return shuffle(unseen).concat(shuffle(seen)); // 未出題優先→ランダム
+}
+
+function startKnock() {
+  if (window.umami) umami.track("knock_start");
+  currentSection = "__knock";
+  currentMode = "knock";
+  knockQueue = buildKnockQueue();
+  knockPos = 0;
+  knockSession = { answered: 0, correct: 0, setAnswered: 0, setCorrect: 0, sets: 0 };
+  document.getElementById("quizBreadcrumb").textContent = KNOCK.title;
+  document.getElementById("quizModeLabel").textContent = "エンドレス";
+  document.getElementById("resultArea").innerHTML = "";
+  knockUpdateProgress();
+  knockRenderQuestion();
+  showPage("quizPage");
+}
+
+function knockUpdateProgress() {
+  const s = knockSession;
+  document.getElementById("progressFill").style.width = (s.setAnswered / KNOCK.setSize * 100) + "%";
+  document.getElementById("progressTxt").textContent = `セット ${s.setAnswered}/${KNOCK.setSize} ・ 通算 ${s.answered}問`;
+}
+
+function knockRenderQuestion() {
+  if (knockPos >= knockQueue.length) { // プール切れ→組み直してエンドレス続行
+    knockQueue = buildKnockQueue();
+    knockPos = 0;
+  }
+  const item = knockQueue[knockPos];
+  const secTitle = SECTIONS[item.sec].title;
+  const body = document.getElementById("quizBody");
+  body.innerHTML = `
+    <div class="q-card">
+      <div class="q-meta">
+        <div class="q-num">Q${String(knockSession.answered + 1).padStart(2, '0')}</div>
+        <div class="q-cat">${secTitle}</div>
+      </div>
+      <div class="q-text">${item.q}</div>
+      <div class="q-buttons">
+        <button class="q-btn" id="btn-o-k" onclick="knockAnswer(true)">○</button>
+        <button class="q-btn" id="btn-x-k" onclick="knockAnswer(false)">×</button>
+      </div>
+      <div class="q-answer" id="ans-k">
+        <div class="ans-label"></div>
+        <div class="ans-text">${item.exp}</div>
+      </div>
+      <div id="knockNextArea"></div>
+    </div>
+  `;
+  document.getElementById("resultArea").innerHTML = "";
+  knockUpdateProgress();
+  window.scrollTo(0, 0);
+}
+
+function knockAnswer(userAnswer) {
+  const item = knockQueue[knockPos];
+  const correct = userAnswer === item.a;
+  const s = knockSession;
+  s.answered++; s.setAnswered++;
+  if (correct) { s.correct++; s.setCorrect++; }
+
+  const btnO = document.getElementById("btn-o-k");
+  const btnX = document.getElementById("btn-x-k");
+  btnO.disabled = true; btnX.disabled = true;
+  if (userAnswer === true) {
+    btnO.className = "q-btn " + (correct ? "selected-correct" : "selected-wrong");
+    if (!correct) btnX.className = "q-btn show-correct";
+  } else {
+    btnX.className = "q-btn " + (correct ? "selected-correct" : "selected-wrong");
+    if (!correct) btnO.className = "q-btn show-correct";
+  }
+  const ansDiv = document.getElementById("ans-k");
+  ansDiv.className = "q-answer visible " + (correct ? "correct" : "wrong");
+  ansDiv.querySelector(".ans-label").textContent = correct ? "正解！" : "不正解";
+
+  // ── 科目側の周回カバー・苦手克服・間違い履歴に加算（全モード加算） ──
+  const sec = item.sec;
+  const mistakes = STATE.mistakes[sec];
+  if (correct) {
+    if (mistakes[item.qIdx]) {
+      mistakes[item.qIdx].consecCorrect = (mistakes[item.qIdx].consecCorrect || 0) + 1;
+      if (mistakes[item.qIdx].consecCorrect >= 2) delete mistakes[item.qIdx];
+    }
+  } else {
+    if (mistakes[item.qIdx]) {
+      mistakes[item.qIdx].missCount += 1;
+      mistakes[item.qIdx].consecCorrect = 0;
+    } else {
+      mistakes[item.qIdx] = { missCount: 1, consecCorrect: 0 };
+    }
+    STATE.everWrong[sec][item.qIdx] = true;
+  }
+  const cov = STATE.coverage[sec];
+  if (!cov.seen[item.qIdx]) {
+    cov.seen[item.qIdx] = true;
+    if (Object.keys(cov.seen).length >= SECTIONS[sec].questions.length) {
+      cov.laps += 1;
+      cov.seen = {};
+    }
+  }
+
+  // ── 千本ノック通算の記録 ──
+  STATE.knock.totalAnswered++;
+  if (correct) STATE.knock.totalCorrect++;
+  saveState();
+  knockUpdateProgress();
+
+  // 次へ or 10問区切り
+  const nextArea = document.getElementById("knockNextArea");
+  if (s.setAnswered >= KNOCK.setSize) {
+    knockInterstitial();
+  } else {
+    nextArea.innerHTML = `
+      <div class="result-actions" style="margin-top:10px">
+        <button class="result-btn primary" onclick="knockNext()">次の1問 →</button>
+      </div>`;
+  }
+}
+
+function knockNext() {
+  knockPos++;
+  knockRenderQuestion();
+}
+
+function knockInterstitial() {
+  const s = knockSession;
+  s.sets++;
+  const setPct = Math.round(s.setCorrect / KNOCK.setSize * 100);
+  if (setPct > (STATE.knock.bestSetPct || 0)) { STATE.knock.bestSetPct = setPct; saveState(); }
+  document.getElementById("resultArea").innerHTML = `
+    <div class="result">
+      <div class="result-title">${s.sets}セット目 終了</div>
+      <div class="result-score">${s.setCorrect} / ${KNOCK.setSize}</div>
+      <div class="result-pct">このセットの正答率 ${setPct}%</div>
+      <div class="knock-set-meta">本日通算 ${s.answered}問 ・ 正答率 ${Math.round(s.correct / s.answered * 100)}%</div>
+      <div class="result-actions">
+        <button class="result-btn secondary" onclick="knockFinish()">今日はここまで</button>
+        <button class="result-btn primary" onclick="knockContinue()">続ける</button>
+      </div>
+    </div>
+  `;
+  document.getElementById("resultArea").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function knockContinue() {
+  knockSession.setAnswered = 0;
+  knockSession.setCorrect = 0;
+  knockNext();
+}
+
+function knockFinish() {
+  const s = knockSession;
+  if (window.umami) umami.track("knock_finish", { answered: s.answered });
+  const pct = s.answered > 0 ? Math.round(s.correct / s.answered * 100) : 0;
+  document.getElementById("quizBody").innerHTML = "";
+  document.getElementById("resultArea").innerHTML = `
+    <div class="result">
+      <div class="result-title">おつかれさまでした</div>
+      <div class="result-score">${s.correct} / ${s.answered}</div>
+      <div class="result-pct">本日の正答率 ${pct}%</div>
+      <div class="knock-set-meta">間違えた問題は各科目の「間違えた問題だけ」に入っています。<br>累計 ${STATE.knock.totalAnswered}問ノック済み。</div>
+      <div class="result-actions">
+        <button class="result-btn primary" onclick="showTop()">TOPへ</button>
+      </div>
+    </div>
+  `;
+  document.getElementById("resultArea").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
 function toggleBuyGuide() {
   const g = document.getElementById("buyGuide");
   const open = g.classList.toggle("open");
@@ -938,15 +1188,33 @@ function toggleBuyGuide() {
   if (open && window.umami) umami.track("buyguide_open");
 }
 
+/* 出題枠：科目ごとの問数を固定し、枠の中だけでランダムに選ぶ。
+   毎回ちがう5問になるので、何度でも解きなおす意味がある。 */
+const SAMPLE_PLAN = [
+  { cat: "宅建業法",     n: 2 },
+  { cat: "権利関係",     n: 2 },
+  { cat: "法令制限・税", n: 1 }
+];
+const SAMPLE_SIZE = SAMPLE_PLAN.reduce((s, p) => s + p.n, 0);
+
+function pickSampleQuestions() {
+  const all = SAMPLE_QUESTIONS.map((q, idx) => ({ qIdx: idx, ...q }));
+  const picked = [];
+  for (const p of SAMPLE_PLAN) {
+    picked.push(...shuffle(all.filter(q => q.cat === p.cat)).slice(0, p.n));
+  }
+  return shuffle(picked);
+}
+
 function startSample() {
   if (window.umami) umami.track("sample_start");
   currentSection = "sample";
   currentMode = "sample";
-  currentQuestions = shuffle(SAMPLE_QUESTIONS.map((q, idx) => ({ qIdx: idx, ...q })));
+  currentQuestions = pickSampleQuestions();
   currentAnswers = {};
   sessionCorrect = 0;
   document.getElementById("quizBreadcrumb").textContent = "おためし（無料）";
-  document.getElementById("quizModeLabel").textContent = "サンプル " + SAMPLE_QUESTIONS.length + "問";
+  document.getElementById("quizModeLabel").textContent = "サンプル " + SAMPLE_SIZE + "問";
   document.getElementById("resultArea").innerHTML = "";
   updateProgress();
   renderQuestions();
@@ -975,7 +1243,7 @@ function finishSample(total, pct) {
       <a class="sample-outro-cta" href="https://note.com/fond_bison5155/m/m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="sample_cta_note">教材一覧を見てみる（note）</a>
       <div class="result-actions">
         <button class="result-btn secondary" onclick="showTop()">TOPへ</button>
-        <button class="result-btn primary" onclick="startSample()">もう一度</button>
+        <button class="result-btn primary" onclick="startSample()">もう${SAMPLE_SIZE}問解く</button>
       </div>
     </div>
   `;
@@ -1002,6 +1270,7 @@ function makeEmptyState() {
     state.coverage[k] = { seen: {}, laps: 0 }; // 今の周で解いた問題 / 完走した周数
     state.everWrong[k] = {};                   // これまで一度でも間違えた問題
   }
+  state.knock = { totalAnswered: 0, totalCorrect: 0, bestSetPct: 0 }; // 千本ノック通算
   return state;
 }
 
@@ -1018,6 +1287,7 @@ function loadState() {
         parsed.mistakes = { ...base.mistakes, ...(parsed.mistakes||{}) };
         parsed.coverage = { ...base.coverage, ...(parsed.coverage||{}) };
         parsed.everWrong = { ...base.everWrong, ...(parsed.everWrong||{}) };
+        parsed.knock = { ...base.knock, ...(parsed.knock||{}) };
         return parsed;
       }
     } catch(e) {}
@@ -1124,6 +1394,7 @@ function renderTop() {
     card.onclick = () => unlocked ? showSection(key) : openModal(key);
     el.appendChild(card);
   }
+  renderKnockCard();
 }
 
 /* ================================================================
@@ -1134,7 +1405,8 @@ let currentSection = null;
 
 function openModal(key) {
   pendingKey = key;
-  document.getElementById("modalTitle").textContent = SECTIONS[key].title + " のパスワード";
+  const title = key === "__knock" ? KNOCK.title : SECTIONS[key].title;
+  document.getElementById("modalTitle").textContent = title + " のパスワード";
   document.getElementById("modalInput").value = "";
   document.getElementById("modalError").textContent = "";
   document.getElementById("modalOverlay").classList.add("active");
@@ -1149,6 +1421,20 @@ function closeModal() {
 function tryUnlock() {
   const input = document.getElementById("modalInput").value.trim();
   if (!pendingKey) return;
+  if (pendingKey === "__knock") {
+    if (input === KNOCK.password) {
+      STATE.unlocked.__knock = true;
+      saveState();
+      closeModal();
+      if (window.umami) umami.track("knock_unlock");
+      startKnock();
+    } else {
+      document.getElementById("modalError").textContent = "パスワードが違います";
+      document.getElementById("modalInput").value = "";
+      document.getElementById("modalInput").focus();
+    }
+    return;
+  }
   if (input === SECTIONS[pendingKey].password) {
     STATE.unlocked[pendingKey] = true;
     saveState();
@@ -1332,6 +1618,10 @@ function startQuiz(key, mode) {
 }
 
 function confirmExitQuiz() {
+  if (currentMode === "knock") {
+    if (knockSession.answered === 0 || confirm("千本ノックを終了してTOPに戻りますか？\n（ここまでの記録は保存されています）")) showTop();
+    return;
+  }
   if (currentMode === "sample") {
     const a = Object.keys(currentAnswers).length;
     if (a === 0 || a === currentQuestions.length || confirm("おためしを終了してTOPに戻りますか？")) showTop();
@@ -1567,7 +1857,7 @@ function finishQuiz() {
    INIT
    ================================================================ */
 renderTop();
-// 外部（宅建おみくじ等）からの直リンクで無料15問を即開始
+// 外部（宅建おみくじ等）からの直リンクで無料5問を即開始
 // 例: index.html#sample / index.html?start=sample
 if (location.hash === "#sample" || /[?&]start=sample(\b|$)/.test(location.search)) {
   startSample();
