@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>今週の過去問1問｜耳で覚える宅建2026</title>
+<meta name="robots" content="noindex">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#17C5E8; --cyan-dark:#0EA2C2; --cyan-soft:#D8F3FA;
+    --green:#0BAF82; --green-soft:#DFF7EF; --green-dark:#0B8F68;
+    --red:#D6453F; --red-soft:#FBE4E3; --red-dark:#B93636;
+    --amber:#C98A12; --amber-soft:#FFF3D9;
+    --lav:#7C4FD1; --lav-soft:#EDE4FB;
+    --surface:#F4F7F9; --card:#FFFFFF;
+    --text:#2B3A46; --muted:#5C6B78; --line:#D9E0E6; --gray-pill:#EEF2F5;
+    --shadow:0 2px 8px rgba(43,58,70,.08); --shadow-lg:0 6px 20px rgba(43,58,70,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{font-size:17px}
+  body{
+    background:var(--surface); color:var(--text);
+    font-family:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+    line-height:1.8; padding:20px 14px 60px;
+  }
+  .wrap{max-width:480px;margin:0 auto}
+  /* header */
+  .kicker{font-size:.72rem;letter-spacing:.18em;color:var(--cyan-dark);font-weight:700;text-align:center}
+  h1{font-size:1.5rem;font-weight:900;text-align:center;margin:.3rem 0 .2rem;color:var(--text)}
+  .lead{font-size:1rem;color:var(--muted);text-align:center;margin-bottom:22px;line-height:1.85}
+  /* question card */
+  .qcard{
+    background:var(--card);
+    border:1px solid var(--line); border-radius:18px;
+    padding:20px 18px; margin-bottom:16px;
+    box-shadow:var(--shadow);
+  }
+  .qcard.current{border-color:var(--cyan);box-shadow:var(--shadow-lg)}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .tag{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:99px;letter-spacing:.03em}
+  .tag.week{background:var(--cyan-soft);color:var(--cyan-dark)}
+  .tag.field{background:var(--lav-soft);color:var(--lav)}
+  .tag.src{background:var(--gray-pill);color:var(--muted)}
+  .tag.done{background:var(--green-soft);color:var(--green-dark)}
+  .tag.miss{background:var(--red-soft);color:var(--red-dark)}
+  .qlabel{font-size:.92rem;color:var(--muted);margin-bottom:8px;font-weight:600}
+  .qtext{font-size:1.18rem;line-height:1.85;font-feature-settings:"palt";color:var(--text);font-weight:500}
+  /* episode strip */
+  .epstrip{
+    background:var(--cyan-soft); border-left:4px solid var(--cyan);
+    border-radius:0 10px 10px 0; padding:10px 12px; margin-bottom:12px;
+    font-size:.88rem;
+  }
+  .epstrip .eplabel{color:var(--cyan-dark);margin-bottom:3px;font-weight:600}
+  .epstrip a{color:var(--cyan-dark);text-decoration:none;font-weight:700}
+  /* buttons */
+  .btns{display:flex;gap:14px;margin-top:20px}
+  .btns button{
+    flex:1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    min-height:92px; padding:14px 8px;
+    border-radius:16px; border:2px solid var(--line); cursor:pointer;
+    background:#fff; color:var(--text);
+    transition:transform .08s,border-color .15s,background .15s;
+  }
+  .btns button:active{transform:scale(.97)}
+  .bsym{font-size:2.1rem;font-weight:900;line-height:1}
+  .blbl{font-size:1rem;font-weight:800}
+  .btns .maru .bsym{color:var(--green)}
+  .btns .batsu .bsym{color:var(--red)}
+  .btns button:disabled{opacity:.45;cursor:default}
+  .btns button.picked{border-color:currentColor;background:rgba(0,0,0,.03);opacity:1}
+  /* result */
+  .result{display:none;margin-top:16px}
+  .result.show{display:block;animation:pop .25s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .verdict{font-size:1.15rem;font-weight:900;margin-bottom:8px}
+  .verdict.ok{color:var(--green-dark)} .verdict.ng{color:var(--red-dark)}
+  .answer-line{font-size:.98rem;font-weight:700;margin-bottom:12px;color:var(--text)}
+  .point{
+    font-size:.95rem; color:var(--text); font-weight:700;
+    background:var(--amber-soft); border-left:4px solid var(--amber);
+    padding:10px 12px; border-radius:0 10px 10px 0; margin-bottom:12px;
+  }
+  .kaisetsu{font-size:1rem;color:var(--text);line-height:1.85}
+  .source{font-size:.85rem;color:var(--muted);margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+  /* CTA */
+  .cta{
+    background:var(--card);
+    border:1px solid var(--cyan); border-radius:18px;
+    padding:20px 18px; margin:26px 0 16px;
+    box-shadow:var(--shadow);
+  }
+  .cta h2{font-size:1.08rem;font-weight:900;margin-bottom:8px;color:var(--text)}
+  .cta p{font-size:.95rem;color:var(--muted);margin-bottom:14px;line-height:1.8}
+  .cta a{
+    display:block; text-decoration:none; text-align:center;
+    font-size:1rem; font-weight:800; padding:15px;
+    border-radius:12px; margin-bottom:10px;
+  }
+  .cta a.free{border:1.5px solid var(--line);color:var(--text);background:#fff}
+  .cta a.buy{background:var(--cyan);color:#fff}
+  .cta .note{font-size:.82rem;color:var(--muted);text-align:center;margin:0;line-height:1.7}
+  /* archive */
+  .sec{font-size:.85rem;letter-spacing:.14em;color:var(--muted);font-weight:700;margin:30px 0 12px;text-align:center}
+  details.arch{margin-bottom:14px}
+  details.arch summary{
+    list-style:none; cursor:pointer;
+    background:var(--card);
+    border:1px solid var(--line); border-radius:14px; padding:15px 16px;
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    box-shadow:var(--shadow);
+  }
+  details.arch summary::-webkit-details-marker{display:none}
+  details.arch summary .ttl{font-size:.92rem;font-weight:700;flex:1 1 100%}
+  details.arch[open] summary{border-radius:14px 14px 0 0;border-bottom:none;box-shadow:none}
+  details.arch .body{
+    background:var(--card);
+    border:1px solid var(--line);border-top:none;border-radius:0 0 14px 14px;
+    padding:6px 18px 20px;
+    box-shadow:var(--shadow);
+  }
+  footer{margin-top:34px;font-size:.82rem;color:var(--muted);line-height:1.9;text-align:center}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">耳で覚える宅建2026</div>
+  <h1>今週の過去問 1問</h1>
+  <p class="lead">その週の放送テーマに合わせて、本試験で実際に出た問題を一問一答で毎週1問。正しいか誤りかを直感で押してみてください。</p>
+
+  <div id="current"></div>
+
+  <div class="cta" id="cta">
+    <h2>1問では物足りない方へ</h2>
+    <p>ひっかけの「型」は、数を解くほど見えてきます。続きはこちらからどうぞ。</p>
+    <a class="free" href="https://takken2026-quiz.vercel.app/" data-umami-event="weekly_cta_sample">無料おためし 5問（登録不要）</a>
+    <a class="buy" href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" data-umami-event="weekly_cta_note">スマホで解ける一問一答問題集を見る（980円）</a>
+    <p class="note">現在160問以上収録（9月に230問以上に）／解説をじっくり読める設計です</p>
+    <p class="note"><a href="https://takken2026-quiz.vercel.app/kyozai.html" data-umami-event="weekly_cta_kyozai" style="color:inherit">直前期のまとめ教材は、教材一覧に並んでいます →</a></p>
+  </div>
+
+  <div class="sec">これまでの出題</div>
+  <div id="archive"></div>
+
+  <footer>
+    掲載の問題文は、宅地建物取引士資格試験の本試験問題（実施：不動産適正取引推進機構）から引用し、<br>
+    一問一答形式で解けるよう一部再構成しています。出典は各問題に明記しています。
+  </footer>
+</div>
+
+<script>
+// ===== 出題データ（新しい週を先頭に1件追記していく）=====
+// answer: "○" or "×"（この記述が正しいか誤りか）
+const QUESTIONS = [
+  {
+    id: "2026-0817",
+    week: "8/17の週",
+    field: "法令上の制限・建ぺい率",
+    text: "都市計画により建蔽率の限度が10分の6と定められている近隣商業地域において、準防火地域内にある耐火建築物で、街区の角にある敷地又はこれに準ずる敷地で特定行政庁が指定するものの内にある建築物については、建蔽率の限度が10分の8となる。",
+    answer: "○",
+    point: "耐火系で+10分の1、指定角地で+10分の1——両方そろえば合算で+10分の2",
+    kaisetsu: "建ぺい率の緩和は2系統あります。①防火地域内の耐火建築物等（準防火地域内の耐火・準耐火建築物等も対象）で10分の1加算、②街区の角にある敷地で特定行政庁が指定するものは10分の1加算（建築基準法53条3項）。本肢は両方を満たすので、10分の6＋10分の2＝10分の8となり正しい記述です。なお、指定建ぺい率が10分の8の地域で防火地域内の耐火建築物なら、建ぺい率の制限自体がなくなります（同条6項）——ここまでセットで覚えると盤石です。",
+    source: "令和3年度10月 本試験 問18 肢1",
+    ep: {no:"#25", title:"なぜ狭い土地に大きな家が建たないのか ── 建ぺい率・容積率", url:"https://stand.fm/episodes/6a3226270d6d126edeca842d"}
+  },
+  {
+    id: "2026-0810",
+    week: "8/10の週",
+    field: "法令上の制限・用途地域",
+    text: "建築物の敷地が工業地域と工業専用地域にわたる場合において、当該敷地の過半が工業地域内であるときは、共同住宅を建築することができる（用途地域以外の地域地区等の指定及び特定行政庁の許可は考慮しないものとする）。",
+    answer: "○",
+    point: "敷地がまたがるときは「過半」の地域のルールが敷地全体に適用",
+    kaisetsu: "敷地が2つの用途地域にわたるときは、面積の過半を占める地域の用途規制が敷地全体に適用されます（建築基準法91条）。本肢は過半が工業地域なので、敷地全体が工業地域の扱いになり、共同住宅を建築できます（工業専用地域のままなら住宅系は建てられません）。割合に応じて按分するのではなく、広い方のルールに全部が染まる——この「過半主義」が急所です。",
+    source: "平成22年度 本試験 問19 肢1（設問の設定を含めて再構成）",
+    ep: {no:"#24", title:"木造3階建ては建てられる？ ── 単体規定と用途制限の基本", url:"https://stand.fm/episodes/6a3225d492f82860b8c86f5f"}
+  },
+  {
+    id: "2026-0803",
+    week: "8/3の週",
+    field: "法令上の制限・開発許可",
+    text: "準都市計画区域において、店舗の建築を目的とした4,000㎡の土地の区画形質の変更を行おうとする者は、あらかじめ、都道府県知事の許可を受けなければならない（許可を要する開発行為の面積について、条例による定めはないものとする）。",
+    answer: "○",
+    point: "準都市計画区域は3,000㎡以上で開発許可が必要",
+    kaisetsu: "開発許可が不要になる面積は区域ごとに決まっています。市街化区域は1,000㎡未満、非線引き区域と準都市計画区域は3,000㎡未満、都市計画区域外は10,000㎡未満（都市計画法29条1項1号）。本肢は準都市計画区域の4,000㎡なので許可が必要で、記述は正しい。なお市街化調整区域だけは面積の基準がなく原則すべて許可が必要——この数字のセットごと覚えるのが近道です。",
+    source: "令和元年度 本試験 問16 肢1（設問の設定を含めて再構成）",
+    ep: {no:"#23", title:"開発許可が要る？要らない？ ── 面積要件の数字を一発暗記", url:"https://stand.fm/episodes/6a3224a00d6d126edeca840b"}
+  },
+  {
+    id: "2026-0727",
+    week: "7/27の週",
+    field: "法令上の制限・用途地域",
+    text: "近隣商業地域内において映画館を建築する場合は、客席の部分の床面積の合計が200㎡未満となるようにしなければならない（用途地域以外の地域地区等の指定及び特定行政庁の許可は考慮しないものとする）。",
+    answer: "×",
+    point: "ひっかけ：「客席200㎡未満」は準住居地域の数字",
+    kaisetsu: "映画館を建築できるのは、準住居・近隣商業・商業・準工業の4地域。このうち「客席の床面積200㎡未満」という制限がつくのは準住居地域だけで、近隣商業地域から先は面積の制限なく建築できます。数字を別の地域に移して誤りを作る、用途制限の定番ひっかけです。",
+    source: "平成22年度 本試験 問19 肢3",
+    ep: {no:"#22", title:"ここには家が建てられない ── 13種の用途地域を攻略する", url:"https://stand.fm/episodes/6a166e38b2568b9f1774597b"}
+  },
+  {
+    id: "2026-0720",
+    week: "7/20の週",
+    field: "権利関係・区分所有法",
+    text: "集会は、区分所有者（議決権を有しないものを除く。）の4分の3以上の同意があるときは、招集の手続を経ないで開くことができる。",
+    answer: "×",
+    point: "ひっかけ：「4分の3」というもっともらしい数字",
+    kaisetsu: "招集手続を省略して集会を開くには、区分所有者「全員」の同意が必要です（区分所有法36条）。4分の3は規約の設定・変更・廃止や共用部分の重大変更など特別決議の数字。区分所有法は「過半数・4分の3・5分の4・全員」のどれが出てくるかの使い分けが急所です。",
+    source: "令和5年度 本試験 問13 肢2",
+    ep: {no:"#21", title:"マンション住民の多数決 ── 管理組合と決議要件の急所", url:"https://stand.fm/episodes/6a166de9b2568b9f17745976"}
+  },
+  {
+    id: "2026-0713",
+    week: "7/13の週",
+    field: "宅建業法・禁止行為",
+    text: "宅地建物取引業者は、宅地又は建物の売買の契約の締結の勧誘をするに際し、宅地建物取引業者の相手方等に対し、宅地又は建物の引渡しの時期について故意に不実のことを告げた場合であっても、契約が成立したときに宅地建物取引業法第37条の規定により交付すべき書面に当該事項を正確に記載すればよい。",
+    answer: "×",
+    point: "ひっかけ：「書面に正確に書けばセーフ」という逃げ道",
+    kaisetsu: "重要な事項について故意に不実のことを告げる行為は、それ自体が禁止行為です（業法47条1号）。あとから37条書面に正確に記載しても、違反がなかったことにはなりません。「利益が生ずることが確実」と誤解させる断定的判断の提供——いわゆる「必ず値上がりします」——も同じく一発アウトの禁止行為です。",
+    source: "令和6年度 本試験 問42 肢2",
+    ep: {no:"補5", title:"「必ず値上がりします」は一発アウト──禁止行為と届出を一問一答で", url:"https://stand.fm/episodes/6a2b7ba5ee6c4785c97930c3"}
+  },
+  {
+    id: "2026-0713b",
+    week: "7/13の週",
+    field: "権利関係・相続",
+    text: "家庭裁判所への相続放棄の申述は、被相続人の生前には行うことができない。",
+    answer: "○",
+    point: "ひっかけ：「生前に放棄の約束をさせておけば安心」と思わせる",
+    kaisetsu: "相続放棄は、相続が開始したあとに家庭裁判所へ申述して初めてできます。生前の「放棄します」という約束や申述は無効。一方、遺留分の放棄は家庭裁判所の許可を受ければ生前でも可能——この対比がひっかけの定番です。",
+    source: "令和4年度 本試験 問2 肢2",
+    ep: {no:"#20", title:"相続で揉めないための法定ルール ── 配偶者居住権と不法行為", url:"https://stand.fm/episodes/6a166d50b20c34ca3ce00f3c"}
+  },
+  {
+    id: "2026-0706",
+    week: "7/6の週",
+    field: "宅建業法・案内所",
+    text: "宅地建物取引業者A（甲県知事免許）が乙県内に所在するマンション（100戸）を分譲する場合、Aが案内所を設置して分譲を行うときは、契約の締結又は契約の申込みの受付を行うか否かにかかわらず、その案内所に宅地建物取引業法第50条第1項の規定に基づく標識を掲げなければならない。",
+    answer: "○",
+    point: "ひっかけ：「申込みを受けない案内所なら不要では？」と迷わせる",
+    kaisetsu: "標識は、契約や申込みの受付をするかどうかに関係なく、すべての案内所に必要です。一方、専任の宅地建物取引士（1人以上）の設置と、業務開始10日前までの50条2項の届出が必要になるのは「申込み・契約をする案内所」だけ。テント張りの案内所にも標識はいる——この線引きが頻出です。",
+    source: "平成27年度 本試験 問44 肢2（設問の設定を含めて再構成）",
+    ep: {no:"補4", title:"テントの案内所にも標識はいる──5人に1人・1人以上・10日前", url:"https://stand.fm/episodes/6a2b7b59ee6c4785c97930bb"}
+  },
+  {
+    id: "2026-0706b",
+    week: "7/6の週",
+    field: "権利関係・定期建物賃貸借",
+    text: "期間が1年以上の定期建物賃貸借契約においては、賃貸人は、期間の満了の1年前から6か月前までの間に賃借人に対し期間満了により賃貸借が終了する旨の通知をしなければ、当該期間満了による終了を賃借人に対抗することができない。",
+    answer: "○",
+    point: "ひっかけ：「定期なんだから期間が来れば自動で終了」と思わせる",
+    kaisetsu: "定期建物賃貸借でも、期間が1年以上なら「1年前から6か月前まで」の間に終了通知が必要で、通知を怠ると期間満了を賃借人に対抗できません。「定期＝ほうっておいても終わる」ではない——通知のタイミングが頻出の急所です。",
+    source: "平成20年度 本試験 問14 肢3",
+    ep: {no:"#19", title:"大家に「出てけ」と言われたら ── 借家権と正当事由・定期借家", url:"https://stand.fm/episodes/6a166cf4b20c34ca3ce00f37"}
+  },
+  {
+    id: "2026-0629",
+    week: "6/29の週",
+    field: "権利関係・借地権",
+    text: "借地権の存続期間を契約で30年と定めた場合には、当事者が借地契約を更新する際、その期間を更新の日から30年以下に定めることはできない。",
+    answer: "×",
+    point: "ひっかけ：「更新後もずっと30年」と思わせる",
+    kaisetsu: "30年の縛りがあるのは当初の存続期間だけ。更新後の期間は、最初の更新で20年、2回目以降は10年です（合意でこれより長くするのは自由）。つまり更新の日から20年と定めてもよく、「30年以下にできない」は誤り。30年→20年→10年の階段を覚えるのが急所です。",
+    source: "令和3年度（12月実施）本試験 問11 肢1",
+    ep: {no:"#18", title:"30年住んでも出ていけと言われる？ ── 借地権の存続期間と更新", url:"https://stand.fm/episodes/69ddd9e3e60f6035692bb3ee"}
+  },
+  {
+    id: "2026-0629b",
+    week: "6/29の週",
+    field: "宅建業法・手付金等の保全措置",
+    text: "宅地建物取引業者Aが、自ら売主として、宅地建物取引業者でない買主Fと建築工事完了前のマンションを4,000万円で売却する契約を締結する際、100万円の手付金を受領し、さらに200万円の中間金を受領する場合であっても、手付金が代金の5%以内であれば保全措置を講ずる必要はない。",
+    answer: "×",
+    point: "ひっかけ：「手付金だけ」を見せて5%以内と思わせる",
+    kaisetsu: "保全措置の要否は「手付金等」＝契約締結後・引渡し前に受け取る手付金や中間金などの合計額で判定します。100万円＋200万円＝300万円は代金4,000万円の5%（200万円）を超えるので、中間金を受け取る前に、すでに受領した分も含めた全額について保全措置が必要です。合算で判定——ここが最大の罠。",
+    source: "平成25年度 本試験 問40 肢4（設問の設定を含めて再構成）",
+    ep: {no:"補3", title:"業者が倒れても手付金は戻る ─ 保全措置5%・10%・1000万円の壁", url:"https://stand.fm/episodes/6a2b7a8904c78e086cf58c52"}
+  },
+  {
+    id: "2026-0622",
+    week: "6/22の週",
+    field: "宅建業法・クーリング・オフ",
+    text: "宅地建物取引業者Aが、自ら売主として、宅地建物取引業者ではない法人Bと土地付建物の売買契約を締結する場合において、Bは事務所で買受けの申込みをし、その翌日、喫茶店で契約を締結したが、Aはクーリング・オフについて告げる書面をBに交付しなかった。この場合、Bはクーリング・オフによる契約の解除をすることができない。",
+    answer: "○",
+    point: "ひっかけ：契約した場所（喫茶店）に目を向けさせる",
+    kaisetsu: "クーリング・オフできるかどうかは「買受けの申込みをした場所」で判定します。申込みが事務所なら、契約を喫茶店で結んでいても解除はできません。書面を交付しなかったことも結論を変えません——そもそもクーリング・オフの適用がない場面だからです。",
+    source: "令和3年度（12月実施）本試験 問43 肢4（設問の設定を含めて再構成）",
+    ep: {no:"補2", title:"8日間なら、なかったことにできる──クーリングオフは場所と書面で決まる", url:"https://stand.fm/episodes/6a2b7adc87ef761937377a43"}
+  },
+  {
+    id: "2026-0622b",
+    week: "6/22の週",
+    field: "権利関係・連帯保証",
+    text: "AがBから1,000万円を借り入れ、CがBとの間でAの債務についての連帯保証契約を締結した場合、BがCに債務の履行を請求したときは、Cは、まずAに催告すべき旨を請求する（催告の抗弁を主張する）ことができる。",
+    answer: "×",
+    point: "ひっかけ：「まず本人に請求してよ」が通じそうに見える",
+    kaisetsu: "催告の抗弁・検索の抗弁があるのは普通の保証人だけ。連帯保証人にはどちらもなく、債権者はいきなり連帯保証人に全額を請求できます。この「抗弁がない」ことこそが連帯保証の恐さで、普通の保証との違いを問う定番ひっかけです。",
+    source: "令和2年度（10月実施）本試験 問2 肢3（設問の設定を含めて再構成）",
+    ep: {no:"#17", title:"友人の借金を肩代わり？ ── 連帯債務と保証の違いが命取り", url:"https://stand.fm/episodes/69ddd922a46200ccc5f4ace2"}
+  },
+  {
+    id: "2026-0615",
+    week: "6/15の週",
+    field: "権利関係・抵当権（法定地上権）",
+    text: "Aが、甲土地上の建物を取り壊して更地にしてから甲土地に抵当権を設定登記し、その後にAが甲土地上に丙建物を建築していた場合、甲土地の抵当権が実行されたとしても、丙建物のために法定地上権は成立しない。",
+    answer: "○",
+    point: "ひっかけ：「実行のとき建物があるなら成立しそう」と思わせる",
+    kaisetsu: "法定地上権は「抵当権設定当時に建物が存在した」ことが要件です。更地に設定したあとで建てた建物には成立しません。抵当権者は更地として土地を評価しているので、あとから地上権を負わせるのは不意打ちになるからです。判定はつねに設定時を基準に——これが鉄則。",
+    source: "平成30年度 本試験 問6 肢2（設問の設定を含めて再構成）",
+    ep: {no:"#16", title:"家は住んだまま担保になる ── 抵当権の設定・順位・法定地上権", url:"https://stand.fm/episodes/69ddd8f0a46200ccc5f4ace0"}
+  },
+  {
+    id: "2026-0615b",
+    week: "6/15の週",
+    field: "宅建業法・宅建士の登録",
+    text: "甲県知事の登録を受けている宅地建物取引士が、乙県知事に登録の移転を申請するときは、乙県知事が指定する講習を受講しなければならない。",
+    answer: "×",
+    point: "ひっかけ：「移転先で講習を受け直し」というもっともらしさ",
+    kaisetsu: "登録の移転に講習は不要です。移転できるのは「移転先の都道府県にある事務所の業務に従事し、または従事しようとするとき」で、住所が変わっただけでは移転できない点もセットで頻出。知事指定の法定講習が必要になるのは、試験合格から1年を超えて宅建士証の交付を受けるとき（交付申請前6か月以内に受講）の話です。",
+    source: "令和2年度（10月実施）本試験 問28 肢4",
+    ep: {no:"補1", title:"合格しても、まだ宅建士じゃない ── 登録・宅建士証・「移転の罠」", url:"https://stand.fm/episodes/6a2b7a0d87ef761937377a38"}
+  },
+  {
+    id: "2026-0608",
+    week: "6/8の週",
+    field: "権利関係・物権変動",
+    text: "Aは、Aが所有している甲土地をBに売却した。甲土地を何らの権原なく不法占有しているCがいる場合、BがCに対して甲土地の所有権を主張して明渡請求をするには、甲土地の所有権移転登記を備えなければならない。",
+    answer: "×",
+    point: "ひっかけ：「所有権を主張するならまず登記」と反射させる",
+    kaisetsu: "登記がないと勝てない相手は、民法177条の「第三者」＝登記がないことを主張する正当な利益のある人だけ。何の権原もない不法占有者はこれに当たらないので、Bは登記なしで明渡しを請求できます。「第三者」に当たる人・当たらない人の仕分けが物権変動の本丸です。",
+    source: "令和元年度 本試験 問1 肢1（設問の設定を含めて再構成）",
+    ep: {no:"#15", title:"登記しないと負ける ── 不動産物権変動と「第三者」の正体", url:"https://stand.fm/episodes/69ddd8b7e60f6035692bb3dd"}
+  },
+  {
+    id: "2026-0601",
+    week: "6/1の週",
+    field: "権利関係・時効",
+    text: "AはBに対し、自己所有の甲土地を売却し、代金と引換えにBに甲土地を引き渡した。Bが、甲土地の所有権の取得時効の完成前に甲土地の占有をEに奪われたとしても、Eに対して占有回収の訴えを提起して占有を回復した場合には、Eに占有を奪われていた期間も時効期間に算入される。",
+    answer: "○",
+    point: "ひっかけ：「占有を奪われたら時効は途切れる」と思わせる",
+    kaisetsu: "占有回収の訴えで占有を取り戻せば、占有は中断しなかったものとして扱われます（民法203条ただし書）。奪われたまま何もしなければ占有は失われますが、訴えて取り戻せば継続扱い——「訴えたかどうか」で結論が分かれるのがポイントです。",
+    source: "令和4年度 本試験 問10 肢2（設問の設定を含めて再構成）",
+    ep: {no:"#14", title:"放っておくと権利が消える ── 取得時効と消滅時効を完全整理", url:"https://stand.fm/episodes/69ddd886e60f6035692bb3d4"}
+  },
+  {
+    id: "2026-0525",
+    week: "5/25の週",
+    field: "権利関係・代理",
+    text: "Aが、所有する甲土地の売却に関する代理権をBに授与し、BがCとの間で、Aを売主、Cを買主とする甲土地の売買契約を締結した場合において、BがCの代理人にもなって契約を成立させたときは、Aの許諾の有無にかかわらず、この契約は無効となる。",
+    answer: "×",
+    point: "ひっかけ：「双方代理＝無効」と言い切る",
+    kaisetsu: "双方代理は原則として無権代理とみなされます（民法108条1項）が、本人があらかじめ許諾していれば有効です。また、許諾がない場合も「無効」ではなく無権代理なので、本人が追認すれば有効になります。「許諾の有無にかかわらず」「無効」——二重に誤りが仕込まれた記述です。",
+    source: "平成30年度 本試験 問2 肢3（設問の設定を含めて再構成）",
+    ep: {no:"#13", title:"頼んでないのに契約された ── 代理と無権代理・表見代理の境界線", url:"https://stand.fm/episodes/69dc7cb6a3cd112547af1093"}
+  },
+  {
+    id: "2026-0518",
+    week: "5/18の週",
+    field: "権利関係・意思表示",
+    text: "Aは、その所有する甲土地を譲渡する意思がないのに、Bと通謀して、Aを売主、Bを買主とする甲土地の仮装の売買契約を締結した。善意のCが、Bとの間で、Bが甲土地上に建てた乙建物の賃貸借契約（貸主B、借主C）を締結した場合、AはAB間の売買契約の無効をCに主張することができない。",
+    answer: "×",
+    point: "ひっかけ：「善意の第三者」と聞くと守られそうに見える",
+    kaisetsu: "仮装譲受人Bが土地の上に建てた建物を借りただけのCは、土地そのものについて法律上の利害関係を持たないため、民法94条2項で保護される「第三者」に当たりません。だからAは無効をCに主張できます。虚偽表示は「第三者に当たる人・当たらない人」の仕分けこそが本丸です。",
+    source: "平成27年度 本試験 問2 肢2（設問の設定を含めて再構成）",
+    ep: {no:"#12", title:"騙されたのに契約が有効？ ── 意思表示（詐欺・強迫・錯誤）の恐い話", url:"https://stand.fm/episodes/69dc7c7af87676817ebf104d"}
+  },
+  {
+    id: "2026-0511",
+    week: "5/11の週",
+    field: "宅建業法・報酬",
+    text: "宅地建物取引業者A（消費税課税事業者）が、Bから売買の媒介を依頼され、Bからの特別の依頼に基づき、遠隔地への現地調査を実施した。その際、当該調査に要する特別の費用について、Bが負担することを事前に承諾していたので、Aは媒介報酬とは別に、当該調査に要した特別の費用相当額を受領することができる。",
+    answer: "○",
+    point: "ひっかけ：「上限を超えてお金を取ったらダメでは？」と迷わせる",
+    kaisetsu: "依頼者からの特別の依頼に基づく特別の費用（遠隔地の現地調査費など）は、事前の承諾があれば報酬とは別に受け取れます。一方、依頼されていない通常の広告費や調査費を上乗せするのはNG。「依頼者から頼まれたか」「特別の費用か」の2点で切り分けるのが急所です。",
+    source: "令和4年度 本試験 問27 肢1（設問の設定を含めて再構成）",
+    ep: {no:"#11", title:"3%+6万円だけ覚えても解けない ── 報酬計算の落とし穴と瑕疵担保", url:"https://stand.fm/episodes/69dc7c44f87676817ebf104a"}
+  },
+  {
+    id: "2026-0504",
+    week: "5/4の週",
+    field: "宅建業法・保証協会",
+    text: "宅地建物取引業保証協会の社員との宅地建物取引業に関する取引により生じた債権を有する者は、当該社員が納付した弁済業務保証金分担金の額に相当する額の範囲内で弁済を受ける権利を有する。",
+    answer: "×",
+    point: "ひっかけ：「納めた分担金の範囲内」というもっともらしさ",
+    kaisetsu: "弁済を受けられる限度は、その業者が保証協会に加入していなかったとしたら供託すべき「営業保証金の額」（主たる事務所1,000万円＋従たる事務所1か所500万円）です。実際に納付した分担金（60万円＋30万円）ではありません。60万円の負担で1,000万円分の保護——この差こそが保証協会の存在意義で、限度額の主語のすり替えが定番ひっかけです。",
+    source: "令和2年度（10月実施）本試験 問36 肢1",
+    ep: {no:"#10", title:"1000万円 vs 60万円の差 ── 営業保証金と保証協会どっちが得か", url:"https://stand.fm/episodes/69dc7ba498eff95c436a4549"}
+  }
+];
+
+// ===== 回答済み記録（端末内のみ）=====
+const LS_KEY = "takken_weekly1q_v1";
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch(e){}
+function markDone(id, ok){
+  saved[id] = ok ? "correct" : "wrong";
+  try { localStorage.setItem(LS_KEY, JSON.stringify(saved)); } catch(e){}
+}
+
+// ===== 回答状態バッジ（未回答／正解／不正解の3値）=====
+function statusBadgeHTML(id){
+  return `<span class="tag status-badge" data-qid="${id}"></span>`;
+}
+function refreshStatusBadge(id){
+  const s = saved[id];
+  document.querySelectorAll('.status-badge[data-qid="' + CSS.escape(id) + '"]').forEach(el => {
+    el.classList.remove("done", "miss");
+    if (s === "correct") {
+      el.classList.add("done"); el.textContent = "正解"; el.style.display = "";
+    } else if (s === "wrong") {
+      el.classList.add("miss"); el.textContent = "不正解"; el.style.display = "";
+    } else {
+      el.textContent = ""; el.style.display = "none";
+    }
+  });
+}
+
+// ===== 描画 =====
+function qBody(q, isCurrent){
+  return `
+    <div class="meta">
+      ${isCurrent ? `<span class="tag week">今週の1問</span>` : ``}
+      <span class="tag field">${q.field}</span>
+      <span class="tag src">${q.source.split("（")[0]}</span>
+      ${statusBadgeHTML(q.id)}
+    </div>
+    ${(q.ep && q.ep.url) ? `
+    <div class="epstrip">
+      <div class="eplabel">この週の放送テーマから出題</div>
+      <div><a href="${q.ep.url}" target="_blank" rel="noopener" data-umami-event="weekly_cta_episode">▶ ${q.ep.no} ${q.ep.title}</a></div>
+    </div>` : ``}
+    <div class="qlabel">次の記述は正しいか、誤りか。</div>
+    <div class="qtext">${q.text}</div>
+    <div class="btns">
+      <button class="maru" onclick="answer('${q.id}','○',this)"><span class="bsym">○</span><span class="blbl">正しい</span></button>
+      <button class="batsu" onclick="answer('${q.id}','×',this)"><span class="bsym">×</span><span class="blbl">誤り</span></button>
+    </div>
+    <div class="result" id="res-${q.id}">
+      <div class="verdict" id="ver-${q.id}"></div>
+      <div class="answer-line">正解：<span style="font-size:1.1rem">${q.answer}</span>（この記述は${q.answer === "○" ? "正しい" : "誤り"}）</div>
+      <div class="point">${q.point}</div>
+      <div class="kaisetsu">${q.kaisetsu}</div>
+      <div class="source">出典：${q.source}</div>
+    </div>`;
+}
+
+const [current, ...rest] = QUESTIONS;
+document.getElementById("current").innerHTML =
+  `<div class="qcard current">${qBody(current, true)}</div>`;
+if (window.umami) umami.track("weekly_start");
+
+document.getElementById("archive").innerHTML = rest.map(q => `
+  <details class="arch">
+    <summary>
+      <span class="tag week">${q.week}</span>
+      <span class="tag field">${q.field}</span>
+      ${statusBadgeHTML(q.id)}
+    </summary>
+    <div class="body">${qBody(q, false)}</div>
+  </details>`).join("");
+
+QUESTIONS.forEach(q => refreshStatusBadge(q.id));
+
+// ===== 回答処理 =====
+const qmap = Object.fromEntries(QUESTIONS.map(q => [q.id, q]));
+function answer(id, picked, btn){
+  const q = qmap[id];
+  const box = btn.closest(".qcard, .body");
+  box.querySelectorAll(".btns button").forEach(b => b.disabled = true);
+  btn.classList.add("picked");
+  const ok = picked === q.answer;
+  const ver = box.querySelector("#ver-" + CSS.escape(id));
+  ver.textContent = ok ? "正解！" : "残念、ひっかかりました";
+  ver.className = "verdict " + (ok ? "ok" : "ng");
+  box.querySelector("#res-" + CSS.escape(id)).classList.add("show");
+  markDone(id, ok);
+  refreshStatusBadge(id);
+  if (window.umami) umami.track("週1問_回答", { q: id, result: ok ? "正解" : "不正解" });
+  if (id === current.id && window.umami) umami.track("weekly_complete", { result: ok ? "正解" : "不正解" });
+}
+</script>
+</body>
+</html>

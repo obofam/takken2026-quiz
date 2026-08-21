@@ -396,6 +396,27 @@
     body{max-width:720px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,.05)}
     .badges{grid-template-columns:repeat(6,1fr)}
   }
+
+  /* ---------- Next-step card ---------- */
+  .next-step-card{
+    position:fixed;left:16px;right:16px;bottom:16px;z-index:90;
+    background:linear-gradient(135deg,var(--cyan),var(--cyan-dark));
+    color:#fff;border-radius:14px;padding:12px 34px 12px 14px;
+    box-shadow:var(--shadow-lg);font-size:12.5px;line-height:1.4;
+    display:flex;flex-direction:column;gap:8px;max-width:688px;margin:0 auto;
+    animation:next-step-in .35s cubic-bezier(.2,1.2,.3,1);
+  }
+  @keyframes next-step-in{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .next-step-card .close{
+    position:absolute;top:8px;right:10px;background:none;border:none;color:#fff;
+    opacity:.75;font-size:15px;line-height:1;cursor:pointer;padding:4px;font-family:inherit;
+  }
+  .next-step-card .close:active{opacity:1}
+  .next-step-card .btn{
+    align-self:flex-start;background:rgba(255,255,255,.22);border:none;color:#fff;
+    font-weight:700;font-size:12px;padding:7px 13px;border-radius:999px;
+    font-family:inherit;text-decoration:none;display:inline-block;
+  }
 </style>
 </head>
 <body>
@@ -851,6 +872,9 @@ function cycleState(n){
         confetti(m === 100 ? 180 : 100);
         showToast(m === 100 ? "🎉 全エピソード制覇！おめでとう！" : `✨ ${m}%到達！いいペース`);
       }, 120);
+      if(m === 75 || m === 100){
+        setTimeout(() => showNextStepCard(m), 1500);
+      }
     }
   });
   // バッジ獲得通知
@@ -874,6 +898,40 @@ function showToast(msg){
   t.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+// ============ 次の一歩カード ============
+const NEXT_STEP_CONTENT = {
+  75: {
+    text: "✨ 75%まで来ました。聴いた回を、解いて確かめてみませんか",
+    label: "週1回の過去問コーナーへ",
+    href: "https://takken2026-quiz.vercel.app/weekly.html",
+    event: "tracker_next_75"
+  },
+  100: {
+    text: "🎉 全エピソード制覇です。最後の仕上げに",
+    label: "教材一覧を見てみる",
+    href: "https://takken2026-quiz.vercel.app/kyozai.html",
+    event: "tracker_next_100"
+  }
+};
+function showNextStepCard(m){
+  const key = "trk_next_" + m;
+  try{
+    if(localStorage.getItem(key) === "1") return;
+  }catch(e){}
+  const c = NEXT_STEP_CONTENT[m];
+  if(!c) return;
+  const card = document.createElement("div");
+  card.className = "next-step-card";
+  card.innerHTML = `
+    <button class="close" aria-label="閉じる">✕</button>
+    <div>${c.text}</div>
+    <a class="btn" href="${c.href}" target="_blank" rel="noopener" data-umami-event="${c.event}">${c.label}</a>
+  `;
+  card.querySelector(".close").addEventListener("click", () => card.remove());
+  document.body.appendChild(card);
+  try{ localStorage.setItem(key, "1"); }catch(e){}
 }
 
 // ============ 紙吹雪 ============

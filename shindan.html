@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>宅建2026 現在地診断｜耳で覚える宅建2026</title>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#17C5E8; --cyan-dark:#0EA2C2; --cyan-soft:#D8F3FA;
+    --green:#0BAF82; --green-soft:#DFF7EF; --green-dark:#0B8F68;
+    --red:#D6453F; --red-soft:#FBE4E3; --red-dark:#B93636;
+    --amber:#C98A12; --amber-soft:#FFF3D9;
+    --lav:#7C4FD1; --lav-soft:#EDE4FB;
+    --surface:#F4F7F9; --card:#FFFFFF;
+    --text:#2B3A46; --muted:#5C6B78; --line:#D9E0E6; --gray-pill:#EEF2F5;
+    --shadow:0 2px 8px rgba(43,58,70,.08); --shadow-lg:0 6px 20px rgba(43,58,70,.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{font-size:17px}
+  body{
+    background:var(--surface); color:var(--text);
+    font-family:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+    line-height:1.8; padding:20px 14px 60px;
+  }
+  .wrap{max-width:480px;margin:0 auto}
+  a{color:inherit}
+
+  /* header */
+  .kicker{font-size:.72rem;letter-spacing:.18em;color:var(--cyan-dark);font-weight:700;text-align:center}
+  h1{font-size:1.5rem;font-weight:900;text-align:center;margin:.3rem 0 .2rem;color:var(--text)}
+  .lead{font-size:1rem;color:var(--muted);text-align:center;margin-bottom:26px;line-height:1.85}
+
+  /* question card */
+  .qcard{
+    background:var(--card);
+    border:1px solid var(--line); border-radius:18px;
+    padding:20px 18px; margin-bottom:16px;
+    box-shadow:var(--shadow);
+    transition:border-color .2s, box-shadow .2s;
+    scroll-margin-top:16px;
+  }
+  .qcard.attn{border-color:var(--red);box-shadow:0 0 0 3px rgba(214,69,63,.15)}
+  .qnum{font-size:.76rem;font-weight:700;letter-spacing:.06em;color:var(--cyan-dark);margin-bottom:6px}
+  .qtext{font-size:1.06rem;font-weight:700;line-height:1.75;color:var(--text);font-feature-settings:"palt"}
+  .qhint{font-size:.82rem;color:var(--muted);margin-top:4px}
+
+  /* options */
+  .opts{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .opt{
+    display:flex;align-items:center;gap:12px;
+    padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;
+    background:#fff;color:var(--text);font-size:.98rem;font-weight:600;
+    text-align:left;width:100%;cursor:pointer;font-family:inherit;line-height:1.6;
+    transition:border-color .15s,background .15s,color .15s;
+  }
+  .opt:active{transform:scale(.98)}
+  .opt .mark{
+    flex-shrink:0;width:20px;height:20px;border:2px solid var(--line);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .15s,background .15s;
+  }
+  .opt.multi .mark{border-radius:6px}
+  .opt .mark::after{content:"";width:9px;height:9px;border-radius:50%;background:#fff;opacity:0;transition:opacity .15s}
+  .opt.multi .mark::after{border-radius:2px}
+  .opt.selected{border-color:var(--cyan);background:var(--cyan-soft);color:var(--cyan-dark)}
+  .opt.selected .mark{border-color:var(--cyan);background:var(--cyan)}
+  .opt.selected .mark::after{opacity:1}
+
+  /* submit */
+  .submit-wrap{margin:28px 0 8px;text-align:center}
+  .submit-btn{
+    display:inline-block;width:100%;
+    background:var(--cyan);color:#fff;border:none;
+    font-size:1.05rem;font-weight:800;padding:16px;border-radius:14px;
+    cursor:pointer;box-shadow:var(--shadow-lg);
+    font-family:inherit;
+  }
+  .submit-btn:active{transform:scale(.98)}
+  .submit-note{font-size:.82rem;color:var(--muted);margin-top:10px}
+
+  /* result */
+  .result-section{display:none;margin-top:8px}
+  .result-section.show{display:block;animation:pop .3s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .result-card{
+    background:var(--card);border:1.5px solid var(--cyan);border-radius:20px;
+    padding:26px 20px;box-shadow:var(--shadow-lg);margin-bottom:18px;
+    scroll-margin-top:16px;
+  }
+  .result-intro{font-size:.95rem;font-weight:700;color:var(--muted);margin-bottom:6px}
+  .result-headline{font-size:1.28rem;font-weight:900;line-height:1.65;color:var(--text);margin-bottom:6px}
+  .result-score{font-size:.92rem;font-weight:700;color:var(--cyan-dark);margin-bottom:20px}
+  .result-body p{font-size:1rem;line-height:1.9;color:var(--text);margin-bottom:12px}
+  .result-body p:last-child{margin-bottom:0}
+  .reco-head{font-size:.98rem;font-weight:800;color:var(--text);margin:22px 0 10px}
+  .reco-list{list-style:none}
+  .reco-list li{font-size:.98rem;line-height:1.9;color:var(--text)}
+  .memo{
+    margin-top:20px;font-size:.82rem;color:var(--muted);
+    background:var(--gray-pill);border-radius:10px;padding:10px 12px;line-height:1.8;
+  }
+  .memo b{color:var(--text);font-weight:700}
+  .cta-btn{
+    display:block;text-decoration:none;text-align:center;
+    margin-top:22px;background:var(--cyan);color:#fff;
+    font-weight:800;font-size:1rem;padding:15px;border-radius:12px;
+  }
+  .divider{border:none;border-top:1px solid var(--line);margin:22px 0}
+  .closing{
+    margin:0 0 18px;
+  }
+  .closing p{font-size:.95rem;line-height:1.9;color:var(--muted);margin-bottom:6px}
+  .closing p:last-child{margin-bottom:0}
+  .bansou{
+    background:var(--lav-soft);border-left:4px solid var(--lav);
+    border-radius:0 12px 12px 0;padding:14px 16px;margin-top:18px;
+  }
+  .bansou p{font-size:.92rem;line-height:1.85;color:var(--text);margin-bottom:6px}
+  .bansou p:last-child{margin-bottom:0}
+  .reset-wrap{text-align:center;margin-top:22px}
+  .reset-btn{
+    display:inline-block;background:#fff;color:var(--muted);
+    border:1.5px solid var(--line);border-radius:12px;
+    font-size:.92rem;font-weight:700;padding:12px 22px;cursor:pointer;font-family:inherit;
+  }
+
+  footer{margin-top:34px;font-size:.82rem;color:var(--muted);line-height:1.9;text-align:center}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">耳で覚える宅建2026</div>
+  <h1>宅建2026 現在地診断</h1>
+  <p class="lead">8月は「このペースで大丈夫かな？」と不安になりやすい時期です。6問・約1分で、いまの学習状況から「何を優先すればいいか」を整理します。</p>
+
+  <!-- Q1 -->
+  <div class="qcard" id="q1-card">
+    <div class="qnum">①</div>
+    <div class="qtext">過去問・問題集は、いまどのあたり？</div>
+    <div class="opts">
+      <button type="button" class="opt" onclick="selectSingle('q1',0,'まだこれから',this)"><span class="mark"></span><span>まだこれから</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q1',1,'1周目の途中',this)"><span class="mark"></span><span>1周目の途中</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q1',2,'1周終わった',this)"><span class="mark"></span><span>1周終わった</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q1',3,'2周以上',this)"><span class="mark"></span><span>2周以上</span></button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="qcard" id="q2-card">
+    <div class="qnum">②</div>
+    <div class="qtext">年度別過去問や模試を通し（50問）で解くと、何点くらい？</div>
+    <div class="opts">
+      <button type="button" class="opt" onclick="selectSingle('q2',0,'まだ通しでは解いていない',this)"><span class="mark"></span><span>まだ通しでは解いていない</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q2',1,'〜25点',this)"><span class="mark"></span><span>〜25点</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q2',2,'26〜32点',this)"><span class="mark"></span><span>26〜32点</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q2',3,'33点以上',this)"><span class="mark"></span><span>33点以上</span></button>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="qcard" id="q3-card">
+    <div class="qnum">③</div>
+    <div class="qtext">いちばん不安な分野は？（複数選択OK）</div>
+    <div class="qhint">複数選択できます。任意の設問です。</div>
+    <div class="opts">
+      <button type="button" class="opt multi" onclick="toggleMulti('q3','宅建業法',this)"><span class="mark"></span><span>宅建業法</span></button>
+      <button type="button" class="opt multi" onclick="toggleMulti('q3','権利関係',this)"><span class="mark"></span><span>権利関係</span></button>
+      <button type="button" class="opt multi" onclick="toggleMulti('q3','法令上の制限',this)"><span class="mark"></span><span>法令上の制限</span></button>
+      <button type="button" class="opt multi" onclick="toggleMulti('q3','税・その他',this)"><span class="mark"></span><span>税・その他</span></button>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="qcard" id="q4-card">
+    <div class="qnum">④</div>
+    <div class="qtext">直近2週間、平日1日あたりの勉強時間は？</div>
+    <div class="opts">
+      <button type="button" class="opt" onclick="selectSingle('q4',0,'ほぼ取れていない',this)"><span class="mark"></span><span>ほぼ取れていない</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q4',1,'30分未満',this)"><span class="mark"></span><span>30分未満</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q4',2,'30分〜1時間',this)"><span class="mark"></span><span>30分〜1時間</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q4',3,'1時間以上',this)"><span class="mark"></span><span>1時間以上</span></button>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="qcard" id="q5-card">
+    <div class="qnum">⑤</div>
+    <div class="qtext">いま一番の悩みに近いのは？</div>
+    <div class="opts">
+      <button type="button" class="opt" onclick="selectSingle('q5',null,'覚えたはずが抜けていく',this)"><span class="mark"></span><span>覚えたはずが抜けていく</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q5',null,'問題文の意味が取りづらい',this)"><span class="mark"></span><span>問題文の意味が取りづらい</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q5',null,'計画どおり進まない・時間がない',this)"><span class="mark"></span><span>計画どおり進まない・時間がない</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q5',null,'不安・モチベーションが続かない',this)"><span class="mark"></span><span>不安・モチベーションが続かない</span></button>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="qcard" id="q6-card">
+    <div class="qnum">⑥</div>
+    <div class="qtext">模試を受ける予定はある？</div>
+    <div class="opts">
+      <button type="button" class="opt" onclick="selectSingle('q6',null,'申込済み・受験済',this)"><span class="mark"></span><span>申込済み・受験済</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q6',null,'検討中',this)"><span class="mark"></span><span>検討中</span></button>
+      <button type="button" class="opt" onclick="selectSingle('q6',null,'受けない予定',this)"><span class="mark"></span><span>受けない予定</span></button>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button type="button" class="submit-btn" id="submitBtn" onclick="checkResult()">結果を見る</button>
+    <p class="submit-note">未回答の設問があると、その設問までスクロールします（③は任意）</p>
+  </div>
+
+  <!-- 結果 -->
+  <div class="result-section" id="result">
+    <div class="result-card" id="resultCard">
+      <div class="result-intro">あなたの診断結果は・・・</div>
+      <div class="result-headline" id="resultHeadline"></div>
+      <div class="result-score" id="resultScore"></div>
+      <div class="result-body" id="resultBody"></div>
+
+      <div class="reco-head">▼8月のおすすめ</div>
+      <ul class="reco-list" id="resultReco"></ul>
+
+      <div id="resultCtaWrap"></div>
+
+      <hr class="divider">
+
+      <div class="closing">
+        <p>診断はいまの現在地であって、合否ではありません。8月は、ここからどう動くかで大きく変わります。一歩ずつ、淡々と積み上げていきましょう。</p>
+      </div>
+
+      <div class="bansou" id="resultBansou">
+        <p>「一人だと途中で止まりそう…」という方向けに、試験日まで伴走する少人数サポートもご用意しています。</p>
+        <p>気になる方は、LINEのトークに戻って「伴走」と送ってみてください。</p>
+      </div>
+
+      <div class="memo" id="resultMemo"></div>
+    </div>
+
+    <div class="reset-wrap">
+      <button type="button" class="reset-btn" onclick="resetAll()">もう一度診断する</button>
+    </div>
+  </div>
+
+  <footer>
+    耳で覚える宅建2026<br>
+    この診断はいまの現在地を確認するためのものです。結果は送信・保存されません。
+  </footer>
+
+</div>
+
+<script>
+  const state = { q1:null, q2:null, q3:[], q4:null, q5:null, q6:null };
+  let started = false;
+
+  function trackStart(){
+    if(!started){
+      started = true;
+      if (window.umami) umami.track("shindan_start");
+    }
+  }
+
+  function selectSingle(qid, value, label, btn){
+    trackStart();
+    state[qid] = { value: value, label: label };
+    const container = btn.closest(".opts");
+    container.querySelectorAll(".opt").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    const card = document.getElementById(qid + "-card");
+    if (card) card.classList.remove("attn");
+  }
+
+  function toggleMulti(qid, label, btn){
+    trackStart();
+    btn.classList.toggle("selected");
+    const arr = state[qid];
+    const idx = arr.indexOf(label);
+    if (btn.classList.contains("selected")) {
+      if (idx === -1) arr.push(label);
+    } else {
+      if (idx !== -1) arr.splice(idx, 1);
+    }
+  }
+
+  const REQUIRED = ["q1", "q2", "q4", "q5", "q6"];
+
+  function checkResult(){
+    for (const qid of REQUIRED) {
+      if (state[qid] === null) {
+        const card = document.getElementById(qid + "-card");
+        card.classList.add("attn");
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+    }
+    showResult();
+  }
+
+  const TYPES = {
+    sprout: {
+      emoji: "🌱", label: "助走型", range: "0〜2点", tail: "でした",
+      event: "shindan_type_sprout",
+      body: [
+        "大丈夫、落ち着いてください。まだ間に合います。",
+        "8月に本当に危ないのは「遅れていること」よりも、焦って何から手をつければいいか分からなくなることです。",
+        "いまは点数より「毎日宅建に触れる習慣」づくりが最優先。音声学習でながら時間を使いつつ、まずは宅建業法を1周終えることだけ考えましょう。"
+      ],
+      reco: ["耳学習を毎日1本（ながらでOK）", "宅建業法をまず1周", "1日5問だけ問題に触れる"],
+      cta: { label: "📘業法が不安な方はこちら", url: "https://note.com/fond_bison5155/n/n21bbbcab9add", event: "shindan_cta_gyoho" },
+      bansou: true
+    },
+    rebuild: {
+      emoji: "🔄", label: "立て直し型", range: "3〜5点", tail: "でした",
+      event: "shindan_type_rebuild",
+      body: [
+        "まだ大丈夫、ここから十分巻き返せます。",
+        "このタイプは知識が不足しているというより、まだ全体がつながっていない状態の方が多いです。8月は新しい教材を増やすより、宅建業法を確実に固めるのが近道。ここが安定すると、点数は一気に動きます。"
+      ],
+      reco: ["宅建業法を重点復習", "いきなり50問通しより、まず分野別で解く", "間違えた問題だけ繰り返す"],
+      cta: { label: "📘業法の総復習はこちら", url: "https://note.com/fond_bison5155/n/n21bbbcab9add", event: "shindan_cta_gyoho" },
+      bansou: true
+    },
+    stack: {
+      emoji: "📚", label: "積み上げ型", range: "6〜7点", tail: "です",
+      event: "shindan_type_stack",
+      body: [
+        "順調ですね！知識はしっかりと積み上がっているので、ここからは覚えるより本番で点を取る練習に切り替える時期です。",
+        "50問を通しで解く練習を、週1回でいいので増やしていきましょう。8月の通しは26〜32点で十分順調です。"
+      ],
+      reco: ["週1回の50問通し演習", "苦手分野だけ復習", "模試の申込みを済ませる"],
+      cta: { label: "📘演習量を増やしたい方はこちら", url: "https://note.com/fond_bison5155/n/nb59bbfa5b01d", event: "shindan_cta_quiz" },
+      bansou: true
+    },
+    finish: {
+      emoji: "🚀", label: "仕上げ期型", range: "8〜9点", tail: "です",
+      event: "shindan_type_finish",
+      body: [
+        "かなり順調です！ここから点数を伸ばす人は、知識を増やすより失点を減らすことに集中しています。",
+        "模試や年度別過去問で本番感覚を養いながら、苦手分野だけを潰していきましょう。ここまで来れば、合格が見えてきます。"
+      ],
+      reco: ["模試を最低2回申し込む", "苦手分野だけ総復習", "本番と同じ2時間で50問演習"],
+      cta: { label: "📘失点を減らす最後の一冊はこちら", url: "https://note.com/fond_bison5155/n/na9740956174c", event: "shindan_cta_chokuzen" },
+      bansou: false
+    }
+  };
+
+  function getType(score){
+    if (score <= 2) return TYPES.sprout;
+    if (score <= 5) return TYPES.rebuild;
+    if (score <= 7) return TYPES.stack;
+    return TYPES.finish;
+  }
+
+  function showResult(){
+    const score = state.q1.value + state.q2.value + state.q4.value;
+    const type = getType(score);
+
+    document.getElementById("resultHeadline").textContent =
+      `${type.emoji}【${type.label}】（${type.range}/9点中）${type.tail}。`;
+    document.getElementById("resultScore").textContent = `あなたの合計：${score}点`;
+
+    document.getElementById("resultBody").innerHTML =
+      type.body.map(line => `<p>${line}</p>`).join("");
+
+    document.getElementById("resultReco").innerHTML =
+      type.reco.map(item => `<li>・${item}</li>`).join("");
+
+    const ctaWrap = document.getElementById("resultCtaWrap");
+    if (type.cta) {
+      ctaWrap.innerHTML = `<a class="cta-btn" href="${type.cta.url}" target="_blank" rel="noopener" data-umami-event="${type.cta.event}">${type.cta.label}</a>`;
+    } else {
+      ctaWrap.innerHTML = "";
+    }
+
+    const q3str = state.q3.length ? state.q3.join("・") : "特になし";
+    const q5str = state.q5 && state.q5.label ? state.q5.label : "未回答";
+    document.getElementById("resultMemo").innerHTML =
+      `<b>あなたの回答メモ</b><br>不安分野: ${q3str}／いまの悩み: ${q5str}`;
+
+    document.getElementById("resultBansou").style.display = type.bansou ? "" : "none";
+
+    const result = document.getElementById("result");
+    result.style.display = "block";
+    requestAnimationFrame(() => result.classList.add("show"));
+    document.getElementById("resultCard").scrollIntoView({ behavior: "smooth", block: "start" });
+
+    if (window.umami) {
+      umami.track("shindan_complete", { score: score, type: type.label });
+      umami.track(type.event, { score: score });
+    }
+  }
+
+  function resetAll(){
+    state.q1 = null; state.q2 = null; state.q3 = []; state.q4 = null; state.q5 = null; state.q6 = null;
+    document.querySelectorAll(".opt.selected").forEach(b => b.classList.remove("selected"));
+    document.querySelectorAll(".qcard.attn").forEach(c => c.classList.remove("attn"));
+    const result = document.getElementById("result");
+    result.classList.remove("show");
+    result.style.display = "none";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+</script>
+</body>
+</html>
