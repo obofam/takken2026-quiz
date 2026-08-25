@@ -159,7 +159,6 @@
   .quiz-btn:hover{background:var(--shu-bright)}
   .quiz-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8f2a20,0 3px 8px rgba(143,42,32,.24)}
   .quiz-btn .qb-main{font-size:16px;font-weight:700;letter-spacing:.06em}
-  .quiz-btn .qb-sub{font-size:11px;font-weight:500;letter-spacing:.08em;opacity:.92}
   /* 副：音声で復習（小さく） */
   .audio-link{
     display:flex;align-items:center;justify-content:center;gap:5px;
@@ -249,19 +248,18 @@
       <dl class="cats" id="cats"></dl>
       <div class="actions">
         <!-- ▼ 主CTA：無料5問をその場で開始（本番クイズ=vercel の #sample で自動開始） ▼ -->
-        <a class="quiz-btn" href="https://takken2026-quiz.vercel.app/#sample" target="_blank" rel="noopener" id="quizBtn">
+        <a class="quiz-btn" href="https://takken2026-quiz.vercel.app/#sample" target="_blank" rel="noopener" id="quizBtn" data-umami-event="omikuji_cta_quiz">
           <span class="qb-main">今日のラッキー問題に挑戦</span>
-          <span class="qb-sub">無料5問・1分で解ける →</span>
         </a>
         <!-- ▼ 副：音声で復習（Stand.fm） ▼ -->
-        <a class="audio-link" href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" id="audioLink">不安な分野は音声で復習 ➔ Stand.fm</a>
+        <a class="audio-link" href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" id="audioLink" data-umami-event="omikuji_cta_standfm">不安な分野は音声で復習 ➔ Stand.fm</a>
         <button class="again-btn" id="againBtn">もう一度ひく</button>
       </div>
     </section>
 
     <p class="footnote">※ おみくじは何度でも引けます。最後に効くのは過去問です。</p>
     <!-- note記事「このおみくじができるまで」（湯島天神・合格祈願）。公開後に有効化される ▼ -->
-    <a class="note-link" href="https://note.com/fond_bison5155/n/n9b5f6dd9441b" target="_blank" rel="noopener" id="noteLink">▸ このおみくじができるまで（note）</a>
+    <a class="note-link" href="https://note.com/fond_bison5155/n/n9b5f6dd9441b" target="_blank" rel="noopener" id="noteLink" data-umami-event="omikuji_cta_note">▸ このおみくじができるまで（note）</a>
   </main>
 
 <script>
@@ -414,8 +412,28 @@
     slip.classList.remove("show"); void slip.offsetWidth; slip.classList.add("show");
   }
 
-  function draw(){
+  // ── URLパラメータ ──
+  // ?auto=1 … 「引く」を飛ばして、開いた瞬間に結果を表示（LINEリッチメニュー直行用）
+  //            #auto でも可。?auto=0 なら通常どおり「引く」から。
+  // ?from=xxx … 流入元のメモ。Umamiのイベントに from プロパティとして乗る（例 ?from=richmenu）
+  const QS = new URLSearchParams(location.search);
+  const AUTO = QS.has("auto") ? QS.get("auto") !== "0" : (location.hash === "#auto");
+  const SRC  = (QS.get("from") || "").slice(0, 24);
+
+  // ── Umami計測：引いた回数・ランク・引き方を記録 ──
+  let drawCount = 0;
+  function trackDraw(f, mode){
+    drawCount++;
+    if(window.umami){
+      const props = { rank: f.rank, nth: drawCount, mode: mode };
+      if(SRC) props.from = SRC;
+      umami.track("omikuji_draw", props);
+    }
+  }
+
+  function draw(mode){
     const f=pick();
+    trackDraw(f, mode || "manual");
     if(reduce){ drawZone.style.display="none"; render(f); return; }
     tutu.classList.add("shaking"); drawBtn.disabled=true;
     setTimeout(()=>{
@@ -424,12 +442,21 @@
     },560);
   }
 
-  drawBtn.addEventListener("click",draw);
+  drawBtn.addEventListener("click",()=>draw("manual"));
   againBtn.addEventListener("click",()=>{
+    if(window.umami) umami.track("omikuji_again", { nth: drawCount, mode: AUTO ? "auto" : "manual" });
     slip.classList.remove("show");
     drawZone.style.display="block";
     window.scrollTo({top:0,behavior:reduce?"auto":"smooth"});
   });
+
+  // ── 直行モード：開いた瞬間に結果を出す ──
+  if(AUTO){
+    const f=pick();
+    trackDraw(f,"auto");
+    drawZone.style.display="none";
+    render(f);
+  }
 </script>
 </body>
 </html>

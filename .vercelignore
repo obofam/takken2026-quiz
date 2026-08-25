@@ -4,8 +4,5 @@ Thumbs.db
 node_modules/
 .vscode/
 .idea/
-
 .vercel
-
-pdf/
-audio/
+.git

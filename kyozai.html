@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>教材一覧｜耳で覚える宅建2026</title>
+<!-- Umami analytics -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#17C5E8;
+    --cyan-dark:#0EA2C2;
+    --cyan-soft:#D8F3FA;
+    --surface:#F4F7F9;
+    --card:#FFFFFF;
+    --text:#2B3A46;
+    --muted:#73818D;
+    --line:#D9E0E6;
+    --gray-pill:#EEF2F5;
+    --shadow:0 2px 8px rgba(43,58,70,.08);
+    --shadow-lg:0 6px 20px rgba(43,58,70,.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans", "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+    background: var(--surface); color: var(--text);
+    min-height: 100dvh; line-height: 1.75;
+  }
+  .container { max-width: 480px; margin: 0 auto; padding: 28px 16px 60px; }
+
+  a { color: inherit; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 8px 0 20px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+  }
+  .hero .eyebrow {
+    font-size: .78rem; font-weight: 700;
+    letter-spacing: .18em; color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-size: 1.5rem; font-weight: 900;
+    letter-spacing: .02em; line-height: 1.55;
+    color: var(--text);
+  }
+  .hero p {
+    font-size: 1rem; color: var(--muted);
+    margin-top: 14px; line-height: 1.85;
+  }
+
+  /* ── ROUTE BAND ── */
+  .route-band {
+    margin: 0 auto 28px;
+    padding: 12px 14px;
+    text-align: center;
+    font-size: .92rem; line-height: 1.7;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  /* ── SECTION HEADS ── */
+  .section-head {
+    margin: 0 0 14px;
+  }
+  .section-head h2 {
+    font-size: 1.12rem; font-weight: 800;
+    color: var(--text); letter-spacing: .02em;
+  }
+  .section-block { margin-bottom: 34px; }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    height: 3px;
+    background: #C7D1D9;
+    border-radius: 3px;
+    margin: 6px 0 38px;
+  }
+
+  /* ── FREE CARDS ── */
+  .free-list { display: flex; flex-direction: column; gap: 10px; }
+  .free-card {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-decoration: none;
+    box-shadow: var(--shadow);
+    transition: box-shadow .15s, transform .15s;
+  }
+  .free-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+  .fc-icon {
+    font-size: 1.5rem; line-height: 1; flex-shrink: 0;
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--cyan-soft); border-radius: 10px;
+  }
+  .fc-body { flex: 1; min-width: 0; }
+  .fc-title { display: block; font-size: 1rem; font-weight: 700; color: var(--text); }
+  .fc-desc { display: block; font-size: .88rem; color: var(--muted); margin-top: 3px; line-height: 1.65; }
+  .fc-tag {
+    display: inline-block; font-size: .68rem; font-weight: 700; letter-spacing: .02em;
+    color: var(--cyan-dark); background: var(--cyan-soft);
+    border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: 2px;
+  }
+  .fc-arrow { font-size: 1.2rem; color: var(--muted); flex-shrink: 0; }
+
+  /* ── MATERIAL CARDS ── */
+  .material-list { display: flex; flex-direction: column; gap: 14px; }
+  .material-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 18px 18px;
+    box-shadow: var(--shadow);
+  }
+  .material-card--set {
+    border: 1.5px solid var(--cyan);
+  }
+  .mc-flag {
+    font-size: .74rem; font-weight: 700;
+    color: var(--cyan-dark); letter-spacing: .06em;
+    margin-bottom: 10px;
+  }
+  .mc-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+  }
+  .mc-icon { font-size: 1.3rem; line-height: 1; }
+  .mc-title { font-size: 1.12rem; font-weight: 800; color: var(--text); letter-spacing: .01em; }
+  .mc-point { font-size: 1rem; color: var(--text); margin-bottom: 6px; line-height: 1.75; }
+  .mc-content { font-size: .9rem; color: var(--muted); margin-bottom: 14px; }
+  .mc-status-badge {
+    display: inline-block;
+    font-size: .74rem; font-weight: 700;
+    color: var(--muted);
+    background: var(--gray-pill);
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .mc-price-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding-top: 12px; margin-top: 2px;
+    border-top: 1px solid var(--line);
+  }
+  .mc-price-lbl { font-size: .82rem; color: var(--muted); }
+  .mc-price { font-size: 1.35rem; font-weight: 900; color: var(--cyan-dark); }
+  .mc-note { font-size: .8rem; color: var(--muted); margin: 10px 0 0; }
+
+  .btn-cta {
+    display: block; text-align: center;
+    margin-top: 14px;
+    background: var(--cyan); color: #fff;
+    font-weight: 800; font-size: 1rem;
+    padding: 13px 16px; border-radius: 10px;
+    text-decoration: none;
+    transition: background .15s, transform .15s;
+  }
+  .btn-cta:hover { background: var(--cyan-dark); transform: translateY(-1px); }
+
+  .btn-disabled {
+    display: block; text-align: center;
+    margin-top: 14px;
+    background: var(--gray-pill);
+    border: 1px dashed var(--line);
+    color: var(--muted);
+    font-weight: 700; font-size: .95rem;
+    padding: 13px 16px; border-radius: 10px;
+  }
+
+
+  /* ── CHOOSER（教材のえらび方） ── */
+  html { scroll-behavior: smooth; }
+  .material-card { scroll-margin-top: 16px; }
+  .chooser { margin: 18px 0 22px; }
+  .chooser > summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: center; gap: 14px;
+    background: var(--cyan-soft);
+    border: 2px solid var(--cyan);
+    border-radius: 14px;
+    padding: 18px 18px;
+  }
+  .chooser > summary::-webkit-details-marker { display: none; }
+  .ch-icon { font-size: 1.5rem; line-height: 1; flex-shrink: 0; }
+  .ch-txt { flex: 1; min-width: 0; }
+  .ch-txt b { display: block; font-size: 1.12rem; font-weight: 900; color: var(--text); }
+  .ch-txt small { display: block; font-size: .9rem; color: var(--cyan-dark); font-weight: 700; margin-top: 4px; }
+  .ch-caret { font-size: .95rem; color: var(--cyan-dark); font-weight: 900; flex-shrink: 0; transition: transform .2s; }
+  .chooser[open] .ch-caret { transform: rotate(180deg); }
+  .chooser-body {
+    background: var(--card); border: 1px solid var(--line); border-top: none;
+    border-radius: 0 0 14px 14px; margin: -8px 10px 0; padding: 22px 18px 18px;
+  }
+  .ch-q1 { font-size: 1.15rem; font-weight: 900; line-height: 1.6; color: var(--text); }
+  .ch-route { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .ch-branch {
+    display: inline-block; font-size: .95rem; font-weight: 800; color: #fff;
+    background: var(--cyan-dark); padding: 5px 14px; border-radius: 999px;
+  }
+  .ch-q2 { font-size: 1.05rem; font-weight: 800; line-height: 1.6; margin-top: 12px; color: var(--text); }
+  .ch-opt {
+    display: block; text-decoration: none;
+    background: var(--gray-pill); border-radius: 12px;
+    padding: 16px 16px; margin-top: 12px;
+  }
+  .ch-opt .ch-a { display: block; font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.6; }
+  .ch-opt .ch-n { display: block; font-size: 1.08rem; font-weight: 900; color: var(--cyan-dark); margin-top: 6px; }
+  .ch-extra {
+    display: block; text-decoration: none; text-align: center;
+    font-size: .98rem; font-weight: 700; color: var(--cyan-dark);
+    margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); line-height: 1.7;
+  }
+  @keyframes chFlash { 0%,100% { box-shadow: var(--shadow); } 25%,75% { box-shadow: 0 0 0 4px var(--cyan-soft), 0 0 0 6px var(--cyan); } }
+  .material-card.ch-flash { animation: chFlash 1.8s ease-in-out 1; }
+
+  /* ── FAQ ── */
+  .faq-list { display: flex; flex-direction: column; gap: 16px; }
+  .faq-item {
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .faq-q { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .faq-a { font-size: .95rem; color: var(--muted); line-height: 1.85; }
+
+  /* ── LINE CTA ── */
+  .line-cta {
+    margin-top: 40px;
+    background: var(--cyan-soft);
+    border: 1px solid rgba(14,162,194,.25);
+    border-radius: 14px;
+    padding: 24px 18px;
+    text-align: center;
+  }
+  .lc-lead { font-size: .9rem; font-weight: 700; color: var(--cyan-dark); letter-spacing: .02em; }
+  .lc-body { font-size: .95rem; color: var(--text); line-height: 1.9; margin-top: 10px; }
+  .lc-btn {
+    display: block; margin-top: 18px; padding: 15px 18px;
+    background: var(--cyan-dark); color: #fff; font-weight: 700; font-size: 1.02rem;
+    border-radius: 999px; text-decoration: none; box-shadow: var(--shadow);
+  }
+  .lc-btn:hover { background: var(--cyan); }
+  .lc-note { font-size: .8rem; color: var(--muted); line-height: 1.8; margin-top: 14px; }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 40px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+  }
+  footer .foot-line {
+    font-size: .84rem; color: var(--muted); line-height: 1.85;
+  }
+  footer .foot-line a {
+    color: var(--cyan-dark); text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  footer .credit {
+    font-size: .78rem; color: var(--muted); margin-top: 14px;
+    letter-spacing: .04em;
+  }
+
+  @media (min-width: 640px) {
+    .container { padding-top: 48px; }
+    .hero h1 { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 1. ヒーロー -->
+  <header class="hero">
+    <p class="eyebrow">耳で覚える宅建2026</p>
+    <h1>耳で覚えて、目で固定。<br>一問一答で点数へ。</h1>
+    <p>『耳で覚える宅建2026』の教材一覧です。どれもスマホ完結。必要なものだけどうぞ！</p>
+  </header>
+
+  <!-- 2. 順路ガイド -->
+  <div class="route-band">
+    おすすめの順路：①音声を聴く → ②図解で確認 → ③一問一答を解いて定着
+  </div>
+
+  <!-- 3. 無料で試せます -->
+  <div class="section-block">
+    <div class="section-head">
+      <h2>無料で試せます</h2>
+    </div>
+    <div class="free-list">
+
+      <a class="free-card" href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="kyozai_cta_standfm">
+        <span class="fc-icon">🎧</span>
+        <span class="fc-body">
+          <span class="fc-title">音声配信（毎週月曜）</span>
+          <span class="fc-desc">スキマ時間に繰り返し。（Stand.fm）</span>
+        </span>
+        <span class="fc-arrow">›</span>
+      </a>
+
+      <a class="free-card" href="https://takken2026-quiz.vercel.app/#sample" target="_blank" rel="noopener" data-umami-event="kyozai_cta_sample">
+        <span class="fc-icon">📝</span>
+        <span class="fc-body">
+          <span class="fc-title">一問一答問題集お試し5問</span>
+          <span class="fc-desc">スマホでサクサク1分でお試し。</span>
+        </span>
+        <span class="fc-arrow">›</span>
+      </a>
+
+      <a class="free-card" href="https://takken2026-quiz.vercel.app/weekly.html" target="_blank" rel="noopener" data-umami-event="kyozai_cta_weekly">
+        <span class="fc-icon">📅</span>
+        <span class="fc-body">
+          <span class="fc-title">今週の過去問<span class="fc-tag">LINEで毎週お届け</span></span>
+          <span class="fc-desc">毎週の放送テーマにあわせた過去問を週替わりで。公式LINEに登録すると、毎週月曜に届きます。</span>
+        </span>
+        <span class="fc-arrow">›</span>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- 4. 教材（有料） -->
+  <div class="section-block">
+    <div class="section-head">
+      <h2>ここからは有料の教材です</h2>
+      <p class="section-lead" style="font-size:0.95rem; color:var(--muted); line-height:1.8; margin:10px 0 0;">各分野の要点とハマるポイントを、忙しいあなたに代わってまとめておきました。いちばん時間のかかる「まとめる」作業はこちらで済ませてあります。あなたがやるのは、覚えることだけです。</p>
+    </div>
+
+    <details class="chooser">
+      <summary data-umami-event="kyozai_flow_open">
+        <span class="ch-icon">🧭</span>
+        <span class="ch-txt"><b>どれを買えばいい？</b><small>2つの質問で決まります — 教材の選び方</small></span>
+        <span class="ch-caret">▼</span>
+      </summary>
+      <div class="chooser-body">
+        <p class="ch-q1">いま、ひととおり全分野おわってる？</p>
+
+        <div class="ch-route">
+          <p class="ch-branch">まだ終わっていない</p>
+          <p class="ch-q2">いま足りないのは？</p>
+          <a class="ch-opt" href="#card-set3" data-umami-event="kyozai_flow_set3">
+            <span class="ch-a">分野の基礎を固めたい</span>
+            <span class="ch-n">3冊セット →</span>
+          </a>
+          <a class="ch-opt" href="#card-quiz" data-umami-event="kyozai_flow_quiz">
+            <span class="ch-a">とにかく解く量を増やしたい</span>
+            <span class="ch-n">一問一答問題集 →</span>
+          </a>
+        </div>
+
+        <div class="ch-route">
+          <p class="ch-branch">ひととおり終わった</p>
+          <p class="ch-q2">残りの時間、ひとりで進められそう？</p>
+          <a class="ch-opt" href="#card-chokuzen" data-umami-event="kyozai_flow_chokuzen">
+            <span class="ch-a">自分のペースで進められる</span>
+            <span class="ch-n">直前対策 →</span>
+          </a>
+          <a class="ch-opt" href="#card-last30" data-umami-event="kyozai_flow_last30">
+            <span class="ch-a">毎日やることを決めてほしい</span>
+            <span class="ch-n">宅建 ラスト30日プログラム →</span>
+          </a>
+        </div>
+
+        <a class="ch-extra" href="#card-bansou" data-umami-event="kyozai_flow_bansou">ひとりで最後まで走り切れるか不安な方は → 最後まで伴走</a>
+      </div>
+    </details>
+    <div class="material-list">
+
+      <article class="material-card">
+        <div class="mc-head">
+          <span class="mc-icon">📘</span>
+          <h3 class="mc-title">宅建業法で20点とる</h3>
+        </div>
+        <p class="mc-content">PDF教材＋一問一答問題集 全50問つき</p>
+        <div class="mc-price-row">
+          <span class="mc-price-lbl">価格</span>
+          <span class="mc-price">980円</span>
+        </div>
+        <a class="btn-cta" href="https://note.com/fond_bison5155/n/n21bbbcab9add" target="_blank" rel="noopener" data-umami-event="kyozai_cta_gyoho">詳細（note）へ →</a>
+      </article>
+
+      <article class="material-card">
+        <div class="mc-head">
+          <span class="mc-icon">📗</span>
+          <h3 class="mc-title">権利関係で14点を拾う</h3>
+        </div>
+        <p class="mc-content">PDF教材＋一問一答問題集 全52問つき</p>
+        <div class="mc-price-row">
+          <span class="mc-price-lbl">価格</span>
+          <span class="mc-price">980円</span>
+        </div>
+        <a class="btn-cta" href="https://note.com/fond_bison5155/n/n10bb0e89fe64" target="_blank" rel="noopener" data-umami-event="kyozai_cta_kenri">詳細（note）へ →</a>
+      </article>
+
+      <article class="material-card">
+        <div class="mc-head">
+          <span class="mc-icon">📙</span>
+          <h3 class="mc-title">法令上の制限＋税その他で16点を落とさない</h3>
+        </div>
+        <p class="mc-content">PDF教材＋一問一答問題集 全60問つき</p>
+        <div class="mc-price-row">
+          <span class="mc-price-lbl">価格</span>
+          <span class="mc-price">980円</span>
+        </div>
+        <a class="btn-cta" href="https://note.com/fond_bison5155/n/nd131a0a57d4b" target="_blank" rel="noopener" data-umami-event="kyozai_cta_horei">詳細（note）へ →</a>
+      </article>
+
+      <article class="material-card material-card--set" id="card-set3">
+        <p class="mc-flag">まとめて派はこちら</p>
+        <div class="mc-head">
+          <span class="mc-icon">📚</span>
+          <h3 class="mc-title">3冊セット</h3>
+        </div>
+        <p class="mc-point">業法・権利・法令税をまとめて。単品合計より540円お得です。</p>
+        <div class="mc-price-row">
+          <span class="mc-price-lbl">価格</span>
+          <span class="mc-price">2,400円</span>
+        </div>
+        <a class="btn-cta" href="https://note.com/fond_bison5155/m/m373c85a7e952" target="_blank" rel="noopener" data-umami-event="kyozai_cta_set3">詳細（note）へ →</a>
+      </article>
+
+      <article class="material-card" id="card-quiz">
+        <div class="mc-head">
+          <span class="mc-icon">📱</span>
+          <h3 class="mc-title">一問一答問題集 単体版</h3>
+        </div>
+        <p class="mc-point">PDF教材は不要、問題演習だけひたすらしたい方へ。</p>
+        <p class="mc-content">全分野230問以上・3モード</p>
+        <div class="mc-price-row">
+          <span class="mc-price-lbl">価格</span>
+          <span class="mc-price">980円</span>
+        </div>
+        <a class="btn-cta" href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" target="_blank" rel="noopener" data-umami-event="kyozai_cta_quiz">詳細（note）へ →</a>
+      </article>
+
+      <article class="material-card" id="card-bansou">
+        <div class="mc-head">
+          <span class="mc-icon">🤝</span>
+          <h3 class="mc-title">宅建 最後まで伴走</h3>
+        </div>
+        <span class="mc-status-badge">第1期 募集終了</span>
+        <p class="mc-point" style="margin-top:10px;">毎週の小テストと報告で、試験まで一緒に走り切る少人数サポート。次期のご案内希望の方は公式LINEで「伴走」と送ってください。</p>
+        <a class="btn-cta" href="https://note.com/fond_bison5155/n/n8fa55d09f348" target="_blank" rel="noopener" data-umami-event="kyozai_cta_bansou">詳細（note）へ →</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- 4b. 直前期の教材（時期で切る） -->
+  <div class="section-block">
+    <div class="section-head">
+      <h2>試験まで60日を切ったら</h2>
+      <p id="exam-countdown" style="display:none; margin:8px 0 0; font-size:0.9rem; font-weight:700; color:var(--muted); letter-spacing:.04em;"></p>
+      <p class="section-lead" style="font-size:0.95rem; color:var(--muted); line-height:1.8; margin:10px 0 0;">残り時間でやるべきは、足すことではなく、混ざってしまった知識を整理することです。ここから下は、そのための教材です。いま基礎をひと通り進めている最中の方は、上の教材で足ります。</p>
+    </div>
+    <div class="material-list">
+
+      <article class="material-card" id="card-chokuzen">
+        <div class="mc-head">
+          <span class="mc-icon">🎯</span>
+          <h3 class="mc-title">直前対策</h3>
+        </div>
+        <p class="mc-point">直前期の合否を分けるのは、取れるはずだった1点を混同して落とすかどうか。営業保証金の1,000万円と手付金保全の1,000万円。事後届出の2週間と勧告の3週間。ここまで積み上げた方ほどハマります。</p>
+        <p class="mc-content">横断ひっかけ26組／PDF全35ページ＋一問一答70問</p>
+        <div class="mc-price-row">
+          <span class="mc-price-lbl">価格</span>
+          <span class="mc-price">2,200円</span>
+        </div>
+        <p class="mc-note">発売中</p>
+        <a class="btn-cta" href="https://note.com/fond_bison5155/n/na9740956174c" target="_blank" rel="noopener" data-umami-event="kyozai_cta_chokuzen">詳細（note）へ →</a>
+      </article>
+
+      <article class="material-card" id="card-last30">
+        <div class="mc-head">
+          <span class="mc-icon">🏁</span>
+          <h3 class="mc-title">宅建 ラスト30日プログラム</h3>
+        </div>
+        <p class="mc-point">最後の30日を、何をやるかで迷わないために。毎朝、その日にやることが届きます。</p>
+        <p class="mc-content">限定音声12本／30日ロードマップPDF／最終チェック1枚／毎朝のLINEペース便</p>
+        <div class="mc-price-row">
+          <span class="mc-price-lbl">価格</span>
+          <span class="mc-price">7,800円</span>
+        </div>
+        <p class="mc-note">9月14日（月）発売／上の「直前対策」と一問一答問題集は含まれません。</p>
+        <!-- 9/14にhref追加（販売ページ未公開） ／ data-umami-event="kyozai_cta_last30" -->
+        <span class="btn-disabled">9/14（月）発売予定</span>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- 5. よくある質問 -->
+  <div class="section-block">
+    <div class="section-head">
+      <h2>よくある質問</h2>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <p class="faq-q">Q. どれから始めればいいですか？</p>
+        <p class="faq-a">A. まずは無料の一問一答5問と音声からどうぞ。じっくり固めたくなったら、いま勉強中の分野の一冊を。</p>
+      </div>
+
+      <div class="faq-item">
+        <p class="faq-q">Q. 音声を聴いていなくても使えますか？</p>
+        <p class="faq-a">A. 使えます。教材はどれも単体で完結しています。音声と併用すると定着が早くなる、という位置づけです。</p>
+      </div>
+
+      <div class="faq-item">
+        <p class="faq-q">Q. 購入はどこでできますか？</p>
+        <p class="faq-a">A. すべてnoteでの販売です。各カードのリンク先からご覧いただけます。</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. LINE誘導 -->
+  <div class="line-cta">
+    <p class="lc-lead">毎週月曜、音声と図解を配信しています</p>
+    <p class="lc-body">公式LINEに登録すると、<b>今週の過去問</b>と<b>図解のまとめ</b>が毎週届きます。登録は無料、解除もいつでもできます。</p>
+    <a class="lc-btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="kyozai_cta_line_footer">LINEで毎週受け取る</a>
+  </div>
+
+  <!-- 7. フッター -->
+  <footer>
+    <p class="credit">耳で覚える宅建2026</p>
+  </footer>
+
+</div>
+<script>
+  // 教材の選び方 → 該当カードへ移動して一瞬光らせる
+  document.querySelectorAll('.chooser a[href^="#card-"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var el = document.querySelector(a.getAttribute('href'));
+      if (!el) return;
+      el.classList.remove('ch-flash');
+      void el.offsetWidth;
+      el.classList.add('ch-flash');
+      setTimeout(function () { el.classList.remove('ch-flash'); }, 2000);
+    });
+  });
+  // 試験日カウントダウン（2026-10-18・JST基準）
+  (function () {
+    var el = document.getElementById('exam-countdown');
+    if (!el) return;
+    var jstNow = new Date(Date.now() + 9 * 3600 * 1000);
+    var today = Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth(), jstNow.getUTCDate());
+    var exam = Date.UTC(2026, 9, 18); // 2026-10-18
+    var days = Math.round((exam - today) / 86400000);
+    if (days > 1) { el.textContent = '🗓 試験（10月18日）まで、あと' + days + '日'; el.style.display = 'block'; }
+    else if (days === 1) { el.textContent = '🗓 試験は明日です。'; el.style.display = 'block'; }
+    else if (days === 0) { el.textContent = '🗓 試験当日です。いってらっしゃい。'; el.style.display = 'block'; }
+  })();
+</script>
+</body>
+</html>

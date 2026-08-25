@@ -142,7 +142,8 @@
     <p>ひっかけの「型」は、数を解くほど見えてきます。続きはこちらからどうぞ。</p>
     <a class="free" href="https://takken2026-quiz.vercel.app/" data-umami-event="weekly_cta_sample">無料おためし 5問（登録不要）</a>
     <a class="buy" href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" data-umami-event="weekly_cta_note">スマホで解ける一問一答問題集を見る（980円）</a>
-    <p class="note">現在160問以上収録（9月に230問以上に）／解説をじっくり読める設計です</p>
+    <p class="note">全4分野230問以上を収録／解説をじっくり読める設計です</p>
+    <p class="note"><a href="https://takken2026-quiz.vercel.app/shindan.html" data-umami-event="weekly_cta_shindan" style="color:inherit">いまの学習状況が気になる方は、6問1分の現在地診断へ →</a></p>
     <p class="note"><a href="https://takken2026-quiz.vercel.app/kyozai.html" data-umami-event="weekly_cta_kyozai" style="color:inherit">直前期のまとめ教材は、教材一覧に並んでいます →</a></p>
   </div>
 
@@ -159,6 +160,17 @@
 // ===== 出題データ（新しい週を先頭に1件追記していく）=====
 // answer: "○" or "×"（この記述が正しいか誤りか）
 const QUESTIONS = [
+  {
+    id: "2026-0824",
+    week: "8/24の週",
+    field: "法令上の制限・農地法",
+    text: "市街化区域内の農地を宅地とする目的で権利を取得する場合は、あらかじめ農業委員会に届出をすれば、農地法第5条の許可は不要である。",
+    answer: "○",
+    point: "市街化区域では、転用を伴う4条・5条だけが「許可→事前届出」に軽くなる",
+    kaisetsu: "正しい記述です。農地を宅地にして、さらにそのために権利を取得する本肢は5条のケース。市街化区域内（農林水産大臣との協議が調った区域）なら、あらかじめ農業委員会へ届出をすれば、都道府県知事等の許可は不要です（農地法5条1項6号）。ただし、農地のまま耕作する人だけが変わる3条にはこの特例はありません。3条は市街化区域でも許可が必要——「転用する4・5条だけ」とセットで整理しましょう。",
+    source: "平成30年度 本試験 問22 肢1",
+    ep: {no:"#26", title:"田んぼを駐車場にしたら違法？ ── 農地法3条・4条・5条", url:"https://stand.fm/episodes/6a32267cbe3842d829ad5db1"}
+  },
   {
     id: "2026-0817",
     week: "8/17の週",

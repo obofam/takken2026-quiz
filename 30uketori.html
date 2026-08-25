@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>直前30日パック 受け取りページ</title>
+  <title>ラスト30日プログラム 受け取りページ</title>
   <style>
     :root {
       color-scheme: light;
@@ -150,15 +150,14 @@
     }
 
     .hero-inner {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 172px;
-      gap: 22px;
-      align-items: center;
+      display: block;
     }
 
     .brand-image {
-      width: 172px;
-      height: 172px;
+      display: block;
+      margin-bottom: 14px;
+      width: 112px;
+      height: 112px;
       object-fit: cover;
       border-radius: 8px;
       border: 1px solid rgba(216, 224, 234, 0.9);
@@ -257,6 +256,19 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 14px;
+    }
+
+    .download-grid .item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .download-grid .item .btn {
+      margin-top: auto;
+    }
+
+    .download-grid .item p {
+      margin-bottom: 10px;
     }
 
     .item h3,
@@ -360,6 +372,87 @@
       margin: 8px 0;
     }
 
+    /* 台本／ポイント整理 タブ */
+    .ab-tabbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    button.ab-tab {
+      background: #f8fafc;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 0;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    button.ab-tab.active {
+      background: #edf4ff;
+      color: var(--blue);
+      border-color: #c9def7;
+    }
+
+    .ab-panel {
+      margin-top: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 4px 14px 12px;
+    }
+
+    .ab-panel[hidden] { display: none; }
+
+    .pt-h {
+      font-size: 13px;
+      font-weight: 800;
+      margin: 12px 0 2px;
+    }
+
+    .pt-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 8px 0;
+      background: #fff;
+    }
+
+    .pt-table th,
+    .pt-table td {
+      border: 1px solid var(--line);
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.55;
+    }
+
+    .pt-table th {
+      background: #edf4ff;
+      color: var(--blue);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .pt-table td b { color: var(--red); }
+
+    .pt-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 6px 0 0;
+    }
+
+    .pt-list {
+      margin: 8px 0;
+      padding-left: 20px;
+      font-size: 13px;
+    }
+
+    .pt-list li { margin: 4px 0; }
+
     .steps {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -373,6 +466,24 @@
       border-radius: 8px;
       padding: 12px;
       min-height: 118px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step > a.btn,
+    .step > div:last-child {
+      margin-top: auto !important;
+    }
+
+    .step span {
+      margin-bottom: 10px;
+    }
+
+    .step .btn {
+      padding-left: 6px;
+      padding-right: 6px;
+      font-size: 13px;
+      white-space: nowrap;
     }
 
     .step b {
@@ -433,9 +544,8 @@
       }
 
       .brand-image {
-        width: 132px;
-        height: 132px;
-        justify-self: start;
+        width: 96px;
+        height: 96px;
       }
 
       header,
@@ -457,31 +567,16 @@
   <div class="gate" id="gate">
     <div class="gate-box">
       <span class="eyebrow">購入者専用</span>
-      <h1>直前30日パック<br>受け取りページ</h1>
+      <h1>ラスト30日プログラム<br>受け取りページ</h1>
       <p class="lead">note購入後に表示されたパスワードを入力してください。伴走メンバーの方も同じページを使えます。</p>
       <div class="pass-row">
         <input id="passwordInput" type="password" autocomplete="current-password" placeholder="パスワード">
         <button id="unlockButton" type="button">開く</button>
       </div>
       <p class="error" id="errorText">パスワードが違います。購入後の案内文をご確認ください。</p>
-    </div>
-  </div>
-
-  <div class="app" id="app">
-    <div class="wrap">
-      <header>
-        <div class="hero-inner">
-          <div>
-            <span class="eyebrow">耳で覚える宅建2026</span>
-            <h1>直前30日パック<br>受け取りページ</h1>
-            <p class="lead">ここに、30日前から使う教材をまとめています。迷ったら上から順番に使ってください。</p>
-          </div>
-          <img class="brand-image" src="../1_配信運用/ラジオ画像.png" alt="耳で覚える宅建">
-        </div>
-      </header>
 
       <div class="included">
-        <h2>30日パックに含まれているもの</h2>
+        <h2>ラスト30日プログラムに含まれているもの</h2>
         <div class="included-list">
           <div class="included-item">
             <span class="included-icon">PDF</span>
@@ -501,10 +596,54 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="app" id="app">
+    <div class="wrap">
+      <header>
+        <div class="hero-inner">
+          <img class="brand-image" src="img/brand_radio.png" alt="耳で覚える宅建">
+          <div>
+            <span class="eyebrow">耳で覚える宅建2026</span>
+            <h1>ラスト30日プログラム<br>受け取りページ</h1>
+            <p class="lead">ここに、30日前から使う教材をまとめています。迷ったら上から順番に使ってください。</p>
+          </div>
+        </div>
+      </header>
 
       <main>
         <section>
-          <h2>最初にやること</h2>
+          <h2>How to use ①準備編</h2>
+          <div class="steps">
+            <div class="step">
+              <b>① まずはPDFをダウンロード</b>
+              <span>「30日ロードマップ」（毎日やることを迷わないための進行表）・最終チェック1枚（前日と当日に見返す会場持参用の確認シート）の2点をダウンロードして、お使いのスマホ・パソコンに保存してください。</span>
+              <a class="btn secondary" href="#pdf" style="margin-top:10px;width:100%;">PDFダウンロードへ</a>
+            </div>
+            <div class="step">
+              <b>② 千本ノックの準備</b>
+              <span>入口でパスワードを入れて、全232問から1問ずつ出る千本ノックを解ける状態にしておきましょう。</span>
+              <a class="btn secondary" href="#knock" style="margin-top:10px;width:100%;">千本ノックへ</a>
+            </div>
+            <div class="step">
+              <b>③ 音声とノックを進める</b>
+              <span>ダウンロードしたロードマップを見ながら、数字・横断ひっかけ・総整理を直前期用に回す限定音声12本や、千本ノックを進めてください。</span>
+              <a class="btn secondary" href="#audio" style="margin-top:10px;width:100%;">限定音声へ</a>
+            </div>
+            <div class="step">
+              <b>④ 毎朝、LINEでその日のメニューが届きます</b>
+              <span>期間中は毎朝、その日のメニューがLINEで届きます。届かなかった日は、このページのペース便全文から確認してください。</span>
+              <div style="margin-top:10px;display:flex;gap:8px;">
+                <a class="btn secondary" href="#pace-30" style="flex:1;">30日版</a>
+                <a class="btn secondary" href="#pace-14" style="flex:1;">14日版</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>How to use ②30日前からの使い方</h2>
           <div class="steps">
             <div class="step"><b>1. ロードマップを見る</b><span>今日が試験何日前かを確認して、該当日の欄だけ見ます。</span></div>
             <div class="step"><b>2. 指定の音声を聴く</b><span>移動中や家事中でOK。数字とひっかけを声で確認します。</span></div>
@@ -515,49 +654,676 @@
         </section>
 
         <section>
+          <h2>MENU</h2>
+          <div class="link-grid">
+            <a class="link-card" href="#audio">
+              <b>🎧 限定音声12本</b>
+              <span>直前用の音声ドリルをまとめて聴けます。</span>
+            </a>
+            <a class="link-card" href="#knock">
+              <b>🥊 千本ノック</b>
+              <span>全232問を1問ずつ解く直前モードです。</span>
+            </a>
+            <a class="link-card" href="#pdf">
+              <b>📄 PDFダウンロード</b>
+              <span>ロードマップ・最終チェックの2点です。</span>
+            </a>
+            <a class="link-card" href="#pace-30">
+              <b>📅 30日ペース便</b>
+              <span>9/18〜10/17のLINE配信内容を読み返せます。</span>
+            </a>
+            <a class="link-card" href="#pace-14">
+              <b>⚡ 14日版ペース便</b>
+              <span>10/4以降にご購入の方向けの圧縮ルートです。</span>
+            </a>
+          </div>
+        </section>
+
+        <section id="audio">
+          <details open>
+            <summary style="cursor:pointer;font-size:22px;line-height:1.35;padding-bottom:8px;border-bottom:2px solid var(--ink);">限定音声12本</summary>
+            <p class="lead">収録が終わったものから、順にここで再生できるようになります。移動中や家事中に、その日の指定の1本をどうぞ。各回の「ポイント整理」を開くと、聴いた内容を表で確認できます。</p>
+            <div class="audio-list" id="audioList"></div>
+          </details>
+        </section>
+        <section id="knock">
+          <h2>千本ノック</h2>
+          <div class="knock-box">
+            <div>
+              <h3>全232問を1問ずつ解く直前モード</h3>
+              <p>入口でパスワードを入力してください。10問ごとに区切って、通算記録が残ります。</p>
+              <p>パスワード：<span class="pw">knock232</span></p>
+              <p>※入口は、問題集ページの<b>いちばん下</b>にあるカードです。下のボタンから開いたら、最下部までスクロールしてください。</p>
+            </div>
+            <a class="btn green" href="index.html">千本ノックへ</a>
+          </div>
+        </section>
+        <section id="pdf">
           <h2>PDFダウンロード</h2>
           <div class="download-grid">
             <article class="item">
               <h3>30日ロードマップ</h3>
               <p>試験30日前から毎日やることを、耳15分＋机30分で整理しています。</p>
-              <a class="btn" href="../6_有料PDF/直前30日パック_ロードマップ_スマホ版_v1.pdf" download>ダウンロード</a>
+              <a class="btn" href="pdf/pack30_roadmap_v1.pdf" download>ダウンロード</a>
             </article>
             <article class="item">
               <h3>最終チェック1枚</h3>
               <p>前日・当日に見返すためのA4一枚チェックです。</p>
-              <a class="btn" href="../6_有料PDF/直前30日パック_最終チェック1枚_v1.pdf" download>ダウンロード</a>
-            </article>
-            <article class="item">
-              <h3>直前対策PDF</h3>
-              <p>数字・横断ひっかけ・改正論点をまとめた直前期用PDFです。</p>
-              <a class="btn" href="../6_有料PDF/直前対策_スマホ版_v2.pdf" download>ダウンロード</a>
+              <a class="btn" href="pdf/pack30_finalcheck_v1.pdf" download>ダウンロード</a>
             </article>
           </div>
         </section>
-
-        <section>
-          <h2>限定音声12本</h2>
-          <p class="lead">収録が終わったものから、順にここで再生できるようになります。移動中や家事中に、その日の指定の1本をどうぞ。</p>
-          <div class="audio-list" id="audioList"></div>
-        </section>
-
-        <section>
-          <h2>千本ノック</h2>
-          <div class="knock-box">
+        <section id="pace-30">
+        <details>
+          <summary style="cursor:pointer;font-size:22px;line-height:1.35;padding-bottom:8px;border-bottom:2px solid var(--ink);">30日ペース便 全文（9/18〜10/17・LINE配信内容）</summary>
+          <p class="lead">毎日LINEで届く「今日やること」の全文です。配信が届かなくても、ここで同じ内容を確認できます。配信は日付固定です。10/4以降のご購入は14日版のペース便が届きます（下の「14日版」セクションをご覧ください）。</p>
+          <h3 style="border-bottom:0;padding-bottom:0;font-size:16px;margin-top:18px;">Week 1 業法を固める（9/18〜9/24）</h3>
+          <div class="audio-list">
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り30日</span>
             <div>
-              <h3>全232問を1問ずつ回す直前モード</h3>
-              <p>入口でパスワードを入力してください。10問ごとに区切って、通算記録が残ります。</p>
-              <p>パスワード：<span class="pw">knock232</span></p>
+              <h3>9/18（金）</h3>
             </div>
-            <a class="btn green" href="index.html">千本ノックへ</a>
           </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>今日から30日、1日1個だけいきます。</p>
+          <p>🎧 限定09 業法総整理</p>
+          <p>✍ 最終チェック1枚の「期間」ブロックを音読で1周</p>
+          <p>今週は業法週。ここが固まると後半戦がぐっと楽になります。聴くだけで終わる日があっても大丈夫、毎日ゼロにしないことだけ意識してください。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り29日</span>
+            <div>
+              <h3>9/19（土）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定01 期間系ドリル</p>
+          <p>✍ 媒介契約の数字を紙に書く（3か月・7日/5日・2週/1週）</p>
+          <p>7日と5日は「専属のほうが手厚い＝日数が短い」とセットで覚えると混ざりません。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り28日</span>
+            <div>
+              <h3>9/20（日）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 本編#2 35条と37条</p>
+          <p>✍ 35条書面・37条書面の記載事項の振り分けを、口に出して言ってみる</p>
+          <p>35条は契約の前、37条は契約の後。この軸だけ先に固定すると振り分けが楽になります。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り27日</span>
+            <div>
+              <h3>9/21（月）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定02 金額系ドリル</p>
+          <p>✍ 保証金ペア（1,000万円/500万円と60万円/30万円）と報酬速算を紙に3回</p>
+          <p>桁ちがいのペアは、目で見るより声に出すのがいちばん速いです。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り26日</span>
+            <div>
+              <h3>9/22（火）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 本編#4 8種制限</p>
+          <p>✍ クーリングオフ8日・手付2/10・保全5%/10%を確認</p>
+          <p>8日は「書面で告知された日を含めて」数える、が今日のポイントです。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り25日</span>
+            <div>
+              <h3>9/23（水）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定05 書面と記名</p>
+          <p>✍ 帳簿5年vs名簿10年、業者の記名vs宅建士の記名を×→○で確認</p>
+          <p>閲覧義務があるのは名簿だけ、もあわせてどうぞ。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り24日</span>
+            <div>
+              <h3>9/24（木）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定09 業法総整理（2回目）</p>
+          <p>✍ ○×問題集の業法セクションを通しで</p>
+          <p>1週間の総仕上げです。解きっぱなしで大丈夫、間違えた論点のメモだけ残しておきましょう。時間がない日は最終チェック1枚の業法箇所だけでも。</p>
+          </div>
+        </article>
+          </div>
+          <h3 style="border-bottom:0;padding-bottom:0;font-size:16px;margin-top:18px;">Week 2 権利関係を固める（9/25〜10/1）</h3>
+          <div class="audio-list">
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り23日</span>
+            <div>
+              <h3>9/25（金）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定10 権利総整理</p>
+          <p>✍ 最終チェック1枚の「期間」の権利関係部分を音読1周</p>
+          <p>今週は権利関係。満点を狙う科目ではありません。「数字と改正だけ確実に」が今週の合言葉です。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り22日</span>
+            <div>
+              <h3>9/26（土）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 本編#12 意思表示</p>
+          <p>✍ 「取消せる／無効」の振り分けを紙に書く（詐欺・強迫・錯誤・心裡留保・虚偽表示）</p>
+          <p>詐欺・強迫は取消せる、虚偽表示は無効。ここから思い出すのが早道です。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り21日</span>
+            <div>
+              <h3>9/27（日）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定07 期間の玉突き</p>
+          <p>✍ 時効10年/20年・不法行為3年/20年を確認</p>
+          <p>不法行為は「生命・身体だけ5年」。この例外を最後にもう一度どうぞ。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り20日</span>
+            <div>
+              <h3>9/28（月）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 本編#16 抵当権</p>
+          <p>✍ 利息は最後の2年分・根抵当の確定請求3年を確認</p>
+          <p>「満期になった最後の2年分」まで言えると、ひっかけに強くなります。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り19日</span>
+            <div>
+              <h3>9/29（火）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 本編#18・#19 借地借家</p>
+          <p>✍ 30年／50年以上／1年未満、3つの帰結を言えるか確認</p>
+          <p>借地は延ばす方向、借家は「定めなし」になる方向。向きで覚えると混ざりません。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り18日</span>
+            <div>
+              <h3>9/30（水）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定08 改正区分所有法 ←今年の最重要回です</p>
+          <p>✍ 建替え4/5原則・客観的事由で3/4・規約3/4を紙に書く</p>
+          <p>改正初年度は出題の大本命。この回だけは2周目もおすすめです。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り17日</span>
+            <div>
+              <h3>10/1（木）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定10 権利総整理（2回目）</p>
+          <p>✍ ○×問題集の権利関係セクションを通しで</p>
+          <p>権利は満点不要。取れる論点をきちんと取れれば、それで十分です。</p>
+          </div>
+        </article>
+          </div>
+          <h3 style="border-bottom:0;padding-bottom:0;font-size:16px;margin-top:18px;">Week 3 法令税＋横断（10/2〜10/8）</h3>
+          <div class="audio-list">
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り16日</span>
+            <div>
+              <h3>10/2（金）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定11 法令税総整理</p>
+          <p>✍ 最終チェック1枚の「面積・距離」ブロックを音読1周</p>
+          <p>今週は法令税。数字がそのまま点になる科目なので、耳との相性がいちばんいい週です。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り15日</span>
+            <div>
+              <h3>10/3（土）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 本編#23 開発許可</p>
+          <p>✍ 1,000㎡（開発許可）vs 2,000㎡（国土法）のペアを紙に書く</p>
+          <p>どっちが1,000でどっちが2,000か、自分の言葉で言えたら今日はOKです。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り14日</span>
+            <div>
+              <h3>10/4（日）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定04 面積・距離ドリル</p>
+          <p>✍ 接道4m/2m・床面積ライン40/50/120㎡を確認</p>
+          <p>40・50・120は語呂合わせより回数。3回書けば残ります。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り13日</span>
+            <div>
+              <h3>10/5（月）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 本編#26 農地法</p>
+          <p>✍ 3条・4条・5条の表を紙に書く（市街化区域内の特例は4条・5条のみ）</p>
+          <p>相続は3条の許可不要、もセットでどうぞ。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り12日</span>
+            <div>
+              <h3>10/6（火）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定03 割合・倍率ドリル</p>
+          <p>✍ 登免税の3つの率（0.4%/2.0%/0.3%）と固定資産税1/6を確認</p>
+          <p>低い順に、住宅の売買移転0.3→相続0.4→本則2.0。順番ごと覚えるのがコツです。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り11日</span>
+            <div>
+              <h3>10/7（水）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定06 お金の混同</p>
+          <p>✍ 「2割」の場面分け（賠償予定・手付・保全5%/10%）を×→○で確認</p>
+          <p>同じ2割でも場面がちがう。ここを切り分けられると強いです。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り10日</span>
+            <div>
+              <h3>10/8（木）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 本編#31 統計ほか</p>
+          <p>✍ 統計の最新数字をメモ1枚にまとめる</p>
+          <p>問48は「覚えたて」がいちばん強い論点。直前にもう一度更新するので、今日は1枚に集めるだけで大丈夫です。</p>
+          </div>
+        </article>
+          </div>
+          <h3 style="border-bottom:0;padding-bottom:0;font-size:16px;margin-top:18px;">Week 4 本試験形式に慣らす（10/9〜10/15）</h3>
+          <div class="audio-list">
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り9日</span>
+            <div>
+              <h3>10/9（金）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>今週は4択・2時間・マークシートに体を慣らす週です。</p>
+          <p>✍ 過去問1年目を50問通し・2時間計る（設問の「正しい／誤っている」に印をつけてから解く）</p>
+          <p>🎧 採点後、間違えた分野の限定ドリル</p>
+          <p>点数は気にしなくて大丈夫。「どの分野で落としたか」の記録だけが今週の収穫です。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り8日</span>
+            <div>
+              <h3>10/10（土）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>今日は復習の日。新しい問題はゼロでいきましょう。</p>
+          <p>✍ 昨日間違えた問題の解説を読み、理由を1行で書く</p>
+          <p>🎧 間違えた論点の本編エピソード</p>
+          <p>「なぜ間違えたか」を1行にできた問題は、もう二度と落としません。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り7日</span>
+            <div>
+              <h3>10/11（日）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>✍ 過去問2年目を50問通し（2時間）</p>
+          <p>🎧 採点後、弱い分野の限定ドリル</p>
+          <p>2年目になると、設問の読み方に体が慣れてくるのを感じられるはずです。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り6日</span>
+            <div>
+              <h3>10/12（月）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>✍ 昨日の復習＋業法で落とした問題だけ解き直し</p>
+          <p>🎧 限定09 業法総整理</p>
+          <p>業法の失点はいちばんの伸びしろ。今日で回収しておきましょう。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り5日</span>
+            <div>
+              <h3>10/13（火）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>✍ 過去問3年目を50問通し（2時間）</p>
+          <p>🎧 限定10 権利総整理</p>
+          <p>ペースは1問2分の感覚で。わからない問題は飛ばして、あとで戻れば大丈夫です。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り4日</span>
+            <div>
+              <h3>10/14（水）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>✍ 昨日の復習＋最終チェック1枚を1周</p>
+          <p>🎧 限定11 法令税総整理</p>
+          <p>今日は軽めの日。積むより整える感覚でどうぞ。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り3日</span>
+            <div>
+              <h3>10/15（木）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>✍ 過去問4年目（最新年度）を50問通し＋採点</p>
+          <p>🎧 間違えた分野のドリル</p>
+          <p>通し演習は今日で最後です。ここまで4年分やり切ったこと自体が、大きな力になっています。</p>
+          </div>
+        </article>
+          </div>
+          <h3 style="border-bottom:0;padding-bottom:0;font-size:16px;margin-top:18px;">ラスト2日（10/16〜10/17）</h3>
+          <div class="audio-list">
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り2日</span>
+            <div>
+              <h3>10/16（金）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>今日から新しい問題は解きません。増やさず、確かめるだけの2日間です。</p>
+          <p>🎧 限定08 改正区分所有法をもう一度</p>
+          <p>✍ 最終チェック1枚を上から下まで音読1周。3回以上間違えた論点だけ、該当PDFの章を読み直す</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">前日</span>
+            <div>
+              <h3>10/17（土）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定12 前日と当日の過ごし方</p>
+          <p>✍ 最終チェック1枚を1周だけ。持ち物（受験票・鉛筆・消しゴム・時計）と会場までの経路を確認したら、いつもどおり寝てください。</p>
+          <p>ここまで毎週聴いてきた耳が、あなたの武器です。明日は、いつもの月曜日と同じ調子で。</p>
+          </div>
+        </article>
+          </div>
+        </details>
         </section>
-
+        <section id="pace-14">
+        <details>
+          <summary style="cursor:pointer;font-size:22px;line-height:1.35;padding-bottom:8px;border-bottom:2px solid var(--ink);">14日版ペース便 全文（10/4〜10/17・LINE配信内容）</summary>
+          <p class="notice">10月4日以降にご購入の方は、こちらの14日版で走ってください。総整理と改正、過去問3年分、最終チェック1枚に絞った圧縮ルートです。</p>
+          <h3 style="border-bottom:0;padding-bottom:0;font-size:16px;margin-top:18px;">前半 総整理と改正に絞る（10/4〜10/10）</h3>
+          <div class="audio-list">
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り14日</span>
+            <div>
+              <h3>10/4（日）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>今日から14日、圧縮ルートでいきます。総整理と改正、過去問3年分、最終チェック1枚。ここに絞ってあります。これで十分に戦えます。</p>
+          <p>🎧 限定09 業法総整理</p>
+          <p>✍ 最終チェック1枚の業法ブロックを1周</p>
+          <p>全部やろうとして途中で止まるより、圧縮版を完走するほうが点になります。毎日ゼロにしないことだけ意識してください。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り13日</span>
+            <div>
+              <h3>10/5（月）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定01 期間系ドリル＋限定02 金額系ドリル</p>
+          <p>✍ 保証金ペア（1,000万円/500万円と60万円/30万円）と媒介契約の数字（3か月・7日/5日・2週/1週）を紙に書く</p>
+          <p>7日と5日は「専属のほうが手厚い＝日数が短い」とセットで覚えると混ざりません。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り12日</span>
+            <div>
+              <h3>10/6（火）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定10 権利総整理</p>
+          <p>✍ 時効10年/20年・借地借家30年/50年以上/1年未満を確認</p>
+          <p>権利は満点を狙う科目ではありません。数字と改正だけ確実に、でいきましょう。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り11日</span>
+            <div>
+              <h3>10/7（水）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定08 改正区分所有法 ←今年の最重要回です</p>
+          <p>✍ 建替え4/5原則・客観的事由で3/4を紙に書く</p>
+          <p>改正初年度は出題の大本命。14日しかなくても、この回だけは外せません。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り10日</span>
+            <div>
+              <h3>10/8（木）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定11 法令税総整理</p>
+          <p>✍ 1,000㎡（開発許可）vs 2,000㎡（国土法）・登免税の3つの率（0.4%/2.0%/0.3%）を確認</p>
+          <p>数字がそのまま点になる科目。耳との相性がいちばんいいところです。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り9日</span>
+            <div>
+              <h3>10/9（金）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定03 割合・倍率ドリル＋限定04 面積・距離ドリル</p>
+          <p>✍ 最終チェック1枚を通しで1周</p>
+          <p>今日で数字の総ざらいは一巡です。チェック1枚は、ここから当日まで何度も戻ってくる場所になります。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り8日</span>
+            <div>
+              <h3>10/10（土）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定05 書面と記名・限定06 お金の混同・限定07 期間の玉突き（ひっかけ3本）</p>
+          <p>✍ ×→○の言い直しを口頭で</p>
+          <p>ひっかけは「どこが×か」を声に出せたら勝ちです。3本まとめて、ながらでどうぞ。</p>
+          </div>
+        </article>
+          </div>
+          <h3 style="border-bottom:0;padding-bottom:0;font-size:16px;margin-top:18px;">後半 本試験形式に慣らす（10/11〜10/17）</h3>
+          <div class="audio-list">
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り7日</span>
+            <div>
+              <h3>10/11（日）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>今日から本試験形式（4択・2時間・マークシート）に体を慣らします。</p>
+          <p>✍ 過去問1年目を50問通し・2時間計る（設問の「正しい／誤っている」に印をつけてから解く）</p>
+          <p>点数は気にしなくて大丈夫。「どの分野で落としたか」の記録だけが今日の収穫です。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り6日</span>
+            <div>
+              <h3>10/12（月）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 間違えた分野の限定ドリル</p>
+          <p>✍ 昨日の復習。間違えた問題の解説を読み、理由を1行で書く</p>
+          <p>「なぜ間違えたか」を1行にできた問題は、もう二度と落としません。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り5日</span>
+            <div>
+              <h3>10/13（火）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>✍ 過去問2年目を50問通し（2時間）</p>
+          <p>2年目になると、設問の読み方に体が慣れてくるのを感じられるはずです。1問2分の感覚で、わからない問題は飛ばして戻る。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り4日</span>
+            <div>
+              <h3>10/14（水）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 間違えた分野の限定ドリル</p>
+          <p>✍ 昨日の復習</p>
+          <p>今日は積むより整える日。復習だけで大丈夫です。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り3日</span>
+            <div>
+              <h3>10/15（木）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>✍ 過去問3年目（最新年度）を50問通し＋採点</p>
+          <p>通し演習は今日で最後です。短い期間でここまでやり切ったこと自体が、大きな力になっています。</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">残り2日</span>
+            <div>
+              <h3>10/16（金）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>今日から新しい問題は解きません。増やさず、確かめるだけの2日間です。</p>
+          <p>🎧 限定08 改正区分所有法をもう一度</p>
+          <p>✍ 最終チェック1枚を上から下まで音読1周</p>
+          </div>
+        </article>
+        <article class="audio-item">
+          <div class="audio-head">
+            <span class="tag">前日</span>
+            <div>
+              <h3>10/17（土）</h3>
+            </div>
+          </div>
+          <div class="script-text" style="margin-top:10px;">
+          <p>🎧 限定12 前日と当日の過ごし方</p>
+          <p>✍ 最終チェック1枚を1周だけ。持ち物（受験票・鉛筆・消しゴム・時計）と会場までの経路を確認したら、いつもどおり寝てください。</p>
+          <p>明日、会場に持っていくのは最終チェック1枚だけ。ここまでの14日が、あなたの武器です。</p>
+          </div>
+        </article>
+          </div>
+        </details>
+        </section>
         <section id="line-help">
           <h2>困ったとき</h2>
-          <p class="notice">PDFが開けない、音声が再生できない、千本ノックに入れない場合は、LINEで「30日パック」と送ってください。確認してご案内します。</p>
+          <p class="notice">PDFが開けない、音声が再生できない、千本ノックに入れない場合は、LINEで「ラスト30日」と送ってください。確認してご案内します。</p>
         </section>
-
         <section>
           <h2>関連リンク</h2>
           <div class="link-grid">
@@ -567,7 +1333,7 @@
             </a>
             <a class="link-card" href="#line-help">
               <b>LINE</b>
-              <span>PDFや音声で困ったら、LINEで「30日パック」と送ってください。</span>
+              <span>PDFや音声で困ったら、LINEで「ラスト30日」と送ってください。</span>
             </a>
             <a class="link-card" href="https://note.com/fond_bison5155/n/ne260c221aeb9" target="_blank" rel="noopener">
               <b>noteロードマップ</b>
@@ -578,13 +1344,13 @@
       </main>
 
       <footer>
-        耳で覚える宅建2026 / 直前30日パック / 購入者専用ページ
+        耳で覚える宅建2026 / ラスト30日プログラム / 購入者専用ページ
       </footer>
     </div>
   </div>
 
   <script>
-    const PAGE_PASSWORD = "takkent30";
+    const PAGE_PASSWORD = "kubun45";
     const storageKey = "takken30packUnlocked";
 
     // ready: true = 音声ファイル設置済み（プレイヤー表示）／false = 準備中表示
@@ -597,10 +1363,10 @@
       ["限定06", "ひっかけ② お金の混同", "限定06_お金の混同.mp3", true],
       ["限定07", "ひっかけ③ 期間の玉突き", "限定07_期間の玉突き.mp3", true],
       ["限定08", "ひっかけ④ 改正区分所有法", "限定08_改正区分所有法.mp3", true],
-      ["限定09", "宅建業法 落とせない論点10分整理", "限定09_業法総整理.m4a", false],
-      ["限定10", "権利関係 落とせない論点10分整理", "限定10_権利総整理.m4a", false],
-      ["限定11", "法令税 落とせない論点10分整理", "限定11_法令税総整理.m4a", false],
-      ["限定12", "前日と当日の過ごし方", "限定12_前日当日.mp3", false]
+      ["限定09", "宅建業法 落とせない論点10分整理", "限定09_業法総整理.mp3", true],
+      ["限定10", "権利関係 落とせない論点10分整理", "限定10_権利総整理.mp3", true],
+      ["限定11", "法令税 落とせない論点10分整理", "限定11_法令税総整理.mp3", true],
+      ["限定12", "前日と当日の過ごし方", "限定12_前日当日.mp3", true]
     ];
 
     // 台本本文（読み上げタグ除去済み。空行区切りで段落、renderAudioListで<p>化）
@@ -612,8 +1378,30 @@
       "限定05": "今日は、書面と記名の横断ひっかけを回します。「誰がハンコを押すのか」に注目してください。全部で4つのペアを見ていきます。\n\n1つ目です。35条書面にも、媒介契約書と同じように宅建業者が記名する。これは正しいでしょうか。\n\nこれは、バツです。媒介契約書に記名するのは宅建業者。でも35条書面と37条書面に記名するのは宅建士です。媒介契約書は業者と依頼者との契約なので業者が記名し、35条書面・37条書面は専門家としての宅建士の責任を示すために宅建士が記名する、と場面で覚えると混同しにくくなります。試験では、35条書面の記名者をわざと宅建業者と書き換えて誤りにする問題がよく出ます。もう一度確認します。媒介契約書の記名は宅建業者、35条書面と37条書面の記名は宅建士。この主体の違いを覚えてください。\n\n\n2つ目です。37条書面にも、35条書面と同じように宅建士の説明義務がある。これは正しいでしょうか。\n\nこれは、バツです。35条書面は、契約の前に宅建士が交付して説明する義務があります。重要事項をきちんと理解してもらってから契約に進むための書面だからです。37条書面は、契約が成立したあとに交付する書面で、宅建士の記名だけが必要になり、説明義務はありません。たとえば構造耐力上主要な部分に関する調査結果の確認事項などは、37条書面側の記載事項です。契約前の35条書面と、契約後の37条書面、このタイミングの違いが説明義務の有無につながります。もう一度確認します。35条書面は説明義務あり、37条書面は記名のみで説明義務なし。契約前か契約後かで、書面の役割が違います。\n\n\n3つ目です。専属専任媒介のほうが、指定流通機構への登録も業務処理報告も、専任媒介よりゆるい。これは正しいでしょうか。\n\nこれは、バツです。専属専任のほうが依頼者を1社に縛る分、業者に課される数字は短く、つまり厳しくなります。専任は登録7日以内・報告2週間に1回以上、専属専任は登録5日以内・報告1週間に1回以上。専属専任のほうが7日ではなく5日、2週間ではなく1週間と、より厳しいのが正しい理解です。専属専任のほうが自由に依頼できない分、業者の義務は重くなる、という関係で覚えると忘れにくくなります。もう一度確認します。専任は7日と2週間、専属専任は5日と1週間。専属専任のほうが数字が短くて厳しい、と覚えてください。有効期間はどちらも3か月上限で共通です。\n\n\n4つ目です。帳簿にも、従業者名簿と同じように閲覧義務がある。これは正しいでしょうか。\n\nこれは、バツです。閲覧義務があるのは従業者名簿だけで、帳簿に閲覧義務はありません。保存期間は、帳簿が5年、ただし自ら売主となる新築住宅に関するものは10年になります。従業者名簿の保存期間は10年です。帳簿は業者内部の記録、従業者名簿は取引の相手方も確認できる名簿、と役割の違いで覚えると閲覧義務の有無も整理しやすくなります。もう一度確認します。帳簿は5年か10年で閲覧義務なし、従業者名簿は10年で閲覧義務あり。この組み合わせで覚えてください。\n\n\n最後にもう一度。誰が記名するか、誰に説明義務があるか、どちらの数字が短くて厳しいか。宅建業法のひっかけの多くは、主体と場面の入れ替わりに注目すると見抜けます。今日の4つのペアを、通勤の間にもう一度頭の中で並べてみてください。",
       "限定06": "今日は、お金の横断ひっかけを回します。「同じ2割でも場面が違う」に注目してください。全部で5つのペアです。\n\n1つ目です。営業保証金と弁済業務保証金分担金は、同じ金額で計算する。これは正しいでしょうか。\n\nこれは、バツです。営業保証金は主たる事務所1000万円・その他500万円。弁済業務保証金分担金は主たる事務所60万円・その他30万円。金額はまったく別の数字です。ただし、社員となった日から2週間以内に納付、不足額の供託は通知から2週間以内という、2週間系の期限はどちらも共通しています。もう一度確認します。営業保証金は1000万円と500万円、分担金は60万円と30万円。このペアを区別してください。\n\n\n2つ目です。損害賠償額の予定と、手付の上限と、手付金等の保全措置が必要になる割合は、どれも同じ2割で計算する。これは正しいでしょうか。\n\nこれは、バツです。損害賠償額の予定と違約金の上限は代金の10分の2。自ら売主が受け取れる手付の上限も代金の10分の2。ここまでは同じ10分の2です。でも手付金等の保全措置が必要になる金額は違っていて、未完成物件は代金の5パーセント超または1000万円超、完成物件は10パーセント超または1000万円超です。「2割」「1割」という言葉が複数の場面で出てくるので、予定賠償額の話か、手付の上限の話か、保全措置の話かを区別して聴いてください。同じ2割という言葉でも、意味している場面は3つに分かれます。\n\n\n3つ目です。固定資産税の小規模住宅用地の特例と、取得税の新築住宅の特例は、どちらも同じ仕組みで軽減される。これは正しいでしょうか。\n\nこれは、バツです。固定資産税の小規模住宅用地の特例は、課税標準を6分の1に圧縮する仕組み。取得税の特例は、新築住宅について1200万円を控除する仕組みです。片方は圧縮、もう片方は控除。同じ「住宅の税優遇」でも仕組みが違います。6分の1は圧縮、1200万円は控除、と覚えてください。\n\n\n4つ目です。登録免許税は、どんな移転登記でも同じ税率で計算する。これは正しいでしょうか。\n\nこれは、バツです。登録免許税は原因によって税率が3つに分かれます。本則は2.0パーセント、相続による移転登記は0.4パーセント、住宅用家屋の売買による移転登記は0.3パーセント。いちばん低いのは住宅の売買移転の0.3パーセント、次が相続の0.4パーセント、本則の2.0パーセントがいちばん高い、という順番です。もう一度確認します。本則2.0パーセント、相続0.4パーセント、住宅の売買移転0.3パーセント、同じ移転登記でも原因で税率が変わります。\n\n\n5つ目です。居住用財産の3000万円特別控除も、軽減税率の特例も、どちらも所有期間10年超が条件になる。これは正しいでしょうか。\n\nこれは、バツです。3000万円特別控除は所有期間を問わず使えます。10年という条件がかかるのは軽減税率の特例のほうです。3000万円控除には所有期間の縛りがなく、軽減税率だけが所有期間10年超を要求する、この違いがひっかけの核心です。\n\n\n最後にもう一度。同じ「2割」でも予定賠償額の話か手付の話か保全措置の話かで意味が変わり、同じ「住宅の税優遇」でも圧縮なのか控除なのかで仕組みが変わります。場面を区別して聴くこと、これが今日のポイントです。",
       "限定07": "今日は、期間の横断ひっかけを回します。「30年と50年と1年未満」に注目してください。全部で5つのペアです。\n\n1つ目です。宅建業者の廃業等の届出は、どんな理由でも契約と同じように、その日から30日以内で数える。これは正しいでしょうか。\n\nこれは、バツです。死亡による届出だけは、知った日から30日以内。それ以外の理由による届出は、その日から30日以内です。日数はどちらも30日で同じですが、起算点、数え始める日が違います。もう一度確認します。死亡は知った日から30日、それ以外はその日から30日。ここを区別してください。\n\n\n2つ目です。借地権の存続期間は、普通借地も一般定期借地も事業用定期借地も、すべて30年で統一されている。これは正しいでしょうか。\n\nこれは、バツです。普通借地権の存続期間は30年。一般定期借地権は50年以上。事業用定期借地権は、もっぱら事業用の建物のためのもので、居住用は対象になりません。存続期間は10年以上50年未満です。もう一度確認します。普通借地は30年、一般定期借地は50年以上、事業用定期借地は10年以上50年未満。この3つの期間を区別してください。\n\n\n3つ目です。借地で30年より短い期間を定めた場合と、借家で1年未満の期間を定めた場合は、どちらも自動的に30年に引き上げられる。これは正しいでしょうか。\n\nこれは、バツです。借地で30年より短い期間を定めた場合は、30年に引き上げられます。でも借家で1年未満の期間を定めた場合は、引き上げではなく、期間の定めがない賃貸借とみなされます。借地は引き上げ、借家は期間の定めなし、この違いがひっかけの核心です。同じ「短い期間を定めてしまった」場面でも、借地と借家では扱いがまったく違うので注意してください。\n\n\n4つ目です。取得時効も不法行為の消滅時効も、すべて10年と20年で計算する。これは正しいでしょうか。\n\nこれは、バツです。取得時効は、占有を始めたときに善意無過失なら10年、それ以外は20年です。不法行為による損害賠償請求権は、損害と加害者を知った時から3年、人の生命・身体を害する不法行為は5年、そして不法行為の時から20年です。「10年・20年」の取得時効と、「3年・5年・20年」の不法行為の時効、数字が混同しやすいので区別してください。20年という数字はどちらにも出てきますが、意味している期間の性質が違います。\n\n\n5つ目です。クーリングオフの行使期間と、媒介契約の業務処理報告の頻度は、どちらも同じ日数で覚えればよい。これは正しいでしょうか。\n\nこれは、バツです。クーリングオフは、書面告知の日から8日以内。媒介契約の業務処理報告は、専任が2週間に1回以上、専属専任が1週間に1回以上です。8日、1週間、2週間、どれも短い日数なので玉突き的に混ざりやすいですが、行使できる期間の話か、報告の頻度の話かを区別してください。もう一度確認します。クーリングオフは8日、報告は専任2週間・専属専任1週間です。\n\n\n最後にもう一度。30年、50年、1年未満。起算点が知った日かその日か。引き上げか、期間の定めなしか。今日の5つのペアは、どれも「期間は合っているのに場面を間違える」ひっかけです。通勤の間に、この5つを順番に思い出してみてください。",
-      "限定08": "今日は、2026年4月施行の改正区分所有法を耳で回します。今年いちばん出るところです。旧ルールから新ルールの順で確認します。\n\nこの改正は、老朽化マンション等の管理及び再生の円滑化等を図るための建物の区分所有等に関する法律等の一部を改正する法律によるもので、令和7年5月に成立し、区分所有法の部分は2026年4月1日に施行されました。\n\n\nまず、改正でも変わらない基本の数字です。共用部分の著しい変更、重大変更は4分の3以上。規約の設定・変更・廃止も4分の3以上。どちらも、専有部分の使用や区分所有者の権利に特別の影響を及ぼすときは、その人の承諾も必要です。この4分の3という数字自体は、改正後も変わりません。\n\n\n1つ目、建替え決議の緩和です。\n\n旧ルールでは、建替え決議は建物の状態にかかわらず、区分所有者及び議決権の各5分の4以上が必要でした。新ルールでは、原則は変わらず各5分の4以上です。ただし、建物が次のいずれかに該当する場合は、各4分の3以上に緩和されます。地震に対する安全性の基準に適合していないとき、火災に対する安全性の基準に適合していないとき、外壁や外装材が剥離して落下するおそれがあるとき、給水・排水などの配管設備の劣化で著しく衛生上有害となるおそれがあるとき、そしてバリアフリー基準に適合していないとき、この5つです。5分の4が原則、客観的事由があれば4分の3。この2つの数字が、今年いちばん出るところです。\n\n\n2つ目、所在等不明区分所有者の除外です。\n\n旧ルールでは、所在の分からない区分所有者も、すべて決議の母数に含まれていました。連絡がつかない人が事実上の反対票になり、決議が成立しにくくなっていたのです。新ルールでは、裁判所の裁判によって、区分所有者を知ることができない、またはその所在を知ることができない人を、集会の議決権を持たないものとできます。頭数も議決権も、決議の母数から除外されます。この請求ができるのは、それ以外の区分所有者、または管理者です。ポイントは、管理組合の判断や集会決議だけでは除外できず、必ず裁判所の裁判が必要という点です。\n\n\n3つ目、出席者の多数決化です。\n\n旧ルールでは、普通決議も特別多数決議も、区分所有者全体・議決権全体を母数にして数えていました。新ルールでは、集会に出席した区分所有者の多数決に変わります。普通決議は、出席した区分所有者及びその議決権の各過半数。重大変更や規約変更などの特別多数決議は、区分所有者及び議決権の各過半数が出席した集会で、出席した区分所有者及びその議決権の各4分の3以上です。つまり、定足数は出席者の過半数、そのうえで出席者の4分の3以上、という二段構えです。ただし、建替え決議など建物再生系の決議は、この出席者ベース化の対象外で、従来どおり区分所有者全体・議決権全体の各5分の4以上、客観的事由があれば各4分の3以上のままです。\n\n\n4つ目、建替え決議後の賃借権の終了です。\n\n旧ルールでは、建替え決議があっても、専有部分を借りている人の賃借権を終了させる仕組みは区分所有法にありませんでした。新ルールでは、建替え決議に賛成した区分所有者等は、専有部分の賃借人に対して賃貸借の終了を請求できます。賃貸借は、終了請求があった日から6か月を経過することで終了します。区分所有者は、賃借人に対して、賃貸借の終了によって生じる損失の補償金を支払わなければならず、賃借人は補償金の提供を受けるまで、明け渡しを拒むことができます。決議が成立しても、賃貸借がすぐ終わるわけではない、6か月と補償金、この2つがセットになっている点に注意してください。\n\n\n最後に、出やすいひっかけを2つ確認します。「建替え決議は改正により一律4分の3以上に緩和された」という言い方が出たら、それは誤りです。原則はあくまで5分の4のまま。4分の3になるのは、客観的事由に該当する場合だけです。また、「所在等不明区分所有者は、管理者の判断や集会の決議で母数から除外できる」という言い方も誤りです。必ず裁判所の裁判が必要です。\n\n\n最後にもう一度。建替え決議は、5分の4が原則、客観的事由があれば4分の3。5分の4が原則、客観的事由があれば4分の3。この数字を、繰り返し持ち帰ってください。"
+      "限定08": "今日は、2026年4月施行の改正区分所有法を耳で回します。今年いちばん出るところです。旧ルールから新ルールの順で確認します。\n\nこの改正は、老朽化マンション等の管理及び再生の円滑化等を図るための建物の区分所有等に関する法律等の一部を改正する法律によるもので、令和7年5月に成立し、区分所有法の部分は2026年4月1日に施行されました。\n\n\nまず、改正でも変わらない基本の数字です。共用部分の著しい変更、重大変更は4分の3以上。規約の設定・変更・廃止も4分の3以上。どちらも、専有部分の使用や区分所有者の権利に特別の影響を及ぼすときは、その人の承諾も必要です。この4分の3という数字自体は、改正後も変わりません。\n\n\n1つ目、建替え決議の緩和です。\n\n旧ルールでは、建替え決議は建物の状態にかかわらず、区分所有者及び議決権の各5分の4以上が必要でした。新ルールでは、原則は変わらず各5分の4以上です。ただし、建物が次のいずれかに該当する場合は、各4分の3以上に緩和されます。地震に対する安全性の基準に適合していないとき、火災に対する安全性の基準に適合していないとき、外壁や外装材が剥離して落下するおそれがあるとき、給水・排水などの配管設備の劣化で著しく衛生上有害となるおそれがあるとき、そしてバリアフリー基準に適合していないとき、この5つです。5分の4が原則、客観的事由があれば4分の3。この2つの数字が、今年いちばん出るところです。\n\n\n2つ目、所在等不明区分所有者の除外です。\n\n旧ルールでは、所在の分からない区分所有者も、すべて決議の母数に含まれていました。連絡がつかない人が事実上の反対票になり、決議が成立しにくくなっていたのです。新ルールでは、裁判所の裁判によって、区分所有者を知ることができない、またはその所在を知ることができない人を、集会の議決権を持たないものとできます。頭数も議決権も、決議の母数から除外されます。この請求ができるのは、それ以外の区分所有者、または管理者です。ポイントは、管理組合の判断や集会決議だけでは除外できず、必ず裁判所の裁判が必要という点です。\n\n\n3つ目、出席者の多数決化です。\n\n旧ルールでは、普通決議も特別多数決議も、区分所有者全体・議決権全体を母数にして数えていました。新ルールでは、集会に出席した区分所有者の多数決に変わります。普通決議は、出席した区分所有者及びその議決権の各過半数。重大変更や規約変更などの特別多数決議は、区分所有者及び議決権の各過半数が出席した集会で、出席した区分所有者及びその議決権の各4分の3以上です。つまり、定足数は出席者の過半数、そのうえで出席者の4分の3以上、という二段構えです。ただし、建替え決議など建物再生系の決議は、この出席者ベース化の対象外で、従来どおり区分所有者全体・議決権全体の各5分の4以上、客観的事由があれば各4分の3以上のままです。\n\n\n4つ目、建替え決議後の賃借権の終了です。\n\n旧ルールでは、建替え決議があっても、専有部分を借りている人の賃借権を終了させる仕組みは区分所有法にありませんでした。新ルールでは、建替え決議に賛成した区分所有者等は、専有部分の賃借人に対して賃貸借の終了を請求できます。賃貸借は、終了請求があった日から6か月を経過することで終了します。区分所有者は、賃借人に対して、賃貸借の終了によって生じる損失の補償金を支払わなければならず、賃借人は補償金の提供を受けるまで、明け渡しを拒むことができます。決議が成立しても、賃貸借がすぐ終わるわけではない、6か月と補償金、この2つがセットになっている点に注意してください。\n\n\n最後に、出やすいひっかけを2つ確認します。「建替え決議は改正により一律4分の3以上に緩和された」という言い方が出たら、それは誤りです。原則はあくまで5分の4のまま。4分の3になるのは、客観的事由に該当する場合だけです。また、「所在等不明区分所有者は、管理者の判断や集会の決議で母数から除外できる」という言い方も誤りです。必ず裁判所の裁判が必要です。\n\n\n最後にもう一度。建替え決議は、5分の4が原則、客観的事由があれば4分の3。5分の4が原則、客観的事由があれば4分の3。この数字を、繰り返し持ち帰ってください。",
+      "限定09": "今日は、宅建業法を、結論と数字だけで一気に整理します。業法は20問出題される、宅建試験の最大の得点源です。理由の解説はせず、結論と数字だけをテンポよく流していきます。免許から監督処分まで、順番に進みます。\n\nまずは免許です。宅建業の免許の有効期間は5年。5年ごとに更新の手続きが必要です。欠格事由に該当してから復権までの期間も同じく5年ですが、執行猶予の場合は猶予期間が満了すればその時点でよく、5年を待つ必要はありません。免許の更新申請は、有効期間満了の90日前から30日前までの間に行います。90日前という早い方の数字と、締切である30日前を混同しないでください。申請期間の下限は30日前です。廃業等の届出は30日以内。死亡の場合だけ「知った日から」起算し、それ以外の廃業や合併などは「その日から」起算します。日数はどちらも30日で統一されています。90日前・30日前・30日以内、似た数字が並ぶところなので落ち着いて整理してください。\n\n次は宅建士です。専任の宅建士の設置は、事務所の従業者5人に1人以上。案内所等では最低1人です。専任の宅建士が欠けてしまった場合の補充は2週間以内。人数不足に気づいたら、2週間以内に新しい専任の宅建士を置きます。宅建士証の有効期間は5年で、免許の有効期間と同じ数字です。更新前に受ける法定講習は、交付申請前6か月以内に受講します。5年という数字は、免許の有効期間と宅建士証の有効期間、両方に出てくるとセットで覚えてください。5人に1人、2週間、5年、6か月、この4つの数字が宅建士のブロックです。数字を混同せず、それぞれ何の場面の数字かとセットで覚えてください。設置人数の5人に1人と、補充期限の2週間、この2つはセットで問われやすい数字です。\n\n次は媒介契約です。専任媒介・専属専任媒介の有効期間は、どちらも上限3か月。これより長い特約をしても、3か月に短縮されます。指定流通機構への登録は、専任が7日以内、専属専任が5日以内で、どちらも休業日を除いて数えます。業務処理報告は、専任が2週間に1回以上、専属専任が1週間に1回以上。専任は7日と2週間、専属専任は5日と1週間、専属専任の方が短い数字になる、という対応で覚えてください。有効期間の3か月は共通、登録と報告の日数だけが専任と専属専任で分かれる、という整理です。\n\n次は35条書面と37条書面の振り分けです。35条書面は、契約が成立する前に、宅建士が説明する義務があります。37条書面は、契約が成立した後に交付するもので、宅建士の記名は必要ですが、説明する義務はありません。ここは記名する人を混同しないでください。媒介契約書に記名するのは宅建業者、35条書面と37条書面に記名するのは宅建士です。主体が違う、という点を押さえてください。契約前は説明あり、契約後は記名のみ、この順番も覚えておいてください。誰が記名するか、誰が説明するか、この2つの軸で整理すると混同しません。35条は説明、37条は記名、と覚えておくと本番でも迷いません。\n\n次は8種制限です。クーリングオフができるのは、書面で告知された日から起算して8日以内。告知を受けた日を含めて数えます。これより短くする特約は無効です。自ら売主が受け取れる手付の額は、代金の10分の2まで。これを超える特約も無効です。手付金等の保全措置は、未完成物件が代金の5パーセントを超えるか1000万円を超える場合、完成物件が代金の10パーセントを超えるか1000万円を超える場合に必要になります。未完成は5パーセント、完成は10パーセント、どちらにも1000万円という基準がある、とあわせて押さえてください。損害賠償額の予定と違約金をあわせた額も、代金の10分の2以内です。手付の上限と同じ10分の2、とセットで覚えてください。8日、10分の2、5パーセント、10パーセント、1000万円、8種制限だけで数字が5つ出てきます。\n\n次は報酬です。400万円を超える部分の速算式は、価額に3パーセントを掛けて、6万円を足します。税抜きの金額です。低廉な空家等の特例は、売買代金800万円以下の宅地・建物の売買等の媒介で、30万円税抜きが上限になります。800万円以下という価格の基準と、30万円という上限額の数字を対にして覚えてください。\n\n次は保証金のペアです。営業保証金は、主たる事務所が1000万円、その他の事務所は1か所につき500万円。弁済業務保証金分担金は、主たる事務所が60万円、その他の事務所は1か所につき30万円。1000万円と500万円、60万円と30万円、この2つの金額を混同しないでください。分担金の納付は、保証協会の社員となった日から2週間以内。営業保証金の不足額の供託は、通知を受けてから2週間以内です。どちらも2週間、と覚えてください。営業保証金は1000万円と500万円、分担金は60万円と30万円、この4つの金額をセットで押さえてください。\n\n次は帳簿と従業者名簿です。帳簿の保存期間は5年。自ら売主となる新築住宅に関するものは10年です。帳簿に閲覧義務はありません。従業者名簿の保存期間は10年で、こちらには閲覧義務があります。保存期間の5年と10年、閲覧義務のあるなし、この組み合わせを混同しないでください。帳簿は原則5年で例外10年、従業者名簿は常に10年、という違いです。\n\n最後に監督処分の3段階です。宅建業者に対する処分は、軽い順に指示処分、業務停止処分、免許取消処分。業務停止処分の期間は1年以内です。処分権者はどちらも免許権者、つまり国土交通大臣または都道府県知事で、「大臣のみ」というのはひっかけです。宅建士に対する処分は、指示処分、事務禁止処分、登録消除処分の3段階で、事務禁止処分の期間も1年以内。処分権者は登録先の都道府県知事です。業者は免許権者、宅建士は登録先の知事、と主体を分けて覚えてください。なお、業務停止処分を受けたにもかかわらず、その期間中に業務を行った場合、免許権者はその業者の免許を取り消さなければなりません。この規定もあわせて覚えておいてください。指示処分がもっとも軽く、免許取消・登録消除がもっとも重い、という軽重の順番も一緒に押さえてください。\n\n今日の代表的な数字をもう一度読み上げます。免許と宅建士証の有効期間は5年。専任宅建士は従業者5人に1人。媒介契約の有効期間の上限は3か月。クーリングオフは8日。営業保証金は1000万円と500万円。分担金は60万円と30万円。帳簿は原則5年で自ら売主の新築住宅は10年。従業者名簿は10年。報酬は3パーセントプラス6万円。空家特例は30万円。監督処分の業務停止・事務禁止はどちらも1年以内。この数字を押さえてください。今日整理した数字だけで、業法20問のうち相当数をカバーできます。",
+      "限定10": "今日は、権利関係を、結論と数字だけで一気に整理します。権利関係は深追いをせず、試験で問われる結論だけを淡々と読みます。理由の解説は本編で済んでいる前提です。意思表示から区分所有法まで、順番に進みます。\n\nまずは意思表示です。取り消せるのか無効なのか、ここを軸に整理します。心裡留保は原則有効。ただし相手方が真意でないと知っていた、または知ることができたときは無効です。虚偽表示は無効。錯誤は、重要な錯誤があれば取り消せます。表意者に重大な過失があると、原則として取り消せません。詐欺も取り消せます。強迫も取り消せます。ここでのポイントは第三者保護です。心裡留保と虚偽表示の無効、錯誤と詐欺の取消しは、善意の第三者に対抗できません。錯誤と詐欺はさらに、善意無過失の第三者であることが必要です。強迫だけは例外で、第三者保護規定がなく、善意の第三者にも対抗できます。強迫と詐欺、ここを混同しないでください。詐欺は取消しに第三者保護あり、強迫は第三者保護なし、という一点で区別してください。心裡留保・虚偽表示・錯誤・詐欺は善意の第三者に対抗できず、強迫だけが善意の第三者にも対抗できる、と繰り返し押さえてください。\n\n次は代理です。無権代理は、本人が追認しなければ、本人に効力は生じません。相手方には催告権と取消権があり、無権代理人は相手方の選択によって、履行または損害賠償の責任を負います。表見代理は3類型です。代理権授与の表示による表見代理、権限外の行為の表見代理、代理権消滅後の表見代理。この3つを押さえてください。\n\n次は時効です。時効には、権利を取得する取得時効と、権利が消滅する消滅時効があります。取得時効は、占有開始時点で善意無過失なら10年、それ以外は20年。10年と20年、この差は占有開始時点の善意無過失で決まります。不法行為による損害賠償請求権の消滅時効は、損害及び加害者を知った時から3年。人の生命・身体を害する場合は5年に伸びます。不法行為の時からは20年です。3年、5年、20年、この3つの数字をセットで覚えてください。知った時からの3年・5年と、行為の時からの20年、起算点が違う点も押さえてください。\n\n所有権が誰に移ったかという場面で問われるのが物権変動です。不動産に関する物権の得喪・変更は、登記をしなければ第三者に対抗できません。登記と第三者、この組み合わせだけを押さえてください。誰が正当な権利者かを争う場面では、登記の有無が決め手になります。登記をした方が優先される、という結論だけを押さえてください。\n\n次は抵当権です。抵当権者が利息その他の定期金を請求できるのは、満期となった最後の2年分のみです。それより前の分は、満期後に特別の登記をした場合に限り行使できます。2年分より前の分は原則として請求できない、という点を押さえてください。最後の2年分、この数字だけを押さえてください。\n\n次は連帯債務と保証です。連帯債務では、絶対効が生じるのは更改・相殺・混同の3事由のみで、それ以外は相対効が原則です。3事由以外は、一人に生じた事由が他の連帯債務者に影響しません。保証契約は口約束では成立せず、書面でしなければ効力を生じません。連帯保証には、催告の抗弁も検索の抗弁もありません。個人根保証契約は、極度額を定めなければ効力を生じません。個人貸金等根保証契約の元本確定期日は、契約締結の日から5年を超える定めは無効。定めがない場合は、締結の日から3年を経過する日になります。5年と3年、この2つの数字を混同しないでください。定めがある場合の上限が5年、定めがない場合のデフォルトが3年です。5年を超える定めをしても無効になる、という点も押さえてください。事業のために負担する貸金等債務の保証契約は、締結の日前1か月以内に作成された公正証書で、保証人になろうとする者が保証債務を履行する意思を表示していなければ、効力を生じません。\n\n次は借地借家です。普通借地権の存続期間は30年。これより短い期間を定めても、30年に引き上げられます。一般定期借地権は50年以上。事業用定期借地権は、居住用は不可で、10年以上50年未満です。借家権は、期間を1年未満とする建物の賃貸借は、期間の定めがない賃貸借とみなされます。ここは「引き上げ」と「期間の定めなしになる」を混同しないでください。借地は短い期間を定めても30年に引き上げ、借家は1年未満だと期間の定めなしになる、という違いです。事業用定期借地権は居住用に使えない、という点もあわせて押さえてください。普通借地権30年、一般定期借地権50年以上、事業用定期借地権10年以上50年未満、この3つの数字の並びも一緒に覚えてください。\n\n次は相続です。法定相続分は、配偶者と子は各2分の1。配偶者と直系尊属は、配偶者3分の2、直系尊属3分の1。配偶者と兄弟姉妹は、配偶者4分の3、兄弟姉妹4分の1。半血の兄弟姉妹の相続分は、全血の2分の1です。相続の承認・放棄は、自己のために相続の開始があったことを知った時から3か月以内に選択します。遺留分侵害額請求は、知った時から1年、相続開始の時から10年で時効消滅します。3か月、1年、10年、この3つの期限を押さえてください。数字だけを見ると混同しやすいので、場面とセットで思い出してください。放棄の3か月は相続開始を知った時から、遺留分の10年は相続開始の時から、起算点が異なる点にも注意してください。\n\n最後に区分所有法です。共用部分の著しい変更と、規約の設定・変更・廃止は、4分の3以上の多数。建替え決議は原則5分の4以上ですが、2026年4月施行の改正で、耐震性不足・耐火性不足・外壁等剥離のおそれ・給排水管等の劣化・バリアフリー基準不適合のいずれかに該当すれば、4分の3に緩和されます。5分の4が原則、客観的事由があれば4分の3、この2つを押さえてください。共用部分の変更と規約はどちらも4分の3、建替えだけが5分の4という原則の違いも意識してください。建替え決議後、決議に賛成しなかった区分所有者の専有部分の賃貸借は、終了請求から6か月経過することで終了し、区分所有者は補償金を支払わなければなりません。所在等不明の区分所有者は、裁判所の決定により、決議の母数から除外できる制度があります。\n\nそれでは最後に、今日の代表的な数字をもう一度読み上げます。取得時効は10年と20年。不法行為は3年、生命身体は5年、20年。抵当権は最後の2年分。借地借家は30年、50年以上、10年以上50年未満、1年未満。相続放棄は3か月。遺留分は1年と10年。区分所有は4分の3と、原則5分の4、緩和で4分の3。この数字を押さえてください。権利関係は範囲が広い分野ですが、今日の数字を押さえるだけで頻出論点の多くをカバーできます。焦らず、結論のかたちで思い出せるようにしておいてください。",
+      // 限定11：2026-08-04 ElevenLabs台本方式で収録済み（容積率0.4訂正後の台本・Kei耳検品済み）
+      "限定11": "今日は、法令上の制限と税を、結論と数字だけで一気に整理します。理由の解説はせず、結論と数字だけをテンポよく流していきます。都市計画から期限モノまで、順番に進みます。\n\nまずは都市計画です。都市計画区域は、市街化区域と市街化調整区域に区分されます。市街化区域は、おおむね10年以内に市街化を図るべき区域です。開発をするときは原則として開発許可が必要ですが、市街化区域では1000平方メートル未満なら不要です。市街化調整区域は、面積を問わず必要になります。1000平方メートルという面積の基準を押さえてください。市街化区域は面積で判断し、市街化調整区域は面積を問わない、という違いも一緒に押さえてください。1000平方メートル未満なら市街化区域でも開発許可は不要、という結論だけを覚えておいてください。\n\n次は建築基準法です。建物を建てるための接道義務は、幅員4メートル以上の道路に、敷地が2メートル以上接すること。4メートルと2メートル、この2つの数字がセットです。建蔽率の緩和は、角地でプラス10パーセント、防火地域内の耐火建築物でプラス10パーセント、両方に該当すればプラス20パーセントになります。角地と耐火建築物、それぞれ単独では10パーセント、重なれば合算して20パーセントです。10パーセントが2つ重なって20パーセント、という足し算の関係で覚えてください。角地・防火地域内耐火建築物、それぞれプラス10パーセント、と繰り返し覚えてください。容積率は、前面道路の幅員が12メートル未満のとき、住居系の用途地域では、前面道路の幅員に0.4を掛けた数値が上限になります。住居系以外の用途地域では0.6です。12メートル未満、住居系は0.4、この2つの数字を押さえてください。\n\n次は農地法です。3条・4条・5条の許可制がベースです。市街化区域内の届出による特例、つまり許可が不要で届出だけでよい制度が使えるのは、4条と5条のみ。3条には届出の特例がありません。相続による農地の取得は、3条の許可は不要ですが、届出は必要です。3条だけ届出特例がない、相続は許可不要でも届出は必要、この2点を混同しないでください。市街化区域内という立地条件がある届出特例と、相続という取得原因による許可不要、この2つの制度を分けて覚えてください。4条・5条は届出特例あり、3条は届出特例なし、この対応を繰り返し押さえてください。\n\n次は国土利用計画法の事後届出です。土地の売買等の契約をした後に届け出る制度で、届出は契約から2週間以内。届出が必要な面積は、市街化区域で2000平方メートル以上です。届出の主体は権利取得者です。「共同で届け出る」というのはひっかけなので注意してください。2週間、2000平方メートル、権利取得者、この3つを押さえてください。届出の主体が権利取得者だけである点も、あわせて押さえてください。共同で届け出るわけではありません。契約から2週間以内、市街化区域2000平方メートル以上、権利取得者、この3つの数字と主体をセットで覚えてください。「共同で届け出る」は誤りで、届出をするのは権利取得者だけです。\n\n次は広告表示です。不動産の広告に記載する所要時間の基準です。徒歩の所要時間は、道路距離80メートルを1分として表示し、端数は切り上げます。切り捨てはひっかけです。公園等の名称を用いた広告は、直線距離300メートル以内であることが必要です。80メートルで1分、端数は切り上げ、300メートル以内、この3つを押さえてください。切り捨てや、300メートルを超える距離での名称使用は、いずれもひっかけとして出てきます。80メートルと300メートル、この2つの距離の基準を混同しないでください。\n\n次は税です。不動産取得税は、本則4パーセント、住宅と土地は3パーセントに軽減されます。固定資産税は、小規模住宅用地、つまり200平方メートル以下の部分は、課税標準が6分の1になります。200平方メートルを超える部分は3分の1です。登録免許税は3つの率を押さえてください。相続による移転は0.4パーセント、本則は2パーセント、住宅用家屋の売買による移転は0.3パーセントです。0.4パーセント、2パーセント、0.3パーセント、この3つの率を混同しないでください。低い順に並べると、住宅用家屋の売買移転の0.3パーセントが一番低く、次が相続の0.4パーセント、本則の2パーセントがもっとも高い、という大小関係で覚えると整理しやすくなります。相続0.4パーセント、本則2パーセント、住宅用家屋の売買移転0.3パーセント、この対応をもう一度繰り返します。居住用財産の3000万円特別控除は、所有期間を問いません。軽減税率の特例は、所有期間10年超が要件です。10年という条件がかかるのは軽減税率のほうで、3000万円控除のほうではありません。ここを混同しないでください。3000万円控除は所有期間を問わず使える、という点が最大のポイントです。所有期間を問わない3000万円控除と、所有期間10年超が条件の軽減税率、この2つは別の制度として整理してください。\n\n最後に期限モノです。改正や特例には期限があるものが多いため、ここはソースの記載どおりに読みます。不動産取得税の3パーセント、住宅と土地の軽減税率、印紙税の軽減、登録免許税0.3パーセントの住宅用家屋の売買移転、これらはいずれも令和9年3月31日までです。取得税の認定長期優良住宅1300万円控除は、令和13年3月31日まで。登録免許税の土地売買1.5パーセントは、令和11年3月31日まで延長されています。「令和8年で終了」というのはひっかけです。令和9年、令和11年、令和13年、期限の年が3つ並ぶところなので、落ち着いて区別してください。取得税と印紙税と登録免許税0.3パーセントは令和9年、登録免許税の土地売買1.5パーセントは令和11年、認定長期優良住宅の1300万円控除は令和13年です。\n\nそれでは最後に、今日の代表的な数字をもう一度読み上げます。開発許可は1000平方メートル未満、国土法の届出は2000平方メートル以上で2週間以内。接道は4メートルと2メートル。広告は80メートルで1分、300メートル以内。不動産取得税は3パーセント。固定資産税は6分の1。登録免許税は0.4パーセント、2パーセント、0.3パーセント。3000万円控除は所有期間を問わず、軽減税率は10年超。登録免許税0.3パーセントと取得税の軽減、印紙税の軽減は令和9年3月31日まで。登録免許税の土地売買1.5パーセントは令和11年3月31日まで。認定長期優良住宅の1300万円控除は令和13年3月31日まで。この数字を押さえてください。法令税は暗記量が多い分野ですが、今日の数字を押さえるだけで頻出論点の多くをカバーできます。数字を場面とセットで思い出せるようにしておいてください。",
+      "限定12": "今日は、試験前日と当日の過ごし方だけを、耳で確認しておきます。法律の解説は、今日はお休みです。数字も条文も出てきません。やることを静かに整理するだけの、短い回だと思ってください。\n\nまず、前日の過ごし方から。前日は、新しい問題には手を出さないでください。ここまで来て新しい論点に触れても、点数には直結しませんし、むしろ「これ知らなかった」という不安を増やすだけになってしまいます。前日にやることは、最終チェックシートの数字を、上から下まで、ひととおり1周だけ読み返すこと。それだけで十分です。新しいことは足さず、今まで積み重ねてきたものを、そのまま確認するだけにしてください。\n\n読み返し終えたら、持ち物の準備に移ります。確認するのは、受験票、鉛筆、消しゴム、時計の4つです。かばんの中に、この4つがちゃんと入っているか、ひとつずつ確認してみてください。受験票、鉛筆、消しゴム、時計。あわせて、会場までの経路も、念のため確認しておきましょう。準備がすべて終わったら、あとは特別なことは何もせず、いつもどおりの時間に、いつもどおり眠りについてください。特別な儀式も、気合いを入れることも、必要ありません。受験票、鉛筆、消しゴム、時計、この4つを確認したら、前日にやることは、もう終わりです。\n\n翌朝、当日の朝です。会場に持っていくものは、最終チェック1枚、これだけにしてください。分厚いテキストは、持っていかなくて大丈夫です。試験の開始直前にたまたま開いたページの数字しか、結局は頭に残らないからです。荷物を軽くしておくと、気持ちも自然と軽くなります。持っていくのは、最終チェック1枚、それだけです。\n\n会場に着いて、席についたら、開始までのあいだ、その最終チェック1枚を、もう一度だけ見返しておきます。目新しいことは、もうそこには何もありません。ただ、これまで確認してきた数字が並んでいるだけです。それを確認したら、あとは深呼吸をひとつして、開始の合図を静かに待つだけです。\n\n試験が始まったら、解く順番も、あらかじめ決めておいたとおりに進めます。最初に取りかかるのは、業法です。得点源になる分野から手をつけて、まず勢いをつけます。次に、法令上の制限と税、その他の免除科目に進みます。そして、いちばん時間のかかる権利関係は、最後に回します。業法、法令税・免除科目、権利関係、この順番です。1問あたり2分くらいの感覚で進めて、わからない問題は無理に粘らず、いったん飛ばして、あとで戻ってくればいいのです。見直しの時間ができたら、まずはマークのずれがないかどうかの確認を、最優先にしてください。\n\n最後に、ひとことだけ。ここまで毎週聴いてきた耳が、あなたの武器です。当日は、いつもの月曜日と同じ調子で。それでは、これで終わります。"
     };
+
+    // ポイント整理（聴いた内容を表と要点で確認するタブ。台本と同じくready=trueの回だけ表示）
+    const audioPoints = {
+      "限定01": "<p class=\"pt-h\">「2週間」で統一の5つ</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>保証協会の分担金の納付（社員となった日から）</td><td><b>2週間</b>以内</td></tr><tr><td>営業保証金の不足額の供託（通知から）／供託後の届出</td><td>どちらも<b>2週間</b>以内</td></tr><tr><td>専任の宅建士が欠けたときの補充</td><td><b>2週間</b>以内</td></tr><tr><td>専任媒介の業務処理報告（専属専任は<b>1週間</b>に1回以上）</td><td><b>2週間</b>に1回以上</td></tr><tr><td>国土法の事後届出（契約から）</td><td><b>2週間</b>以内</td></tr></table><p class=\"pt-h\">30日とまぎらわしい数字</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>廃業等の届出（死亡＝知った日から／それ以外＝その日から）</td><td><b>30日</b>以内</td></tr><tr><td>免許更新の申請（締切は30日前のほう）</td><td>満了の<b>90日前〜30日前</b></td></tr><tr><td>住宅瑕疵担保履行法の供託状況の届出（基準日から）</td><td><b>3週間</b>以内</td></tr><tr><td>案内所設置の届出</td><td>業務開始の<b>10日前</b>まで</td></tr></table><p class=\"pt-h\">媒介契約・クーリングオフ・5年</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>専任・専属専任媒介の有効期間の上限</td><td><b>3か月</b>（超える特約は3か月に短縮）</td></tr><tr><td>指定流通機構への登録（休業日を除く）</td><td>専任<b>7日</b>／専属専任<b>5日</b>以内</td></tr><tr><td>クーリングオフ（告知日を含む・短縮特約は無効）</td><td>書面告知の日から<b>8日</b>以内</td></tr><tr><td>欠格事由→復権（執行猶予は満了時点でOK）</td><td><b>5年</b></td></tr><tr><td>宅建士証の有効期間／宅建業免許の有効期間</td><td>どちらも<b>5年</b></td></tr></table>",
+      "限定02": "<p class=\"pt-h\">鉄板の2ペア</p><table class=\"pt-table\"><tr><th>&nbsp;</th><th>主たる事務所</th><th>その他の事務所</th></tr><tr><td>営業保証金</td><td><b>1,000万円</b></td><td>1か所につき<b>500万円</b></td></tr><tr><td>弁済業務保証金分担金</td><td><b>60万円</b></td><td>1か所につき<b>30万円</b></td></tr></table><p class=\"pt-h\">報酬</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>売買代金400万円超の部分の速算式</td><td>価額×<b>3%＋6万円</b>（税抜）</td></tr><tr><td>低廉な空家等の特例（800万円以下の売買）</td><td>上限<b>30万円</b>（税抜）</td></tr><tr><td>居住用建物の貸借の媒介（依頼者の一方から）</td><td>原則<b>0.5か月分</b>（承諾があれば1か月分）</td></tr></table><p class=\"pt-h\">手付と賠償</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>手付金等の保全措置が必要になるライン</td><td>未完成＝<b>5%超</b>／完成＝<b>10%超</b>、どちらも<b>1,000万円超</b></td></tr><tr><td>損害賠償額の予定＋違約金</td><td>合算で代金の<b>10分の2</b>以内</td></tr></table><p class=\"pt-h\">税金</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>居住用財産の特別控除（所有期間を問わない）</td><td><b>3,000万円</b></td></tr><tr><td>不動産取得税の課税標準の特例</td><td>新築<b>1,200万円</b>控除／認定長期優良<b>1,300万円</b>控除</td></tr><tr><td>記載金額のない契約書の印紙税</td><td>一律<b>200円</b></td></tr></table>",
+      "限定03": "<p class=\"pt-h\">宅建業法の割合</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>専任の宅建士の設置（案内所等は最低1人）</td><td>従業者<b>5人に1人</b>以上</td></tr><tr><td>損害賠償額の予定＋違約金（手付の上限も同じ）</td><td>代金の<b>10分の2</b>以内</td></tr><tr><td>代理の報酬</td><td>媒介の報酬の<b>2倍</b>以内</td></tr></table><p class=\"pt-h\">区分所有法の決議（今年の最重要）</p><table class=\"pt-table\"><tr><th>決議</th><th>数字</th></tr><tr><td>共用部分の重大変更／規約の設定・変更・廃止</td><td>どちらも<b>4分の3</b>以上</td></tr><tr><td>建替え決議（2026年4月施行の改正）</td><td>原則<b>5分の4</b>以上→耐震性不足など客観的事由があれば<b>4分の3</b></td></tr></table><p class=\"pt-h\">税の割合</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>固定資産税：小規模住宅用地（200㎡以下）</td><td>課税標準<b>6分の1</b>（超える部分は<b>3分の1</b>）</td></tr><tr><td>登録免許税（移転登記）</td><td>本則<b>2.0%</b>／相続<b>0.4%</b>／住宅用家屋の売買移転<b>0.3%</b></td></tr><tr><td>不動産取得税</td><td>本則<b>4%</b>／住宅・土地<b>3%</b></td></tr></table><p class=\"pt-h\">相続と建蔽率</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>配偶者と子の法定相続分（半血の兄弟姉妹は全血の2分の1）</td><td>各<b>2分の1</b></td></tr><tr><td>建蔽率の緩和</td><td>角地<b>＋10%</b>／防火地域内の耐火建築物<b>＋10%</b>／両方で<b>＋20%</b></td></tr></table>",
+      "限定04": "<p class=\"pt-h\">いちばん混同しやすいペア</p><table class=\"pt-table\"><tr><th>制度</th><th>数字</th></tr><tr><td>開発許可が<b>不要</b>（市街化区域。調整区域は面積を問わず必要）</td><td><b>1,000㎡未満</b></td></tr><tr><td>国土法の事後届出が<b>必要</b>（市街化区域）</td><td><b>2,000㎡以上</b></td></tr></table><p class=\"pt-h\">建築基準法・床面積</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>接道義務</td><td>幅員<b>4m</b>以上の道路に<b>2m</b>以上接する</td></tr><tr><td>床面積の使い分け</td><td><b>40㎡</b>＝取得税の緩和（<b>貸家共同住宅</b>の場合。一般住宅は原則<b>50㎡以上240㎡以下</b>）／<b>50㎡</b>＝登録免許税等の緩和／<b>120㎡</b>＝固定資産税の新築減額の上限</td></tr></table><p class=\"pt-h\">距離と面積の基準</p><table class=\"pt-table\"><tr><th>場面</th><th>数字</th></tr><tr><td>広告の徒歩表示（端数は<b>切り上げ</b>）</td><td>道路距離<b>80m＝1分</b></td></tr><tr><td>公園等の名称使用</td><td>直線距離<b>300m以内</b></td></tr><tr><td>定期借家の借主からの中途解約（居住用）</td><td>床面積<b>200㎡未満</b>＋転勤・療養・介護など<b>やむを得ない事情</b>があるとき</td></tr><tr><td>盛土規制法の許可（盛土のほうが厳しい）</td><td>盛土<b>1m超</b>／切土<b>2m超</b>（同時も2m超）／面積<b>500㎡超</b></td></tr></table>",
+      "限定05": "<p class=\"pt-note\">「誰がハンコを押すのか」——主体と場面の入れ替わりに注目する4ペアです。</p><table class=\"pt-table\"><tr><th>ペア</th><th>正しい整理</th></tr><tr><td>① 記名の主体</td><td>媒介契約書＝<b>宅建業者</b>／35条・37条書面＝<b>宅建士</b></td></tr><tr><td>② 説明義務</td><td>35条＝契約<b>前</b>・宅建士が<b>説明</b>／37条＝契約<b>後</b>・<b>記名のみ</b>（説明義務なし）</td></tr><tr><td>③ 専任と専属専任</td><td>専任＝登録<b>7日</b>・報告<b>2週間</b>に1回／専属専任＝登録<b>5日</b>・報告<b>1週間</b>に1回（専属専任のほうが厳しい）。有効期間はどちらも<b>3か月</b>上限</td></tr><tr><td>④ 帳簿と従業者名簿</td><td>帳簿＝保存<b>5年</b>（自ら売主の新築住宅は<b>10年</b>）・閲覧義務<b>なし</b>／従業者名簿＝保存<b>10年</b>・閲覧義務<b>あり</b></td></tr></table>",
+      "限定06": "<p class=\"pt-note\">「同じ2割でも場面が違う」——お金のひっかけ5ペアです。</p><table class=\"pt-table\"><tr><th>ペア</th><th>正しい整理</th></tr><tr><td>① 営業保証金と分担金</td><td>営業保証金＝<b>1,000万円・500万円</b>／分担金＝<b>60万円・30万円</b>。金額は別物、<b>2週間</b>の期限だけ共通</td></tr><tr><td>② 「2割」の3場面</td><td>賠償予定＋違約金＝<b>10分の2</b>／手付の上限＝<b>10分の2</b>／保全措置は別で、未完成<b>5%超</b>・完成<b>10%超</b>または<b>1,000万円超</b></td></tr><tr><td>③ 住宅の税優遇の仕組み</td><td>固定資産税＝課税標準を<b>6分の1に圧縮</b>／取得税＝新築<b>1,200万円を控除</b>。圧縮と控除で仕組みが違う</td></tr><tr><td>④ 登録免許税の税率</td><td>原因で3つに分かれる：本則<b>2.0%</b>／相続<b>0.4%</b>／住宅の売買移転<b>0.3%</b></td></tr><tr><td>⑤ 3,000万円控除と軽減税率</td><td>3,000万円特別控除＝所有期間を<b>問わない</b>／軽減税率の特例＝所有期間<b>10年超</b>が条件</td></tr></table>",
+      "限定07": "<p class=\"pt-note\">「30年と50年と1年未満」——期間は合っているのに場面を間違えるひっかけ5ペアです。</p><table class=\"pt-table\"><tr><th>ペア</th><th>正しい整理</th></tr><tr><td>① 廃業等の届出の起算点</td><td>死亡＝<b>知った日</b>から30日／それ以外＝<b>その日</b>から30日（日数は同じ）</td></tr><tr><td>② 借地権の存続期間</td><td>普通借地＝<b>30年</b>／一般定期＝<b>50年以上</b>／事業用定期＝<b>10年以上50年未満</b>（居住用は不可）</td></tr><tr><td>③ 短い期間を定めたら</td><td>借地（30年未満）＝<b>30年に引き上げ</b>／借家（1年未満）＝<b>期間の定めがない</b>賃貸借とみなす</td></tr><tr><td>④ 時効の数字</td><td>取得時効＝善意無過失<b>10年</b>・それ以外<b>20年</b>／不法行為＝知った時から<b>3年</b>（生命・身体は<b>5年</b>）・行為の時から<b>20年</b></td></tr><tr><td>⑤ 8日と1週間・2週間</td><td>クーリングオフ＝告知から<b>8日</b>以内／業務処理報告＝専任<b>2週間</b>・専属専任<b>1週間</b>に1回以上</td></tr></table>",
+      "限定08": "<p class=\"pt-note\">2026年4月施行の改正区分所有法。今年いちばん出るところです。</p><p class=\"pt-h\">改正でも変わらない数字</p><table class=\"pt-table\"><tr><th>決議</th><th>数字</th></tr><tr><td>共用部分の重大変更／規約の設定・変更・廃止</td><td>どちらも<b>4分の3</b>以上（特別の影響がある人の承諾も必要）</td></tr></table><p class=\"pt-h\">改正の4本柱</p><table class=\"pt-table\"><tr><th>改正点</th><th>内容</th></tr><tr><td>① 建替え決議の緩和</td><td>原則<b>5分の4</b>以上のまま→<b>客観的事由</b>（耐震性不足・耐火性不足・外壁等剥離のおそれ・給排水管等の劣化・バリアフリー基準不適合の5つ）のいずれかで<b>4分の3</b>に緩和</td></tr><tr><td>② 所在等不明区分所有者の除外</td><td><b>裁判所の裁判</b>で頭数・議決権とも母数から除外（管理組合の判断や集会決議だけでは不可）</td></tr><tr><td>③ 出席者ベースの多数決</td><td>普通決議＝<b>出席者</b>の各過半数／特別多数決議＝各過半数が出席した集会で<b>出席者の4分の3</b>以上。建替えなど再生系は対象外（全体の5分の4のまま）</td></tr><tr><td>④ 建替え決議後の賃借権終了</td><td>終了請求から<b>6か月</b>で終了＋<b>補償金</b>（提供を受けるまで明渡しを拒める）</td></tr></table><p class=\"pt-h\">出やすいひっかけ</p><ul class=\"pt-list\"><li>「建替え決議は一律4分の3に緩和された」→<b>誤り</b>。原則は5分の4のまま、4分の3は客観的事由がある場合だけ。</li><li>「所在等不明者は管理者の判断や集会決議で除外できる」→<b>誤り</b>。必ず裁判所の裁判が必要。</li></ul>",
+      "限定09": "<p class=\"pt-note\">業法20問の得点源を、ブロックごとに数字で確認します。</p><table class=\"pt-table\"><tr><th>ブロック</th><th>押さえる数字・結論</th></tr><tr><td>免許</td><td>有効期間<b>5年</b>／更新申請＝満了の<b>90日前〜30日前</b>／廃業等の届出<b>30日</b>以内（死亡のみ知った日から）</td></tr><tr><td>宅建士</td><td>設置＝<b>5人に1人</b>（案内所等は1人）／補充<b>2週間</b>以内／宅建士証<b>5年</b>・法定講習は申請前<b>6か月</b>以内</td></tr><tr><td>媒介契約</td><td>有効期間上限<b>3か月</b>／登録＝専任<b>7日</b>・専属専任<b>5日</b>（休業日除く）／報告＝<b>2週間</b>・<b>1週間</b>に1回以上</td></tr><tr><td>35条・37条書面</td><td>35条＝契約<b>前</b>・宅建士が<b>説明</b>／37条＝契約<b>後</b>・<b>記名のみ</b>／媒介契約書の記名は<b>宅建業者</b></td></tr><tr><td>8種制限</td><td>クーリングオフ<b>8日</b>／手付上限<b>10分の2</b>／保全措置＝未完成<b>5%超</b>・完成<b>10%超</b>・<b>1,000万円超</b>／賠償予定＋違約金<b>10分の2</b></td></tr><tr><td>報酬</td><td>400万円超＝<b>3%＋6万円</b>（税抜）／空家特例＝<b>800万円以下</b>→上限<b>30万円</b></td></tr><tr><td>保証金</td><td>営業保証金<b>1,000万円・500万円</b>／分担金<b>60万円・30万円</b>／納付・供託は<b>2週間</b>以内</td></tr><tr><td>帳簿・名簿</td><td>帳簿<b>5年</b>（自ら売主の新築住宅<b>10年</b>）閲覧義務なし／従業者名簿<b>10年</b>・閲覧義務あり</td></tr><tr><td>監督処分</td><td>業者＝指示→業務停止（<b>1年以内</b>）→免許取消。指示・業務停止は免許権者に加え<b>業務地の知事も可</b>、免許取消は<b>免許権者のみ</b>／宅建士＝指示→事務禁止（<b>1年以内</b>）→登録消除。指示・事務禁止は<b>業務地の知事も可</b>、登録消除は<b>登録先の知事のみ</b>／停止期間中に営業→<b>必ず免許取消</b></td></tr></table>",
+      "限定10": "<p class=\"pt-note\">権利関係は深追いせず、試験で問われる結論だけを分野ごとに確認します。</p><table class=\"pt-table\"><tr><th>分野</th><th>押さえる結論</th></tr><tr><td>意思表示</td><td>心裡留保＝原則<b>有効</b>（相手が悪意・有過失なら無効）／虚偽表示＝<b>無効</b>／錯誤＝<b>取消し</b>（重過失は原則×）／詐欺・強迫＝<b>取消し</b></td></tr><tr><td>第三者保護</td><td><b>強迫だけ</b>は善意の第三者にも対抗できる。錯誤・詐欺は<b>善意無過失</b>の第三者に対抗できない</td></tr><tr><td>代理</td><td>無権代理＝追認がなければ本人に効力なし（相手方に催告権・取消権）／表見代理は<b>3類型</b></td></tr><tr><td>時効</td><td>取得時効＝善意無過失<b>10年</b>・それ以外<b>20年</b>／不法行為＝<b>3年</b>（生命・身体は<b>5年</b>）・行為の時から<b>20年</b></td></tr><tr><td>物権変動</td><td><b>登記</b>をしなければ第三者に対抗できない</td></tr><tr><td>抵当権</td><td>利息等は満期となった<b>最後の2年分</b>のみ</td></tr><tr><td>連帯債務・保証</td><td>絶対効＝<b>更改・相殺・混同</b>のみ／保証は<b>書面</b>必須／連帯保証に催告・検索の抗弁なし／個人根保証＝<b>極度額</b>必須／元本確定期日＝定め<b>5年</b>まで・なしは<b>3年</b>／事業貸金の保証＝<b>1か月以内の公正証書</b></td></tr><tr><td>借地借家</td><td>普通借地<b>30年</b>（短くても引き上げ）／一般定期<b>50年以上</b>／事業用<b>10年以上50年未満</b>／借家<b>1年未満</b>＝期間の定めなし</td></tr><tr><td>相続</td><td>配偶者と子＝各<b>2分の1</b>／直系尊属<b>3分の1</b>（配偶者3分の2）／兄弟姉妹<b>4分の1</b>（配偶者4分の3）・半血は全血の2分の1／放棄＝知った時から<b>3か月</b>／遺留分＝知った時から<b>1年</b>・開始から<b>10年</b></td></tr><tr><td>区分所有法</td><td>重大変更・規約＝<b>4分の3</b>／建替え＝原則<b>5分の4</b>→客観的事由で<b>4分の3</b>／賃借権＝請求から<b>6か月</b>＋補償金／所在等不明者は<b>裁判所</b>の決定で除外</td></tr></table>",
+      "限定11": "<p class=\"pt-note\">法令上の制限と税を、分野ごとに数字で確認します。</p><table class=\"pt-table\"><tr><th>分野</th><th>押さえる数字・結論</th></tr><tr><td>開発許可</td><td>市街化区域＝<b>1,000㎡未満</b>は不要／市街化調整区域＝<b>面積を問わず</b>必要</td></tr><tr><td>建築基準法</td><td>接道＝<b>4m・2m</b>／建蔽率＝角地<b>＋10%</b>・防火地域内耐火建築物<b>＋10%</b>（両方＋20%）／容積率＝前面道路<b>12m未満</b>なら住居系は幅員×<b>0.4</b>（住居系以外は×0.6）</td></tr><tr><td>農地法</td><td>市街化区域内の届出特例は<b>4条・5条のみ</b>（3条にはない）／相続＝3条の<b>許可不要でも届出は必要</b></td></tr><tr><td>国土法（事後届出）</td><td>契約から<b>2週間</b>以内／市街化区域<b>2,000㎡以上</b>／届出は<b>権利取得者</b>（「共同で届け出る」は誤り）</td></tr><tr><td>広告表示</td><td>徒歩＝道路距離<b>80m＝1分</b>・端数<b>切り上げ</b>／公園等の名称使用＝直線<b>300m以内</b></td></tr><tr><td>税</td><td>取得税＝本則<b>4%</b>・住宅と土地<b>3%</b>／固定資産税＝200㎡以下<b>6分の1</b>・超は<b>3分の1</b>／登録免許税＝本則<b>2%</b>・相続<b>0.4%</b>・住宅売買移転<b>0.3%</b>／<b>3,000万円控除</b>＝所有期間を問わず・<b>軽減税率</b>＝10年超</td></tr></table><p class=\"pt-h\">期限モノ（ひっかけ注意：「令和8年で終了」は誤り）</p><table class=\"pt-table\"><tr><th>期限</th><th>対象</th></tr><tr><td><b>令和9年</b>3月31日まで</td><td>取得税3%／印紙税の軽減／登録免許税0.3%（住宅用家屋の売買移転）</td></tr><tr><td><b>令和11年</b>3月31日まで</td><td>登録免許税：土地売買<b>1.5%</b></td></tr><tr><td><b>令和13年</b>3月31日まで</td><td>認定長期優良住宅の<b>1,300万円</b>控除</td></tr></table>",
+      "限定12": "<p class=\"pt-note\">数字も条文もありません。やることを静かに確認するだけの1枚です。</p><p class=\"pt-h\">前日にやること</p><ul class=\"pt-list\"><li>新しい問題には<b>手を出さない</b>（不安を増やすだけ）。</li><li>最終チェック1枚を、上から下まで<b>1周だけ</b>読み返す。</li><li>持ち物確認：<b>受験票・鉛筆・消しゴム・時計</b>の4つ＋会場までの経路。</li><li>いつもどおりの時間に、いつもどおり眠る。</li></ul><p class=\"pt-h\">当日</p><ul class=\"pt-list\"><li>持っていくのは<b>最終チェック1枚だけ</b>。分厚いテキストは置いていく。</li><li>席についたら1枚をもう一度見返す→深呼吸して開始を待つ。</li></ul><p class=\"pt-h\">解く順番と時間</p><ul class=\"pt-list\"><li><b>業法→法令税・免除科目→権利関係</b>の順（時間のかかる権利関係は最後）。</li><li>1問<b>2分</b>くらいの感覚。わからない問題は飛ばして、あとで戻る。</li><li>見直しの時間ができたら、<b>マークのずれ確認</b>を最優先。</li></ul>"
+    };
+
 
     function scriptParagraphs(text) {
       return text
@@ -632,7 +1420,8 @@
     function showApp() {
       gate.style.display = "none";
       app.style.display = "block";
-      sessionStorage.setItem(storageKey, "1");
+      localStorage.setItem(storageKey, "1");
+      openHashDetails();
     }
 
     function tryUnlock() {
@@ -647,14 +1436,18 @@
     function renderAudioList() {
       const list = document.getElementById("audioList");
       list.innerHTML = audioItems.map(([tag, title, file, ready]) => {
+        const audioId = "audio-" + tag.replace(/[^0-9]/g, "");
         const hasScript = ready && audioScripts[tag];
-        const scriptHtml = hasScript ? `
-          <details class="script-box">
-            <summary>台本を読む（文字で確認したい方向け）</summary>
-            <div class="script-text">${scriptParagraphs(audioScripts[tag]).map(p => `<p>${p}</p>`).join("")}</div>
-          </details>` : "";
+        const hasPoints = ready && audioPoints[tag];
+        const extrasHtml = (hasScript || hasPoints) ? `
+          <div class="ab-tabbar">
+            ${hasScript ? `<button type="button" class="ab-tab" data-panel="panel-script-${audioId}">📖 台本を読む</button>` : ""}
+            ${hasPoints ? `<button type="button" class="ab-tab" data-panel="panel-points-${audioId}">📝 ポイント整理</button>` : ""}
+          </div>
+          ${hasScript ? `<div class="ab-panel" id="panel-script-${audioId}" hidden><div class="script-text">${scriptParagraphs(audioScripts[tag]).map(p => `<p>${p}</p>`).join("")}</div></div>` : ""}
+          ${hasPoints ? `<div class="ab-panel" id="panel-points-${audioId}" hidden>${audioPoints[tag]}</div>` : ""}` : "";
         return `
-        <article class="audio-item">
+        <article class="audio-item" id="${audioId}">
           <div class="audio-head">
             <span class="tag">${tag}</span>
             <div>
@@ -662,10 +1455,26 @@
               <p>${ready ? file : "準備中（順次追加されます）"}</p>
             </div>
           </div>
-          ${ready ? `<audio controls preload="none" src="../6_有料PDF/直前30日パック_受け取りページ/audio/${file}"></audio>` : ""}${scriptHtml}
+          ${ready ? `<audio controls preload="none" src="audio/${file}"></audio>` : ""}${extrasHtml}
         </article>
       `;
       }).join("");
+
+      // タブ：押すと開く／もう一度押すと閉じる。台本とポイント整理はどちらか一方だけ開く。
+      list.addEventListener("click", event => {
+        const tab = event.target.closest(".ab-tab");
+        if (!tab) return;
+        const panel = document.getElementById(tab.dataset.panel);
+        if (!panel) return;
+        const wasOpen = !panel.hidden;
+        const item = tab.closest(".audio-item");
+        item.querySelectorAll(".ab-panel").forEach(p => { p.hidden = true; });
+        item.querySelectorAll(".ab-tab").forEach(t => t.classList.remove("active"));
+        if (!wasOpen) {
+          panel.hidden = false;
+          tab.classList.add("active");
+        }
+      });
     }
 
     button.addEventListener("click", tryUnlock);
@@ -675,9 +1484,26 @@
 
     renderAudioList();
 
-    if (sessionStorage.getItem(storageKey) === "1") {
+    if (localStorage.getItem(storageKey) === "1") {
       showApp();
     }
+
+    // アンカー(#pace-30 / #pace-14 / #audio-01〜12 等)で details 内へ遷移した場合、自動的に開いてスクロールする。
+    // details が見つからない場合（既に開いている・details外の要素）でも、target があれば必ずスクロールする。
+    function openHashDetails() {
+      const hash = location.hash;
+      if (!hash) return;
+      let target;
+      try { target = document.querySelector(hash); } catch (e) { return; }
+      if (!target) return;
+      const details = target.tagName === "DETAILS" ? target : target.querySelector("details");
+      if (details && details.tagName === "DETAILS") {
+        details.open = true;
+      }
+      requestAnimationFrame(() => target.scrollIntoView());
+    }
+    window.addEventListener("load", openHashDetails);
+    window.addEventListener("hashchange", openHashDetails);
   </script>
 </body>
 </html>

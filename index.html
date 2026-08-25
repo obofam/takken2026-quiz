@@ -325,6 +325,12 @@
   .modal button:hover { opacity: .85; }
   .btn-unlock { background: var(--cyan); color: #fff; }
   .btn-cancel { background: var(--gray-pill); color: var(--muted); }
+  .modal .no-pass {
+    display: block; margin-top: 16px; padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: .78rem; color: var(--cyan-dark);
+    text-decoration: underline; text-underline-offset: 2px;
+  }
 
   /* ── QUIZ PAGE ── */
   .quiz-head {
@@ -548,6 +554,10 @@
     margin: 12px 0 4px; color: #fff; font-weight: 800; font-size: .82rem; text-decoration: none;
   }
   .sample-outro-cta:hover { background: var(--cyan-dark); border-color: var(--cyan-dark); }
+  .sample-outro-cta.alt {
+    background: #fff; color: var(--cyan-dark); border-color: var(--cyan);
+  }
+  .sample-outro-cta.alt:hover { background: var(--cyan-soft); border-color: var(--cyan-dark); color: var(--cyan-dark); }
   /* ===== 購入案内アコーディオン ===== */
   .buy-guide { margin-top: 18px; }
   .buy-toggle {
@@ -618,13 +628,13 @@
         <div class="buy-inner">
           この問題集は、各科目の<a href="https://note.com/fond_bison5155/m/m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="buyguide_pdf_inline"><b>総まとめPDF教材</b></a>とセットになっています。教材を入手すると、その科目の<b>解除パスワード</b>が付いてきます。
           <ol class="buy-steps">
-            <li>下の「教材一覧（note）」から、解きたい科目の教材を選ぶ</li>
+            <li>下の「教材一覧」から、解きたい科目の教材を選ぶ</li>
             <li>TOPでその科目を選び、表示されるパスワード欄に入力する</li>
             <li>その科目の全問題が解けるようになります（成績も記録されます）</li>
           </ol>
-          パスワードは<b>科目ごと</b>に分かれています（宅建業法／権利関係／法令・税その他）。
-          <div class="buy-relax">「教材は不要で、問題集だけ解きたい」という方には、この問題集だけを切り出した<a href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" target="_blank" rel="noopener" data-umami-event="buyguide_tantai">単体版（note）</a>があります。3科目ぶんのパスワードが、まとめて付いてきます。</div>
-          <a class="sample-outro-cta" href="https://note.com/fond_bison5155/m/m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="buyguide_cta_note">教材一覧を見てみる（note）</a>
+          パスワードは<b>科目ごと</b>に分かれています（宅建業法／権利関係／法令・税その他／直前対策）。
+          <div class="buy-relax">「教材は不要で、問題集だけ解きたい」という方には、この問題集だけを切り出した<a href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" target="_blank" rel="noopener" data-umami-event="buyguide_tantai">単体版（note）</a>があります。4分野ぶんのパスワードが、まとめて付いてきます。</div>
+          <a class="sample-outro-cta" href="https://takken2026-quiz.vercel.app/kyozai.html" data-umami-event="buyguide_cta_kyozai">教材一覧を見てみる</a>
           <div class="buy-note">無料おためしは登録不要で、いつでも何度でも解けます。</div>
         </div>
       </div>
@@ -685,6 +695,7 @@
       <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
       <button class="btn-unlock" onclick="tryUnlock()">解除</button>
     </div>
+    <a class="no-pass" id="modalNoPass" href="https://takken2026-quiz.vercel.app/kyozai.html" data-umami-event="modal_cta_kyozai">パスワードをお持ちでない方は → 教材一覧へ</a>
   </div>
 </div>
 
@@ -1256,7 +1267,8 @@ function finishSample(total, pct) {
   if (window.umami) umami.track("sample_complete", { pct: pct });
   const fullTotal = SECTIONS.gyouhou.questions.length
     + SECTIONS.kenri.questions.length
-    + SECTIONS.houreizei.questions.length;
+    + SECTIONS.houreizei.questions.length
+    + SECTIONS.chokuzen.questions.length;
   let msg;
   if (pct >= 80) msg = "○ いい手応えですね。この調子で本編へ。";
   else if (pct >= 50) msg = "△ あと少し。解説を読み直すと定着します。";
@@ -1268,10 +1280,10 @@ function finishSample(total, pct) {
       <div class="result-pct">正答率 ${pct}%</div>
       <div class="result-msg">${msg}</div>
       <div style="font-size:.8rem; color:#9db8d6; line-height:1.7; padding:6px 2px 4px; text-align:center">
-        いまの${total}問は、本編（3科目あわせて${fullTotal}問以上）からのピックアップです。<br>
-        間違えた問題だけを繰り返し解けるのが、本編の使い方です。
+        いまの${total}問は、本編（全4分野あわせて${fullTotal}問以上）からのピックアップです。
       </div>
-      <a class="sample-outro-cta" href="https://takken2026-quiz.vercel.app/kyozai.html" target="_blank" rel="noopener" data-umami-event="sample_cta_kyozai">教材一覧を見てみる</a>
+      <a class="sample-outro-cta" href="https://takken2026-quiz.vercel.app/shindan.html" data-umami-event="sample_cta_shindan">6問1分・いまの現在地を診断する</a>
+      <a class="sample-outro-cta alt" href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" target="_blank" rel="noopener" data-umami-event="sample_cta_tantai">この続きを解く（一問一答問題集・980円）</a>
       <div class="result-actions">
         <button class="result-btn secondary" onclick="showTop()">TOPへ</button>
         <button class="result-btn primary" onclick="startSample()">もう${SAMPLE_SIZE}問解く</button>
@@ -1437,6 +1449,9 @@ let currentSection = null;
 function openModal(key) {
   pendingKey = key;
   const title = key === "__knock" ? KNOCK.title : SECTIONS[key].title;
+  // どのカード経由で「教材一覧へ」を押したかをUmamiのevent dataで区別する
+  const noPass = document.getElementById("modalNoPass");
+  if (noPass) noPass.setAttribute("data-umami-event-section", key);
   document.getElementById("modalTitle").textContent = title + " のパスワード";
   document.getElementById("modalInput").value = "";
   document.getElementById("modalError").textContent = "";

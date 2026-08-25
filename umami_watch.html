@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Umamiウォッチ</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 16px 60px;
+    background: #f4f8f9;
+    color: #2b3438;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+  .grid-2 .card { margin-bottom: 0; }
+  header { margin-bottom: 20px; }
+  header h1 { font-size: 22px; margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+  header .meta { font-size: 13px; color: #6b7a80; }
+  .card {
+    background: #ffffff; border-radius: 14px; padding: 18px 20px; margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e7eef0;
+  }
+  .card h2 { font-size: 15px; margin: 0 0 14px; color: #0e7c8b; display: flex; align-items: center; gap: 6px; }
+  .card h2 .sub { font-size: 12px; color: #9aa7ab; font-weight: 400; margin-left: auto; }
+  .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .summary-item { background: #eefaf9; border-radius: 10px; padding: 14px; text-align: center; }
+  .summary-item .label { font-size: 12px; color: #5c6c70; margin-bottom: 6px; }
+  .summary-item .value { font-size: 22px; font-weight: 700; color: #0e7c8b; }
+  .summary-item .sub { font-size: 12px; color: #7c8b8f; margin-top: 4px; }
+  .chart-box { position: relative; height: 260px; }
+  .chart-box.tall { height: 300px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #eef2f3; }
+  th { color: #6b7a80; font-weight: 500; font-size: 12px; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bar-row { display: grid; grid-template-columns: 110px 1fr 70px; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; }
+  .bar-row .name { color: #3d4a4e; }
+  .bar-track { background: #eef4f5; border-radius: 6px; height: 14px; overflow: hidden; }
+  .bar-fill { background: #17a2af; height: 100%; border-radius: 6px; }
+  .bar-row .val { text-align: right; color: #5c6c70; font-variant-numeric: tabular-nums; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .stat-mini { background: #f7fbfb; border-radius: 10px; padding: 12px; text-align: center; }
+  .stat-mini .n { font-size: 20px; font-weight: 700; color: #0e7c8b; }
+  .stat-mini .t { font-size: 11px; color: #7c8b8f; margin-top: 2px; }
+  .note-line { font-size: 13px; color: #5c6c70; background: #f7fbfb; border-radius: 8px; padding: 10px 12px; margin-top: 4px; }
+
+  /* ===== 6ページ並列比較 ===== */
+  .page-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .pcard {
+    border: 1px solid #e2ecee;
+    border-radius: 12px;
+    padding: 14px 14px 12px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+  }
+  .pcard .phead { display: flex; align-items: baseline; gap: 6px; margin-bottom: 2px; }
+  .pcard .pname { font-size: 14px; font-weight: 700; color: #2b3438; }
+  .pcard .ppath { font-size: 11px; color: #a6b2b6; margin-bottom: 10px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .pcard .pnums { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .pcard .pnum { background: #f2fafa; border-radius: 8px; padding: 8px 6px; text-align: center; }
+  .pcard .pnum .n { font-size: 21px; font-weight: 700; color: #0e7c8b; line-height: 1.2; font-variant-numeric: tabular-nums; }
+  .pcard .pnum .t { font-size: 10.5px; color: #7c8b8f; }
+  .pcard .pnum .d { font-size: 11px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .up { color: #128a5f; }
+  .down { color: #b4553f; }
+  .flat { color: #9aa7ab; }
+  .pcard .pextra {
+    background: #fff6e9; border-radius: 8px; padding: 7px 9px; margin-bottom: 10px;
+    font-size: 11.5px; color: #8a6b3a; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px;
+  }
+  .pcard .pextra .v { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .pcard .pev { font-size: 12.5px; color: #4c5b60; border-top: 1px dashed #e2ecee; padding-top: 8px; margin-top: auto; }
+  .pcard .pev div { display: flex; justify-content: space-between; gap: 8px; padding: 1.5px 0; }
+  .pcard .pev .k { color: #6b7a80; }
+  .pcard .pev .v { font-variant-numeric: tabular-nums; font-weight: 600; color: #2b3438; }
+  .pcard .pnote { font-size: 11.5px; color: #8a9498; margin-top: 8px; line-height: 1.5; }
+  .rank { font-size: 11px; color: #ffffff; background: #17a2af; border-radius: 999px; padding: 1px 7px; font-weight: 700; }
+  .rank.g { background: #cbd6d8; color: #5c6c70; }
+
+  details { font-size: 13px; }
+  details summary { cursor: pointer; font-size: 15px; color: #0e7c8b; font-weight: 600; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸ "; }
+  details[open] summary::before { content: "▾ "; }
+  dl { margin: 12px 0 0; }
+  dl dt { font-weight: 600; color: #2b3438; margin-top: 10px; }
+  dl dd { margin: 2px 0 0; color: #5c6c70; }
+  .caution { margin-top: 14px; padding: 10px 12px; background: #fff8ee; border-radius: 8px; font-size: 12.5px; color: #8a6b3a; }
+  .caution li { margin-bottom: 4px; }
+  footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; }
+
+  @media (max-width: 1000px) {
+    .page-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-2 .card { margin-bottom: 16px; }
+  }
+  @media (max-width: 620px) {
+    .page-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>📈 Umamiウォッチ</h1>
+    <div class="meta" id="headerMeta"></div>
+  </header>
+
+  <div class="card">
+    <h2>今週の途中経過<span class="sub" id="sumRange"></span></h2>
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="note-line" id="summaryNote" style="margin-top:12px;"></div>
+  </div>
+
+  <!-- ===== 6ページ並列比較 ===== -->
+  <div class="card">
+    <h2>🔎 6ページ並列比較<span class="sub" id="pcRange"></span></h2>
+    <div class="page-grid" id="pageGrid"></div>
+    <div class="note-line" id="pageGridNote" style="margin-top:14px;"></div>
+  </div>
+
+  <div class="card">
+    <h2>📊 ページ別 先週 vs 今週（Visitors）</h2>
+    <div class="chart-box tall">
+      <canvas id="compareChart"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔀 どこから→どこへ（多い順）<span class="sub" id="routesRange"></span></h2>
+    <table id="routesTable">
+      <thead>
+        <tr><th>出発地</th><th>行き先</th><th style="text-align:right;">回数</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="note-line" id="routesNote" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="card">
+    <h2>週次トレンド（Visitors・Views）</h2>
+    <div class="chart-box">
+      <canvas id="trendChart"></canvas>
+    </div>
+    <div class="note-line" style="margin-top:12px;">
+      月曜の週次レビューで取得した「過去7日」の値。8/7だけ週の途中集計（菱形マーカー）。8/11以降はAPI実測系列（8/11はAPI遡及値・当時のUI記録70/156を置換）。
+    </div>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary>📖 用語ミニ辞典</summary>
+      <dl>
+        <dt>Visitors（人数）</dt>
+        <dd>同じ人が何回訪れても1人としてカウント（日をまたぐと数え直し）</dd>
+        <dt>Visits（訪問回数）</dt>
+        <dd>30分以上間が空くと別カウントになる、1人の訪問セット数</dd>
+        <dt>Views（閲覧回数）</dt>
+        <dd>ページが開かれた回数。1人が複数ページを見ると増える</dd>
+        <dt>直帰率</dt>
+        <dd>1ページだけ見て帰った割合。低いほど中で回遊している</dd>
+        <dt>診断イベントの読み方</dt>
+        <dd>shindan_start=診断開始、shindan_complete=結果表示まで完走、shindan_type_◯◯=判定タイプ（sprout=助走／rebuild=立て直し／stack=積み上げ／finish=仕上げ期）、shindan_cta_◯◯=結果画面の教材ボタンクリック（gyoho=業法／quiz=問題集）</dd>
+        <dt>revisitのbucket</dt>
+        <dd>初回訪問からどれくらい経って戻ってきたか。same_day=当日／d1=1日以上／d7=7日以上／d30plus=30日以上</dd>
+        <dt>おみくじイベント（2026-08-07実装）</dt>
+        <dd>omikuji_draw=おみくじを引いた（プロパティ rank=出た運勢／nth=そのセッションで何回目か／mode=auto は結果直行URL・manual は「引く」を押した／from=URLの ?from= に入れた流入元メモ）、omikuji_again=「もう一度ひく」を押した、omikuji_cta_quiz／omikuji_cta_standfm／omikuji_cta_note=結果画面から各リンクへ。※デプロイ後の分から蓄積されます</dd>
+        <dt>おみくじの結果直行URL</dt>
+        <dd><code>omikuji.html?auto=1</code> で「引く」を飛ばして即結果。<code>&amp;from=richmenu</code> のように流入元も付けられる。mode=auto と manual でCTAクリック率を比べれば、儀式ありと即結果どちらが効くか判定できる</dd>
+      </dl>
+      <ul class="caution">
+        <li>サマリーはAPI実測（2026-08-17から標準）。UIカードはstale値を返すことがあるので参考にしない</li>
+        <li>月をまたぐと、同じ人が別のVisitorsとして数え直されることがある</li>
+        <li>母数がまだ小さいので、週ごとの上下は誤差の範囲であることが多い</li>
+        <li>ローカルテスト（path が /C:/Claude/... のもの）は目視で除外して読む</li>
+      </ul>
+    </details>
+  </div>
+
+  <footer>耳で覚える宅建2026｜内部集計用ダッシュボード</footer>
+</div>
+
+<script>
+// Chart.js を CDN 2系統から順に試す（片方が塞がれている環境でも表は必ず出る）
+function loadChart(cb){
+  const urls = [
+    'https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js'
+  ];
+  let i = 0;
+  (function next(){
+    if (typeof Chart !== 'undefined' || i >= urls.length) return cb();
+    const s = document.createElement('script');
+    s.src = urls[i++];
+    s.onload = cb;
+    s.onerror = next;
+    document.head.appendChild(s);
+  })();
+}
+</script>
+<script>
+<!-- WEEKLY_DATA -->
+const DATA = {
+  updated: "2026-08-24",
+  currentRange: "8/18–8/24（7日間・API実測）",
+  prevRange: "8/11–8/17（7日間・API実測）",
+  summaryNote: "直前対策2,200円（8/24発売）の前夜週＝kyozai.htmlが23→40人・CTAクリック15→34回と倍増点火。全体は小幅減（お盆明けで音声側が+32.7%回復＝注意が音声に戻った週とみる）。滞在2m09s・直帰率25%。※ページ別は8/24午後スナップショット（サマリーは午前取得＝週次ログと同値）。",
+
+  summary: {
+    visitors: { now: 121, prev: 134 },
+    views:    { now: 300, prev: 320 },
+    bounce:   { now: 25,  prev: 21 },
+    duration: { now: "2m09s", prev: "2m37s" },
+    days:     { now: 7, prev: 7 }
+  },
+
+  // 6ページ並列。cur/prevともAPI実測（path=フィルタ）
+  pages: [
+    {
+      key: "tracker", name: "進捗トラッカー", icon: "📊", path: "/takken2026-quiz/tracker.html",
+      visitors: 48, views: 87, prev: { visitors: 60, views: 86 },
+      events: [
+        { k: "progress_toggle（チェック操作）", v: 146 },
+        { k: "revisit（再訪）", v: 67 },
+        { k: "visit_new（初回訪問）", v: 20 },
+        { k: "stand_fm（音声へ）／note図解へ", v: "37 ／ 18" }
+      ],
+      note: "人数は60→48だがチェック操作105→146・stand_fm19→37と中身は濃い＝盆明けで音声へ戻る導線が活発。views87はほぼ維持＝1人あたり閲覧が増加。"
+    },
+    {
+      key: "kyozai", name: "教材一覧", icon: "🗂", path: "/kyozai.html",
+      visitors: 40, views: 61, prev: { visitors: 23, views: 31 },
+      events: [
+        { k: "CTAクリック合計", v: "34（先週15）" },
+        { k: "kyozai_cta_standfm / sample", v: "11 / 9" },
+        { k: "kyozai_flow_open（選び方ナビ・8/21新設）", v: 8 },
+        { k: "cta_kenri3・line_footer3・horei2・set3 2・weekly2・bansou1・gyoho1", v: "—" }
+      ],
+      note: "発売前週に人数23→40・CTA15→34と倍増＝事前点火。kyozai_cta_chokuzen（直前対策）は8/24告知前でベースライン0のまま＝来週の初動計測が本番。2位に浮上。"
+    },
+    {
+      key: "weekly", name: "週1過去問コーナー", icon: "📝", path: "/weekly.html",
+      visitors: 31, views: 39, prev: { visitors: 37, views: 53 },
+      events: [
+        { k: "週1問_回答", v: 56 },
+        { k: "└ 正答率（プロパティ集計）", v: "71.4%（正解40・不正解16）" },
+        { k: "weekly_complete", v: 14 },
+        { k: "weekly_cta_sample / note / episode", v: "3 / 1 / 1" }
+      ],
+      note: "4週目31人（24→41→36→31）で定着継続。正答率70.1%→71.4%と安定。今週分（農地法・H30問22肢1）はcodex追記→検品合格・本番反映済み。"
+    },
+    {
+      key: "quiz", name: "一問一答問題集", icon: "📚", path: "/",
+      visitors: 22, views: 36, prev: { visitors: 28, views: 42 },
+      extra: { label: "うち無料おためし /#sample", visitors: 17, views: 19, prev: { visitors: 25, views: 30 } },
+      events: [
+        { k: "sample_start（おためし着手）", v: 22 },
+        { k: "sample_complete（完走）", v: 29 },
+        { k: "sample_cta_note / cta_kyozai（8/21新設）", v: "3 / 2" },
+        { k: "buyguide_open（購入ガイド）", v: 1 }
+      ],
+      note: "完走29＞着手22＝周回族は健在。購入ガイドは7→1回に沈静化（先週の3冊セット2件との整合の逆＝今週は購入1件）。新CTA sample_cta_kyozaiが早速2回。"
+    },
+    {
+      key: "omikuji", name: "おみくじ", icon: "🎲", path: "/omikuji.html",
+      visitors: 19, views: 22, prev: { visitors: 34, views: 48 },
+      events: [
+        { k: "omikuji_cta_quiz（→問題集おためし）", v: 9 },
+        { k: "omikuji_draw / again", v: "2 / 2" }
+      ],
+      note: "34→19人・cta_quiz26→9＝8月限定メニュー終盤の自然減（Kei裁定8/24＝追加施策なし・9月C枠差し替えは再検討中）。"
+    },
+    {
+      key: "shindan", name: "現在地診断", icon: "🧭", path: "/shindan.html",
+      visitors: 9, views: 12, prev: { visitors: 25, views: 28 },
+      events: [
+        { k: "shindan_start / complete", v: "9 / 11" },
+        { k: "🌱助走 / 🚀仕上げ / 📚積み上げ / 🔄立て直し", v: "3 / 3 / 3 / 2" },
+        { k: "shindan_cta_gyoho（→業法note）", v: 1 }
+      ],
+      note: "配布直後の山（25人）が一巡して9人へ。タイプ分布は4型に分散。仕上げ期→直前対策CTAは8/21実装＝クリック計測は来週から見える。"
+    }
+  ],
+
+  // どこから→どこへ（CTAイベント由来・多い順）
+  routes: [
+    { from: "トラッカー",     to: "音声配信（Stand.fm）",   count: 37, ev: "stand_fm" },
+    { from: "トラッカー",     to: "note図解まとめ",         count: 18, ev: "note_summary" },
+    { from: "教材一覧LP",     to: "音声配信",               count: 11, ev: "kyozai_cta_standfm" },
+    { from: "教材一覧LP",     to: "無料おためし",           count: 9,  ev: "kyozai_cta_sample" },
+    { from: "おみくじ",       to: "問題集おためし",         count: 9,  ev: "omikuji_cta_quiz" },
+    { from: "教材一覧LP",     to: "権利関係PDF",            count: 3,  ev: "kyozai_cta_kenri" },
+    { from: "教材一覧LP",     to: "LINE（フッター）",       count: 3,  ev: "kyozai_cta_line_footer" },
+    { from: "無料おためし",   to: "note置き場",             count: 3,  ev: "sample_cta_note" },
+    { from: "週1過去問",      to: "無料おためし",           count: 3,  ev: "weekly_cta_sample" },
+    { from: "教材一覧LP",     to: "法令税PDF",              count: 2,  ev: "kyozai_cta_horei" },
+    { from: "教材一覧LP",     to: "3冊セット",              count: 2,  ev: "kyozai_cta_set3" },
+    { from: "教材一覧LP",     to: "週1過去問",              count: 2,  ev: "kyozai_cta_weekly" },
+    { from: "無料おためし",   to: "教材一覧LP",             count: 2,  ev: "sample_cta_kyozai" },
+    { from: "購入ガイド",     to: "note",                   count: 2,  ev: "buyguide_cta_note" },
+    { from: "教材一覧LP",     to: "伴走／業法PDF",          count: 2,  ev: "kyozai_cta_bansou / gyoho 各1" },
+    { from: "現在地診断",     to: "業法note",               count: 1,  ev: "shindan_cta_gyoho" }
+  ],
+
+  trend: [
+    { date: "2026-06-22", visitors: 3,  views: 4,   partial: false },
+    { date: "2026-06-29", visitors: 37, views: 71,  partial: false },
+    { date: "2026-07-05", visitors: 44, views: 86,  partial: false },
+    { date: "2026-07-06", visitors: 47, views: 95,  partial: false },
+    { date: "2026-07-13", visitors: 64, views: 125, partial: false },
+    { date: "2026-07-20", visitors: 62, views: 120, partial: false },
+    { date: "2026-07-28", visitors: 59, views: 87,  partial: false },
+    { date: "2026-08-03", visitors: 75, views: 190, partial: false },
+    { date: "2026-08-07", visitors: 105, views: 251, partial: true },
+    { date: "2026-08-11", visitors: 128, views: 313, partial: false },
+    { date: "2026-08-17", visitors: 133, views: 319, partial: false },
+    { date: "2026-08-24", visitors: 121, views: 300, partial: false }
+  ]
+  // ※8/11以降はAPI実測系列。8/24行は午前取得値＝umami_週次ログと同値。
+};
+<!-- /WEEKLY_DATA -->
+
+// ---------- ヘッダー ----------
+document.getElementById('headerMeta').textContent =
+  `データ最終更新日：${DATA.updated}（今週＝${DATA.currentRange} / 比較対象＝${DATA.prevRange}）｜毎週月曜の週次レビューで更新`;
+document.getElementById('sumRange').textContent = DATA.currentRange;
+document.getElementById('pcRange').textContent = `今週 ${DATA.currentRange} ／ 先週 ${DATA.prevRange}`;
+document.getElementById('routesRange').textContent = DATA.currentRange;
+
+// ---------- 共通：増減表示 ----------
+function delta(now, prev) {
+  if (prev === null || prev === undefined) return { cls: 'flat', text: '新設' };
+  if (prev === 0) return { cls: 'flat', text: '—' };
+  const diff = now - prev;
+  const pct = Math.round(diff / prev * 100);
+  if (diff === 0) return { cls: 'flat', text: '±0' };
+  return { cls: diff > 0 ? 'up' : 'down', text: `${diff > 0 ? '▲' : '▼'}${Math.abs(diff)}（${pct > 0 ? '+' : ''}${pct}%）` };
+}
+
+// ---------- サマリー ----------
+const s = DATA.summary;
+const dv = delta(s.visitors.now, s.visitors.prev);
+const dw = delta(s.views.now, s.views.prev);
+const perDayNow = (s.visitors.now / s.days.now).toFixed(1);
+const perDayPrev = (s.visitors.prev / s.days.prev).toFixed(1);
+document.getElementById('summaryGrid').innerHTML = `
+  <div class="summary-item">
+    <div class="label">Visitors（人数）</div>
+    <div class="value">${s.visitors.now}</div>
+    <div class="sub ${dv.cls}">先週${s.visitors.prev} → ${dv.text}</div>
+  </div>
+  <div class="summary-item">
+    <div class="label">Views（閲覧回数）</div>
+    <div class="value">${s.views.now}</div>
+    <div class="sub ${dw.cls}">先週${s.views.prev} → ${dw.text}</div>
+  </div>
+  <div class="summary-item">
+    <div class="label">1日あたりVisitors</div>
+    <div class="value">${perDayNow}</div>
+    <div class="sub up">先週${perDayPrev} → 約${(perDayNow / perDayPrev).toFixed(1)}倍</div>
+  </div>
+  <div class="summary-item">
+    <div class="label">直帰率</div>
+    <div class="value">${s.bounce.now}%</div>
+    <div class="sub up">先週${s.bounce.prev}% → 改善</div>
+  </div>
+`;
+document.getElementById('summaryNote').textContent =
+  DATA.summaryNote || `滞在時間は${s.duration.now}。直帰率${s.bounce.prev}%→${s.bounce.now}%。`;
+
+// ---------- 6ページ並列 ----------
+const rankOrder = [...DATA.pages].sort((a, b) => b.visitors - a.visitors).map(p => p.key);
+document.getElementById('pageGrid').innerHTML = DATA.pages.map(p => {
+  const dvv = delta(p.visitors, p.prev ? p.prev.visitors : null);
+  const dww = delta(p.views, p.prev ? p.prev.views : null);
+  const rank = rankOrder.indexOf(p.key) + 1;
+  const evHtml = p.events.length
+    ? p.events.map(e => `<div><span class="k">${e.k}</span><span class="v">${e.v}</span></div>`).join('')
+    : `<div><span class="k">カスタムイベント</span><span class="v">なし</span></div>`;
+  return `
+    <div class="pcard">
+      <div class="phead">
+        <span class="rank ${rank <= 3 ? '' : 'g'}">${rank}位</span>
+        <span class="pname">${p.icon} ${p.name}</span>
+      </div>
+      <div class="ppath">${p.path}</div>
+      <div class="pnums">
+        <div class="pnum">
+          <div class="n">${p.visitors}</div>
+          <div class="t">Visitors</div>
+          <div class="d ${dvv.cls}">${dvv.text}</div>
+        </div>
+        <div class="pnum">
+          <div class="n">${p.views}</div>
+          <div class="t">Views</div>
+          <div class="d ${dww.cls}">${dww.text}</div>
+        </div>
+      </div>
+      ${p.extra ? `<div class="pextra">
+        <span class="k">${p.extra.label}</span>
+        <span class="v">${p.extra.visitors}人 / ${p.extra.views}view</span>
+        <span class="d ${delta(p.extra.visitors, p.extra.prev.visitors).cls}">${delta(p.extra.visitors, p.extra.prev.visitors).text}</span>
+      </div>` : ''}
+      <div class="pev">${evHtml}</div>
+      <div class="pnote">${p.note}</div>
+    </div>
+  `;
+}).join('');
+document.getElementById('pageGridNote').textContent =
+  '順位は今週のVisitors順。増減は先週（8/4–8/10・7日間）との同条件比較。';
+
+// ---------- どこから→どこへ（多い順） ----------
+const sortedRoutes = [...DATA.routes].sort((a, b) => b.count - a.count);
+document.querySelector('#routesTable tbody').innerHTML = sortedRoutes.map(r => `
+  <tr>
+    <td>${r.from}</td>
+    <td>${r.to}<br><span style="font-size:11px;color:#9aa7ab;">${r.ev}</span></td>
+    <td class="num">${r.count}</td>
+  </tr>
+`).join('');
+document.getElementById('routesNote').textContent =
+  `合計${sortedRoutes.reduce((a, r) => a + r.count, 0)}回。上位は「おみくじ→問題集おためし」「トラッカー→note図解」「トラッカー→音声」＝おみくじが問題集への新しい入口に。`;
+
+// ---------- ここから下はグラフ（Chart.jsが読めない環境では表だけ表示される） ----------
+loadChart(function () {
+if (typeof Chart === 'undefined') {
+  document.querySelectorAll('.chart-box').forEach(el => {
+    el.innerHTML = '<div class="note-line">グラフの読み込みに失敗しました（オフライン等）。数値は上の表をご覧ください。</div>';
+    el.style.height = 'auto';
+  });
+  return;
+}
+
+// ---------- ページ別 先週 vs 今週 ----------
+const cmpPages = [...DATA.pages].sort((a, b) => b.visitors - a.visitors);
+const cmpRows = [];
+cmpPages.forEach(p => {
+  cmpRows.push({ name: p.name, now: p.visitors, prev: p.prev ? p.prev.visitors : 0 });
+  if (p.extra) cmpRows.push({ name: '└無料おためし', now: p.extra.visitors, prev: p.extra.prev.visitors });
+});
+new Chart(document.getElementById('compareChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: cmpRows.map(r => r.name),
+    datasets: [
+      {
+        label: `先週（${DATA.prevRange}）`,
+        data: cmpRows.map(r => r.prev),
+        backgroundColor: '#cbd6d8'
+      },
+      {
+        label: `今週（${DATA.currentRange}）`,
+        data: cmpRows.map(r => r.now),
+        backgroundColor: '#17a2af'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+    scales: {
+      x: { ticks: { font: { size: 10 }, maxRotation: 30, minRotation: 0 } },
+      y: { beginAtZero: true, ticks: { font: { size: 11 } }, title: { display: true, text: 'Visitors', font: { size: 11 } } }
+    }
+  }
+});
+
+// ---------- 週次トレンド ----------
+const tctx = document.getElementById('trendChart').getContext('2d');
+new Chart(tctx, {
+  type: 'line',
+  data: {
+    labels: DATA.trend.map(d => d.date.slice(5).replace('-', '/')),
+    datasets: [
+      {
+        label: 'Visitors（人数）',
+        data: DATA.trend.map(d => d.visitors),
+        borderColor: '#17a2af',
+        backgroundColor: 'rgba(23,162,175,0.12)',
+        tension: 0.3, fill: true,
+        pointRadius: DATA.trend.map(d => d.partial ? 6 : 3),
+        pointStyle: DATA.trend.map(d => d.partial ? 'rectRot' : 'circle')
+      },
+      {
+        label: 'Views（閲覧回数）',
+        data: DATA.trend.map(d => d.views),
+        borderColor: '#c9d3d5',
+        backgroundColor: 'rgba(150,160,163,0.08)',
+        tension: 0.3, fill: true,
+        pointRadius: DATA.trend.map(d => d.partial ? 6 : 3),
+        pointStyle: DATA.trend.map(d => d.partial ? 'rectRot' : 'circle'),
+        borderDash: [4, 3]
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          afterLabel: (c) => DATA.trend[c.dataIndex].partial ? '※週の途中（8/3–8/7）' : ''
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { font: { size: 11 } } },
+      y: { beginAtZero: true, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+});
+</script>
+</body>
+</html>
