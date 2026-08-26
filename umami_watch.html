@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
 <title>Umamiウォッチ</title>
 <style>
   :root { color-scheme: light; }
@@ -99,6 +100,29 @@
   .caution li { margin-bottom: 4px; }
   footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; }
 
+  /* ===== Live操作パネル ===== */
+  .live-badge {
+    font-size: 11px; background: #17a2af; color: #fff; border-radius: 999px;
+    padding: 2px 9px; vertical-align: middle; font-weight: 600; letter-spacing: .04em;
+  }
+  header .controls { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .period-switch { display: inline-flex; border: 1px solid #cfe0e2; border-radius: 8px; overflow: hidden; }
+  .period-switch button {
+    border: none; background: #fff; color: #5c6c70; font-size: 12.5px; padding: 6px 12px; cursor: pointer;
+    font-family: inherit;
+  }
+  .period-switch button + button { border-left: 1px solid #e2ecee; }
+  .period-switch button.active { background: #17a2af; color: #fff; }
+  .period-switch button:not(.active):hover { background: #eefaf9; }
+  #refreshBtn {
+    border: 1px solid #17a2af; background: #fff; color: #0e7c8b; font-size: 12.5px;
+    padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: inherit;
+  }
+  #refreshBtn:hover { background: #eefaf9; }
+  #refreshBtn:disabled { opacity: .5; cursor: default; }
+  #lastFetched { font-size: 12px; color: #7c8b8f; }
+  .fetch-fail { font-size: 13px; color: #b4553f; background: #fdf1ee; border-radius: 8px; padding: 10px 12px; }
+
   @media (max-width: 1000px) {
     .page-grid { grid-template-columns: repeat(2, 1fr); }
   }
@@ -116,8 +140,17 @@
 <div class="wrap">
 
   <header>
-    <h1>📈 Umamiウォッチ</h1>
-    <div class="meta" id="headerMeta"></div>
+    <h1>📈 Umamiウォッチ <span class="live-badge">LIVE</span></h1>
+    <div class="meta" id="headerMeta">データ取得中…</div>
+    <div class="controls">
+      <div class="period-switch">
+        <button data-days="7" class="active">直近7日</button>
+        <button data-days="14">直近14日</button>
+        <button data-days="30">直近30日</button>
+      </div>
+      <button id="refreshBtn">🔄 更新</button>
+      <span class="meta" id="lastFetched"></span>
+    </div>
   </header>
 
   <div class="card">
@@ -128,7 +161,7 @@
 
   <!-- ===== 6ページ並列比較 ===== -->
   <div class="card">
-    <h2>🔎 6ページ並列比較<span class="sub" id="pcRange"></span></h2>
+    <h2>🔎 7ページ並列比較<span class="sub" id="pcRange"></span></h2>
     <div class="page-grid" id="pageGrid"></div>
     <div class="note-line" id="pageGridNote" style="margin-top:14px;"></div>
   </div>
@@ -213,328 +246,462 @@ function loadChart(cb){
 }
 </script>
 <script>
-<!-- WEEKLY_DATA -->
-<!-- ⚠️次回更新チェックリスト（2026-08-26仕込み分）
-  1. 7枚目カード「メインHP」(mimiobo.vercel.app / path=なし・hostname=mimiobo.vercel.app で分離) を追加
-     見るイベント: home_cta_line(+bottom) / home_share / home_cta_kyozai / home_cta_shindan / home_mat_chokuzen / home_tokushoho
-  2. 新イベント: modal_cta_kyozai(section別data付き) / buyguide_cta_kyozai / tracker_cta_kyozai
-  3. buyguide_cta_note は8/26に廃止→0が正常（死亡と誤読しない）
-  4. プロフ貼り替え後は utm_source (x_prof/ig_prof/yt_prof/note_prof/standfm/line) 別の流入を見る
-  5. kyozai_cta_chokuzen 初動（8/24発売、ベースライン0から）
--->
-const DATA = {
-  updated: "2026-08-24",
-  currentRange: "8/18–8/24（7日間・API実測）",
-  prevRange: "8/11–8/17（7日間・API実測）",
-  summaryNote: "直前対策2,200円（8/24発売）の前夜週＝kyozai.htmlが23→40人・CTAクリック15→34回と倍増点火。全体は小幅減（お盆明けで音声側が+32.7%回復＝注意が音声に戻った週とみる）。滞在2m09s・直帰率25%。※ページ別は8/24午後スナップショット（サマリーは午前取得＝週次ログと同値）。",
+/* ===================================================================
+   Live版2026-08-26: Share URL方式で自動取得。SLUG変更時はスクリプト内定数(SHARE_ID)を差し替え
+   =================================================================== */
 
-  summary: {
-    visitors: { now: 121, prev: 134 },
-    views:    { now: 300, prev: 320 },
-    bounce:   { now: 25,  prev: 21 },
-    duration: { now: "2m09s", prev: "2m37s" },
-    days:     { now: 7, prev: 7 }
-  },
+const SHARE_ID        = 'AnWP6Ox8wWRpOqY1';
+const WEBSITE_ID      = '99a5370c-5fbd-4ceb-9d35-7734d7c580ec';
+const TOKEN_URL       = `https://cloud.umami.is/analytics/us/api/share/${SHARE_ID}`;
+const API_BASE        = `https://gateway-us.umami.is/api/websites/${WEBSITE_ID}`;
+const AUTO_NOTE       = '（自動取得モード：コメントは月曜レビューで記入）';
+const FETCH_FAIL_NOTE = '取得失敗・再読み込みしてね';
 
-  // 6ページ並列。cur/prevともAPI実測（path=フィルタ）
-  pages: [
-    {
-      key: "tracker", name: "進捗トラッカー", icon: "📊", path: "/takken2026-quiz/tracker.html",
-      visitors: 48, views: 87, prev: { visitors: 60, views: 86 },
-      events: [
-        { k: "progress_toggle（チェック操作）", v: 146 },
-        { k: "revisit（再訪）", v: 67 },
-        { k: "visit_new（初回訪問）", v: 20 },
-        { k: "stand_fm（音声へ）／note図解へ", v: "37 ／ 18" }
-      ],
-      note: "人数は60→48だがチェック操作105→146・stand_fm19→37と中身は濃い＝盆明けで音声へ戻る導線が活発。views87はほぼ維持＝1人あたり閲覧が増加。"
-    },
-    {
-      key: "kyozai", name: "教材一覧", icon: "🗂", path: "/kyozai.html",
-      visitors: 40, views: 61, prev: { visitors: 23, views: 31 },
-      events: [
-        { k: "CTAクリック合計", v: "34（先週15）" },
-        { k: "kyozai_cta_standfm / sample", v: "11 / 9" },
-        { k: "kyozai_flow_open（選び方ナビ・8/21新設）", v: 8 },
-        { k: "cta_kenri3・line_footer3・horei2・set3 2・weekly2・bansou1・gyoho1", v: "—" }
-      ],
-      note: "発売前週に人数23→40・CTA15→34と倍増＝事前点火。kyozai_cta_chokuzen（直前対策）は8/24告知前でベースライン0のまま＝来週の初動計測が本番。2位に浮上。"
-    },
-    {
-      key: "weekly", name: "週1過去問コーナー", icon: "📝", path: "/weekly.html",
-      visitors: 31, views: 39, prev: { visitors: 37, views: 53 },
-      events: [
-        { k: "週1問_回答", v: 56 },
-        { k: "└ 正答率（プロパティ集計）", v: "71.4%（正解40・不正解16）" },
-        { k: "weekly_complete", v: 14 },
-        { k: "weekly_cta_sample / note / episode", v: "3 / 1 / 1" }
-      ],
-      note: "4週目31人（24→41→36→31）で定着継続。正答率70.1%→71.4%と安定。今週分（農地法・H30問22肢1）はcodex追記→検品合格・本番反映済み。"
-    },
-    {
-      key: "quiz", name: "一問一答問題集", icon: "📚", path: "/",
-      visitors: 22, views: 36, prev: { visitors: 28, views: 42 },
-      extra: { label: "うち無料おためし /#sample", visitors: 17, views: 19, prev: { visitors: 25, views: 30 } },
-      events: [
-        { k: "sample_start（おためし着手）", v: 22 },
-        { k: "sample_complete（完走）", v: 29 },
-        { k: "sample_cta_note / cta_kyozai（8/21新設）", v: "3 / 2" },
-        { k: "buyguide_open（購入ガイド）", v: 1 }
-      ],
-      note: "完走29＞着手22＝周回族は健在。購入ガイドは7→1回に沈静化（先週の3冊セット2件との整合の逆＝今週は購入1件）。新CTA sample_cta_kyozaiが早速2回。"
-    },
-    {
-      key: "omikuji", name: "おみくじ", icon: "🎲", path: "/omikuji.html",
-      visitors: 19, views: 22, prev: { visitors: 34, views: 48 },
-      events: [
-        { k: "omikuji_cta_quiz（→問題集おためし）", v: 9 },
-        { k: "omikuji_draw / again", v: "2 / 2" }
-      ],
-      note: "34→19人・cta_quiz26→9＝8月限定メニュー終盤の自然減（Kei裁定8/24＝追加施策なし・9月C枠差し替えは再検討中）。"
-    },
-    {
-      key: "shindan", name: "現在地診断", icon: "🧭", path: "/shindan.html",
-      visitors: 9, views: 12, prev: { visitors: 25, views: 28 },
-      events: [
-        { k: "shindan_start / complete", v: "9 / 11" },
-        { k: "🌱助走 / 🚀仕上げ / 📚積み上げ / 🔄立て直し", v: "3 / 3 / 3 / 2" },
-        { k: "shindan_cta_gyoho（→業法note）", v: 1 }
-      ],
-      note: "配布直後の山（25人）が一巡して9人へ。タイプ分布は4型に分散。仕上げ期→直前対策CTAは8/21実装＝クリック計測は来週から見える。"
-    }
-  ],
+// 7ページ定義（構造は固定。人数/回数はfetch、イベントは接頭辞で振り分け）
+const PAGE_DEFS = [
+  { key: "tracker", name: "進捗トラッカー", icon: "📊", path: "/takken2026-quiz/tracker.html",
+    prefixes: ["tracker_", "progress_toggle", "revisit", "stand_fm", "note_summary"] },
+  { key: "kyozai", name: "教材一覧", icon: "🗂", path: "/kyozai.html",
+    prefixes: ["kyozai_"] },
+  { key: "weekly", name: "週1過去問コーナー", icon: "📝", path: "/weekly.html",
+    prefixes: ["weekly_", "週1問_回答"] },
+  { key: "quiz", name: "一問一答問題集", icon: "📚", path: "/",
+    prefixes: ["sample_", "buyguide_", "modal_", "knock_"],
+    extraPath: "/#sample", extraLabel: "うち無料おためし /#sample" },
+  { key: "omikuji", name: "おみくじ", icon: "🎲", path: "/omikuji.html",
+    prefixes: ["omikuji_"] },
+  { key: "shindan", name: "現在地診断", icon: "🧭", path: "/shindan.html",
+    prefixes: ["shindan_"] },
+  { key: "home", name: "メインHP", icon: "🏠", hostname: "mimiobo.vercel.app",
+    prefixes: ["home_"] }
+];
 
-  // どこから→どこへ（CTAイベント由来・多い順）
-  routes: [
-    { from: "トラッカー",     to: "音声配信（Stand.fm）",   count: 37, ev: "stand_fm" },
-    { from: "トラッカー",     to: "note図解まとめ",         count: 18, ev: "note_summary" },
-    { from: "教材一覧LP",     to: "音声配信",               count: 11, ev: "kyozai_cta_standfm" },
-    { from: "教材一覧LP",     to: "無料おためし",           count: 9,  ev: "kyozai_cta_sample" },
-    { from: "おみくじ",       to: "問題集おためし",         count: 9,  ev: "omikuji_cta_quiz" },
-    { from: "教材一覧LP",     to: "権利関係PDF",            count: 3,  ev: "kyozai_cta_kenri" },
-    { from: "教材一覧LP",     to: "LINE（フッター）",       count: 3,  ev: "kyozai_cta_line_footer" },
-    { from: "無料おためし",   to: "note置き場",             count: 3,  ev: "sample_cta_note" },
-    { from: "週1過去問",      to: "無料おためし",           count: 3,  ev: "weekly_cta_sample" },
-    { from: "教材一覧LP",     to: "法令税PDF",              count: 2,  ev: "kyozai_cta_horei" },
-    { from: "教材一覧LP",     to: "3冊セット",              count: 2,  ev: "kyozai_cta_set3" },
-    { from: "教材一覧LP",     to: "週1過去問",              count: 2,  ev: "kyozai_cta_weekly" },
-    { from: "無料おためし",   to: "教材一覧LP",             count: 2,  ev: "sample_cta_kyozai" },
-    { from: "購入ガイド",     to: "note",                   count: 2,  ev: "buyguide_cta_note" },
-    { from: "教材一覧LP",     to: "伴走／業法PDF",          count: 2,  ev: "kyozai_cta_bansou / gyoho 各1" },
-    { from: "現在地診断",     to: "業法note",               count: 1,  ev: "shindan_cta_gyoho" }
-  ],
+// どこから→どこへ（構造＝from/to/evは固定。件数はイベント実測から都度引き当て）
+const ROUTE_DEFS = [
+  { from: "トラッカー",   to: "音声配信（Stand.fm）", ev: "stand_fm" },
+  { from: "トラッカー",   to: "note図解まとめ",       ev: "note_summary" },
+  { from: "トラッカー",   to: "教材一覧LP",           ev: "tracker_cta_kyozai" },
+  { from: "教材一覧LP",   to: "音声配信",             ev: "kyozai_cta_standfm" },
+  { from: "教材一覧LP",   to: "無料おためし",         ev: "kyozai_cta_sample" },
+  { from: "教材一覧LP",   to: "直前対策PDF",          ev: "kyozai_cta_chokuzen" },
+  { from: "おみくじ",     to: "問題集おためし",       ev: "omikuji_cta_quiz" },
+  { from: "教材一覧LP",   to: "権利関係PDF",          ev: "kyozai_cta_kenri" },
+  { from: "教材一覧LP",   to: "LINE（フッター）",     ev: "kyozai_cta_line_footer" },
+  { from: "無料おためし", to: "note置き場",           ev: "sample_cta_note" },
+  { from: "週1過去問",    to: "無料おためし",         ev: "weekly_cta_sample" },
+  { from: "教材一覧LP",   to: "法令税PDF",            ev: "kyozai_cta_horei" },
+  { from: "教材一覧LP",   to: "3冊セット",            ev: "kyozai_cta_set3" },
+  { from: "教材一覧LP",   to: "週1過去問",            ev: "kyozai_cta_weekly" },
+  { from: "無料おためし", to: "教材一覧LP",           ev: "sample_cta_kyozai" },
+  { from: "モーダル",     to: "教材一覧LP",           ev: "modal_cta_kyozai" },
+  { from: "購入ガイド",   to: "教材一覧LP",           ev: "buyguide_cta_kyozai" },
+  { from: "購入ガイド",   to: "note",                 ev: "buyguide_cta_note" },
+  { from: "教材一覧LP",   to: "伴走PDF",              ev: "kyozai_cta_bansou" },
+  { from: "教材一覧LP",   to: "業法PDF",              ev: "kyozai_cta_gyoho" },
+  { from: "現在地診断",   to: "業法note",             ev: "shindan_cta_gyoho" }
+];
 
-  trend: [
-    { date: "2026-06-22", visitors: 3,  views: 4,   partial: false },
-    { date: "2026-06-29", visitors: 37, views: 71,  partial: false },
-    { date: "2026-07-05", visitors: 44, views: 86,  partial: false },
-    { date: "2026-07-06", visitors: 47, views: 95,  partial: false },
-    { date: "2026-07-13", visitors: 64, views: 125, partial: false },
-    { date: "2026-07-20", visitors: 62, views: 120, partial: false },
-    { date: "2026-07-28", visitors: 59, views: 87,  partial: false },
-    { date: "2026-08-03", visitors: 75, views: 190, partial: false },
-    { date: "2026-08-07", visitors: 105, views: 251, partial: true },
-    { date: "2026-08-11", visitors: 128, views: 313, partial: false },
-    { date: "2026-08-17", visitors: 133, views: 319, partial: false },
-    { date: "2026-08-24", visitors: 121, views: 300, partial: false }
-  ]
-  // ※8/11以降はAPI実測系列。8/24行は午前取得値＝umami_週次ログと同値。
-};
-<!-- /WEEKLY_DATA -->
+// 週次トレンド（歴史部分・手動集計のまま固定表示。新しい週は月曜レビューで1行手で足す運用を継続）
+const STATIC_TREND = [
+  { date: "2026-06-22", visitors: 3,  views: 4,   partial: false },
+  { date: "2026-06-29", visitors: 37, views: 71,  partial: false },
+  { date: "2026-07-05", visitors: 44, views: 86,  partial: false },
+  { date: "2026-07-06", visitors: 47, views: 95,  partial: false },
+  { date: "2026-07-13", visitors: 64, views: 125, partial: false },
+  { date: "2026-07-20", visitors: 62, views: 120, partial: false },
+  { date: "2026-07-28", visitors: 59, views: 87,  partial: false },
+  { date: "2026-08-03", visitors: 75, views: 190, partial: false },
+  { date: "2026-08-07", visitors: 105, views: 251, partial: true },
+  { date: "2026-08-11", visitors: 128, views: 313, partial: false },
+  { date: "2026-08-17", visitors: 133, views: 319, partial: false },
+  { date: "2026-08-24", visitors: 121, views: 300, partial: false }
+  // ※8/11以降はAPI実測系列。8/24行は午前取得値＝umami_週次ログと同値。この推移表は歴史記録として固定。
+];
 
-// ---------- ヘッダー ----------
-document.getElementById('headerMeta').textContent =
-  `データ最終更新日：${DATA.updated}（今週＝${DATA.currentRange} / 比較対象＝${DATA.prevRange}）｜毎週月曜の週次レビューで更新`;
-document.getElementById('sumRange').textContent = DATA.currentRange;
-document.getElementById('pcRange').textContent = `今週 ${DATA.currentRange} ／ 先週 ${DATA.prevRange}`;
-document.getElementById('routesRange').textContent = DATA.currentRange;
+let currentDays = 7;
+let cachedToken = null;
+let compareChartInstance = null;
+let trendChartInstance = null;
 
-// ---------- 共通：増減表示 ----------
+// ---------- 共通ユーティリティ ----------
+function fmtMD(d) { return `${d.getMonth() + 1}/${d.getDate()}`; }
+function periodLabel(days, endMs) {
+  const end = new Date(endMs);
+  const start = new Date(endMs - (days - 1) * 86400000);
+  return `${fmtMD(start)}–${fmtMD(end)}（${days}日間・API実測）`;
+}
+function fmtDuration(sec) {
+  if (!isFinite(sec) || sec <= 0) return '0m00s';
+  const m = Math.floor(sec / 60), s = Math.round(sec % 60);
+  return `${m}m${String(s).padStart(2, '0')}s`;
+}
+function pctOf(part, total) { return total > 0 ? Math.round(part / total * 100) : 0; }
 function delta(now, prev) {
   if (prev === null || prev === undefined) return { cls: 'flat', text: '新設' };
   if (prev === 0) return { cls: 'flat', text: '—' };
   const diff = now - prev;
-  const pct = Math.round(diff / prev * 100);
+  const p = Math.round(diff / prev * 100);
   if (diff === 0) return { cls: 'flat', text: '±0' };
-  return { cls: diff > 0 ? 'up' : 'down', text: `${diff > 0 ? '▲' : '▼'}${Math.abs(diff)}（${pct > 0 ? '+' : ''}${pct}%）` };
+  return { cls: diff > 0 ? 'up' : 'down', text: `${diff > 0 ? '▲' : '▼'}${Math.abs(diff)}（${p > 0 ? '+' : ''}${p}%）` };
 }
 
-// ---------- サマリー ----------
-const s = DATA.summary;
-const dv = delta(s.visitors.now, s.visitors.prev);
-const dw = delta(s.views.now, s.views.prev);
-const perDayNow = (s.visitors.now / s.days.now).toFixed(1);
-const perDayPrev = (s.visitors.prev / s.days.prev).toFixed(1);
-document.getElementById('summaryGrid').innerHTML = `
-  <div class="summary-item">
-    <div class="label">Visitors（人数）</div>
-    <div class="value">${s.visitors.now}</div>
-    <div class="sub ${dv.cls}">先週${s.visitors.prev} → ${dv.text}</div>
-  </div>
-  <div class="summary-item">
-    <div class="label">Views（閲覧回数）</div>
-    <div class="value">${s.views.now}</div>
-    <div class="sub ${dw.cls}">先週${s.views.prev} → ${dw.text}</div>
-  </div>
-  <div class="summary-item">
-    <div class="label">1日あたりVisitors</div>
-    <div class="value">${perDayNow}</div>
-    <div class="sub up">先週${perDayPrev} → 約${(perDayNow / perDayPrev).toFixed(1)}倍</div>
-  </div>
-  <div class="summary-item">
-    <div class="label">直帰率</div>
-    <div class="value">${s.bounce.now}%</div>
-    <div class="sub up">先週${s.bounce.prev}% → 改善</div>
-  </div>
-`;
-document.getElementById('summaryNote').textContent =
-  DATA.summaryNote || `滞在時間は${s.duration.now}。直帰率${s.bounce.prev}%→${s.bounce.now}%。`;
+// ---------- Umami API ----------
+async function getShareToken() {
+  if (cachedToken) return cachedToken;
+  const res = await fetch(TOKEN_URL);
+  if (!res.ok) throw new Error('share token取得失敗: ' + res.status);
+  const json = await res.json();
+  if (!json.token) throw new Error('share tokenがレスポンスに無い');
+  cachedToken = json.token;
+  return cachedToken;
+}
+async function apiGet(path, params) {
+  const token = await getShareToken();
+  const qs = new URLSearchParams(params).toString();
+  const res = await fetch(`${API_BASE}${path}?${qs}`, {
+    headers: {
+      'x-umami-share-token': token,
+      'x-umami-share-context': SHARE_ID
+    }
+  });
+  if (!res.ok) throw new Error(`API ${path} 失敗: ${res.status}`);
+  return res.json();
+}
+function matchesPrefixes(name, prefixes) {
+  return prefixes.some(p => name === p || name.startsWith(p));
+}
+function topEventsFor(prefixes, eventList, n) {
+  return eventList
+    .filter(e => matchesPrefixes(e.x, prefixes))
+    .sort((a, b) => b.y - a.y)
+    .slice(0, n)
+    .map(e => ({ k: e.x, v: e.y }));
+}
 
-// ---------- 6ページ並列 ----------
-const rankOrder = [...DATA.pages].sort((a, b) => b.visitors - a.visitors).map(p => p.key);
-document.getElementById('pageGrid').innerHTML = DATA.pages.map(p => {
-  const dvv = delta(p.visitors, p.prev ? p.prev.visitors : null);
-  const dww = delta(p.views, p.prev ? p.prev.views : null);
-  const rank = rankOrder.indexOf(p.key) + 1;
-  const evHtml = p.events.length
-    ? p.events.map(e => `<div><span class="k">${e.k}</span><span class="v">${e.v}</span></div>`).join('')
-    : `<div><span class="k">カスタムイベント</span><span class="v">なし</span></div>`;
-  return `
-    <div class="pcard">
-      <div class="phead">
-        <span class="rank ${rank <= 3 ? '' : 'g'}">${rank}位</span>
-        <span class="pname">${p.icon} ${p.name}</span>
-      </div>
-      <div class="ppath">${p.path}</div>
-      <div class="pnums">
-        <div class="pnum">
-          <div class="n">${p.visitors}</div>
-          <div class="t">Visitors</div>
-          <div class="d ${dvv.cls}">${dvv.text}</div>
-        </div>
-        <div class="pnum">
-          <div class="n">${p.views}</div>
-          <div class="t">Views</div>
-          <div class="d ${dww.cls}">${dww.text}</div>
-        </div>
-      </div>
-      ${p.extra ? `<div class="pextra">
-        <span class="k">${p.extra.label}</span>
-        <span class="v">${p.extra.visitors}人 / ${p.extra.views}view</span>
-        <span class="d ${delta(p.extra.visitors, p.extra.prev.visitors).cls}">${delta(p.extra.visitors, p.extra.prev.visitors).text}</span>
-      </div>` : ''}
-      <div class="pev">${evHtml}</div>
-      <div class="pnote">${p.note}</div>
+// ---------- メイン取得フロー ----------
+async function loadAll(days) {
+  currentDays = days;
+  setStatusLoading();
+
+  const now = Date.now();
+  const curStart = now - days * 86400000;
+
+  try {
+    await getShareToken(); // 以降のapiGetでトークン再取得が走らないよう先に確定させる
+
+    const [overall, eventsCur] = await Promise.all([
+      apiGet('/stats', { startAt: curStart, endAt: now }),
+      apiGet('/metrics', { startAt: curStart, endAt: now, type: 'event', limit: 100 })
+    ]);
+
+    const pages = await Promise.all(PAGE_DEFS.map(async def => {
+      try {
+        const filterParams = def.hostname
+          ? { startAt: curStart, endAt: now, hostname: def.hostname }
+          : { startAt: curStart, endAt: now, path: def.path };
+        const stat = await apiGet('/stats', filterParams);
+
+        let extra = null;
+        if (def.extraPath) {
+          try {
+            const exStat = await apiGet('/stats', { startAt: curStart, endAt: now, path: def.extraPath });
+            extra = {
+              label: def.extraLabel,
+              visitors: exStat.visitors, views: exStat.pageviews,
+              prev: { visitors: exStat.comparison.visitors, views: exStat.comparison.pageviews }
+            };
+          } catch (e) { extra = null; }
+        }
+
+        return {
+          key: def.key, name: def.name, icon: def.icon, path: def.path || def.hostname,
+          visitors: stat.visitors, views: stat.pageviews,
+          prev: { visitors: stat.comparison.visitors, views: stat.comparison.pageviews },
+          events: topEventsFor(def.prefixes, eventsCur, 5),
+          note: AUTO_NOTE,
+          extra,
+          error: false
+        };
+      } catch (e) {
+        console.error('ページ取得失敗', def.key, e);
+        return { key: def.key, name: def.name, icon: def.icon, path: def.path || def.hostname, error: true };
+      }
+    }));
+
+    const routes = ROUTE_DEFS
+      .map(r => {
+        const found = eventsCur.find(e => e.x === r.ev);
+        return { from: r.from, to: r.to, count: found ? found.y : 0, ev: r.ev };
+      })
+      .filter(r => r.count > 0);
+
+    const bounceNow = pctOf(overall.bounces, overall.visits);
+    const bouncePrev = pctOf(overall.comparison.bounces, overall.comparison.visits);
+
+    const DATA = {
+      updated: new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      currentRange: periodLabel(days, now),
+      prevRange: periodLabel(days, curStart),
+      summaryNote: AUTO_NOTE,
+      summary: {
+        visitors: { now: overall.visitors, prev: overall.comparison.visitors },
+        views:    { now: overall.pageviews, prev: overall.comparison.pageviews },
+        bounce:   { now: bounceNow, prev: bouncePrev },
+        duration: { now: fmtDuration(overall.totaltime / (overall.visits || 1)), prev: fmtDuration(overall.comparison.totaltime / (overall.comparison.visits || 1)) },
+        days:     { now: days, prev: days }
+      },
+      pages,
+      routes,
+      trend: STATIC_TREND
+    };
+
+    renderAll(DATA);
+    setStatusSuccess();
+  } catch (err) {
+    console.error('Umami取得失敗', err);
+    setStatusError();
+    renderFatalFailure();
+  }
+}
+
+// ---------- ステータス表示 ----------
+function setStatusLoading() {
+  document.getElementById('headerMeta').textContent = 'データ取得中…';
+  document.getElementById('refreshBtn').disabled = true;
+}
+function setStatusSuccess() {
+  const now = new Date();
+  document.getElementById('lastFetched').textContent =
+    `最終取得：${now.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}`;
+  document.getElementById('refreshBtn').disabled = false;
+}
+function setStatusError() {
+  document.getElementById('lastFetched').textContent = FETCH_FAIL_NOTE;
+  document.getElementById('refreshBtn').disabled = false;
+}
+function renderFatalFailure() {
+  document.getElementById('headerMeta').textContent =
+    'データ取得に失敗しました（Umami APIに接続できません）。🔄 更新で再試行してね。';
+  const grid = document.getElementById('summaryGrid');
+  if (!grid.dataset.rendered) grid.innerHTML = `<div class="fetch-fail">${FETCH_FAIL_NOTE}</div>`;
+  const pg = document.getElementById('pageGrid');
+  if (!pg.dataset.rendered) pg.innerHTML = `<div class="fetch-fail">${FETCH_FAIL_NOTE}</div>`;
+  const rt = document.querySelector('#routesTable tbody');
+  if (rt && !rt.dataset.rendered) rt.innerHTML = `<tr><td colspan="3" class="fetch-fail">${FETCH_FAIL_NOTE}</td></tr>`;
+}
+
+// ---------- 描画 ----------
+function renderAll(DATA) {
+  document.getElementById('headerMeta').textContent =
+    `今期間＝${DATA.currentRange} / 比較対象＝${DATA.prevRange}（APIが自動算出）｜🔄更新でいつでも最新化`;
+  document.getElementById('sumRange').textContent = DATA.currentRange;
+  document.getElementById('pcRange').textContent = `今 ${DATA.currentRange} ／ 前 ${DATA.prevRange}`;
+  document.getElementById('routesRange').textContent = DATA.currentRange;
+
+  // サマリー
+  const s = DATA.summary;
+  const dv = delta(s.visitors.now, s.visitors.prev);
+  const dw = delta(s.views.now, s.views.prev);
+  const perDayNow = (s.visitors.now / s.days.now).toFixed(1);
+  const perDayPrev = s.days.prev > 0 ? (s.visitors.prev / s.days.prev).toFixed(1) : '0.0';
+  document.getElementById('summaryGrid').innerHTML = `
+    <div class="summary-item">
+      <div class="label">Visitors（人数）</div>
+      <div class="value">${s.visitors.now}</div>
+      <div class="sub ${dv.cls}">前期間${s.visitors.prev} → ${dv.text}</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">Views（閲覧回数）</div>
+      <div class="value">${s.views.now}</div>
+      <div class="sub ${dw.cls}">前期間${s.views.prev} → ${dw.text}</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">1日あたりVisitors</div>
+      <div class="value">${perDayNow}</div>
+      <div class="sub flat">前期間${perDayPrev}</div>
+    </div>
+    <div class="summary-item">
+      <div class="label">直帰率</div>
+      <div class="value">${s.bounce.now}%</div>
+      <div class="sub ${s.bounce.now <= s.bounce.prev ? 'up' : 'down'}">前期間${s.bounce.prev}%</div>
     </div>
   `;
-}).join('');
-document.getElementById('pageGridNote').textContent =
-  '順位は今週のVisitors順。増減は先週（8/4–8/10・7日間）との同条件比較。';
+  document.getElementById('summaryGrid').dataset.rendered = '1';
+  document.getElementById('summaryNote').textContent =
+    `${DATA.summaryNote}　滞在時間の目安：${s.duration.now}（前期間${s.duration.prev}）`;
 
-// ---------- どこから→どこへ（多い順） ----------
-const sortedRoutes = [...DATA.routes].sort((a, b) => b.count - a.count);
-document.querySelector('#routesTable tbody').innerHTML = sortedRoutes.map(r => `
-  <tr>
-    <td>${r.from}</td>
-    <td>${r.to}<br><span style="font-size:11px;color:#9aa7ab;">${r.ev}</span></td>
-    <td class="num">${r.count}</td>
-  </tr>
-`).join('');
-document.getElementById('routesNote').textContent =
-  `合計${sortedRoutes.reduce((a, r) => a + r.count, 0)}回。上位は「おみくじ→問題集おためし」「トラッカー→note図解」「トラッカー→音声」＝おみくじが問題集への新しい入口に。`;
+  // 7ページ並列
+  const okPages = DATA.pages.filter(p => !p.error);
+  const rankOrder = [...okPages].sort((a, b) => b.visitors - a.visitors).map(p => p.key);
+  document.getElementById('pageGrid').innerHTML = DATA.pages.map(p => {
+    if (p.error) {
+      return `
+        <div class="pcard">
+          <div class="phead"><span class="pname">${p.icon} ${p.name}</span></div>
+          <div class="ppath">${p.path}</div>
+          <div class="fetch-fail">${FETCH_FAIL_NOTE}</div>
+        </div>`;
+    }
+    const dvv = delta(p.visitors, p.prev ? p.prev.visitors : null);
+    const dww = delta(p.views, p.prev ? p.prev.views : null);
+    const rank = rankOrder.indexOf(p.key) + 1;
+    const evHtml = p.events.length
+      ? p.events.map(e => `<div><span class="k">${e.k}</span><span class="v">${e.v}</span></div>`).join('')
+      : `<div><span class="k">カスタムイベント</span><span class="v">なし</span></div>`;
+    return `
+      <div class="pcard">
+        <div class="phead">
+          <span class="rank ${rank <= 3 ? '' : 'g'}">${rank}位</span>
+          <span class="pname">${p.icon} ${p.name}</span>
+        </div>
+        <div class="ppath">${p.path}</div>
+        <div class="pnums">
+          <div class="pnum">
+            <div class="n">${p.visitors}</div>
+            <div class="t">Visitors</div>
+            <div class="d ${dvv.cls}">${dvv.text}</div>
+          </div>
+          <div class="pnum">
+            <div class="n">${p.views}</div>
+            <div class="t">Views</div>
+            <div class="d ${dww.cls}">${dww.text}</div>
+          </div>
+        </div>
+        ${p.extra ? `<div class="pextra">
+          <span class="k">${p.extra.label}</span>
+          <span class="v">${p.extra.visitors}人 / ${p.extra.views}view</span>
+          <span class="d ${delta(p.extra.visitors, p.extra.prev.visitors).cls}">${delta(p.extra.visitors, p.extra.prev.visitors).text}</span>
+        </div>` : ''}
+        <div class="pev">${evHtml}</div>
+        <div class="pnote">${p.note}</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('pageGrid').dataset.rendered = '1';
+  document.getElementById('pageGridNote').textContent =
+    `順位は今期間のVisitors順。増減は同じ日数の直前期間（${DATA.prevRange}）とのAPI自動比較。`;
 
-// ---------- ここから下はグラフ（Chart.jsが読めない環境では表だけ表示される） ----------
-loadChart(function () {
-if (typeof Chart === 'undefined') {
-  document.querySelectorAll('.chart-box').forEach(el => {
-    el.innerHTML = '<div class="note-line">グラフの読み込みに失敗しました（オフライン等）。数値は上の表をご覧ください。</div>';
-    el.style.height = 'auto';
-  });
-  return;
+  // どこから→どこへ（多い順・発生ありのみ）
+  const sortedRoutes = [...DATA.routes].sort((a, b) => b.count - a.count).slice(0, 15);
+  const tbody = document.querySelector('#routesTable tbody');
+  tbody.innerHTML = sortedRoutes.length
+    ? sortedRoutes.map(r => `
+      <tr>
+        <td>${r.from}</td>
+        <td>${r.to}<br><span style="font-size:11px;color:#9aa7ab;">${r.ev}</span></td>
+        <td class="num">${r.count}</td>
+      </tr>
+    `).join('')
+    : `<tr><td colspan="3" class="note-line">この期間はCTAイベントの発生がありません</td></tr>`;
+  tbody.dataset.rendered = '1';
+  document.getElementById('routesNote').textContent = sortedRoutes.length
+    ? `合計${sortedRoutes.reduce((a, r) => a + r.count, 0)}回（この期間に発生したルートのみ表示・上位15件）。`
+    : 'この期間はCTAイベントの発生がありませんでした。';
+
+  renderCompareChart(DATA);
+  renderTrendChart(DATA);
 }
 
-// ---------- ページ別 先週 vs 今週 ----------
-const cmpPages = [...DATA.pages].sort((a, b) => b.visitors - a.visitors);
-const cmpRows = [];
-cmpPages.forEach(p => {
-  cmpRows.push({ name: p.name, now: p.visitors, prev: p.prev ? p.prev.visitors : 0 });
-  if (p.extra) cmpRows.push({ name: '└無料おためし', now: p.extra.visitors, prev: p.extra.prev.visitors });
-});
-new Chart(document.getElementById('compareChart').getContext('2d'), {
-  type: 'bar',
-  data: {
-    labels: cmpRows.map(r => r.name),
-    datasets: [
-      {
-        label: `先週（${DATA.prevRange}）`,
-        data: cmpRows.map(r => r.prev),
-        backgroundColor: '#cbd6d8'
-      },
-      {
-        label: `今週（${DATA.currentRange}）`,
-        data: cmpRows.map(r => r.now),
-        backgroundColor: '#17a2af'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
-    scales: {
-      x: { ticks: { font: { size: 10 }, maxRotation: 30, minRotation: 0 } },
-      y: { beginAtZero: true, ticks: { font: { size: 11 } }, title: { display: true, text: 'Visitors', font: { size: 11 } } }
+function renderCompareChart(DATA) {
+  loadChart(function () {
+    if (typeof Chart === 'undefined') {
+      const el = document.getElementById('compareChart').closest('.chart-box');
+      el.innerHTML = '<div class="note-line">グラフの読み込みに失敗しました（オフライン等）。数値は上の表をご覧ください。</div>';
+      el.style.height = 'auto';
+      return;
     }
-  }
-});
-
-// ---------- 週次トレンド ----------
-const tctx = document.getElementById('trendChart').getContext('2d');
-new Chart(tctx, {
-  type: 'line',
-  data: {
-    labels: DATA.trend.map(d => d.date.slice(5).replace('-', '/')),
-    datasets: [
-      {
-        label: 'Visitors（人数）',
-        data: DATA.trend.map(d => d.visitors),
-        borderColor: '#17a2af',
-        backgroundColor: 'rgba(23,162,175,0.12)',
-        tension: 0.3, fill: true,
-        pointRadius: DATA.trend.map(d => d.partial ? 6 : 3),
-        pointStyle: DATA.trend.map(d => d.partial ? 'rectRot' : 'circle')
+    const okPages = DATA.pages.filter(p => !p.error);
+    const cmpPages = [...okPages].sort((a, b) => b.visitors - a.visitors);
+    const cmpRows = [];
+    cmpPages.forEach(p => {
+      cmpRows.push({ name: p.name, now: p.visitors, prev: p.prev ? p.prev.visitors : 0 });
+      if (p.extra) cmpRows.push({ name: '└無料おためし', now: p.extra.visitors, prev: p.extra.prev.visitors });
+    });
+    if (compareChartInstance) compareChartInstance.destroy();
+    compareChartInstance = new Chart(document.getElementById('compareChart').getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: cmpRows.map(r => r.name),
+        datasets: [
+          { label: `前期間（${DATA.prevRange}）`, data: cmpRows.map(r => r.prev), backgroundColor: '#cbd6d8' },
+          { label: `今期間（${DATA.currentRange}）`, data: cmpRows.map(r => r.now), backgroundColor: '#17a2af' }
+        ]
       },
-      {
-        label: 'Views（閲覧回数）',
-        data: DATA.trend.map(d => d.views),
-        borderColor: '#c9d3d5',
-        backgroundColor: 'rgba(150,160,163,0.08)',
-        tension: 0.3, fill: true,
-        pointRadius: DATA.trend.map(d => d.partial ? 6 : 3),
-        pointStyle: DATA.trend.map(d => d.partial ? 'rectRot' : 'circle'),
-        borderDash: [4, 3]
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
-      tooltip: {
-        callbacks: {
-          afterLabel: (c) => DATA.trend[c.dataIndex].partial ? '※週の途中（8/3–8/7）' : ''
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+        scales: {
+          x: { ticks: { font: { size: 10 }, maxRotation: 30, minRotation: 0 } },
+          y: { beginAtZero: true, ticks: { font: { size: 11 } }, title: { display: true, text: 'Visitors', font: { size: 11 } } }
         }
       }
-    },
-    scales: {
-      x: { ticks: { font: { size: 11 } } },
-      y: { beginAtZero: true, ticks: { font: { size: 11 } } }
-    }
-  }
+    });
+  });
+}
+
+function renderTrendChart(DATA) {
+  loadChart(function () {
+    if (typeof Chart === 'undefined') return; // compareChart側で失敗メッセージ済み
+    if (trendChartInstance) return; // 静的データなので初回描画のみでOK
+    const tctx = document.getElementById('trendChart').getContext('2d');
+    trendChartInstance = new Chart(tctx, {
+      type: 'line',
+      data: {
+        labels: DATA.trend.map(d => d.date.slice(5).replace('-', '/')),
+        datasets: [
+          {
+            label: 'Visitors（人数）',
+            data: DATA.trend.map(d => d.visitors),
+            borderColor: '#17a2af',
+            backgroundColor: 'rgba(23,162,175,0.12)',
+            tension: 0.3, fill: true,
+            pointRadius: DATA.trend.map(d => d.partial ? 6 : 3),
+            pointStyle: DATA.trend.map(d => d.partial ? 'rectRot' : 'circle')
+          },
+          {
+            label: 'Views（閲覧回数）',
+            data: DATA.trend.map(d => d.views),
+            borderColor: '#c9d3d5',
+            backgroundColor: 'rgba(150,160,163,0.08)',
+            tension: 0.3, fill: true,
+            pointRadius: DATA.trend.map(d => d.partial ? 6 : 3),
+            pointStyle: DATA.trend.map(d => d.partial ? 'rectRot' : 'circle'),
+            borderDash: [4, 3]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+          tooltip: {
+            callbacks: {
+              afterLabel: (c) => DATA.trend[c.dataIndex].partial ? '※週の途中（8/3–8/7）' : ''
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { font: { size: 11 } } },
+          y: { beginAtZero: true, ticks: { font: { size: 11 } } }
+        }
+      }
+    });
+  });
+}
+
+// ---------- 操作パネル ----------
+document.getElementById('refreshBtn').addEventListener('click', () => loadAll(currentDays));
+document.querySelectorAll('.period-switch button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.period-switch button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadAll(Number(btn.dataset.days));
+  });
 });
 
-});
+loadAll(currentDays);
 </script>
 </body>
 </html>
