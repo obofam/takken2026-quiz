@@ -214,6 +214,14 @@ function loadChart(cb){
 </script>
 <script>
 <!-- WEEKLY_DATA -->
+<!-- ⚠️次回更新チェックリスト（2026-08-26仕込み分）
+  1. 7枚目カード「メインHP」(mimiobo.vercel.app / path=なし・hostname=mimiobo.vercel.app で分離) を追加
+     見るイベント: home_cta_line(+bottom) / home_share / home_cta_kyozai / home_cta_shindan / home_mat_chokuzen / home_tokushoho
+  2. 新イベント: modal_cta_kyozai(section別data付き) / buyguide_cta_kyozai / tracker_cta_kyozai
+  3. buyguide_cta_note は8/26に廃止→0が正常（死亡と誤読しない）
+  4. プロフ貼り替え後は utm_source (x_prof/ig_prof/yt_prof/note_prof/standfm/line) 別の流入を見る
+  5. kyozai_cta_chokuzen 初動（8/24発売、ベースライン0から）
+-->
 const DATA = {
   updated: "2026-08-24",
   currentRange: "8/18–8/24（7日間・API実測）",
