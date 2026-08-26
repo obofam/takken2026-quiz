@@ -28,3 +28,6 @@
 - buyguide_cta_note は廃止済み→0が正常
 - utm_source別流入（x_prof/ig_prof/yt_prof/note_prof/standfm/line）※プロフ貼り替え後から
 - kyozai_cta_chokuzen 初動（直前対策の主計測）
+
+## 取得方法（2026-08-26からShare URL方式・APIキー不要）
+`python umami_fetch.py 7` で直近7日の全数字（前週比・ホスト別・ページ別・イベント・リファラ・UTM）が一発で出る。Share URLを再発行したらスクリプト冒頭のSLUGを差し替え。

@@ -6,3 +6,4 @@ node_modules/
 .idea/
 .vercel
 .git
+umami_fetch.py
