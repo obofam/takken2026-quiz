@@ -8,4 +8,4 @@ node_modules/
 .vercel
 
 # pdf/ はデプロイ対象（audio/ のみ除外）
-audio/
+# audio/ もデプロイ対象（限定音声が404だったため除外解除）
