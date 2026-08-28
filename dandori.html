@@ -27,12 +27,15 @@
     padding-bottom:env(safe-area-inset-bottom);
   }
   .band{height:8px;background:var(--cyan)}
-  .hero{background:var(--card);padding:28px 20px 22px;text-align:left}
+  /* 表紙感を出す：センター寄せ＋下部の短いアクセントラインで本文と切り替える */
+  .hero{background:var(--card);padding:34px 20px 28px;text-align:center}
   .kicker{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.22em;
-    color:var(--muted);margin:0 0 10px}
+    color:var(--muted);margin:0 0 12px}
   .pretitle{font-size:12.5px;color:var(--muted);margin:0 0 4px}
-  .hero h1{font-size:26px;font-weight:900;line-height:1.4;letter-spacing:.01em;margin:0 0 10px}
-  .hero .sub{font-size:13.5px;color:var(--muted);line-height:1.9;margin:0}
+  .hero h1{font-size:27px;font-weight:900;line-height:1.4;letter-spacing:.01em;margin:0 0 12px}
+  .hero .sub{font-size:13.5px;color:var(--muted);line-height:1.9;margin:0 auto;max-width:420px}
+  .hero-rule{width:44px;height:4px;border-radius:2px;margin:20px auto 0;
+    background:linear-gradient(90deg,var(--cyan),var(--lime))}
   .marker{background:linear-gradient(transparent 58%,var(--lime) 58%);padding:0 .06em}
 
   .wrap{max-width:560px;margin:0 auto;padding:0 16px 40px}
@@ -69,7 +72,11 @@
   .field-row .unit{font-size:12px;color:var(--muted);white-space:nowrap}
   .result-line{font-size:16px;font-weight:800}
   .result-line .num{color:var(--cyan-dark)}
-  #countdownRow{margin-top:8px}
+  /* 残り時間はこのノートの主役なので、いちばん目立たせる（noteの小文字にしない） */
+  #countdownRow{margin-top:10px;font-size:14px;font-weight:700;line-height:2}
+  #countdownRow .cd-calc{color:var(--muted);font-weight:500;font-size:13px}
+  #countdownRow .cd-big{font-size:22px;font-weight:900;
+    background:linear-gradient(transparent 58%,var(--lime) 58%);padding:0 .06em}
 
   /* ---- STEP2 フェーズ ---- */
   .ph{display:flex;gap:12px;align-items:stretch;margin:0 0 10px;border-radius:10px;padding:2px}
@@ -141,6 +148,7 @@
   <div class="pretitle">スマホで書き込める</div>
   <h1>合格までの<span class="marker">段取りノート</span></h1>
   <p class="sub">時間の棚卸し・模試のふりかえり・前日と当日のチェックリスト。勉強そのものの前に、段取りを整えるページです。</p>
+  <div class="hero-rule"></div>
 </header>
 
 <div class="wrap">
@@ -188,7 +196,7 @@
 
     <div class="card limecard">
       <div class="result-line">週の合計 <span class="num" id="weekTotalMin">0</span>分 ≒ <span class="num" id="weekTotal">0.0</span>時間</div>
-      <div class="note" id="countdownRow">試験まで残り<span id="weeksLeft">—</span>週 × 週<span id="weekTotal2">0.0</span>時間 ＝ 使える時間はあと約<span id="usableHours">0.0</span>時間</div>
+      <div id="countdownRow"><span class="cd-calc">試験まで残り<span id="weeksLeft">—</span>週 × 週<span id="weekTotal2">0.0</span>時間</span><br>＝ 使える時間は <span class="cd-big">あと約<span id="usableHours">0.0</span>時間</span></div>
     </div>
     <p class="note">時間が見えると、「全部はできない」が前提になります。そこから、やらないことを決められるようになります。耳の時間と机の時間は別物として数えるのがコツです。</p>
   </section>
