@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#17C5E8">
-<title>合格までの段取り帳｜耳で覚える宅建2026</title>
+<title>合格までの段取りノート｜耳で覚える宅建2026</title>
 <!-- Umami analytics -->
 <script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +30,7 @@
   .hero{background:var(--card);padding:28px 20px 22px;text-align:left}
   .kicker{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.22em;
     color:var(--muted);margin:0 0 10px}
+  .pretitle{font-size:12.5px;color:var(--muted);margin:0 0 4px}
   .hero h1{font-size:26px;font-weight:900;line-height:1.4;letter-spacing:.01em;margin:0 0 10px}
   .hero .sub{font-size:13.5px;color:var(--muted);line-height:1.9;margin:0}
   .marker{background:linear-gradient(transparent 58%,var(--lime) 58%);padding:0 .06em}
@@ -82,11 +83,19 @@
   .ph-b .note{margin-top:1px}
   .ph-now{display:inline-block;margin-left:6px;font-family:var(--display);font-size:10px;
     letter-spacing:.08em;color:var(--lime-ink);background:var(--lime);border-radius:999px;padding:1px 8px;vertical-align:middle}
+  .ph-memo{display:block;width:100%;margin-top:6px;padding:6px 8px;font-size:12.5px;
+    border:1px solid var(--line);border-radius:8px;font-family:var(--font);color:var(--text);background:var(--surface)}
+  .ph-memo:focus{outline:2px solid var(--cyan);outline-offset:1px}
+  .ph-memo::placeholder{color:var(--muted)}
 
   /* ---- 模試ふりかえりシート（1行=1カード。横スクロールはスマホで書きにくいので使わない） ---- */
   .mrow{border:1px solid var(--line);border-radius:10px;padding:10px;margin:0 0 10px;background:var(--card)}
+  .mrow.done{opacity:.55}
   .mrow .r1,.mrow .r2{display:flex;gap:8px}
   .mrow .r1{margin-bottom:8px}
+  .mrow .r3{display:flex;justify-content:flex-end;margin-top:8px}
+  .done-label{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);cursor:pointer}
+  .done-label input[type=checkbox]{width:16px;height:16px;flex-shrink:0;accent-color:var(--cyan-dark)}
   .mrow input[type=text],.mrow input[type=number],.mrow select{
     border:1px solid var(--line);border-radius:8px;padding:9px 8px;font-size:14px;
     font-family:var(--font);color:var(--text);background:var(--card);min-width:0}
@@ -128,8 +137,9 @@
 
 <div class="band"></div>
 <header class="hero">
-  <div class="kicker">MIMIOBO — 耳で覚える宅建2026</div>
-  <h1>合格までの<span class="marker">段取り帳</span></h1>
+  <div class="kicker">耳で覚える宅建2026</div>
+  <div class="pretitle">スマホで書き込める</div>
+  <h1>合格までの<span class="marker">段取りノート</span></h1>
   <p class="sub">時間の棚卸し・模試のふりかえり・前日と当日のチェックリスト。勉強そのものの前に、段取りを整えるページです。</p>
 </header>
 
@@ -137,12 +147,12 @@
 
   <!-- ===== はじめに ===== -->
   <section class="blk" id="intro">
-    <div class="label">HAJIMENI</div>
+    <div class="label">はじめに</div>
     <h2>勉強の前に、<span class="marker">段取り</span>があります</h2>
     <p>宅建の勉強法の情報はたくさんあります。でも、社会人の合否を分けるのは、勉強法よりも先に「時間をどう確保するか」「模試をどう使うか」「当日に忘れ物をしないか」といった段取りの部分だったりします。</p>
-    <p>このページは、その段取りだけを1枚にまとめたものです。知識のまとめは入っていません。書き込んで使う道具です。</p>
+    <p>このノートは、実際にあなたに書き込んでもらいながら、一緒に段取りをつくっていくものです。</p>
     <div class="card soft">
-      <div class="card-t">このページでやること（3つだけ）</div>
+      <div class="card-t">このノートでやること（3つだけ）</div>
       ① 自分の持ち時間を数える<br>
       ② 模試を「受けっぱなし」にしない<br>
       ③ 前日と当日を、チェックリストで迷わない
@@ -177,7 +187,7 @@
     </div>
 
     <div class="card limecard">
-      <div class="result-line">週の合計 ≒ <span class="num" id="weekTotal">0.0</span> 時間</div>
+      <div class="result-line">週の合計 <span class="num" id="weekTotalMin">0</span>分 ≒ <span class="num" id="weekTotal">0.0</span>時間</div>
       <div class="note" id="countdownRow">試験まで残り<span id="weeksLeft">—</span>週 × 週<span id="weekTotal2">0.0</span>時間 ＝ 使える時間はあと約<span id="usableHours">0.0</span>時間</div>
     </div>
     <p class="note">時間が見えると、「全部はできない」が前提になります。そこから、やらないことを決められるようになります。耳の時間と机の時間は別物として数えるのがコツです。</p>
@@ -190,20 +200,20 @@
     <p>細かい計画は崩れます。壁に貼るのは、このくらい大まかな物差しで十分です。いま自分がどの段にいるかだけ、ときどき確かめてください。</p>
 
     <div class="ph" data-phase="0">
-      <div class="ph-k">〜9月<br>前半</div>
-      <div class="ph-b"><b>分野を一周させる<span class="ph-now">今ここ</span></b><br><span class="note">業法から。完璧にせず、まず最後まで通す</span></div>
+      <div class="ph-k">試験5週前<br>まで</div>
+      <div class="ph-b"><b>分野を一周させる</b><br><span class="note">業法から。完璧にせず、まず最後まで通す</span><input type="text" class="ph-memo" data-idx="0" placeholder="いつまでに（メモ）"></div>
     </div>
     <div class="ph" data-phase="1">
-      <div class="ph-k">9月<br>後半</div>
-      <div class="ph-b"><b>過去問の周回と模試<span class="ph-now">今ここ</span></b><br><span class="note">解きっぱなしにしない（次のセクション）</span></div>
+      <div class="ph-k">5〜3週前</div>
+      <div class="ph-b"><b>過去問の周回と模試</b><br><span class="note">解きっぱなしにしない（次のセクション）</span><input type="text" class="ph-memo" data-idx="1" placeholder="いつまでに（メモ）"></div>
     </div>
     <div class="ph" data-phase="2">
-      <div class="ph-k">10月<br>前半</div>
-      <div class="ph-b"><b>混同の整理と本試験形式<span class="ph-now">今ここ</span></b><br><span class="note">4択・2時間の形に体を慣らす</span></div>
+      <div class="ph-k">3〜1週前</div>
+      <div class="ph-b"><b>混同の整理と本試験形式</b><br><span class="note">4択・2時間の形に体を慣らす</span><input type="text" class="ph-memo" data-idx="2" placeholder="いつまでに（メモ）"></div>
     </div>
     <div class="ph" data-phase="3">
-      <div class="ph-k">直前</div>
-      <div class="ph-b"><b>新しいことを足さない<span class="ph-now">今ここ</span></b><br><span class="note">見慣れた問題と、前日・当日の段取り（このあと）</span></div>
+      <div class="ph-k">直前1週間</div>
+      <div class="ph-b"><b>新しいことを足さない</b><br><span class="note">見慣れた問題と、前日・当日の段取り（このあと）</span><input type="text" class="ph-memo" data-idx="3" placeholder="いつまでに（メモ）"></div>
     </div>
 
     <p class="note">出遅れていても、順番は同じです。段を飛ばさず、各段を「浅く速く」に切り替えるだけです。</p>
@@ -218,6 +228,7 @@
     <div class="step"><div class="step-n">2</div><div class="step-b"><span class="step-t">本番のつもりで受ける</span>時計・マークシート・解く順番。当日にやることを、模試で一度ぜんぶ試しておきます。</div></div>
     <div class="step"><div class="step-n">3</div><div class="step-b"><span class="step-t">当日中にふりかえる</span>点数は見なくてもいいくらいです。見るのは「どの分野を・なぜ落としたか」。次のシートに書き込んでください。</div></div>
     <p class="note">ふりかえりまでが模試です。ここをやらないと、受けた時間がまるごと感想で終わってしまいます。</p>
+    <p class="note">模試の日程や選び方は、noteにまとめています。→ <a href="https://note.com/fond_bison5155/n/n954e5444cfd2" target="_blank" rel="noopener">模試情報まとめ（note）</a></p>
   </section>
 
   <!-- ===== 模試ふりかえりシート ===== -->
@@ -233,7 +244,7 @@
 
   <!-- ===== 前日チェックリスト ===== -->
   <section class="blk" id="zenjitsu">
-    <div class="label">ZENJITSU</div>
+    <div class="label">前日</div>
     <h2>前日は<span class="marker">準備だけ</span>で満点です</h2>
     <p>前日に伸ばそうとしなくて大丈夫です。荷物と道順を整えて、いつもどおり寝る。それが前日の満点です。</p>
     <ul class="ck" id="checklist">
@@ -250,7 +261,7 @@
 
   <!-- ===== 当日の流れ ===== -->
   <section class="blk" id="tojitsu">
-    <div class="label">TOJITSU</div>
+    <div class="label">当日</div>
     <h2>当日の<span class="marker">流れ</span>を決めておく</h2>
     <p>当日に考えることを、できるだけ前日までに使い切っておきます。会場で決めるのは答えだけ、が理想です。</p>
     <div class="step"><div class="step-n">1</div><div class="step-b"><span class="step-t">早めに会場へ</span>受験票の集合時刻から逆算して、余裕をもって到着。着いたらまずお手洗いの場所を確認します。</div></div>
@@ -262,18 +273,17 @@
 
   <!-- ===== おわりに ===== -->
   <section class="blk" id="owarini">
-    <div class="label">OWARINI</div>
+    <div class="label">おわりに</div>
     <h2>あとは、<span class="marker">淡々と</span>積み上げるだけ</h2>
-    <p>段取りが整うと、迷う時間が減ります。減った分は、そのまま勉強時間になります。</p>
-    <p>毎週の放送・図解・過去問1問は、メルマガとLINEでお届けしています。このページと一緒に、試験の日まで淡々と使ってください。</p>
+    <p>段取りを整えることで迷いをなくし、安心して勉強する時間にあてられます。</p>
+    <p>毎週の放送・図解・過去問1問は、メルマガとLINEでお届けしています。このノートも、役立てていただけたら幸いです。</p>
     <div class="card">
-      <div class="card-t">無料で使える装置</div>
-      一問一答おためし・現在地診断・今週の過去問・進捗トラッカー<br>
-      <span class="note links"><a href="https://takken2026-quiz.vercel.app/" target="_blank" rel="noopener">https://takken2026-quiz.vercel.app/</a></span>
+      <div class="card-t">無料で使えるもの</div>
+      <span class="note links"><a href="https://takken2026-quiz.vercel.app/#sample" target="_blank" rel="noopener">一問一答おためし</a>・<a href="https://takken2026-quiz.vercel.app/shindan.html" target="_blank" rel="noopener">現在地診断</a>・<a href="https://takken2026-quiz.vercel.app/weekly.html" target="_blank" rel="noopener">今週の過去問</a>・<a href="https://obofam.github.io/takken2026-quiz/tracker.html" target="_blank" rel="noopener">進捗トラッカー</a></span>
     </div>
     <div class="card">
       <div class="card-t">知識を点数に変えたいというときは</div>
-      <span class="note links">教材一覧 → <a href="/kyozai.html">/kyozai.html</a></span>
+      <span class="note links"><a href="https://takken2026-quiz.vercel.app/kyozai.html" target="_blank" rel="noopener">教材一覧</a></span>
     </div>
     <p class="note" style="margin-top:16px">耳で覚える宅建2026｜www.mimiobo.com｜運営者：松永慶<br>本ページの無断転載・再配布はご遠慮ください。</p>
   </section>
@@ -300,10 +310,11 @@
   function defaultState(){
     var rows = [];
     for (var i = 0; i < DEFAULT_ROWS; i++){
-      rows.push({field:'', count:'', cause:'', action:''});
+      rows.push({field:'', count:'', cause:'', action:'', done:false});
     }
     return {
       step1: {commute:'', lunch:'', night:'', weekend:''},
+      phaseMemo: ['', '', '', ''],
       sheet: rows,
       checklist: [false,false,false,false,false,false,false,false]
     };
@@ -317,10 +328,18 @@
       if (raw){
         var parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object'){
+          var defaults = defaultState();
+          var sheet = Array.isArray(parsed.sheet) && parsed.sheet.length ? parsed.sheet : defaults.sheet;
+          sheet = sheet.map(function(r){
+            return Object.assign({field:'', count:'', cause:'', action:'', done:false}, r || {});
+          });
+          var phaseMemo = Array.isArray(parsed.phaseMemo) ? parsed.phaseMemo.slice(0, 4) : defaults.phaseMemo.slice();
+          while (phaseMemo.length < 4) phaseMemo.push('');
           state = {
             step1: Object.assign({commute:'',lunch:'',night:'',weekend:''}, parsed.step1 || {}),
-            sheet: Array.isArray(parsed.sheet) && parsed.sheet.length ? parsed.sheet : defaultState().sheet,
-            checklist: Array.isArray(parsed.checklist) ? parsed.checklist : defaultState().checklist
+            phaseMemo: phaseMemo,
+            sheet: sheet,
+            checklist: Array.isArray(parsed.checklist) ? parsed.checklist : defaults.checklist
           };
         }
       }
@@ -339,6 +358,7 @@
   var elNight = document.getElementById('in-night');
   var elWeekend = document.getElementById('in-weekend');
   var elWeekTotal = document.getElementById('weekTotal');
+  var elWeekTotalMin = document.getElementById('weekTotalMin');
   var elWeekTotal2 = document.getElementById('weekTotal2');
   var elWeeksLeft = document.getElementById('weeksLeft');
   var elUsableHours = document.getElementById('usableHours');
@@ -354,6 +374,7 @@
     var hours = minutes / 60;
     var hoursStr = hours.toFixed(1);
     elWeekTotal.textContent = hoursStr;
+    elWeekTotalMin.textContent = Math.round(minutes);
     elWeekTotal2.textContent = hoursStr;
 
     var today = todayZero();
@@ -386,28 +407,46 @@
   /* ---------- STEP2 フェーズハイライト ---------- */
   function highlightPhase(){
     var today = todayZero();
-    var y = today.getFullYear();
+    var diffDays = Math.floor((EXAM_DATE - today) / 86400000);
     var phase = -1;
-    var p0end = new Date(y, 8, 15);   // 9/15
-    var p1end = new Date(y, 8, 30);   // 9/30
-    var p2end = new Date(y, 9, 11);   // 10/11
-    var p3end = new Date(y, 9, 18);   // 10/18
-    if (today <= p0end) phase = 0;
-    else if (today <= p1end) phase = 1;
-    else if (today <= p2end) phase = 2;
-    else if (today <= p3end) phase = 3;
+    if (diffDays >= 0){
+      var weeksLeft = Math.floor(diffDays / 7);
+      if (weeksLeft > 5) phase = 0;
+      else if (weeksLeft > 3) phase = 1;
+      else if (weeksLeft > 1) phase = 2;
+      else phase = 3;
+    }
 
     var nodes = document.querySelectorAll('.ph');
     nodes.forEach(function(n){
       var idx = Number(n.getAttribute('data-phase'));
+      var bEl = n.querySelector('.ph-b b');
+      var badge = bEl ? bEl.querySelector('.ph-now') : null;
       if (idx === phase){
         n.classList.add('active');
+        if (bEl && !badge){
+          badge = document.createElement('span');
+          badge.className = 'ph-now';
+          badge.textContent = '今ここ';
+          bEl.appendChild(badge);
+        }
       } else {
         n.classList.remove('active');
+        if (badge) badge.remove();
       }
     });
   }
   highlightPhase();
+
+  /* ---------- STEP2 各段のメモ ---------- */
+  var phaseMemoEls = document.querySelectorAll('.ph-memo');
+  phaseMemoEls.forEach(function(el){
+    var idx = Number(el.getAttribute('data-idx'));
+    el.addEventListener('input', function(){
+      state.phaseMemo[idx] = el.value;
+      save();
+    });
+  });
 
   /* ---------- 模試ふりかえりシート ---------- */
   var sheetBody = document.getElementById('sheetBody');
@@ -416,7 +455,7 @@
 
   function buildRow(rowData, index){
     var card = document.createElement('div');
-    card.className = 'mrow';
+    card.className = 'mrow' + (rowData.done ? ' done' : '');
     card.setAttribute('data-idx', index);
 
     var r1 = document.createElement('div');
@@ -448,7 +487,18 @@
     inAction.placeholder = '次の一手';
     r2.appendChild(selCause); r2.appendChild(inAction);
 
-    card.appendChild(r1); card.appendChild(r2);
+    var r3 = document.createElement('div');
+    r3.className = 'r3';
+    var doneLabel = document.createElement('label');
+    doneLabel.className = 'done-label';
+    var doneCk = document.createElement('input');
+    doneCk.type = 'checkbox'; doneCk.className = 'f-done'; doneCk.checked = !!rowData.done;
+    var doneTxt = document.createElement('span');
+    doneTxt.textContent = '対策済み';
+    doneLabel.appendChild(doneCk); doneLabel.appendChild(doneTxt);
+    r3.appendChild(doneLabel);
+
+    card.appendChild(r1); card.appendChild(r2); card.appendChild(r3);
     return card;
   }
 
@@ -477,6 +527,11 @@
     var idx = Number(row.getAttribute('data-idx'));
     if (!state.sheet[idx]) return;
     if (e.target.classList.contains('f-cause')) { state.sheet[idx].cause = e.target.value; save(); }
+    if (e.target.classList.contains('f-done')) {
+      state.sheet[idx].done = e.target.checked;
+      row.classList.toggle('done', e.target.checked);
+      save();
+    }
   });
   sheetBody.addEventListener('click', function(e){
     if (!e.target.classList.contains('del-btn')) return;
@@ -489,7 +544,7 @@
 
   addRowBtn.addEventListener('click', function(){
     if (state.sheet.length >= MAX_ROWS) return;
-    state.sheet.push({field:'', count:'', cause:'', action:''});
+    state.sheet.push({field:'', count:'', cause:'', action:'', done:false});
     renderSheet();
     save();
   });
@@ -522,6 +577,10 @@
   elWeekend.value = state.step1.weekend;
   recalcStep1();
   renderSheet();
+  phaseMemoEls.forEach(function(el){
+    var idx = Number(el.getAttribute('data-idx'));
+    el.value = state.phaseMemo[idx] || '';
+  });
   checklistEls.forEach(function(el){
     var idx = Number(el.getAttribute('data-idx'));
     el.checked = !!state.checklist[idx];
