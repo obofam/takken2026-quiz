@@ -23,6 +23,15 @@
 | 2026-08-24 | 8/18–8/24 | 121 | 167 | 300 | 25% | -10%/-1%/-6%（API実測） | 56人(27%) | トップ23人＋#sample18人 | API取得2週目=前週比の連続性確立(APIの前週値134/169/320が先週記録と一致)。**kyozai.html 23→41人と急伸=直前対策発売前週の事前点火**。weekly.html33人(24→41→36→33で4週目定着)。おみくじ35→18人に半減=8月限定メニュー終盤の自然減とみる。shindan14人。リファラ=note.com 3のみ。全体は小幅減だが発売導線は温まっている |
 | 2026-08-31 | 8/24–8/31 | 119 | 171 | 319 | 33% | -7%/+7%/+11%（API実測） | 43人(25%) | トップ36人＋#sample14人 | **メインHP(mimiobo.vercel.app)計測1週目=13visits**。Visitors微減だがVisits/Viewsは増＝1人あたりの回遊が深まった（totaltime 15,880→36,152で倍増）。直帰率25%→33%。**kyozai_cta_chokuzen が0件**＝直前対策(8/24発売)の主計測がまだ無反応、導線露出の見直し要。新導線もmodal_cta_kyozai 1・tracker_cta_kyozai 0・buyguide_cta_kyozai 0（buyguide_open 1のみ）と初動は弱い。buyguide_cta_noteは0で正常。home系はhome_share 5・home_cta_shindan 3・home_cta_kyozai 1・home_tokushoho 1。utm_sourceはstf計8(profile 4/ep01-03 4)・line step 3・yt_prof 2・note 1・ig_prof 1でプロフ貼り替え分が着弾、x_prof/note_profは0。tracker 56→43人・weekly 33→28人・shindan 14→5人・おみくじ18→15人と主要ページは軒並み減、kyozai.html 41→38人は横ばい圏。※APIの前週値(128/160/288)は先週ログ実数(121/167/300)と数時間の期間ずれで微差
 
+## メルマガ読者数ログ（Kit・毎週月曜に1行追記。2026-08-28開始）
+
+取得は `python C:\Claude\宅建\9_メルマガ\kit_subs.py`（active＝ダブルオプトイン確認済みのみを読者数として扱う）。
+あわせて C:\Claude\宅建\宅建ダッシュボード.html のKPIタイル「メルマガ読者数」の数値・時点も更新する。
+
+| 取得日 | active | 確認待ち | 配信解除 | 前週比 | 一言 |
+|---|---|---|---|---|---|
+| 2026-08-28 | 1 | 1 | 0 | — | 初回記録。activeはKei本人のテスト登録。確認待ち1はLPフォーム開通テスト（+lptest）。LP下部にフォーム設置・特典を段取りノートに差し替えた週 |
+
 ## 月曜チェック追加項目（2026-08-26仕込み分・9/1から）
 - メインHP（mimiobo.vercel.app）: 訪問数＋home_cta_line/home_share/home_cta_kyozai/home_tokushoho
 - 新導線: modal_cta_kyozai（どの科目カード発か=section data）/ buyguide_cta_kyozai / tracker_cta_kyozai
@@ -32,3 +41,7 @@
 
 ## 取得方法（2026-08-26からShare URL方式・APIキー不要）
 `python umami_fetch.py 7` で直近7日の全数字（前週比・ホスト別・ページ別・イベント・リファラ・UTM）が一発で出る。Share URLを再発行したらスクリプト冒頭のSLUGを差し替え。
+
+## 参照先の使い分け（2026-08-26確定）
+- **LIVE版**＝https://takken2026-quiz.vercel.app/umami_watch.html ：開くとその場でAPI取得。月曜レビューの**読み取り元はこっち**（依存なし・常に最新）。JS描画なのでWebFetchでは空、必ずChromeで開いて数秒待つ。
+- **Artifact週報**＝https://claude.ai/code/artifact/1fdd539f-a013-4358-9f04-65ae375f9535 ：`umami_snapshot.py` が数字を焼き込んだ静的スナップショット。**その週の凍結記録・人が読む用**。private artifactのため自動読み取りには不向き（Claudeからはテキスト抽出できない）＝レビューにはURLを1行貼るだけにする。
