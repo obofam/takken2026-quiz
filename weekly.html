@@ -466,7 +466,7 @@ document.getElementById("current").innerHTML =
 if (window.umami) umami.track("weekly_start");
 
 document.getElementById("archive").innerHTML = rest.map(q => `
-  <details class="arch">
+  <details class="arch" id="q-${q.id}">
     <summary>
       <span class="tag week">${q.week}</span>
       <span class="tag field">${q.field}</span>
@@ -476,6 +476,17 @@ document.getElementById("archive").innerHTML = rest.map(q => `
   </details>`).join("");
 
 QUESTIONS.forEach(q => refreshStatusBadge(q.id));
+
+// メルマガの「先週のひとくち復習」などから #q-<問題id> で特定の過去問へ直接飛べるようにする。
+// アーカイブは畳まれているので、開いてからスクロールする（今週の分はハッシュ不要で先頭にある）
+if (location.hash.startsWith("#q-")) {
+  const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target) {
+    target.open = true;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (window.umami) umami.track("weekly_deeplink", { q: location.hash.slice(3) });
+  }
+}
 
 // ===== 回答処理 =====
 const qmap = Object.fromEntries(QUESTIONS.map(q => [q.id, q]));
