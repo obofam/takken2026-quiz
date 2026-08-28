@@ -290,14 +290,18 @@
   </header>
 
   <!-- 2. 順路ガイド -->
-  <div class="route-band">
-    おすすめの順路：①音声を聴く → ②図解で確認 → ③一問一答を解いて定着
-  </div>
+  <!-- 2b. ページ内プチメニュー -->
+  <p style="font-size:.72rem; font-weight:700; letter-spacing:.14em; color:var(--muted); margin:18px 0 6px;">MENU</p>
+  <nav style="display:flex; flex-wrap:wrap; gap:8px; margin:0;" aria-label="ページ内メニュー">
+    <a href="#sec-free" data-umami-event="kyozai_nav_free" style="flex:1; min-width:80px; text-align:center; padding:9px 8px; border:1.5px solid currentColor; border-radius:999px; text-decoration:none; color:inherit; font-size:.88rem; font-weight:700; white-space:nowrap;">🆓 無料</a>
+    <a href="#sec-paid" data-umami-event="kyozai_nav_paid" style="flex:1; min-width:80px; text-align:center; padding:9px 8px; border:1.5px solid currentColor; border-radius:999px; text-decoration:none; color:inherit; font-size:.88rem; font-weight:700; white-space:nowrap;">📘 教材</a>
+    <a href="#sec-chokuzen" data-umami-event="kyozai_nav_chokuzen" style="flex:1; min-width:80px; text-align:center; padding:9px 8px; border:1.5px solid currentColor; border-radius:999px; text-decoration:none; color:inherit; font-size:.88rem; font-weight:700; white-space:nowrap;">🎯 直前期</a>
+  </nav>
 
   <!-- 3. 無料で試せます -->
-  <div class="section-block">
+  <div class="section-block" id="sec-free">
     <div class="section-head">
-      <h2>無料で試せます</h2>
+      <p style="font-size:.72rem; font-weight:700; letter-spacing:.14em; color:var(--muted); margin:30px 0 8px;">無料で試せます</p>
     </div>
     <div class="free-list">
 
@@ -323,7 +327,7 @@
         <span class="fc-icon">📅</span>
         <span class="fc-body">
           <span class="fc-title">今週の過去問<span class="fc-tag">LINEで毎週お届け</span></span>
-          <span class="fc-desc">毎週の放送テーマにあわせた過去問を週替わりで。公式LINEに登録すると、毎週月曜に届きます。</span>
+          <span class="fc-desc">毎週の放送テーマにあわせた過去問を週替わりで。</span>
         </span>
         <span class="fc-arrow">›</span>
       </a>
@@ -334,16 +338,16 @@
   <div class="section-divider"></div>
 
   <!-- 4. 教材（有料） -->
-  <div class="section-block">
+  <div class="section-block" id="sec-paid">
     <div class="section-head">
-      <h2>ここからは有料の教材です</h2>
-      <p class="section-lead" style="font-size:0.95rem; color:var(--muted); line-height:1.8; margin:10px 0 0;">各分野の要点とハマるポイントを、忙しいあなたに代わってまとめておきました。いちばん時間のかかる「まとめる」作業はこちらで済ませてあります。あなたがやるのは、覚えることだけです。</p>
+      <h2>要点まとめ教材</h2>
+      <p class="section-lead" style="font-size:0.95rem; color:var(--muted); line-height:1.8; margin:10px 0 0;">図解つきPDF＋一問一答。忙しいあなたに代わって、要点の整理を済ませておきました。</p>
     </div>
 
     <details class="chooser">
       <summary data-umami-event="kyozai_flow_open">
         <span class="ch-icon">🧭</span>
-        <span class="ch-txt"><b>どれを買えばいい？</b><small>2つの質問で決まります — 教材の選び方</small></span>
+        <span class="ch-txt"><b>どれを買えばいい？</b><small>2つの質問で決まります — 教材の選び方（タップで開く）</small></span>
         <span class="ch-caret">▼</span>
       </summary>
       <div class="chooser-body">
@@ -380,57 +384,29 @@
     </details>
     <div class="material-list">
 
-      <article class="material-card">
+      <article class="material-card" id="card-bunya">
         <div class="mc-head">
           <span class="mc-icon">📘</span>
-          <h3 class="mc-title">宅建業法で20点とる</h3>
+          <h3 class="mc-title">分野別 要点まとめ<span style="font-size:.85rem; font-weight:700; color:var(--muted);">（各980円）</span></h3>
         </div>
-        <p class="mc-content">PDF教材＋一問一答問題集 全50問つき</p>
-        <div class="mc-price-row">
-          <span class="mc-price-lbl">価格</span>
-          <span class="mc-price">980円</span>
+        <div class="free-list" style="gap:8px;">
+          <a class="free-card" style="padding:10px 14px; box-shadow:none;" href="https://note.com/fond_bison5155/n/n21bbbcab9add" target="_blank" rel="noopener" data-umami-event="kyozai_cta_gyoho">
+            <span class="fc-body"><span class="fc-title" style="font-size:.95rem;">宅建業法で20点とる</span><span class="fc-desc" style="margin-top:1px;">一問一答 全50問つき</span></span>
+            <span class="fc-arrow">›</span>
+          </a>
+          <a class="free-card" style="padding:10px 14px; box-shadow:none;" href="https://note.com/fond_bison5155/n/n10bb0e89fe64" target="_blank" rel="noopener" data-umami-event="kyozai_cta_kenri">
+            <span class="fc-body"><span class="fc-title" style="font-size:.95rem;">権利関係で14点を拾う</span><span class="fc-desc" style="margin-top:1px;">一問一答 全52問つき</span></span>
+            <span class="fc-arrow">›</span>
+          </a>
+          <a class="free-card" style="padding:10px 14px; box-shadow:none;" href="https://note.com/fond_bison5155/n/nd131a0a57d4b" target="_blank" rel="noopener" data-umami-event="kyozai_cta_horei">
+            <span class="fc-body"><span class="fc-title" style="font-size:.95rem;">法令上の制限＋税その他で16点を落とさない</span><span class="fc-desc" style="margin-top:1px;">一問一答 全60問つき</span></span>
+            <span class="fc-arrow">›</span>
+          </a>
+          <a class="free-card" style="padding:13px 14px; box-shadow:none; border:1.5px solid var(--cyan); background:var(--cyan-soft);" id="card-set3" href="https://note.com/fond_bison5155/m/m373c85a7e952" target="_blank" rel="noopener" data-umami-event="kyozai_cta_set3">
+            <span class="fc-body"><span class="fc-title" style="font-size:1.08rem;">📚 3冊セット <span style="color:var(--cyan-dark); font-weight:900;">2,400円</span></span><span class="fc-desc" style="margin-top:2px;">まとめて派はこちら。単品合計より540円お得</span></span>
+            <span class="fc-arrow">›</span>
+          </a>
         </div>
-        <a class="btn-cta" href="https://note.com/fond_bison5155/n/n21bbbcab9add" target="_blank" rel="noopener" data-umami-event="kyozai_cta_gyoho">詳細（note）へ →</a>
-      </article>
-
-      <article class="material-card">
-        <div class="mc-head">
-          <span class="mc-icon">📗</span>
-          <h3 class="mc-title">権利関係で14点を拾う</h3>
-        </div>
-        <p class="mc-content">PDF教材＋一問一答問題集 全52問つき</p>
-        <div class="mc-price-row">
-          <span class="mc-price-lbl">価格</span>
-          <span class="mc-price">980円</span>
-        </div>
-        <a class="btn-cta" href="https://note.com/fond_bison5155/n/n10bb0e89fe64" target="_blank" rel="noopener" data-umami-event="kyozai_cta_kenri">詳細（note）へ →</a>
-      </article>
-
-      <article class="material-card">
-        <div class="mc-head">
-          <span class="mc-icon">📙</span>
-          <h3 class="mc-title">法令上の制限＋税その他で16点を落とさない</h3>
-        </div>
-        <p class="mc-content">PDF教材＋一問一答問題集 全60問つき</p>
-        <div class="mc-price-row">
-          <span class="mc-price-lbl">価格</span>
-          <span class="mc-price">980円</span>
-        </div>
-        <a class="btn-cta" href="https://note.com/fond_bison5155/n/nd131a0a57d4b" target="_blank" rel="noopener" data-umami-event="kyozai_cta_horei">詳細（note）へ →</a>
-      </article>
-
-      <article class="material-card material-card--set" id="card-set3">
-        <p class="mc-flag">まとめて派はこちら</p>
-        <div class="mc-head">
-          <span class="mc-icon">📚</span>
-          <h3 class="mc-title">3冊セット</h3>
-        </div>
-        <p class="mc-point">業法・権利・法令税をまとめて。単品合計より540円お得です。</p>
-        <div class="mc-price-row">
-          <span class="mc-price-lbl">価格</span>
-          <span class="mc-price">2,400円</span>
-        </div>
-        <a class="btn-cta" href="https://note.com/fond_bison5155/m/m373c85a7e952" target="_blank" rel="noopener" data-umami-event="kyozai_cta_set3">詳細（note）へ →</a>
       </article>
 
       <article class="material-card" id="card-quiz">
@@ -447,27 +423,17 @@
         <a class="btn-cta" href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" target="_blank" rel="noopener" data-umami-event="kyozai_cta_quiz">詳細（note）へ →</a>
       </article>
 
-      <article class="material-card" id="card-bansou">
-        <div class="mc-head">
-          <span class="mc-icon">🤝</span>
-          <h3 class="mc-title">宅建 最後まで伴走</h3>
-        </div>
-        <span class="mc-status-badge">第1期 募集終了</span>
-        <p class="mc-point" style="margin-top:10px;">毎週の小テストと報告で、試験まで一緒に走り切る少人数サポート。次期のご案内希望の方は公式LINEで「伴走」と送ってください。</p>
-        <a class="btn-cta" href="https://note.com/fond_bison5155/n/n8fa55d09f348" target="_blank" rel="noopener" data-umami-event="kyozai_cta_bansou">詳細（note）へ →</a>
-      </article>
-
     </div>
   </div>
 
   <div class="section-divider"></div>
 
   <!-- 4b. 直前期の教材（時期で切る） -->
-  <div class="section-block">
+  <div class="section-block" id="sec-chokuzen">
     <div class="section-head">
       <h2>試験まで60日を切ったら</h2>
       <p id="exam-countdown" style="display:none; margin:8px 0 0; font-size:0.9rem; font-weight:700; color:var(--muted); letter-spacing:.04em;"></p>
-      <p class="section-lead" style="font-size:0.95rem; color:var(--muted); line-height:1.8; margin:10px 0 0;">残り時間でやるべきは、足すことではなく、混ざってしまった知識を整理することです。ここから下は、そのための教材です。いま基礎をひと通り進めている最中の方は、上の教材で足ります。</p>
+      <p class="section-lead" style="font-size:0.95rem; color:var(--muted); line-height:1.8; margin:10px 0 0;">残り時間でやるべきは、足すことより、混ざった知識の整理。基礎を進めている途中の方は、上の教材で足ります。</p>
     </div>
     <div class="material-list">
 
@@ -476,7 +442,7 @@
           <span class="mc-icon">🎯</span>
           <h3 class="mc-title">直前対策</h3>
         </div>
-        <p class="mc-point">直前期の合否を分けるのは、取れるはずだった1点を混同して落とすかどうか。営業保証金の1,000万円と手付金保全の1,000万円。事後届出の2週間と勧告の3週間。ここまで積み上げた方ほどハマります。</p>
+        <p class="mc-point">合否を分けるのは、取れるはずだった1点の混同（例：営業保証金と手付金保全、どちらも1,000万円）。それを対比でほどく一冊です。</p>
         <p class="mc-content">横断ひっかけ26組／PDF全35ページ＋一問一答70問</p>
         <div class="mc-price-row">
           <span class="mc-price-lbl">価格</span>
@@ -497,13 +463,32 @@
           <span class="mc-price-lbl">価格</span>
           <span class="mc-price">7,800円</span>
         </div>
-        <p class="mc-note">9月14日（月）発売／上の「直前対策」と一問一答問題集は含まれません。</p>
         <!-- 9/14にhref追加（販売ページ未公開） ／ data-umami-event="kyozai_cta_last30" -->
         <span class="btn-disabled">9/14（月）発売予定</span>
       </article>
 
     </div>
   </div>
+
+  <!-- 4c. LIMITED（限定メニュー） -->
+  <div class="section-block" id="sec-limited">
+    <div class="section-head">
+      <p style="font-size:.72rem; font-weight:700; letter-spacing:.18em; color:var(--muted); margin:0 0 8px;">🔒 LIMITED ─ 限定メニュー</p>
+    </div>
+    <div class="material-list">
+      <article class="material-card" id="card-bansou" style="border:1.5px dashed var(--line);">
+        <div class="mc-head">
+          <span class="mc-icon">🤝</span>
+          <h3 class="mc-title">宅建 最後まで伴走</h3>
+        </div>
+        <span class="mc-status-badge">第1期 募集終了</span>
+        <p class="mc-point" style="margin-top:10px;">毎週の小テストと報告で、試験まで一緒に走り切る少人数サポート。次期のご案内希望の方は公式LINEで「伴走」と送ってください。</p>
+        <a class="btn-cta" href="https://note.com/fond_bison5155/n/n8fa55d09f348" target="_blank" rel="noopener" data-umami-event="kyozai_cta_bansou">詳細（note）へ →</a>
+      </article>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
 
   <!-- 5. よくある質問 -->
   <div class="section-block">
