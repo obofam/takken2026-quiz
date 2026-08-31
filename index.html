@@ -1115,6 +1115,8 @@ function knockAnswer(userAnswer) {
   s.answered++; s.setAnswered++;
   if (correct) { s.correct++; s.setCorrect++; }
 
+  trackAnswer(item.sec, "knock", correct);
+
   const btnO = document.getElementById("btn-o-k");
   const btnX = document.getElementById("btn-x-k");
   btnO.disabled = true; btnX.disabled = true;
@@ -1206,8 +1208,8 @@ function knockContinue() {
 
 function knockFinish() {
   const s = knockSession;
-  if (window.umami) umami.track("knock_finish", { answered: s.answered });
   const pct = s.answered > 0 ? Math.round(s.correct / s.answered * 100) : 0;
+  uTrack("knock_finish", { answered: s.answered, pct: pct });
   document.getElementById("quizBody").innerHTML = "";
   document.getElementById("resultArea").innerHTML = `
     <div class="result">
@@ -1263,8 +1265,21 @@ function startSample() {
   showPage("quizPage");
 }
 
+function sampleWeakGenre() {
+  const miss = {};
+  currentQuestions.forEach((q, i) => {
+    if (currentAnswers[i] !== undefined && currentAnswers[i] !== q.a) {
+      const g = GENRE_OF_CAT[q.cat] || "other";
+      miss[g] = (miss[g] || 0) + 1;
+    }
+  });
+  const top = Object.entries(miss).sort((a, b) => b[1] - a[1])[0];
+  return top ? top[0] : "none";
+}
+
 function finishSample(total, pct) {
-  if (window.umami) umami.track("sample_complete", { pct: pct });
+  // weak＝この5問で最も落とした分野（none＝全問正解）。pctだけでは分からない中身を残す。
+  uTrack("sample_complete", { pct: pct, weak: sampleWeakGenre() });
   const fullTotal = SECTIONS.gyouhou.questions.length
     + SECTIONS.kenri.questions.length
     + SECTIONS.houreizei.questions.length
@@ -1291,6 +1306,35 @@ function finishSample(total, pct) {
     </div>
   `;
   document.getElementById("resultArea").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+/* ================================================================
+   UMAMI 計測ヘルパー（2026-08-31 追加）
+   ねらい：①どのカードが開かれているか ②どの分野で間違えているか を取る。
+   Umamiのshare APIは「イベント×プロパティ」の値分布しか引けず、
+   分野×正誤のようなクロス集計ができない。そのため連結した1つの値
+   （gr="kenri|不正解" など）として持たせ、1クエリで読めるようにしている。
+   集計は umami_bunya.py で読む。
+   ================================================================ */
+const GENRE_OF_CAT = {
+  "宅建業法": "gyouhou",
+  "権利関係": "kenri",
+  "法令制限・税": "houreizei"
+};
+
+function uTrack(name, data) {
+  try { if (window.umami) umami.track(name, data); } catch (e) {}
+}
+
+function trackAnswer(genre, mode, correct) {
+  if (!genre) return;
+  const r = correct ? "正解" : "不正解";
+  uTrack("quiz_answer", {
+    gr: genre + "|" + r,   // 分野×正誤 → これ1本で分野別正答率が出る
+    mr: mode + "|" + r,    // モード×正誤
+    genre: genre,
+    mode: mode
+  });
 }
 
 /* ================================================================
@@ -1362,6 +1406,8 @@ function showTop() {
 
 function showSection(key) {
   currentSection = key;
+  // どの科目カードが実際に開かれたか（解除済みで開いた場合もここを通る）
+  uTrack("section_open", { section: key });
   renderSection(key);
   showPage("sectionPage");
 }
@@ -1448,6 +1494,9 @@ let currentSection = null;
 
 function openModal(key) {
   pendingKey = key;
+  // ロックされたカードを押した＝需要のシグナル。開封できた数(section_open)との差が
+  // 「欲しがられたが入れなかった人」になる。
+  uTrack("lock_prompt", { section: key });
   const title = key === "__knock" ? KNOCK.title : SECTIONS[key].title;
   // どのカード経由で「教材一覧へ」を押したかをUmamiのevent dataで区別する
   const noPass = document.getElementById("modalNoPass");
@@ -1486,8 +1535,10 @@ function tryUnlock() {
     saveState();
     const k = pendingKey;
     closeModal();
+    uTrack("section_unlock", { section: k });   // 初回解除＝教材が実際に届いた証跡
     showSection(k);
   } else {
+    uTrack("unlock_fail", { section: pendingKey });
     document.getElementById("modalError").textContent = "パスワードが違います";
     document.getElementById("modalInput").value = "";
     document.getElementById("modalInput").focus();
@@ -1643,6 +1694,8 @@ function buildQuestionList(key, mode) {
 function startQuiz(key, mode) {
   currentSection = key;
   currentMode = mode;
+  // どの科目を、どの解き方で始めたか（sm="kenri|mistakes" で1クエリで読める）
+  uTrack("quiz_start", { sm: key + "|" + mode, section: key, mode: mode });
   currentQuestions = buildQuestionList(key, mode);
   currentAnswers = {};
   sessionCorrect = 0;
@@ -1773,6 +1826,14 @@ function answer(i, userAnswer) {
   const correct = userAnswer === q.a;
   currentAnswers[i] = userAnswer;
   if (correct) sessionCorrect++;
+
+  // 分野×正誤を1問ずつ送る（おためしは問題の cat、科目別は科目キーが分野）
+  const isSample = currentSection === "sample";
+  trackAnswer(
+    isSample ? (GENRE_OF_CAT[q.cat] || "other") : currentSection,
+    isSample ? "sample" : "section",
+    correct
+  );
 
   // Update UI
   const btnO = document.getElementById("btn-o-" + i);

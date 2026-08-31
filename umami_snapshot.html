@@ -49,8 +49,14 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .flat { color: #9aa7ab; }
 .pcard .pev { font-size: 12.5px; color: #4c5b60; border-top: 1px dashed #e2ecee; padding-top: 8px; margin-top: auto; }
 .pcard .pev div { display: flex; justify-content: space-between; gap: 8px; padding: 1.5px 0; }
-.pcard .pev .k { color: #6b7a80; }
+.pcard .pev .k { color: #6b7a80; overflow-wrap: anywhere; }
 .pcard .pev .v { font-variant-numeric: tabular-nums; font-weight: 600; color: #2b3438; }
+.pcard .pblock + .pblock { margin-top: 8px; padding-top: 7px; border-top: 1px dotted #e8eff0; }
+.pcard .blabel { font-size: 10.5px; font-weight: 700; letter-spacing: .02em; margin-bottom: 3px; }
+.pcard .blabel.bin { color: #1c7ea8; }
+.pcard .blabel.bmid { color: #7c8b8f; }
+.pcard .blabel.bout { color: #b06a1f; }
+.pcard .pev .none { color: #b3c0c4; font-size: 12px; font-style: italic; }
 .rank { font-size: 11px; color: #ffffff; background: #17a2af; border-radius: 999px; padding: 1px 7px; font-weight: 700; }
 .rank.g { background: #cbd6d8; color: #5c6c70; }
 .fetch-fail { font-size: 13px; color: #b4553f; background: #fdf1ee; border-radius: 8px; padding: 10px 12px; }
@@ -68,7 +74,7 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
 <div class="wrap">
   <header>
     <h1>📈 Umamiウォッチ（週次スナップショット）</h1>
-    <div class="meta">取得日時：2026-08-31 09:38:36｜対象期間：08/24–08/31（7日間・API実測）（静的スナップショット・自動更新なし・再生成は umami_snapshot.py を再実行）</div>
+    <div class="meta">取得日時：2026-08-31 10:20:05｜対象期間：08/24–08/31（7日間・API実測）（静的スナップショット・自動更新なし・再生成は umami_snapshot.py を再実行）</div>
   </header>
   
     <div class="notice">
@@ -80,23 +86,23 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
       <div class="summary-grid">
         <div class="summary-item">
           <div class="label">Visitors（人数）</div>
-          <div class="value">201</div>
-          <div class="sub up">前期間121 → ▲80（+66%）</div>
+          <div class="value">202</div>
+          <div class="sub up">前期間122 → ▲80（+66%）</div>
         </div>
         <div class="summary-item">
           <div class="label">Views（閲覧回数）</div>
           <div class="value">498</div>
-          <div class="sub up">前期間300 → ▲198（+66%）</div>
+          <div class="sub up">前期間302 → ▲196（+65%）</div>
         </div>
         <div class="summary-item">
           <div class="label">直帰率</div>
-          <div class="value">44%</div>
+          <div class="value">45%</div>
           <div class="sub down">前期間25%</div>
         </div>
         <div class="summary-item">
           <div class="label">平均滞在</div>
           <div class="value">3m27s</div>
-          <div class="sub flat">前期間2m09s</div>
+          <div class="sub flat">前期間2m07s</div>
         </div>
       </div>
     </div>
@@ -113,7 +119,7 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
             <div class="pnum"><div class="n">62</div><div class="t">Visitors</div><div class="d up">▲8（+15%）</div></div>
             <div class="pnum"><div class="n">135</div><div class="t">Views</div><div class="d up">▲40（+42%）</div></div>
           </div>
-          <div class="pev"><div><span class="k">revisit</span><span class="v">117</span></div><div><span class="k">stand_fm</span><span class="v">83</span></div><div><span class="k">progress_toggle</span><span class="v">57</span></div><div><span class="k">note_summary</span><span class="v">26</span></div><div><span class="k">tracker_cta_kyozai</span><span class="v">1</span></div></div>
+          <div class="pev"><div class="pblock"><div class="blabel bin">← どこから来たか</div><div><span class="k">mail</span><span class="v">1</span></div></div><div class="pblock"><div class="blabel bmid">◆ 中の動き</div><div><span class="k">revisit</span><span class="v">117</span></div><div><span class="k">stand_fm</span><span class="v">83</span></div><div><span class="k">progress_toggle</span><span class="v">57</span></div></div><div class="pblock"><div class="blabel bout">→ どこへ行ったか</div><div><span class="k">tracker_cta_kyozai</span><span class="v">1</span></div></div></div>
         </div>
         <div class="pcard">
           <div class="phead">
@@ -122,10 +128,10 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
           </div>
           <div class="ppath">takken2026-quiz.vercel.app/kyozai.html</div>
           <div class="pnums">
-            <div class="pnum"><div class="n">38</div><div class="t">Visitors</div><div class="d down">▼1（-3%）</div></div>
-            <div class="pnum"><div class="n">68</div><div class="t">Views</div><div class="d up">▲7（+11%）</div></div>
+            <div class="pnum"><div class="n">39</div><div class="t">Visitors</div><div class="d flat">±0</div></div>
+            <div class="pnum"><div class="n">69</div><div class="t">Views</div><div class="d up">▲8（+13%）</div></div>
           </div>
-          <div class="pev"><div><span class="k">kyozai_cta_standfm</span><span class="v">10</span></div><div><span class="k">kyozai_flow_open</span><span class="v">7</span></div><div><span class="k">kyozai_cta_sample</span><span class="v">7</span></div><div><span class="k">kyozai_cta_weekly</span><span class="v">5</span></div><div><span class="k">kyozai_cta_chokuzen</span><span class="v">4</span></div></div>
+          <div class="pev"><div class="pblock"><div class="blabel bin">← どこから来たか</div><div><span class="k">stf</span><span class="v">10</span></div><div><span class="k">mail</span><span class="v">2</span></div><div><span class="k">mimiobo.vercel.app</span><span class="v">1</span></div><div><span class="k">obofam.github.io</span><span class="v">1</span></div></div><div class="pblock"><div class="blabel bmid">◆ 中の動き</div><div><span class="k">kyozai_flow_open</span><span class="v">7</span></div><div><span class="k">kyozai_flow_chokuzen</span><span class="v">2</span></div><div><span class="k">kyozai_flow_set3</span><span class="v">1</span></div></div><div class="pblock"><div class="blabel bout">→ どこへ行ったか</div><div><span class="k">kyozai_cta_standfm</span><span class="v">10</span></div><div><span class="k">kyozai_cta_sample</span><span class="v">7</span></div><div><span class="k">kyozai_cta_weekly</span><span class="v">5</span></div><div><span class="k">kyozai_cta_chokuzen</span><span class="v">4</span></div></div></div>
         </div>
         <div class="pcard">
           <div class="phead">
@@ -134,10 +140,10 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
           </div>
           <div class="ppath">takken2026-quiz.vercel.app/weekly.html</div>
           <div class="pnums">
-            <div class="pnum"><div class="n">27</div><div class="t">Visitors</div><div class="d down">▼5（-16%）</div></div>
-            <div class="pnum"><div class="n">39</div><div class="t">Views</div><div class="d flat">±0</div></div>
+            <div class="pnum"><div class="n">28</div><div class="t">Visitors</div><div class="d down">▼3（-10%）</div></div>
+            <div class="pnum"><div class="n">40</div><div class="t">Views</div><div class="d up">▲2（+5%）</div></div>
           </div>
-          <div class="pev"><div><span class="k">週1問_回答</span><span class="v">61</span></div><div><span class="k">weekly_complete</span><span class="v">21</span></div><div><span class="k">weekly_cta_sample</span><span class="v">5</span></div><div><span class="k">weekly_cta_note</span><span class="v">1</span></div></div>
+          <div class="pev"><div class="pblock"><div class="blabel bin">← どこから来たか</div><div><span class="k">mail</span><span class="v">1</span></div></div><div class="pblock"><div class="blabel bmid">◆ 中の動き</div><div><span class="k">週1問_回答</span><span class="v">60</span></div><div><span class="k">weekly_complete</span><span class="v">20</span></div></div><div class="pblock"><div class="blabel bout">→ どこへ行ったか</div><div><span class="k">weekly_cta_sample</span><span class="v">5</span></div><div><span class="k">weekly_cta_note</span><span class="v">1</span></div></div></div>
         </div>
         <div class="pcard">
           <div class="phead">
@@ -149,7 +155,7 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
             <div class="pnum"><div class="n">25</div><div class="t">Visitors</div><div class="d up">▲2（+9%）</div></div>
             <div class="pnum"><div class="n">40</div><div class="t">Views</div><div class="d up">▲3（+8%）</div></div>
           </div>
-          <div class="pev"><div><span class="k">sample_complete</span><span class="v">25</span></div><div><span class="k">sample_start</span><span class="v">19</span></div><div><span class="k">sample_cta_shindan</span><span class="v">3</span></div><div><span class="k">knock_start</span><span class="v">3</span></div><div><span class="k">sample_cta_kyozai</span><span class="v">2</span></div></div>
+          <div class="pev"><div class="pblock"><div class="blabel bin">← どこから来たか</div><div><span class="k">note.com</span><span class="v">2</span></div></div><div class="pblock"><div class="blabel bmid">◆ 中の動き</div><div><span class="k">sample_complete</span><span class="v">25</span></div><div><span class="k">sample_start</span><span class="v">19</span></div><div><span class="k">knock_start</span><span class="v">3</span></div></div><div class="pblock"><div class="blabel bout">→ どこへ行ったか</div><div><span class="k">sample_cta_shindan</span><span class="v">3</span></div><div><span class="k">sample_cta_kyozai</span><span class="v">2</span></div><div><span class="k">modal_cta_kyozai</span><span class="v">1</span></div></div></div>
         </div>
         <div class="pcard">
           <div class="phead">
@@ -161,7 +167,7 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
             <div class="pnum"><div class="n">7</div><div class="t">Visitors</div><div class="d down">▼10（-59%）</div></div>
             <div class="pnum"><div class="n">8</div><div class="t">Views</div><div class="d down">▼11（-58%）</div></div>
           </div>
-          <div class="pev"><div><span class="k">omikuji_cta_quiz</span><span class="v">3</span></div></div>
+          <div class="pev"><div class="pblock"><div class="blabel bin">← どこから来たか</div><div class="none">直接／リファラなし</div></div><div class="pblock"><div class="blabel bmid">◆ 中の動き</div><div class="none">計測イベントなし</div></div><div class="pblock"><div class="blabel bout">→ どこへ行ったか</div><div><span class="k">omikuji_cta_quiz</span><span class="v">3</span></div></div></div>
         </div>
         <div class="pcard">
           <div class="phead">
@@ -173,7 +179,7 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
             <div class="pnum"><div class="n">20</div><div class="t">Visitors</div><div class="d up">▲6（+43%）</div></div>
             <div class="pnum"><div class="n">24</div><div class="t">Views</div><div class="d up">▲6（+33%）</div></div>
           </div>
-          <div class="pev"><div><span class="k">shindan_start</span><span class="v">14</span></div><div><span class="k">shindan_complete</span><span class="v">13</span></div><div><span class="k">shindan_type_rebuild</span><span class="v">7</span></div><div><span class="k">shindan_cta_gyoho</span><span class="v">5</span></div><div><span class="k">shindan_type_finish</span><span class="v">2</span></div></div>
+          <div class="pev"><div class="pblock"><div class="blabel bin">← どこから来たか</div><div><span class="k">line</span><span class="v">5</span></div><div><span class="k">mimiobo.vercel.app</span><span class="v">1</span></div><div><span class="k">mimiobo.com</span><span class="v">1</span></div><div><span class="k">stf</span><span class="v">1</span></div></div><div class="pblock"><div class="blabel bmid">◆ 中の動き</div><div><span class="k">shindan_start</span><span class="v">14</span></div><div><span class="k">shindan_complete</span><span class="v">13</span></div><div><span class="k">shindan_type_rebuild</span><span class="v">7</span></div></div><div class="pblock"><div class="blabel bout">→ どこへ行ったか</div><div><span class="k">shindan_cta_gyoho</span><span class="v">5</span></div><div><span class="k">shindan_cta_chokuzen</span><span class="v">1</span></div><div><span class="k">shindan_cta_quiz</span><span class="v">1</span></div></div></div>
         </div>
         <div class="pcard">
           <div class="phead">
@@ -185,20 +191,20 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
             <div class="pnum"><div class="n">70</div><div class="t">Visitors</div><div class="d flat">▲70（新規）</div></div>
             <div class="pnum"><div class="n">99</div><div class="t">Views</div><div class="d flat">▲99（新規）</div></div>
           </div>
-          <div class="pev"><div><span class="k">home_mat_bansou</span><span class="v">11</span></div><div><span class="k">home_share</span><span class="v">5</span></div><div><span class="k">home_tokushoho</span><span class="v">4</span></div><div><span class="k">home_cta_shindan</span><span class="v">4</span></div><div><span class="k">home_plat_apple</span><span class="v">3</span></div></div>
+          <div class="pev"><div class="pblock"><div class="blabel bin">← どこから来たか</div><div><span class="k">facebook.com</span><span class="v">8</span></div><div><span class="k">ig_prof</span><span class="v">6</span></div><div><span class="k">yt_prof</span><span class="v">5</span></div><div><span class="k">standfm</span><span class="v">3</span></div></div><div class="pblock"><div class="blabel bmid">◆ 中の動き</div><div><span class="k">home_privacy</span><span class="v">1</span></div></div><div class="pblock"><div class="blabel bout">→ どこへ行ったか</div><div><span class="k">home_mat_bansou</span><span class="v">11</span></div><div><span class="k">home_share</span><span class="v">5</span></div><div><span class="k">home_tokushoho</span><span class="v">4</span></div><div><span class="k">home_cta_shindan</span><span class="v">4</span></div></div></div>
         </div></div>
     </div>
     <div class="card">
       <h2>🌐 ホスト別</h2>
       <table><thead><tr><th>ホスト</th><th style="text-align:right;">Visitors</th></tr></thead>
-      <tbody><tr><td>takken2026-quiz.vercel.app</td><td class="num">96</td></tr><tr><td>obofam.github.io</td><td class="num">63</td></tr><tr><td>www.mimiobo.com</td><td class="num">52</td></tr><tr><td>mimiobo.vercel.app</td><td class="num">18</td></tr><tr><td>localhost</td><td class="num">2</td></tr></tbody></table>
+      <tbody><tr><td>takken2026-quiz.vercel.app</td><td class="num">98</td></tr><tr><td>obofam.github.io</td><td class="num">62</td></tr><tr><td>www.mimiobo.com</td><td class="num">52</td></tr><tr><td>mimiobo.vercel.app</td><td class="num">18</td></tr><tr><td>localhost</td><td class="num">2</td></tr></tbody></table>
     </div>
     <div class="card">
       <h2>🏷 UTM source別</h2>
       <table><thead><tr><th>utm_source</th><th style="text-align:right;">件数</th></tr></thead>
-      <tbody><tr><td>stf</td><td class="num">11</td></tr><tr><td>line</td><td class="num">6</td></tr><tr><td>ig_prof</td><td class="num">6</td></tr><tr><td>yt_prof</td><td class="num">5</td></tr><tr><td>mail</td><td class="num">4</td></tr><tr><td>standfm</td><td class="num">3</td></tr><tr><td>note</td><td class="num">2</td></tr><tr><td>yt_comment</td><td class="num">2</td></tr><tr><td>note_prof</td><td class="num">1</td></tr><tr><td>x_prof</td><td class="num">1</td></tr><tr><td>mail_sample</td><td class="num">1</td></tr></tbody></table>
+      <tbody><tr><td>stf</td><td class="num">11</td></tr><tr><td>line</td><td class="num">6</td></tr><tr><td>ig_prof</td><td class="num">6</td></tr><tr><td>yt_prof</td><td class="num">5</td></tr><tr><td>mail</td><td class="num">4</td></tr><tr><td>standfm</td><td class="num">3</td></tr><tr><td>note</td><td class="num">3</td></tr><tr><td>yt_comment</td><td class="num">2</td></tr><tr><td>note_prof</td><td class="num">1</td></tr><tr><td>x_prof</td><td class="num">1</td></tr><tr><td>mail_sample</td><td class="num">1</td></tr></tbody></table>
     </div>
-  <footer>耳で覚える宅建2026｜内部集計用スナップショット（2026-08-31 09:38:36 生成）</footer>
+  <footer>耳で覚える宅建2026｜内部集計用スナップショット（2026-08-31 10:20:05 生成）</footer>
 </div>
 </body>
 </html>

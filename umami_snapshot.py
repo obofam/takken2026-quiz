@@ -71,8 +71,10 @@ def matches_prefixes(name, prefixes):
     return any(name == p or name.startswith(p) for p in prefixes)
 
 
-def top_events_for(prefixes, event_list, n=5):
+def top_events_for(prefixes, event_list, n=5, want_out=None):
     matched = [e for e in event_list if matches_prefixes(e["x"], prefixes)]
+    if want_out is not None:
+        matched = [e for e in matched if is_outbound(e["x"]) == want_out]
     matched.sort(key=lambda e: e["y"], reverse=True)
     return matched[:n]
 
@@ -106,6 +108,45 @@ def delta(now, prev):
 
 def esc(x):
     return html.escape(str(x), quote=True)
+
+
+# 「送り先」＝そのページから外へ出ていくCTA。それ以外は「中の動き」に回す。
+OUTBOUND_HINTS = ("_cta_", "_nav_", "_link", "_plat_", "_sns_", "_ep_", "_mat_",
+                  "_tokushoho", "_share", "_mail_")
+# 名前からは判別できないが外部へ飛ばしているもの（stand.fm / note の各記事）
+OUTBOUND_NAMES = {"stand_fm", "note_summary"}
+
+
+def is_outbound(name):
+    return name in OUTBOUND_NAMES or any(hint in name for hint in OUTBOUND_HINTS)
+
+
+def collect_inbound(d, base_params, headers):
+    """そのページ「どこから来たか」。リファラとUTM sourceを1本のリストにまとめる。"""
+    tally = {}
+    for hn in d["hostnames"]:
+        params = {**base_params, "hostname": hn}
+        if "path" in d:
+            params["path"] = d["path"]
+        for typ in ("referrer", "query"):
+            try:
+                rows = api_get("/metrics", {**params, "type": typ, "limit": 20}, headers)
+            except Exception:
+                continue
+            for r in rows:
+                x, y = r["x"], r["y"]
+                if not x:
+                    continue
+                if typ == "query":
+                    src = urllib.parse.parse_qs(x).get("utm_source", [None])[0]
+                    if not src:
+                        continue
+                    label = src
+                else:
+                    label = x.replace("www.", "").replace("m.facebook.com", "facebook.com")
+                    label = label.replace("l.instagram.com", "instagram.com")
+                tally[label] = tally.get(label, 0) + y
+    return sorted(tally.items(), key=lambda kv: kv[1], reverse=True)[:4]
 
 
 def fetch_all(days):
@@ -148,11 +189,14 @@ def fetch_all(days):
                 prev_views += cp.get("pageviews") or 0
             stat = {"visitors": vis, "pageviews": views}
             comp = {"visitors": prev_vis, "pageviews": prev_views}
+            inbound = collect_inbound(d, base_params, headers)
             pages.append({
+                "inbound": inbound,
                 **d,
                 "visitors": stat["visitors"], "views": stat["pageviews"],
                 "prev_visitors": comp.get("visitors"), "prev_views": comp.get("pageviews"),
-                "events": top_events_for(d["prefixes"], events, 5),
+                "events_inside": top_events_for(d["prefixes"], events, 3, want_out=False),
+                "events_out": top_events_for(d["prefixes"], events, 4, want_out=True),
                 "error": False,
             })
         except Exception as e:
@@ -209,8 +253,14 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .flat { color: #9aa7ab; }
 .pcard .pev { font-size: 12.5px; color: #4c5b60; border-top: 1px dashed #e2ecee; padding-top: 8px; margin-top: auto; }
 .pcard .pev div { display: flex; justify-content: space-between; gap: 8px; padding: 1.5px 0; }
-.pcard .pev .k { color: #6b7a80; }
+.pcard .pev .k { color: #6b7a80; overflow-wrap: anywhere; }
 .pcard .pev .v { font-variant-numeric: tabular-nums; font-weight: 600; color: #2b3438; }
+.pcard .pblock + .pblock { margin-top: 8px; padding-top: 7px; border-top: 1px dotted #e8eff0; }
+.pcard .blabel { font-size: 10.5px; font-weight: 700; letter-spacing: .02em; margin-bottom: 3px; }
+.pcard .blabel.bin { color: #1c7ea8; }
+.pcard .blabel.bmid { color: #7c8b8f; }
+.pcard .blabel.bout { color: #b06a1f; }
+.pcard .pev .none { color: #b3c0c4; font-size: 12px; font-style: italic; }
 .rank { font-size: 11px; color: #ffffff; background: #17a2af; border-radius: 999px; padding: 1px 7px; font-weight: 700; }
 .rank.g { background: #cbd6d8; color: #5c6c70; }
 .fetch-fail { font-size: 13px; color: #b4553f; background: #fdf1ee; border-radius: 8px; padding: 10px 12px; }
@@ -310,10 +360,23 @@ def render_pages(pages):
         dww_cls, dww_text = delta(p["views"], p["prev_views"])
         rank = rank_order.index(p["key"]) + 1
         rank_cls = "" if rank <= 3 else "g"
-        ev_html = "".join(
-            f'<div><span class="k">{esc(e["x"])}</span><span class="v">{e["y"]}</span></div>'
-            for e in p["events"]
-        ) or '<div><span class="k">カスタムイベント</span><span class="v">なし</span></div>'
+        def rows(items, empty):
+            if not items:
+                return f'<div class="none">{empty}</div>'
+            return "".join(
+                f'<div><span class="k">{esc(k)}</span><span class="v">{v}</span></div>'
+                for k, v in items
+            )
+
+        ev_html = (
+            '<div class="pblock"><div class="blabel bin">← どこから来たか</div>'
+            + rows(p["inbound"], "直接／リファラなし")
+            + '</div><div class="pblock"><div class="blabel bmid">◆ 中の動き</div>'
+            + rows([(e["x"], e["y"]) for e in p["events_inside"]], "計測イベントなし")
+            + '</div><div class="pblock"><div class="blabel bout">→ どこへ行ったか</div>'
+            + rows([(e["x"], e["y"]) for e in p["events_out"]], "送り先クリック 0")
+            + '</div>'
+        )
         cards.append(f"""
         <div class="pcard">
           <div class="phead">
