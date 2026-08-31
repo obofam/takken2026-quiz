@@ -189,9 +189,21 @@ def fetch_all(days):
                 prev_views += cp.get("pageviews") or 0
             stat = {"visitors": vis, "pageviews": views}
             comp = {"visitors": prev_vis, "pageviews": prev_views}
+            # 日本からの実数。新ドメイン公開後、リファラを facebook.com 等に
+            # 偽装したbotが / を叩いており、素のvisitorsは水増しされている。
+            vis_jp = 0
+            for hn in d["hostnames"]:
+                params = {**base_params, "hostname": hn, "country": "JP"}
+                if "path" in d:
+                    params["path"] = d["path"]
+                try:
+                    vis_jp += api_get("/stats", params, headers)["visitors"]
+                except Exception:
+                    pass
             inbound = collect_inbound(d, base_params, headers)
             pages.append({
                 "inbound": inbound,
+                "visitors_jp": vis_jp,
                 **d,
                 "visitors": stat["visitors"], "views": stat["pageviews"],
                 "prev_visitors": comp.get("visitors"), "prev_views": comp.get("pageviews"),
@@ -247,6 +259,7 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .pcard .pnum { background: #f2fafa; border-radius: 8px; padding: 8px 6px; text-align: center; }
 .pcard .pnum .n { font-size: 21px; font-weight: 700; color: #0e7c8b; line-height: 1.2; font-variant-numeric: tabular-nums; }
 .pcard .pnum .t { font-size: 10.5px; color: #7c8b8f; }
+.pcard .pnum .jp { color: #b4553f; font-weight: 700; }
 .pcard .pnum .d { font-size: 11px; margin-top: 2px; font-variant-numeric: tabular-nums; }
 .up { color: #128a5f; }
 .down { color: #b4553f; }
@@ -287,6 +300,14 @@ NOTICE_ITEMS = [
     "実質は obofam.github.io 側がほぼ全数。",
     "<b>メインHPは <code>www.mimiobo.com</code>（本番）と旧 <code>mimiobo.vercel.app</code>（308でwwwへ転送）の合算。</b>"
     "2026-08-26週から計測に合流したので、それ以前との比較では丸ごと上積みになる。",
+    "<b>リファラの <code>facebook.com</code> / <code>m.facebook.com</code> は本物の流入ではない。</b>"
+    "Facebookには何も出稿・投稿していない。2026-08-31時点の実測で、この8件は"
+    "<b>全員が日本国外（US 6・SE 1・IE 1）・全員が直帰・滞在0秒・メインHPのトップだけ</b>を叩いている＝"
+    "新ドメイン公開後に湧いたリファラ偽装のbot。数に入れて読まないこと。"
+    "一方 <code>l.instagram.com</code> と <code>ig_prof</code> は日本・Instagramアプリ内ブラウザで、"
+    "こちらはプロフィールリンクからの本物。",
+    "<b>Visitorsに「うち日本 N」が付いているページは、海外botで水増しされている。</b>"
+    "日本語のみのサイトなので、実勢は日本の数字で読む。",
     "<b>進捗トラッカーの「どこから来たか」が空なのは仕様。</b>"
     "流入の主力はLINEリッチメニューからの直リンクで、リファラもUTMも付かない。"
     "<b>LINE側の管理画面でクリック数が見えるため、あえてUTMを付けていない</b>（2026-08-31 Kei判断）。"
@@ -345,6 +366,16 @@ def render_summary(overall, days, period_label):
     </div>"""
 
 
+def jp_note(p):
+    """海外bot混入があるページだけ「うち日本 N」を出す。差が小さければ黙る。"""
+    jp = p.get("visitors_jp")
+    if jp is None or not p["visitors"]:
+        return ""
+    if jp >= p["visitors"] * 0.9:
+        return ""
+    return f'<br><span class="jp">うち日本 {jp}</span>'
+
+
 def render_pages(pages):
     ok_pages = [p for p in pages if not p.get("error")]
     rank_order = [p["key"] for p in sorted(ok_pages, key=lambda p: p["visitors"], reverse=True)]
@@ -389,7 +420,7 @@ def render_pages(pages):
           </div>
           <div class="ppath">{path_label}</div>
           <div class="pnums">
-            <div class="pnum"><div class="n">{p['visitors']}</div><div class="t">Visitors</div><div class="d {dvv_cls}">{dvv_text}</div></div>
+            <div class="pnum"><div class="n">{p['visitors']}</div><div class="t">Visitors{jp_note(p)}</div><div class="d {dvv_cls}">{dvv_text}</div></div>
             <div class="pnum"><div class="n">{p['views']}</div><div class="t">Views</div><div class="d {dww_cls}">{dww_text}</div></div>
           </div>
           <div class="pev">{ev_html}</div>
