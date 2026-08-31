@@ -39,7 +39,9 @@ PAGE_DEFS = [
      "prefixes": ["omikuji_"]},
     {"key": "shindan", "name": "現在地診断", "icon": "\U0001F9ED", "path": "/shindan.html",
      "prefixes": ["shindan_"]},
-    {"key": "home", "name": "メインHP", "icon": "\U0001F3E0", "hostname": "mimiobo.vercel.app",
+    {"key": "home", "name": "メインHP", "icon": "\U0001F3E0", "hostname": "www.mimiobo.com",
+     # 2026-08-27 独自ドメイン移行。旧 mimiobo.vercel.app も生きている（308でwwwへ）ため両方を合算する
+     "hostnames": ["www.mimiobo.com", "mimiobo.vercel.app"],
      "prefixes": ["home_"]},
 ]
 
@@ -121,12 +123,24 @@ def fetch_all(days):
     pages = []
     for d in PAGE_DEFS:
         try:
-            if "hostname" in d:
-                params = {**base_params, "hostname": d["hostname"]}
+            if "hostnames" in d:
+                # 複数ホストを合算（ドメイン移行期にデータが分断されるのを防ぐ）
+                vis = views = prev_vis = prev_views = 0
+                for hn in d["hostnames"]:
+                    st = api_get("/stats", {**base_params, "hostname": hn}, headers)
+                    cp = st.get("comparison", {}) or {}
+                    vis += st["visitors"]; views += st["pageviews"]
+                    prev_vis += cp.get("visitors") or 0
+                    prev_views += cp.get("pageviews") or 0
+                stat = {"visitors": vis, "pageviews": views}
+                comp = {"visitors": prev_vis, "pageviews": prev_views}
             else:
-                params = {**base_params, "path": d["path"]}
-            stat = api_get("/stats", params, headers)
-            comp = stat.get("comparison", {}) or {}
+                if "hostname" in d:
+                    params = {**base_params, "hostname": d["hostname"]}
+                else:
+                    params = {**base_params, "path": d["path"]}
+                stat = api_get("/stats", params, headers)
+                comp = stat.get("comparison", {}) or {}
             pages.append({
                 **d,
                 "visitors": stat["visitors"], "views": stat["pageviews"],
