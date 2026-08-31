@@ -68,32 +68,25 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
 <div class="wrap">
   <header>
     <h1>📈 Umamiウォッチ（週次スナップショット）</h1>
-    <div class="meta">取得日時：2026-08-31 09:27:24｜対象期間：08/24–08/31（7日間・API実測）（静的スナップショット・自動更新なし・再生成は umami_snapshot.py を再実行）</div>
+    <div class="meta">取得日時：2026-08-31 09:38:36｜対象期間：08/24–08/31（7日間・API実測）（静的スナップショット・自動更新なし・再生成は umami_snapshot.py を再実行）</div>
   </header>
-
+  
     <div class="notice">
-      <h3>⚠️ この週報の数字を読むときの注意（2026-08-31 更新）</h3>
-      <ul>
-        <li><b>全指標が過去最高（Visitors 200・+65%）だが、増分の主因は「新規ページの人気」ではなく計測対象の拡大。</b>メインHPのドメイン移行が完了し <code>www.mimiobo.com</code> が今週から本格計上（52人）。旧 <code>mimiobo.vercel.app</code>（18人）と合わせて70人＝丸ごと新規の上積み。<b>この70人を除くと実質は前週並み。</b></li>
-        <li><b>「📚 一問一答問題集 /」の92人（+300%）は読まないこと。</b>パス <code>/</code> をホスト横断で合算しているため、メインHPのトップ（www 51＋vercel 18）を二重に飲み込んでいる。<b>クイズサイトのトップだけなら25人</b>（前週36人 → 実際は減）。次回の <code>umami_snapshot.py</code> 改修で <code>/</code> をホスト単位に分離する。</li>
-        <li><b>obofam.github.io 63人は進捗トラッカーの旧URL。</b>vercel版と二重に生きたままで、導線監査の穴07が未解消。トラッカーの実数を見るときはこのホストが本体。</li>
-        <li><b>直前対策（8/24発売）の主計測 <code>kyozai_cta_chokuzen</code> が 0 → 4 でようやく初動。</b>前週まで無反応だった導線が動き出した最初の週。</li>
-        <li><b>メール導線（Kit）はUmamiの外側。</b>読者数は active 1人（前週比±0）で未点火。LPフォームの送信イベント <code>home_mail_submit</code> も0で整合。</li>
-      </ul>
+      <h3>⚠️ この週報の数字を読むときの注意</h3>
+      <ul><li><b>7ページ比較はホスト＋パスで絞って集計している。</b>以前は <code>/</code> をホスト横断で合算していたため、「一問一答問題集」にメインHPのトップが混ざって実数の数倍に見えていた（2026-08-31の週報で発覚・修正済み）。</li><li><b>進捗トラッカーは <code>obofam.github.io</code> が正。</b>学習記録の蓄積がこのURLに紐づいているため、意図的にGitHub Pages側を本番にしている（vercel版への一本化は来期）。ここでは念のため両ホストを合算しているが、実質は obofam.github.io 側がほぼ全数。</li><li><b>メインHPは <code>www.mimiobo.com</code>（本番）と旧 <code>mimiobo.vercel.app</code>（308でwwwへ転送）の合算。</b>2026-08-26週から計測に合流したので、それ以前との比較では丸ごと上積みになる。</li><li><b>メール導線（Kit）はUmamiの外側。</b>登録・開封・クリックはKitの管理画面にあり、この週報には出ない（穴06）。読者数は <code>umami_週次ログ.md</code> のメルマガ表を見る。</li></ul>
     </div>
-
     <div class="card">
       <h2>今期間の概況<span class="sub">08/24–08/31（7日間・API実測）</span></h2>
       <div class="summary-grid">
         <div class="summary-item">
           <div class="label">Visitors（人数）</div>
-          <div class="value">200</div>
-          <div class="sub up">前期間121 → ▲79（+65%）</div>
+          <div class="value">201</div>
+          <div class="sub up">前期間121 → ▲80（+66%）</div>
         </div>
         <div class="summary-item">
           <div class="label">Views（閲覧回数）</div>
-          <div class="value">497</div>
-          <div class="sub up">前期間300 → ▲197（+66%）</div>
+          <div class="value">498</div>
+          <div class="sub up">前期間300 → ▲198（+66%）</div>
         </div>
         <div class="summary-item">
           <div class="label">直帰率</div>
@@ -102,7 +95,7 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
         </div>
         <div class="summary-item">
           <div class="label">平均滞在</div>
-          <div class="value">3m28s</div>
+          <div class="value">3m27s</div>
           <div class="sub flat">前期間2m09s</div>
         </div>
       </div>
@@ -112,22 +105,22 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
       <div class="page-grid">
         <div class="pcard">
           <div class="phead">
-            <span class="rank ">3位</span>
+            <span class="rank ">2位</span>
             <span class="pname">📊 進捗トラッカー</span>
           </div>
-          <div class="ppath">/takken2026-quiz/tracker.html</div>
+          <div class="ppath">obofam.github.io + takken2026-quiz.vercel.app/takken2026-quiz/tracker.html</div>
           <div class="pnums">
-            <div class="pnum"><div class="n">63</div><div class="t">Visitors</div><div class="d up">▲9（+17%）</div></div>
-            <div class="pnum"><div class="n">136</div><div class="t">Views</div><div class="d up">▲41（+43%）</div></div>
+            <div class="pnum"><div class="n">62</div><div class="t">Visitors</div><div class="d up">▲8（+15%）</div></div>
+            <div class="pnum"><div class="n">135</div><div class="t">Views</div><div class="d up">▲40（+42%）</div></div>
           </div>
-          <div class="pev"><div><span class="k">revisit</span><span class="v">117</span></div><div><span class="k">stand_fm</span><span class="v">83</span></div><div><span class="k">progress_toggle</span><span class="v">60</span></div><div><span class="k">note_summary</span><span class="v">27</span></div><div><span class="k">tracker_cta_kyozai</span><span class="v">1</span></div></div>
+          <div class="pev"><div><span class="k">revisit</span><span class="v">117</span></div><div><span class="k">stand_fm</span><span class="v">83</span></div><div><span class="k">progress_toggle</span><span class="v">57</span></div><div><span class="k">note_summary</span><span class="v">26</span></div><div><span class="k">tracker_cta_kyozai</span><span class="v">1</span></div></div>
         </div>
         <div class="pcard">
           <div class="phead">
-            <span class="rank g">4位</span>
+            <span class="rank ">3位</span>
             <span class="pname">🗂 教材一覧</span>
           </div>
-          <div class="ppath">/kyozai.html</div>
+          <div class="ppath">takken2026-quiz.vercel.app/kyozai.html</div>
           <div class="pnums">
             <div class="pnum"><div class="n">38</div><div class="t">Visitors</div><div class="d down">▼1（-3%）</div></div>
             <div class="pnum"><div class="n">68</div><div class="t">Views</div><div class="d up">▲7（+11%）</div></div>
@@ -136,25 +129,25 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
         </div>
         <div class="pcard">
           <div class="phead">
-            <span class="rank g">5位</span>
+            <span class="rank g">4位</span>
             <span class="pname">📝 週1過去問コーナー</span>
           </div>
-          <div class="ppath">/weekly.html</div>
+          <div class="ppath">takken2026-quiz.vercel.app/weekly.html</div>
           <div class="pnums">
-            <div class="pnum"><div class="n">28</div><div class="t">Visitors</div><div class="d down">▼3（-10%）</div></div>
-            <div class="pnum"><div class="n">40</div><div class="t">Views</div><div class="d up">▲2（+5%）</div></div>
+            <div class="pnum"><div class="n">27</div><div class="t">Visitors</div><div class="d down">▼5（-16%）</div></div>
+            <div class="pnum"><div class="n">39</div><div class="t">Views</div><div class="d flat">±0</div></div>
           </div>
           <div class="pev"><div><span class="k">週1問_回答</span><span class="v">61</span></div><div><span class="k">weekly_complete</span><span class="v">21</span></div><div><span class="k">weekly_cta_sample</span><span class="v">5</span></div><div><span class="k">weekly_cta_note</span><span class="v">1</span></div></div>
         </div>
         <div class="pcard">
           <div class="phead">
-            <span class="rank ">1位</span>
+            <span class="rank g">5位</span>
             <span class="pname">📚 一問一答問題集</span>
           </div>
-          <div class="ppath">/</div>
+          <div class="ppath">takken2026-quiz.vercel.app/</div>
           <div class="pnums">
-            <div class="pnum"><div class="n">92</div><div class="t">Visitors</div><div class="d up">▲69（+300%）</div></div>
-            <div class="pnum"><div class="n">132</div><div class="t">Views</div><div class="d up">▲95（+257%）</div></div>
+            <div class="pnum"><div class="n">25</div><div class="t">Visitors</div><div class="d up">▲2（+9%）</div></div>
+            <div class="pnum"><div class="n">40</div><div class="t">Views</div><div class="d up">▲3（+8%）</div></div>
           </div>
           <div class="pev"><div><span class="k">sample_complete</span><span class="v">25</span></div><div><span class="k">sample_start</span><span class="v">19</span></div><div><span class="k">sample_cta_shindan</span><span class="v">3</span></div><div><span class="k">knock_start</span><span class="v">3</span></div><div><span class="k">sample_cta_kyozai</span><span class="v">2</span></div></div>
         </div>
@@ -163,7 +156,7 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
             <span class="rank g">7位</span>
             <span class="pname">🎲 おみくじ</span>
           </div>
-          <div class="ppath">/omikuji.html</div>
+          <div class="ppath">takken2026-quiz.vercel.app/omikuji.html</div>
           <div class="pnums">
             <div class="pnum"><div class="n">7</div><div class="t">Visitors</div><div class="d down">▼10（-59%）</div></div>
             <div class="pnum"><div class="n">8</div><div class="t">Views</div><div class="d down">▼11（-58%）</div></div>
@@ -175,7 +168,7 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
             <span class="rank g">6位</span>
             <span class="pname">🧭 現在地診断</span>
           </div>
-          <div class="ppath">/shindan.html</div>
+          <div class="ppath">takken2026-quiz.vercel.app/shindan.html</div>
           <div class="pnums">
             <div class="pnum"><div class="n">20</div><div class="t">Visitors</div><div class="d up">▲6（+43%）</div></div>
             <div class="pnum"><div class="n">24</div><div class="t">Views</div><div class="d up">▲6（+33%）</div></div>
@@ -184,10 +177,10 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
         </div>
         <div class="pcard">
           <div class="phead">
-            <span class="rank ">2位</span>
+            <span class="rank ">1位</span>
             <span class="pname">🏠 メインHP</span>
           </div>
-          <div class="ppath">www.mimiobo.com</div>
+          <div class="ppath">www.mimiobo.com + mimiobo.vercel.app</div>
           <div class="pnums">
             <div class="pnum"><div class="n">70</div><div class="t">Visitors</div><div class="d flat">▲70（新規）</div></div>
             <div class="pnum"><div class="n">99</div><div class="t">Views</div><div class="d flat">▲99（新規）</div></div>
@@ -198,14 +191,14 @@ footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; 
     <div class="card">
       <h2>🌐 ホスト別</h2>
       <table><thead><tr><th>ホスト</th><th style="text-align:right;">Visitors</th></tr></thead>
-      <tbody><tr><td>takken2026-quiz.vercel.app</td><td class="num">95</td></tr><tr><td>obofam.github.io</td><td class="num">63</td></tr><tr><td>www.mimiobo.com</td><td class="num">52</td></tr><tr><td>mimiobo.vercel.app</td><td class="num">18</td></tr><tr><td>localhost</td><td class="num">2</td></tr></tbody></table>
+      <tbody><tr><td>takken2026-quiz.vercel.app</td><td class="num">96</td></tr><tr><td>obofam.github.io</td><td class="num">63</td></tr><tr><td>www.mimiobo.com</td><td class="num">52</td></tr><tr><td>mimiobo.vercel.app</td><td class="num">18</td></tr><tr><td>localhost</td><td class="num">2</td></tr></tbody></table>
     </div>
     <div class="card">
       <h2>🏷 UTM source別</h2>
       <table><thead><tr><th>utm_source</th><th style="text-align:right;">件数</th></tr></thead>
       <tbody><tr><td>stf</td><td class="num">11</td></tr><tr><td>line</td><td class="num">6</td></tr><tr><td>ig_prof</td><td class="num">6</td></tr><tr><td>yt_prof</td><td class="num">5</td></tr><tr><td>mail</td><td class="num">4</td></tr><tr><td>standfm</td><td class="num">3</td></tr><tr><td>note</td><td class="num">2</td></tr><tr><td>yt_comment</td><td class="num">2</td></tr><tr><td>note_prof</td><td class="num">1</td></tr><tr><td>x_prof</td><td class="num">1</td></tr><tr><td>mail_sample</td><td class="num">1</td></tr></tbody></table>
     </div>
-  <footer>耳で覚える宅建2026｜内部集計用スナップショット（2026-08-31 09:27:24 生成・同日に計測注意を追記）</footer>
+  <footer>耳で覚える宅建2026｜内部集計用スナップショット（2026-08-31 09:38:36 生成）</footer>
 </div>
 </body>
 </html>

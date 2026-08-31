@@ -18,30 +18,40 @@ WEBSITE_ID = "99a5370c-5fbd-4ceb-9d35-7734d7c580ec"
 GW = "https://gateway-us.umami.is/api"
 TOKEN_URL = f"https://cloud.umami.is/analytics/us/api/share/{SHARE_ID}"
 
-OUT_PATH = (
-    r"C:\Users\canne\AppData\Local\Temp\claude\C--Claude---"
-    r"\3c089994-0cda-4c7b-ba63-0fe62f93f724\scratchpad\umami_snapshot.html"
-)
+OUT_PATH = r"C:\Claude\宅建\7_クイズと進捗トラッカー\umami_snapshot.html"
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 
+QUIZ_HOST = "takken2026-quiz.vercel.app"
+# 進捗トラッカーは旧URL(obofam.github.io)とvercel版が二重に生きている（導線監査の穴07）
+TRACKER_HOSTS = ["obofam.github.io", QUIZ_HOST]
+# 2026-08-27 独自ドメイン移行。旧 mimiobo.vercel.app も生きている（308でwwwへ）ため両方を合算する
+HOME_HOSTS = ["www.mimiobo.com", "mimiobo.vercel.app"]
+
 # 7ページ定義（umami_watch.html と同じ構造）
+# path は必ず hostnames とセットで指定する。ホストを指定しないと、複数ホストで
+# 同じパスが存在する場合に合算されてしまう（特に "/" はクイズトップとメインHPトップが
+# 混ざり実数の数倍になる。2026-08-31 の週報で実際に起きた）。
 PAGE_DEFS = [
-    {"key": "tracker", "name": "進捗トラッカー", "icon": "\U0001F4CA", "path": "/takken2026-quiz/tracker.html",
+    {"key": "tracker", "name": "進捗トラッカー", "icon": "\U0001F4CA",
+     "path": "/takken2026-quiz/tracker.html", "hostnames": TRACKER_HOSTS,
      "prefixes": ["tracker_", "progress_toggle", "revisit", "stand_fm", "note_summary"]},
-    {"key": "kyozai", "name": "教材一覧", "icon": "\U0001F5C2", "path": "/kyozai.html",
+    {"key": "kyozai", "name": "教材一覧", "icon": "\U0001F5C2",
+     "path": "/kyozai.html", "hostnames": [QUIZ_HOST],
      "prefixes": ["kyozai_"]},
-    {"key": "weekly", "name": "週1過去問コーナー", "icon": "\U0001F4DD", "path": "/weekly.html",
+    {"key": "weekly", "name": "週1過去問コーナー", "icon": "\U0001F4DD",
+     "path": "/weekly.html", "hostnames": [QUIZ_HOST],
      "prefixes": ["weekly_", "週1問_回答"]},
-    {"key": "quiz", "name": "一問一答問題集", "icon": "\U0001F4DA", "path": "/",
+    {"key": "quiz", "name": "一問一答問題集", "icon": "\U0001F4DA",
+     "path": "/", "hostnames": [QUIZ_HOST],
      "prefixes": ["sample_", "buyguide_", "modal_", "knock_"]},
-    {"key": "omikuji", "name": "おみくじ", "icon": "\U0001F3B2", "path": "/omikuji.html",
+    {"key": "omikuji", "name": "おみくじ", "icon": "\U0001F3B2",
+     "path": "/omikuji.html", "hostnames": [QUIZ_HOST],
      "prefixes": ["omikuji_"]},
-    {"key": "shindan", "name": "現在地診断", "icon": "\U0001F9ED", "path": "/shindan.html",
+    {"key": "shindan", "name": "現在地診断", "icon": "\U0001F9ED",
+     "path": "/shindan.html", "hostnames": [QUIZ_HOST],
      "prefixes": ["shindan_"]},
-    {"key": "home", "name": "メインHP", "icon": "\U0001F3E0", "hostname": "www.mimiobo.com",
-     # 2026-08-27 独自ドメイン移行。旧 mimiobo.vercel.app も生きている（308でwwwへ）ため両方を合算する
-     "hostnames": ["www.mimiobo.com", "mimiobo.vercel.app"],
+    {"key": "home", "name": "メインHP", "icon": "\U0001F3E0", "hostnames": HOME_HOSTS,
      "prefixes": ["home_"]},
 ]
 
@@ -123,24 +133,21 @@ def fetch_all(days):
     pages = []
     for d in PAGE_DEFS:
         try:
-            if "hostnames" in d:
-                # 複数ホストを合算（ドメイン移行期にデータが分断されるのを防ぐ）
-                vis = views = prev_vis = prev_views = 0
-                for hn in d["hostnames"]:
-                    st = api_get("/stats", {**base_params, "hostname": hn}, headers)
-                    cp = st.get("comparison", {}) or {}
-                    vis += st["visitors"]; views += st["pageviews"]
-                    prev_vis += cp.get("visitors") or 0
-                    prev_views += cp.get("pageviews") or 0
-                stat = {"visitors": vis, "pageviews": views}
-                comp = {"visitors": prev_vis, "pageviews": prev_views}
-            else:
-                if "hostname" in d:
-                    params = {**base_params, "hostname": d["hostname"]}
-                else:
-                    params = {**base_params, "path": d["path"]}
-                stat = api_get("/stats", params, headers)
-                comp = stat.get("comparison", {}) or {}
+            # ホストごとに引いて合算する（旧URL/新ドメインでデータが分断されるため）。
+            # path があれば hostname と AND で絞る＝同名パスの他ホスト混入を防ぐ。
+            vis = views = prev_vis = prev_views = 0
+            for hn in d["hostnames"]:
+                params = {**base_params, "hostname": hn}
+                if "path" in d:
+                    params["path"] = d["path"]
+                st = api_get("/stats", params, headers)
+                cp = st.get("comparison", {}) or {}
+                vis += st["visitors"]
+                views += st["pageviews"]
+                prev_vis += cp.get("visitors") or 0
+                prev_views += cp.get("pageviews") or 0
+            stat = {"visitors": vis, "pageviews": views}
+            comp = {"visitors": prev_vis, "pageviews": prev_views}
             pages.append({
                 **d,
                 "visitors": stat["visitors"], "views": stat["pageviews"],
@@ -207,11 +214,44 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .rank { font-size: 11px; color: #ffffff; background: #17a2af; border-radius: 999px; padding: 1px 7px; font-weight: 700; }
 .rank.g { background: #cbd6d8; color: #5c6c70; }
 .fetch-fail { font-size: 13px; color: #b4553f; background: #fdf1ee; border-radius: 8px; padding: 10px 12px; }
+.notice { background: #fff8e8; border: 1px solid #f0dfb8; border-radius: 12px; padding: 14px 18px; margin-bottom: 16px; }
+.notice h3 { font-size: 14px; margin: 0 0 8px; color: #8a6410; }
+.notice ul { margin: 0; padding-left: 1.1em; font-size: 13px; color: #5c5240; line-height: 1.8; }
+.notice code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #fdf3dd; padding: 1px 4px; border-radius: 3px; }
 footer { text-align: center; font-size: 12px; color: #9aa7ab; margin-top: 24px; }
 @media (max-width: 1000px) { .page-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 900px) { .summary-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 620px) { .page-grid { grid-template-columns: 1fr; } }
 """
+
+
+# 週報に常設する「読み方の注意」。状況が変わったらここを直す（HTMLを手で書き足さない）。
+# 空リストにすればブロックごと消える。
+NOTICE_ITEMS = [
+    "<b>7ページ比較はホスト＋パスで絞って集計している。</b>"
+    "以前は <code>/</code> をホスト横断で合算していたため、"
+    "「一問一答問題集」にメインHPのトップが混ざって実数の数倍に見えていた（2026-08-31の週報で発覚・修正済み）。",
+    "<b>進捗トラッカーは <code>obofam.github.io</code> が正。</b>"
+    "学習記録の蓄積がこのURLに紐づいているため、意図的にGitHub Pages側を本番にしている"
+    "（vercel版への一本化は来期）。ここでは念のため両ホストを合算しているが、"
+    "実質は obofam.github.io 側がほぼ全数。",
+    "<b>メインHPは <code>www.mimiobo.com</code>（本番）と旧 <code>mimiobo.vercel.app</code>（308でwwwへ転送）の合算。</b>"
+    "2026-08-26週から計測に合流したので、それ以前との比較では丸ごと上積みになる。",
+    "<b>メール導線（Kit）はUmamiの外側。</b>"
+    "登録・開封・クリックはKitの管理画面にあり、この週報には出ない（穴06）。"
+    "読者数は <code>umami_週次ログ.md</code> のメルマガ表を見る。",
+]
+
+
+def render_notice():
+    if not NOTICE_ITEMS:
+        return ""
+    lis = "".join(f"<li>{item}</li>" for item in NOTICE_ITEMS)
+    return f"""
+    <div class="notice">
+      <h3>⚠️ この週報の数字を読むときの注意</h3>
+      <ul>{lis}</ul>
+    </div>"""
 
 
 def render_summary(overall, days, period_label):
@@ -256,7 +296,8 @@ def render_pages(pages):
     rank_order = [p["key"] for p in sorted(ok_pages, key=lambda p: p["visitors"], reverse=True)]
     cards = []
     for p in pages:
-        path_label = esc(p.get("path") or p.get("hostname", ""))
+        hosts_label = " + ".join(p["hostnames"])
+        path_label = esc(f"{hosts_label}{p['path']}" if "path" in p else hosts_label)
         if p.get("error"):
             cards.append(f"""
             <div class="pcard">
@@ -325,6 +366,7 @@ def render_html(data):
     period_label = f"{start_date}\u2013{end_date}（{days}日間・API実測）"
 
     body = "".join([
+        render_notice(),
         render_summary(data["overall"], days, period_label),
         render_pages(data["pages"]),
         render_hosts(data["hosts"]),
