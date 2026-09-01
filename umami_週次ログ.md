@@ -24,6 +24,17 @@
 | 2026-08-28 | 8/21–8/28 | 119 | 171 | 319 | 33% | -7%/+7%/+11%（API実測） | 43人(25%) | トップ36人＋#sample14人 | ※この行は当初「2026-08-31／8/24–8/31」と記載されていたが、ファイル更新時刻が8/28で確定したため8/28取得（週の途中集計）に訂正（2026-08-31のレビュー時に判明）。**メインHP(mimiobo.vercel.app)計測1週目=13visits**。Visitors微減だがVisits/Viewsは増＝1人あたりの回遊が深まった（totaltime 15,880→36,152で倍増）。直帰率25%→33%。**kyozai_cta_chokuzen が0件**＝直前対策(8/24発売)の主計測がまだ無反応、導線露出の見直し要。新導線もmodal_cta_kyozai 1・tracker_cta_kyozai 0・buyguide_cta_kyozai 0（buyguide_open 1のみ）と初動は弱い。buyguide_cta_noteは0で正常。home系はhome_share 5・home_cta_shindan 3・home_cta_kyozai 1・home_tokushoho 1。utm_sourceはstf計8(profile 4/ep01-03 4)・line step 3・yt_prof 2・note 1・ig_prof 1でプロフ貼り替え分が着弾、x_prof/note_profは0。tracker 56→43人・weekly 33→28人・shindan 14→5人・おみくじ18→15人と主要ページは軒並み減、kyozai.html 41→38人は横ばい圏。※APIの前週値(128/160/288)は先週ログ実数(121/167/300)と数時間の期間ずれで微差
 | 2026-08-31 | 8/24–8/31 | 200 | 281 | 497 | 44% | +65%/+68%/+66%（API実測） | 63人(22%) | クイズトップ25人＋#sample11人 | **記録以来の最高値・全指標で過去最大**（前週値121/167/300は8/24行の実数と完全一致＝連続性OK）。増分の正体は**www.mimiobo.com 51人の新規計上**（メインHPのドメイン移行が今週稼働）。ホスト別はクイズ95／obofam.github.io 63（＝進捗トラッカーの本番。学習記録の蓄積があるため意図的にGitHub Pages側。一本化は来期／2026-08-31 Kei確認）／www.mimiobo.com 52／mimiobo.vercel.app 18。**メインHP系は51+18=69人でトラッカー(63人)を抜き最大の入口に**。**kyozai_cta_chokuzen が0→4件で直前対策の主計測がようやく初動**（同時にkyozai_flow_chokuzen 2・home_mat_chokuzen 2・shindan_cta_chokuzen 1）。ただしLPのメルマガフォーム送信 home_mail_submit は0（home_mail_sample 2止まり）＝登録導線は未点火。新導線は tracker_cta_kyozai 1・modal_cta_kyozai 0・buyguide_cta_kyozai 0（buyguide_open 2）で依然弱い、buyguide_cta_note 0は正常。home系は home_share 5・home_tokushoho 4・home_cta_kyozai 1・home_cta_line 0（bottom 1のみ）。ページはkyozai.html 38人（41→38で横ばい圏）・weekly.html 28人（33→28）・shindan 20人（5→20と回復）・おみくじ7人（15→7で終息）。リファラはfacebook系8件が最多に見えるが、**これはbot（同日追加検証で判明・下記「botの見分け方」参照）＝実質ゼロ**。人間の流入はnote.com 3・l.instagram 2・bing 2。utmはstf 11・line 6・ig_prof 6・yt_prof 5・mail 4・standfm 3・note 2・yt_comment 2・note_prof 1・x_prof 1・mail_sample 1（snapshot集計値）。**x_prof/note_profが0を脱して初着弾**、ig_profも1→6でプロフ貼り替えが効き始めた。直帰率33%→44%は新規ホスト流入の性質差とみる（totaltime 36,152→58,364で総滞在は増）
 
+### 8/31(月)配信の効果（2026-09-01 実測・日本のみJST）
+| 日付 | 全体 | メインHP | トラッカー | クイズ |
+|---|---:|---:|---:|---:|
+| 8/28(金) | 20 | 1 | 10 | 10 |
+| 8/29(土) | 23 | 1 | 12 | 14 |
+| 8/30(日) | 21 | 3 | 11 | 13 |
+| **8/31(月)** | **50** | **9** | **19** | **28** |
+
+**全体は直前6日平均23人の +117% で記録上の最高日。** 時間帯は 12–15時が最大の山（全体18・HP7）で、HPの9人中7人がここに集中＝配信直後の流入。ブラウザは ios-webview が34で圧倒的＝LINEアプリ内ブラウザ。**LINEはリファラもUTMも付かないので、出どころの特定は「時間帯×ブラウザ」で行う。**
+朝6–9時の山（11人・トラッカー6）は配信とは別で、既存リスナーの通勤前学習の習慣とみられる。**配信で新しく動いたのは昼の山のほう。**
+
 ## メルマガ読者数ログ（Kit・毎週月曜に1行追記。2026-08-28開始）
 
 取得は `python C:\Claude\宅建\9_メルマガ\kit_subs.py`（active＝ダブルオプトイン確認済みのみを読者数として扱う）。
@@ -66,6 +77,13 @@
 
 ## 取得方法（2026-08-26からShare URL方式・APIキー不要）
 `python umami_fetch.py 7` で直近7日の全数字（前週比・ホスト別・ページ別・イベント・リファラ・UTM）が一発で出る。Share URLを再発行したらスクリプト冒頭のSLUGを差し替え。
+
+**日次・時間帯別を見るときは `python umami_nichiji.py 8 -H`**（`-H`で3時間刻み、日付指定も可）。配信やLINEの効果測定用。数字は日本のみ（bot除去）。
+
+### ⚠️ タイムゾーンの罠（2026-08-31に実際に踏んだ）
+Umamiの `/pageviews` は `unit` と `timezone` を渡しても、**返ってくる `x` がUTC**（末尾Z）。timezoneパラメータはバケットのラベルに反映されない。
+これをJSTと思って読むと**9時間ズレて「増えた/減った」が逆に見える**。実際、8/31(月)の配信効果を「減っている」と誤読した。正しくは全体50人＝直前6日平均23人の+117%。
+→ `umami_nichiji.py` は `/pageviews` を使わず、**JSTの範囲を startAt/endAt に直接入れて `/stats` を1コマずつ引く**。遅いが曖昧さゼロ。日次・時間別はこれ以外で出さないこと。
 
 ## 参照先の使い分け（2026-08-26確定）
 - **LIVE版**＝https://takken2026-quiz.vercel.app/umami_watch.html ：開くとその場でAPI取得。月曜レビューの**読み取り元はこっち**（依存なし・常に最新）。JS描画なのでWebFetchでは空、必ずChromeで開いて数秒待つ。
