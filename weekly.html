@@ -74,6 +74,41 @@
   .btns .batsu .bsym{color:var(--red)}
   .btns button:disabled{opacity:.45;cursor:default}
   .btns button.picked{border-color:currentColor;background:rgba(0,0,0,.03);opacity:1}
+  /* 4択（本試験形式） */
+  .fourc-note{font-size:.82rem;color:var(--muted);margin-bottom:10px}
+  .choices{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+  .cbtn{
+    display:flex;align-items:flex-start;gap:10px;text-align:left;
+    padding:12px 14px; border-radius:14px; border:2px solid var(--line);
+    background:#fff; color:var(--text); cursor:pointer; width:100%;
+    font-family:inherit; font-size:.96rem; line-height:1.7;
+    transition:transform .08s,border-color .15s,background .15s;
+  }
+  .cbtn:active{transform:scale(.98)}
+  .cnum{
+    flex:0 0 auto; width:24px;height:24px;margin-top:1px;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:50%; background:var(--gray-pill); color:var(--muted);
+    font-weight:800; font-size:.82rem;
+  }
+  .ctext{flex:1}
+  .cbtn:disabled{cursor:default}
+  .cbtn:disabled:not(.correct):not(.wrong){opacity:.5}
+  .cbtn.correct{border-color:var(--green);background:var(--green-soft)}
+  .cbtn.correct .cnum{background:var(--green);color:#fff}
+  .cbtn.wrong{border-color:var(--red);background:var(--red-soft)}
+  .cbtn.wrong .cnum{background:var(--red);color:#fff}
+  /* ミニ模試導線カード */
+  .moshi-card{
+    display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:14px 16px; margin-bottom:16px; box-shadow:var(--shadow);
+    transition:transform .08s,border-color .15s;
+  }
+  .moshi-card:active{transform:scale(.98)}
+  .moshi-card .mc-icon{font-size:1.6rem;flex:0 0 auto}
+  .moshi-card .mc-ttl{font-size:.96rem;font-weight:800;margin-bottom:2px}
+  .moshi-card .mc-sub{font-size:.82rem;color:var(--muted)}
   /* result */
   .result{display:none;margin-top:16px}
   .result.show{display:block;animation:pop .25s ease}
@@ -133,14 +168,22 @@
 
   <div class="kicker">耳で覚える宅建2026</div>
   <h1>今週の過去問 1問</h1>
-  <p class="lead">その週の放送テーマに合わせて、本試験で実際に出た問題を一問一答で毎週1問。正しいか誤りかを直感で押してみてください。</p>
+  <p class="lead">その週の放送テーマに合わせて、本試験で実際に出た問題を毎週1問。本試験と同じ4択形式で、正解だと思う肢を押してみてください。</p>
 
   <div id="current"></div>
+
+  <a class="moshi-card" href="./index.html#moshi" data-umami-event="weekly_cta_moshi">
+    <span class="mc-icon">🎯</span>
+    <div>
+      <div class="mc-ttl">本番形式ミニ模試（4択×10問・無料）</div>
+      <div class="mc-sub">今週の1問で物足りなければこちら →（目安24分）</div>
+    </div>
+  </a>
 
   <div class="cta" id="cta">
     <h2>1問では物足りない方へ</h2>
     <p>ひっかけの「型」は、数を解くほど見えてきます。続きはこちらからどうぞ。</p>
-    <a class="free" href="https://takken2026-quiz.vercel.app/" data-umami-event="weekly_cta_sample">無料おためし 5問（登録不要）</a>
+    <a class="free" href="https://takken2026-quiz.vercel.app/" data-umami-event="weekly_cta_sample">無料おためし 5問（登録不要・目安1分）</a>
     <a class="buy" href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" data-umami-event="weekly_cta_note">スマホで解ける一問一答問題集を見る（980円）</a>
     <p class="note">全4分野230問以上を収録／解説をじっくり読める設計です</p>
     <p class="note"><a href="https://takken2026-quiz.vercel.app/shindan.html" data-umami-event="weekly_cta_shindan" style="color:inherit">いまの学習状況が気になる方は、6問1分の現在地診断へ →</a></p>
@@ -151,15 +194,33 @@
   <div id="archive"></div>
 
   <footer>
-    掲載の問題文は、宅地建物取引士資格試験の本試験問題（実施：不動産適正取引推進機構）から引用し、<br>
-    一問一答形式で解けるよう一部再構成しています。出典は各問題に明記しています。
+    掲載の問題文は、宅地建物取引士資格試験の本試験問題（実施：不動産適正取引推進機構）から引用しています。<br>
+    過去の○×形式の出題は、一問一答で解けるよう一部再構成しています。出典は各問題に明記しています。
   </footer>
 </div>
 
 <script>
 // ===== 出題データ（新しい週を先頭に1件追記していく）=====
-// answer: "○" or "×"（この記述が正しいか誤りか）
+// answer: "○" or "×"（この記述が正しいか誤りか）※旧スキーマ（○×形式）
+// choices（肢4つの配列）＋answer（正解の0始まりインデックス・数値）があれば4択形式として描画される
+// 2026-09-01の週から新規出題は4択形式に切り替え。旧○×形式のエントリはそのままアーカイブとして残す
 const QUESTIONS = [
+  {
+    id: "2026-0901",
+    week: "9/1の週",
+    field: "宅建業法・クーリングオフ",
+    text: "宅地建物取引業者Ａが、自ら売主として、宅地建物取引業者ではない個人Ｂとの間で宅地の売買契約を締結し、手付金を支払ったＢが、宅地建物取引業法第37条の2の規定に基づくいわゆるクーリング・オフにより、当該売買契約を契約締結の日の翌日に解除しようとしている。この場合に関する次の記述のうち、誤っているものはどれか。",
+    choices: [
+      "Ａがクーリング・オフについて告げるときに交付すべき書面には、Ａの商号又は名称及び住所並びに免許証番号の記載は必要であるが、Ａの宅地建物取引士の記名は必要ない。",
+      "Ｂが、自らの申出により、Ｂの勤務する会社の事務所において、宅地の買受けの申込み及びＡとの売買契約の締結をした場合、Ｂは、クーリング・オフによる当該売買契約の解除を行うことができない。",
+      "Ｂが、自らの申出により、喫茶店において、宅地の買受けの申込み及びＡとの売買契約の締結をした場合、Ｂは、クーリング・オフによる当該売買契約の解除を行うことができる。",
+      "Ｂは、自らの申出により、Ｂが融資を受ける銀行（宅地建物取引業者ではない。）において、宅地の買受けの申込み及びＡとの売買契約の締結をした場合、クーリング・オフによる当該売買契約の解除を行うことができない。"
+    ],
+    answer: 3,
+    point: "自宅・勤務先だけがクーリング・オフの例外",
+    kaisetsu: "クーリング・オフができない場所は、宅建業者の事務所等（事務所、専任の宅建士を置くべき案内所など）、又は買主等が自ら指定した「自宅・勤務先」に限られる（法37条の2、規則16条の5）。銀行（宅建業者ではない）や喫茶店はこの「事務所等」に該当せず、また「自宅・勤務先」にも当たらないため、たとえ買主の申出による場所であっても、クーリング・オフを行うことができます。よって肢4「解除を行うことができない」は誤りであり、これが正解です。肢1は正しく、告知書面の記載事項に取引士の記名は求められていません。肢2は正しく、自ら指定した勤務先事務所での契約は「自ら指定した場所」に該当しクーリング・オフ不可。肢3は正しく、喫茶店は事務所等にも自宅・勤務先にも該当しないため解除可能。「自分で選んだ場所ならどこでもダメ」という思い込みが典型的なひっかけです。",
+    source: "令和6年度 本試験 問30"
+  },
   {
     id: "2026-0831",
     week: "8/31の週",
@@ -443,7 +504,10 @@ function refreshStatusBadge(id){
 }
 
 // ===== 描画 =====
-function qBody(q, isCurrent){
+// q.choices が配列なら4択形式、無ければ従来の○×形式として描画する（後方互換）
+function isChoiceQ(q){ return Array.isArray(q.choices); }
+
+function metaAndEpHTML(q, isCurrent){
   return `
     <div class="meta">
       ${isCurrent ? `<span class="tag week">今週の1問</span>` : ``}
@@ -455,7 +519,12 @@ function qBody(q, isCurrent){
     <div class="epstrip">
       <div class="eplabel">この週の放送テーマから出題</div>
       <div><a href="${q.ep.url}" target="_blank" rel="noopener" data-umami-event="weekly_cta_episode">▶ ${q.ep.no} ${q.ep.title}</a></div>
-    </div>` : ``}
+    </div>` : ``}`;
+}
+
+function qBodyMaru(q, isCurrent){
+  return `
+    ${metaAndEpHTML(q, isCurrent)}
     <div class="qlabel">次の記述は正しいか、誤りか。</div>
     <div class="qtext">${q.text}</div>
     <div class="btns">
@@ -469,6 +538,27 @@ function qBody(q, isCurrent){
       <div class="kaisetsu">${q.kaisetsu}</div>
       <div class="source">出典：${q.source}</div>
     </div>`;
+}
+
+function qBodyChoice(q, isCurrent){
+  return `
+    ${metaAndEpHTML(q, isCurrent)}
+    ${isCurrent ? `<div class="fourc-note">📝 今週から、本試験と同じ4択形式です</div>` : ``}
+    <div class="qtext">${q.text}</div>
+    <div class="choices">
+      ${q.choices.map((c, i) => `<button class="cbtn" data-idx="${i}" onclick="answerChoice('${q.id}',${i},this)"><span class="cnum">${i + 1}</span><span class="ctext">${c}</span></button>`).join("")}
+    </div>
+    <div class="result" id="res-${q.id}">
+      <div class="verdict" id="ver-${q.id}"></div>
+      <div class="answer-line">正解：<span style="font-size:1.1rem">肢${q.answer + 1}</span></div>
+      <div class="point">${q.point}</div>
+      <div class="kaisetsu">${q.kaisetsu}</div>
+      <div class="source">出典：${q.source}</div>
+    </div>`;
+}
+
+function qBody(q, isCurrent){
+  return isChoiceQ(q) ? qBodyChoice(q, isCurrent) : qBodyMaru(q, isCurrent);
 }
 
 const [current, ...rest] = QUESTIONS;
@@ -507,6 +597,30 @@ function answer(id, picked, btn){
   box.querySelectorAll(".btns button").forEach(b => b.disabled = true);
   btn.classList.add("picked");
   const ok = picked === q.answer;
+  const ver = box.querySelector("#ver-" + CSS.escape(id));
+  ver.textContent = ok ? "正解！" : "残念、ひっかかりました";
+  ver.className = "verdict " + (ok ? "ok" : "ng");
+  box.querySelector("#res-" + CSS.escape(id)).classList.add("show");
+  markDone(id, ok);
+  refreshStatusBadge(id);
+  if (window.umami) umami.track("週1問_回答", { q: id, result: ok ? "正解" : "不正解" });
+  if (id === current.id && window.umami) umami.track("weekly_complete", { result: ok ? "正解" : "不正解" });
+}
+
+// ===== 回答処理（4択）=====
+function answerChoice(id, idx, btn){
+  const q = qmap[id];
+  const box = btn.closest(".qcard, .body");
+  box.querySelectorAll(".cbtn").forEach(b => b.disabled = true);
+  btn.classList.add("picked");
+  const ok = idx === q.answer;
+  if (ok) {
+    btn.classList.add("correct");
+  } else {
+    btn.classList.add("wrong");
+    const correctBtn = box.querySelector('.cbtn[data-idx="' + q.answer + '"]');
+    if (correctBtn) correctBtn.classList.add("correct");
+  }
   const ver = box.querySelector("#ver-" + CSS.escape(id));
   ver.textContent = ok ? "正解！" : "残念、ひっかかりました";
   ver.className = "verdict " + (ok ? "ok" : "ng");

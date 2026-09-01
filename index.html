@@ -579,6 +579,86 @@
   .buy-note { font-size: .7rem; color: var(--muted); margin-top: 10px; }
   .buy-relax { margin-top: 12px; font-size: .74rem; color: var(--muted); line-height: 1.8; }
   .buy-relax a { color: var(--cyan-dark); font-weight: 700; text-decoration: none; }
+
+  /* ===== 本番形式ミニ模試（.moshi- prefix, 2026-09-01 追加） ===== */
+  .moshi-top-card { border: 1px solid var(--cyan); }
+  .moshi-new-badge {
+    font-size: .58rem; font-weight: 800; color: #fff; background: var(--cyan);
+    padding: 1px 6px; border-radius: 999px; letter-spacing: .04em; margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .moshi-set-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px; margin-bottom: 14px; cursor: pointer;
+    box-shadow: var(--shadow); transition: border-color .2s, box-shadow .2s, transform .15s;
+  }
+  .moshi-set-card:hover { border-color: var(--cyan); box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+  .moshi-set-title { font-size: 1.02rem; font-weight: 800; color: var(--text); }
+  .moshi-set-sub { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+  .moshi-set-meta { display: flex; gap: 16px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .moshi-set-stat { text-align: center; flex: 1; }
+  .moshi-set-stat-val { font-size: 1.1rem; font-weight: 800; color: var(--cyan-dark); }
+  .moshi-set-stat-lbl { font-size: .66rem; color: var(--muted); margin-top: 2px; }
+  .moshi-set-go { text-align: center; margin-top: 10px; font-size: .8rem; font-weight: 800; color: var(--cyan-dark); }
+
+  .moshi-rules {
+    font-size: .84rem; color: var(--muted); line-height: 1.85; margin: 4px 0 18px;
+    padding: 12px 14px; background: rgba(23,197,232,.06);
+    border-left: 2px solid var(--cyan); border-radius: 4px;
+  }
+
+  .moshi-head-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .moshi-timer {
+    font-size: .78rem; font-weight: 800; color: var(--muted); background: var(--gray-pill);
+    padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+  }
+  .moshi-timer.over { color: var(--amber); background: var(--amber-soft); }
+
+  .moshi-choices { display: flex; flex-direction: column; gap: 10px; }
+  .moshi-choice {
+    display: flex; align-items: flex-start; gap: 10px; text-align: left;
+    padding: 14px; border-radius: 10px; border: 2px solid var(--line);
+    background: var(--surface); color: var(--text); font-size: .92rem; line-height: 1.6;
+    cursor: pointer; transition: all .15s; width: 100%; font-family: inherit;
+  }
+  .moshi-choice:hover { border-color: var(--cyan); background: var(--cyan-soft); }
+  .moshi-choice-num {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--cyan-soft); color: var(--cyan-dark); font-weight: 800; font-size: .78rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .moshi-field-wrap { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 14px 0; }
+  .moshi-field-tag {
+    font-size: .74rem; font-weight: 700; padding: 5px 12px; border-radius: 999px;
+    background: var(--gray-pill); color: var(--muted);
+  }
+  .moshi-field-tag.allcorrect { background: var(--green-soft); color: var(--green); }
+  .moshi-field-tag.haswrong { background: var(--amber-soft); color: var(--amber); }
+
+  .moshi-review-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .moshi-q-field {
+    font-size: .6rem; font-weight: 800; color: var(--cyan-dark); background: var(--cyan-soft);
+    padding: 2px 8px; border-radius: 999px; letter-spacing: .04em;
+  }
+  .q-status.moshi-correct { background: var(--green-soft); color: var(--green); }
+  .q-status.moshi-wrong { background: var(--red-soft); color: var(--red); }
+
+  .moshi-rev-choices { display: flex; flex-direction: column; gap: 6px; margin: 10px 0 12px; }
+  .moshi-rev-choice {
+    display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px;
+    border-radius: 8px; font-size: .84rem; line-height: 1.6; background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .moshi-rev-choice .moshi-choice-num { width: 18px; height: 18px; font-size: .68rem; background: var(--gray-pill); color: var(--muted); }
+  .moshi-rev-choice.is-correct { background: var(--green-soft); border-color: rgba(15,122,87,.3); }
+  .moshi-rev-choice.is-correct .moshi-choice-num { background: var(--green); color: #fff; }
+  .moshi-rev-choice.is-picked-wrong { background: var(--red-soft); border-color: rgba(201,58,58,.3); }
+  .moshi-rev-choice.is-picked-wrong .moshi-choice-num { background: var(--red); color: #fff; }
+
+  .moshi-point { font-size: .82rem; font-weight: 700; color: var(--cyan-dark); margin-bottom: 6px; }
+  .moshi-source { font-size: .68rem; color: var(--muted); margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -591,6 +671,15 @@
       <h1>耳で覚える宅建2026</h1>
       <p>スマホで解ける一問一答問題集</p>
       <p style="font-size:.62rem;opacity:.5;margin-top:2px;letter-spacing:.02em">（旧○×問題集）</p>
+    </div>
+    <div class="section-card moshi-top-card" onclick="openMoshi()">
+      <div class="sc-head">
+        <div class="sc-title-wrap">
+          <div class="sc-kicker">4択・10問・無料</div>
+          <div class="sc-title">🎯 本番形式ミニ模試<span class="moshi-new-badge">NEW!</span></div>
+        </div>
+      </div>
+      <div class="sc-desc">本試験と同じ4択形式。制限時間の感覚も一緒に練習（目安24分）</div>
     </div>
     <div class="sample-card" onclick="startSample()">
       <div class="sample-card-l">
@@ -682,6 +771,12 @@
     </div>
     <div id="quizBody"></div>
     <div id="resultArea"></div>
+  </div>
+
+  <!-- ========== MOSHI（本番形式ミニ模試） ========== -->
+  <div id="moshiPage" class="page">
+    <button class="back-btn" id="moshiBackBtn">&larr; TOPに戻る</button>
+    <div id="moshiBody"></div>
   </div>
 </div>
 
@@ -969,6 +1064,31 @@ const SECTIONS = {
     ]
   }
 };
+
+/* ================================================================
+   本番形式ミニ模試（4択10問・無料・タイマーつき）
+   週次で新しい回を追加するときは、この配列に
+   { id, title, subtitle, questions:[...10問...] } を1要素追記するだけでよい。
+   ================================================================ */
+const MOSHI_SETS = [
+  {
+    id: 1,
+    title: "第1回",
+    subtitle: "令和6年度本試験より",
+    questions: [
+      { field: "宅建業法", q: "宅地建物取引士に関する次の記述のうち、宅地建物取引業法（以下この問において「法」という。）の規定によれば、正しいものはどれか。", choices: ["宅地建物取引士資格試験に合格した者は、宅地又は建物の取引に関する実務の経験期間が2年に満たない場合であっても、試験に合格した日から1年以内に登録を受けようとするときには、都道府県知事が指定する講習を受講することにより、宅地建物取引士の登録を受けることができる。", "宅地建物取引士証は、更新を受けることなくその有効期間が経過した場合、その効力を失うが、当該宅地建物取引士証を都道府県知事に返納する必要はない。", "宅地建物取引士は、他人に自己の名義の使用を許し、当該他人がその名義で宅地建物取引士である旨の表示をしたときは、法第68条の規定に基づく処分の対象となるが、当該他人が宅地建物取引士の登録を受けた者であるときはこの限りでない。", "宅地建物取引業者は、その事務所唯一の専任の宅地建物取引士が宅地建物取引士証の有効期間の経過により効力を失い宅地建物取引士でなくなったときは、2週間以内に法第31条の3第1項の規定に適合させるため必要な措置を執らなければならない。"], answer: 3, exp: "宅建業者は事務所ごとに、業務に従事する者5人に1人以上の割合で成年者である専任の宅地建物取引士を置かなければならない（法31条の3第1項）。唯一の専任の取引士が取引士証の失効等で欠けた場合、宅建業者は2週間以内に新たな専任の取引士を設置するなど必要な措置を執らなければならない（同条3項）。よって肢4が正しい。肢1は誤り。登録実務講習で実務経験を補える制度に「合格から1年以内」という期間制限はなく、いつでも受講できる。肢2は誤り。取引士証の有効期間が満了したときは、遅滞なく交付を受けた都道府県知事に返納しなければならない。肢3は誤り。名義貸しをした取引士は、名義を借りた相手が取引士登録を受けた者であっても法68条の処分対象から除外されない。", point: "唯一の専任者が失効→2週間以内に補充", source: "令和6年度 本試験 問29" },
+      { field: "宅建業法", q: "宅地建物取引業者Ａが、自ら売主として、宅地建物取引業者ではない個人Ｂとの間で、土地付建物を4,000万円で売却する売買契約（所有権の登記は当該土地付建物の引渡し時に行うものとする。）を締結する場合における宅地建物取引業法（以下この問において「法」という。）第41条又は第41条の2の規定に基づく手付金等の保全措置（以下この問において「保全措置」という。）に関する次の記述のうち、誤っているものはどれか。", choices: ["Ａが、保全措置を講じずにＢから手付金100万円を受領する場合、その旨を、法第35条の規定に基づく重要事項説明書に記載する必要があるが、法第37条の規定により交付する書面に記載する必要はない。", "当該建物が建築工事の完了後の建物である場合、ＡがＢから手付金100万円を受領する際には保全措置は不要であるが、その後、当該土地付建物を引き渡す前に中間金400万円を受領するためには、手付金100万円と合わせて保全措置を講じた後でなければ、その中間金を受領することができない。", "当該建物が建築工事の完了前の建物である場合において、Ａは、保全措置を講じずに、Ｂから手付金300万円を受領することができる。", "当該土地付建物の引渡し前に、ＢはＡに対して2,000万円を中間金として支払う契約になっていたが、Ａがその中間金について保全措置を講じていないときは、Ｂはこの中間金の支払いを拒むことができる。"], answer: 2, exp: "未完成物件（建築工事完了前）の場合、代金額の5％又は1,000万円のいずれか少ない額を超える手付金等を受領する際は保全措置が必要（法41条1項）。代金4,000万円の5％は200万円であり、手付金300万円はこれを超えるため、保全措置なしには受領できない。よって肢3が誤り（正解）。肢1は正しく、保全措置の概要は35条書面の記載事項だが37条書面には記載義務がない。肢2は正しく、完成物件は代金の10％又は1,000万円を超える額について保全措置が必要（法41条の2）で、手付金と中間金の合計500万円は10％を超えるため保全措置が必要になる。肢4は正しく、保全措置未了の手付金等の支払いは買主が拒むことができる（法41条4項等）。", point: "未完成物件は代金5%超で保全措置必須", source: "令和6年度 本試験 問34" },
+      { field: "宅建業法", q: "営業保証金及び宅地建物取引業保証協会（以下この問において「保証協会」という。）に関する次の記述のうち、宅地建物取引業法の規定によれば、誤っているものはどれか。", choices: ["宅地建物取引業者で保証協会に加入しようとする者は、その加入しようとする日までに、政令で定める額の弁済業務保証金分担金を当該保証協会に納付しなければならない。", "保証協会の社員と宅地建物取引業に関し取引をした者（宅地建物取引業者に該当する者を除く。）は、その取引により生じた債権に関し、当該社員が社員ではないとしたならばその者が供託すべき営業保証金の額に相当する額の範囲内で弁済を受ける権利を有する。", "宅地建物取引業者は、保証協会の社員の地位を失ったときは、保証協会が弁済業務保証金の還付請求権者に対し、一定期間内に宅地建物取引業法第64条の8第2項の規定による認証を受けるため申し出るべき旨の公告をした後でなければ、弁済業務保証金分担金の返還を受けることができない。", "宅地建物取引業者は、一部の事務所を廃止し営業保証金を取り戻そうとする場合には、供託した営業保証金につき還付を請求する権利を有する者に対し、公告をすることなく営業保証金を取り戻すことができる。"], answer: 3, exp: "営業保証金の取戻しは、原則として還付請求権者に対し6か月以上の期間を定めて公告し、その期間内に申し出がない場合に限り行うことができる（法30条2項）。一部の事務所廃止による取戻しであっても、この公告手続の例外には該当しない。よって肢4「公告をすることなく取り戻すことができる」は誤り（正解）。肢1は正しく、保証協会加入者は加入しようとする日までに弁済業務保証金分担金を納付しなければならない（法64条の9第1項）。肢2は正しく、保証協会の社員と取引した者は、その社員が社員でないとした場合に供託すべき営業保証金額の範囲内で弁済を受ける権利を有する（法64条の8第1項）。肢3は正しく、社員の地位を失った場合の分担金返還には公告・認証申出手続を経る必要がある。", point: "一部事務所廃止でも取戻しには公告が必要", source: "令和6年度 本試験 問36" },
+      { field: "宅建業法", q: "宅地建物取引業者Ａが宅地建物取引業法第37条の規定により交付すべき書面（以下この問において「37条書面」という。）に関する次の記述のうち、宅地建物取引業法の規定に違反しないものはどれか。", choices: ["Ａは、建築工事完了前の建物の売買契約を媒介したときに、37条書面に記載する当該建物を特定するために必要な表示について、宅地建物取引業法第35条の規定に基づく重要事項の説明において使用した図書を交付することによって行った。", "Ａは、貸主Ｂと借主Ｃとの間で締結された建物の賃貸借契約を媒介したときに、借賃の額、支払時期及び支払方法について定められていたが、ＢとＣの承諾を得たので、37条書面に記載しなかった。", "Ａは、宅地建物取引業者Ｄと宅地建物取引業者Ｅとの間で締結された宅地の売買契約を媒介したときに、37条書面に当該宅地の引渡しの時期を記載しなかった。", "Ａが建物の売買契約を買主として締結した場合に、売主Ｆに承諾を得たので、37条書面をＦに交付しなかった。"], answer: 0, exp: "37条書面に記載すべき「目的物を特定するために必要な表示」は、未完成物件の場合、重要事項説明の際に使用した図書を交付する方法で行うことができる。よって肢1は法違反とならず正解。肢2は違反。借賃の額並びに支払いの時期及び方法は37条書面の必要的記載事項であり、当事者の承諾があっても省略できない。肢3は違反。引渡しの時期は必要的記載事項であり、相手方が宅建業者であっても37条書面では省略できない（重要事項説明の35条書面とは異なる）。肢4は違反。37条書面の交付義務は自ら売主・買主として契約した場合も相手方に対して負い、相手方の承諾があっても交付を省略できない。", point: "37条書面は相手の承諾があっても省略不可", source: "令和6年度 本試験 問44" },
+      { field: "権利関係", q: "法律行為に関する次の記述のうち、民法の規定によれば、正しいものはどれか。", choices: ["営業を許された未成年者が、その営業に関する意思表示をした時に意思能力を有しなかった場合は、その法律行為は無効である。", "公の秩序に反する法律行為であっても、当事者が納得して合意した場合には、その法律行為は有効である。", "詐欺による意思表示は取り消すことによって初めから無効であったとみなされるのに対し、強迫による意思表示は取り消すまでもなく無効である。", "他人が所有している土地を目的物にした売買契約は無効であるが、当該他人がその売買契約を追認した場合にはその売買契約は有効となる。"], answer: 0, exp: "意思能力を欠く状態で行った法律行為は無効である（民法3条の2）。営業を許された未成年者（民法6条）であっても、意思表示時に意思能力を欠いていれば、この一般原則により無効となる。よって肢1が正しい。肢2は誤り。公序良俗に反する法律行為は無効であり（民法90条）、これは強行規定なので当事者の合意があっても有効にはならない。肢3は誤り。詐欺・強迫のいずれも取り消すことができる意思表示であり（民法96条）、取り消すまでは有効。強迫だから当然無効という規定はない。肢4は誤り。他人物売買契約自体は有効であり（民法561条）、無効を前提とした追認という構成は誤り。", point: "意思能力ゼロなら未成年特則があっても無効", source: "令和6年度 本試験 問1" },
+      { field: "権利関係", q: "売買契約の目的物が品質に関して契約の内容に適合しない場合において、当該契約不適合が売主及び買主のいずれの責めにも帰することができない事由によるものであるとき、履行の追完請求権、代金の減額請求権、損害賠償請求権及び契約の解除権のうち、民法の規定によれば、買主が行使することができない権利のみを掲げたものとして正しいものは次の記述のうちどれか。なお、上記帰責性以外の点について、権利の行使を妨げる事情はないものとする。", choices: ["履行の追完請求権、損害賠償請求権、契約の解除権", "代金の減額請求権、損害賠償請求権、契約の解除権", "履行の追完請求権、代金の減額請求権", "損害賠償請求権"], answer: 3, exp: "契約不適合責任のうち、損害賠償請求権は債務不履行に基づく請求であり、民法415条1項ただし書により債務者（売主）の帰責事由が必要となる。本問は売主買主いずれの責めにも帰さない事由なので、損害賠償請求権は行使できない。一方、履行の追完請求権（562条）、代金減額請求権（563条）、契約の解除権（541条・542条）はいずれも債務者の帰責事由を要件としていないため、帰責事由がなくても行使できる。よって買主が行使できないのは損害賠償請求権のみであり、正解は肢4。", point: "帰責事由なしで消えるのは損害賠償請求権だけ", source: "令和6年度 本試験 問10" },
+      { field: "権利関係", q: "賃貸人Ａと賃借人Ｂとが、居住目的で期間を3年として、借地借家法第38条の定期建物賃貸借契約（以下この問において「契約①」という。）を締結した場合と、定期建物賃貸借契約でも一時使用目的の賃貸借契約でもない普通建物賃貸借契約（以下この問において「契約②」という。）を締結した場合とに関する次の記述のうち、借地借家法の規定によれば、正しいものはどれか。", choices: ["Ｂが建物の引渡しを受けた後にＡが建物をＣに売却して建物所有者がＣに変わった場合、Ｂは、契約①の場合ではＣに対して賃借人であることを主張できるが、契約②の場合ではＣに対して賃借人であることを主張できない。", "契約期間中は賃料の改定を行わない旨の特約を契約において定めていても、契約期間中に賃料が不相当になったと考えるに至ったＢは、契約①の場合も契約②の場合も、借地借家法第32条に基づく賃料減額請求をすることができる。", "Ｂが契約期間中に相続人なしで死亡した場合において、婚姻はしていないが事実上夫婦と同様の関係にあった同居者Ｄがあるときは、契約①の場合も契約②の場合も、Ａに反対の意思表示をしないＤは、建物の賃貸借契約に関し、Ｂの権利義務を承継する。", "契約①の場合、公正証書によって契約をするときに限り契約の更新がないことを有効に定めることができ、契約②の場合、書面で契約し、かつ、Ａに正当な理由がない限り、Ａは契約の更新を拒絶することができなくなる。"], answer: 2, exp: "借地借家法36条は、居住用建物の賃借人が相続人なしに死亡した場合、内縁の配偶者など事実上夫婦・養親子関係にあった同居者は、賃貸人が反対の意思表示をしない限り建物賃借人の権利義務を承継すると規定し、この規定は定期建物賃貸借（契約①）にも普通建物賃貸借（契約②）にも適用される。よって肢3が正しい。肢1は誤り。建物賃貸借は引渡しを受けていれば対抗要件を備え（借地借家法31条）、定期・普通いずれの契約でも新所有者に対抗できる。肢2は誤り。定期建物賃貸借では、賃料改定をしない特約を定めた場合、32条の減額請求権の規定は適用されない（38条9項）。肢4は誤り。定期建物賃貸借契約は公正証書に限らず書面で締結すればよい（38条1項）。", point: "定期借家は特約次第で減額請求も封じられる", source: "令和6年度 本試験 問12" },
+      { field: "法令上の制限", q: "都市計画法（以下この問において「法」という。）に関する次の記述のうち、正しいものはどれか。ただし、この問において条例による特別の定めはないものとし、「都道府県知事」とは、地方自治法に基づく指定都市、中核市及び施行時特例市にあってはその長をいうものとする。", choices: ["市街化区域内において行う、医療法に規定する病院を建築するための1,000m2の開発行為については、法第29条に基づく都道府県知事の許可を得る必要がある。", "市街化区域内において行う、開発行為を伴わない建築物の建築で、当該建築物の床面積が1,000m2以上のものについては、法第29条に基づく都道府県知事の許可を得る必要がある。", "市街化調整区域内において行う、都市計画事業の施行のための開発行為については、法第29条に基づく都道府県知事の許可を得る必要がある。", "法第29条に基づく許可を受けた者は、当該許可に係る土地についての一定の事項を開発登録簿に登録しなければならない。"], answer: 0, exp: "市街化区域内における開発行為は、原則として1,000m2以上で開発許可が必要となる（都市計画法施行令19条）。病院は、かつては学校・駅舎等と並んで開発許可の適用除外となる公益上必要な建築物とされていたが、法改正により除外規定から外れており、現在は許可が必要である。よって肢1が正しい。肢2は誤り。開発許可は「開発行為」に対する規制であり、開発行為を伴わない建築物の建築のみでは29条の許可対象とならない。肢3は誤り。都市計画事業の施行として行う開発行為は、市街化調整区域内であっても開発許可が不要（29条1項3号）。肢4は誤り。開発登録簿への登録は許可を受けた者ではなく、都道府県知事が行う（47条）。", point: "病院はもう開発許可の適用除外じゃない", source: "令和6年度 本試験 問16" },
+      { field: "法令上の制限", q: "農地に関する次の記述のうち、農地法（以下この問において「法」という。）の規定によれば、誤っているものはどれか。", choices: ["法第3条第1項の許可があったときは所有権が移転する旨の停止条件付売買契約を原因とする所有権移転の仮登記の申請を行う場合にも、農業委員会の許可が必要である。", "法第5条第1項の許可申請書の提出において、法ではその申請に係る権利の設定又は移転に関し民事調停法により調停が成立した場合など一定の場合を除き、当事者は連署した申請書を提出しなければならないとされている。", "法では、農地の賃貸借で期間の定めがあるものについては、一定の場合を除き、期間満了の1年前から6か月前までの間に更新拒絶の通知をしないと従前の賃貸借と同一の条件で更に賃貸借したものとみなされる。", "法では、農地の賃貸借の当事者は、当該賃貸借の合意による解約が民事調停法による農事調停によって行われる場合など一定の場合を除き、知事の許可を受けなければ、当該賃貸借について、解除、解約の申入れ、合意解約、更新拒絶の通知をしてはならないとされている。"], answer: 0, exp: "所有権移転の仮登記は、それ自体が所有権移転の効果を生じさせるものではなく単なる登記手続にとどまるため、農地法3条の許可は不要とされている。よって肢1「許可が必要である」は誤り（正解）。肢2は正しく、農地法5条の許可申請は、原則として当事者双方が連署した申請書の提出が必要（調停成立時等を除く）。肢3は正しく、農地の賃貸借の法定更新（農地法17条）の規定どおり、期間満了1年前から6か月前までに更新拒絶通知をしないと従前と同一条件で更新される。肢4は正しく、農地の賃貸借の解除等には知事（実務上は農業委員会）の許可が必要（農地法18条）。", point: "仮登記だけなら3条許可はまだ要らない", source: "令和6年度 本試験 問21" },
+      { field: "税・その他", q: "不動産取得税に関する次の記述のうち、正しいものはどれか。", choices: ["不動産取得税の課税標準は、不動産を取得した時における当該不動産の売買価格であるから、固定資産税の課税標準である固定資産の評価額とは異なるものである。", "不動産取得税の課税標準となるべき額が、土地の取得にあっては10万円、家屋の取得のうち建築に係るものにあっては1戸につき23万円、その他のものにあっては1戸につき12万円に満たない場合においては、不動産取得税が課されない。", "不動産取得税は、不動産の取得に対して課される税であるので、法人の合併により不動産を取得した場合においても、不動産取得税が課される。", "令和6年4月に個人が取得した住宅及び住宅用地に係る不動産取得税の税率は3％であるが、住宅以外の家屋及び土地に係る不動産取得税の税率は4％である。"], answer: 1, exp: "不動産取得税の免税点（地方税法73条の15の2）は、土地の取得は10万円未満、家屋の建築による取得は1戸につき23万円未満、その他の家屋の取得（売買等）は1戸につき12万円未満であり、これに満たない場合は課税されない。よって肢2が正しい。肢1は誤り。課税標準は実際の売買価格ではなく、固定資産課税台帳に登録された価格（固定資産税評価額）による。肢3は誤り。法人の合併による不動産の取得は形式的な移転にすぎず、不動産取得税は非課税とされる。肢4は誤り。令和6年4月時点の特例税率では、土地は住宅用・非住宅用を問わず一律3％であり、家屋のみ住宅なら3％、住宅以外（店舗等）なら4％となる。「住宅以外の家屋及び土地」を一律4％とする本肢の記述は、土地の部分が誤り。", point: "土地は用途問わず一律3%、4%なのは非住宅の家屋だけ", source: "令和6年度 本試験 問24" }
+    ]
+  }
+];
 
 /* ================================================================
    FREE SAMPLE (no password, no stats) — 全体おためし5問
@@ -1389,6 +1509,264 @@ function saveState() {
 }
 
 let STATE = loadState();
+
+/* ================================================================
+   本番形式ミニ模試 STATE & ENGINE
+   ================================================================ */
+const MOSHI_STORAGE_KEY = "takken_moshi_v1";
+const MOSHI_TIME_LIMIT_SEC = 24 * 60; // 目安24分。強制終了はせず、超過したら表示色をアンバーに変えるだけ。
+
+function moshiLoadState() {
+  if (LS_AVAILABLE) {
+    try {
+      const raw = localStorage.getItem(MOSHI_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        parsed.sets = parsed.sets || {};
+        return parsed;
+      }
+    } catch (e) {}
+  }
+  return { sets: {} };
+}
+function moshiSaveState() {
+  if (LS_AVAILABLE) {
+    try { localStorage.setItem(MOSHI_STORAGE_KEY, JSON.stringify(MOSHI_STATE)); } catch (e) {}
+  }
+}
+let MOSHI_STATE = moshiLoadState();
+
+let moshiSet = null;
+let moshiAnswers = [];
+let moshiIdx = 0;
+let moshiStartedAt = 0;
+let moshiTimerHandle = null;
+
+function moshiFmtTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+function openMoshi() {
+  uTrack("moshi_open");
+  renderMoshiStart();
+  showPage("moshiPage");
+}
+
+function moshiBackToTop() {
+  if (moshiTimerHandle) { clearInterval(moshiTimerHandle); moshiTimerHandle = null; }
+  showTop();
+}
+
+function renderMoshiStart() {
+  const btn = document.getElementById("moshiBackBtn");
+  btn.textContent = "← TOPに戻る";
+  btn.onclick = moshiBackToTop;
+
+  let html = `
+    <div class="subj-head"><h2>🎯 本番形式ミニ模試</h2></div>
+    <div class="moshi-rules">
+      ・本試験と同じ4択形式<br>
+      ・解答中は正誤が出ません<br>
+      ・全問解答後に採点＋全問解説<br>
+      ・目安時間 24分（1問2.4分）
+    </div>
+  `;
+  MOSHI_SETS.forEach(set => {
+    const rec = MOSHI_STATE.sets[set.id] || { attempts: 0, best: 0, lastScore: null };
+    html += `
+      <div class="moshi-set-card" onclick="startMoshi(${set.id})">
+        <div class="moshi-set-title">${set.title}</div>
+        <div class="moshi-set-sub">${set.subtitle}・${set.questions.length}問</div>
+        <div class="moshi-set-meta">
+          <div class="moshi-set-stat">
+            <div class="moshi-set-stat-val">${rec.attempts}</div>
+            <div class="moshi-set-stat-lbl">挑戦回数</div>
+          </div>
+          <div class="moshi-set-stat">
+            <div class="moshi-set-stat-val">${rec.best}<span style="font-size:.6em">/${set.questions.length}</span></div>
+            <div class="moshi-set-stat-lbl">ベスト</div>
+          </div>
+        </div>
+        <div class="moshi-set-go">スタート →</div>
+      </div>
+    `;
+  });
+  document.getElementById("moshiBody").innerHTML = html;
+}
+
+function startMoshi(setId) {
+  moshiSet = MOSHI_SETS.find(s => s.id === setId);
+  if (!moshiSet) return;
+  uTrack("moshi_start", { set: setId });
+  moshiAnswers = new Array(moshiSet.questions.length).fill(null);
+  moshiIdx = 0;
+  moshiStartedAt = Date.now();
+
+  const btn = document.getElementById("moshiBackBtn");
+  btn.textContent = "← 戻る";
+  btn.onclick = confirmExitMoshi;
+
+  renderMoshiQuestion();
+  if (moshiTimerHandle) clearInterval(moshiTimerHandle);
+  moshiTimerHandle = setInterval(moshiTickTimer, 1000);
+}
+
+function confirmExitMoshi() {
+  if (confirm("模試を終了して開始画面に戻りますか？\n（ここまでの結果は記録されません）")) {
+    if (moshiTimerHandle) { clearInterval(moshiTimerHandle); moshiTimerHandle = null; }
+    renderMoshiStart();
+  }
+}
+
+function moshiTickTimer() {
+  const el = document.getElementById("moshiTimer");
+  if (!el) { clearInterval(moshiTimerHandle); moshiTimerHandle = null; return; }
+  const elapsed = Math.floor((Date.now() - moshiStartedAt) / 1000);
+  el.textContent = "⏱ " + moshiFmtTime(elapsed);
+  el.className = "moshi-timer" + (elapsed >= MOSHI_TIME_LIMIT_SEC ? " over" : "");
+}
+
+function renderMoshiQuestion() {
+  const total = moshiSet.questions.length;
+  const q = moshiSet.questions[moshiIdx];
+  document.getElementById("moshiBody").innerHTML = `
+    <div class="moshi-head-row">
+      <div class="quiz-breadcrumb">${moshiSet.title}・本番形式ミニ模試</div>
+      <div class="moshi-timer" id="moshiTimer">⏱ 00:00</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" style="width:${(moshiIdx / total * 100)}%"></div></div>
+      <div class="progress-txt">Q${moshiIdx + 1}/${total}</div>
+    </div>
+    <div class="q-card">
+      <div class="q-meta">
+        <div class="q-num">Q${String(moshiIdx + 1).padStart(2, "0")}</div>
+        <div class="moshi-q-field">${q.field}</div>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="moshi-choices">
+        ${q.choices.map((c, i) => `
+          <button type="button" class="moshi-choice" onclick="moshiSelect(${i})">
+            <span class="moshi-choice-num">${i + 1}</span>
+            <span>${c}</span>
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+  moshiTickTimer();
+}
+
+function moshiSelect(choiceIdx) {
+  moshiAnswers[moshiIdx] = choiceIdx;
+  moshiIdx++;
+  if (moshiIdx >= moshiSet.questions.length) {
+    finishMoshi();
+  } else {
+    renderMoshiQuestion();
+  }
+}
+
+function moshiJudgeMsg(correct) {
+  if (correct >= 8) return { cls: "", text: "合格圏ペース！このまま安定させよう。" };
+  if (correct === 7) return { cls: "warn", text: "ボーダー上。あと一歩、詰めていこう。" };
+  if (correct >= 5) return { cls: "warn", text: "基礎はある。弱点をつぶしていこう。" };
+  return { cls: "warn", text: "伸びしろしかない。下の解説をじっくり読み込もう。" };
+}
+
+function finishMoshi() {
+  if (moshiTimerHandle) { clearInterval(moshiTimerHandle); moshiTimerHandle = null; }
+  const elapsedSec = Math.floor((Date.now() - moshiStartedAt) / 1000);
+
+  let correct = 0;
+  const fieldStats = {};
+  moshiSet.questions.forEach((q, i) => {
+    const ok = moshiAnswers[i] === q.answer;
+    if (ok) correct++;
+    if (!fieldStats[q.field]) fieldStats[q.field] = { correct: 0, total: 0 };
+    fieldStats[q.field].total++;
+    if (ok) fieldStats[q.field].correct++;
+  });
+  const total = moshiSet.questions.length;
+
+  const rec = MOSHI_STATE.sets[moshiSet.id] || { attempts: 0, best: 0, lastScore: null };
+  rec.attempts++;
+  rec.best = Math.max(rec.best, correct);
+  rec.lastScore = correct;
+  MOSHI_STATE.sets[moshiSet.id] = rec;
+  moshiSaveState();
+
+  uTrack("moshi_finish", { set: moshiSet.id, score: correct });
+
+  renderMoshiResult(correct, total, elapsedSec, fieldStats);
+}
+
+function renderMoshiResult(correct, total, elapsedSec, fieldStats) {
+  const btn = document.getElementById("moshiBackBtn");
+  btn.textContent = "← TOPに戻る";
+  btn.onclick = moshiBackToTop;
+
+  const judge = moshiJudgeMsg(correct);
+
+  const fieldHtml = Object.entries(fieldStats).map(([field, st]) => {
+    const cls = st.correct === st.total ? "allcorrect" : (st.correct === 0 ? "haswrong" : "");
+    return `<span class="moshi-field-tag ${cls}">${field} ${st.correct}/${st.total}</span>`;
+  }).join("");
+
+  const reviewHtml = moshiSet.questions.map((q, i) => {
+    const picked = moshiAnswers[i];
+    const ok = picked === q.answer;
+    const choicesHtml = q.choices.map((c, ci) => {
+      let cls = "";
+      if (ci === q.answer) cls = "is-correct";
+      else if (ci === picked) cls = "is-picked-wrong";
+      return `
+        <div class="moshi-rev-choice ${cls}">
+          <span class="moshi-choice-num">${ci + 1}</span>
+          <span>${c}</span>
+        </div>
+      `;
+    }).join("");
+    return `
+      <div class="q-card">
+        <div class="moshi-review-head">
+          <div class="q-meta" style="margin-bottom:0">
+            <div class="q-num">Q${String(i + 1).padStart(2, "0")}</div>
+            <div class="moshi-q-field">${q.field}</div>
+          </div>
+          <div class="q-status ${ok ? "moshi-correct" : "moshi-wrong"}">${ok ? "正解" : "不正解"}</div>
+        </div>
+        <div class="q-text">${q.q}</div>
+        <div class="moshi-rev-choices">${choicesHtml}</div>
+        <div class="q-answer visible ${ok ? "correct" : "wrong"}">
+          <div class="moshi-point">${q.point}</div>
+          <div class="ans-text">${q.exp}</div>
+          <div class="moshi-source">${q.source}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("moshiBody").innerHTML = `
+    <div class="result">
+      <div class="result-title">${moshiSet.title}・採点結果</div>
+      <div class="result-score">${correct} / ${total}</div>
+      <div class="result-pct">経過時間 ${moshiFmtTime(elapsedSec)}</div>
+      <div class="result-msg ${judge.cls}">${judge.text}</div>
+      <div class="moshi-field-wrap">${fieldHtml}</div>
+      <div class="result-actions">
+        <button class="result-btn secondary" onclick="renderMoshiStart()">開始画面へ</button>
+        <button class="result-btn primary" onclick="startMoshi(${moshiSet.id})">もう一度挑戦</button>
+      </div>
+      <a class="sample-outro-cta" href="https://takken2026-quiz.vercel.app/kyozai.html" data-umami-event="moshi_cta_kyozai">教材一覧を見てみる</a>
+    </div>
+    <div class="mode-section-label" style="margin-top:24px">全${total}問の解説</div>
+    ${reviewHtml}
+  `;
+  document.getElementById("moshiBody").scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
 /* ================================================================
    PAGE CONTROL
@@ -1968,6 +2346,10 @@ renderTop();
 // 例: index.html#sample / index.html?start=sample
 if (location.hash === "#sample" || /[?&]start=sample(\b|$)/.test(location.search)) {
   startSample();
+}
+// weekly.html等からの直リンクでミニ模試の開始画面を直接開く。例: index.html#moshi
+if (location.hash === "#moshi") {
+  openMoshi();
 }
 </script>
 </body>
