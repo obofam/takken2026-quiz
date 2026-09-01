@@ -614,6 +614,20 @@
     padding: 3px 10px; border-radius: 999px; white-space: nowrap;
   }
   .moshi-timer.over { color: var(--amber); background: var(--amber-soft); }
+  .moshi-timer-group { display: flex; align-items: center; gap: 6px; }
+  .moshi-pause-btn {
+    border: 1px solid var(--line); background: var(--card); color: var(--muted);
+    border-radius: 999px; width: 26px; height: 26px; font-size: .72rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0;
+  }
+  .moshi-pause { text-align: center; padding: 46px 16px; }
+  .moshi-pause-icon { font-size: 2.2rem; margin-bottom: 8px; }
+  .moshi-pause-ttl { font-size: 1.1rem; font-weight: 900; margin-bottom: 6px; }
+  .moshi-pause-sub { font-size: .82rem; color: var(--muted); margin-bottom: 22px; }
+  .moshi-resume-btn {
+    border: none; background: var(--cyan); color: #fff; font-weight: 800; font-size: .95rem;
+    padding: 12px 34px; border-radius: 999px; cursor: pointer;
+  }
 
   .moshi-choices { display: flex; flex-direction: column; gap: 10px; }
   .moshi-choice {
@@ -1541,6 +1555,7 @@ let moshiAnswers = [];
 let moshiIdx = 0;
 let moshiStartedAt = 0;
 let moshiTimerHandle = null;
+let moshiPausedAt = null;
 
 function moshiFmtTime(sec) {
   const m = Math.floor(sec / 60);
@@ -1603,6 +1618,7 @@ function startMoshi(setId) {
   moshiAnswers = new Array(moshiSet.questions.length).fill(null);
   moshiIdx = 0;
   moshiStartedAt = Date.now();
+  moshiPausedAt = null;
 
   const btn = document.getElementById("moshiBackBtn");
   btn.textContent = "← 戻る";
@@ -1616,8 +1632,32 @@ function startMoshi(setId) {
 function confirmExitMoshi() {
   if (confirm("模試を終了して開始画面に戻りますか？\n（ここまでの結果は記録されません）")) {
     if (moshiTimerHandle) { clearInterval(moshiTimerHandle); moshiTimerHandle = null; }
+    moshiPausedAt = null;
     renderMoshiStart();
   }
+}
+
+function moshiPause() {
+  if (moshiPausedAt) return;
+  moshiPausedAt = Date.now();
+  if (moshiTimerHandle) { clearInterval(moshiTimerHandle); moshiTimerHandle = null; }
+  const elapsed = Math.floor((moshiPausedAt - moshiStartedAt) / 1000);
+  document.getElementById("moshiBody").innerHTML = `
+    <div class="moshi-pause">
+      <div class="moshi-pause-icon">⏸️</div>
+      <div class="moshi-pause-ttl">一時停止中</div>
+      <div class="moshi-pause-sub">ここまで ${moshiFmtTime(elapsed)}・再開すると Q${moshiIdx + 1}/${moshiSet.questions.length} に戻ります</div>
+      <button type="button" class="moshi-resume-btn" onclick="moshiResume()">▶ 再開する</button>
+    </div>`;
+}
+
+function moshiResume() {
+  if (!moshiPausedAt) return;
+  moshiStartedAt += Date.now() - moshiPausedAt;
+  moshiPausedAt = null;
+  renderMoshiQuestion();
+  if (moshiTimerHandle) clearInterval(moshiTimerHandle);
+  moshiTimerHandle = setInterval(moshiTickTimer, 1000);
 }
 
 function moshiTickTimer() {
@@ -1634,7 +1674,10 @@ function renderMoshiQuestion() {
   document.getElementById("moshiBody").innerHTML = `
     <div class="moshi-head-row">
       <div class="quiz-breadcrumb">${moshiSet.title}・本番形式ミニ模試</div>
-      <div class="moshi-timer" id="moshiTimer">⏱ 00:00</div>
+      <div class="moshi-timer-group">
+        <div class="moshi-timer" id="moshiTimer">⏱ 00:00</div>
+        <button type="button" class="moshi-pause-btn" onclick="moshiPause()" aria-label="一時停止">⏸</button>
+      </div>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" style="width:${(moshiIdx / total * 100)}%"></div></div>
