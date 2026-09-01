@@ -109,6 +109,11 @@
   .moshi-card .mc-icon{font-size:1.6rem;flex:0 0 auto}
   .moshi-card .mc-ttl{font-size:.96rem;font-weight:800;margin-bottom:2px}
   .moshi-card .mc-sub{font-size:.82rem;color:var(--muted)}
+  .mc-new{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--cyan);color:#fff;font-size:.62rem;font-weight:800;vertical-align:2px;letter-spacing:.03em}
+  .cta .moshi-card{display:flex;margin:8px 0;box-shadow:none;text-align:left;padding:8px 12px;gap:10px;border-radius:12px}
+  .cta .moshi-card .mc-icon{font-size:1.1rem}
+  .cta .moshi-card .mc-ttl{font-size:.85rem;margin-bottom:0}
+  .cta .moshi-card .mc-sub{font-size:.72rem}
   /* result */
   .result{display:none;margin-top:16px}
   .result.show{display:block;animation:pop .25s ease}
@@ -172,37 +177,38 @@
 
   <div id="current"></div>
 
-  <a class="moshi-card" href="./index.html#moshi" data-umami-event="weekly_cta_moshi">
-    <span class="mc-icon">🎯</span>
-    <div>
-      <div class="mc-ttl">本番形式ミニ模試（4択×10問・無料）</div>
-      <div class="mc-sub">今週の1問で物足りなければこちら →（目安24分）</div>
-    </div>
-  </a>
-
   <div class="cta" id="cta">
     <h2>1問では物足りない方へ</h2>
     <p>ひっかけの「型」は、数を解くほど見えてきます。続きはこちらからどうぞ。</p>
+
+    <a class="moshi-card" href="./index.html#moshi" data-umami-event="weekly_cta_moshi">
+      <span class="mc-icon">🎯</span>
+      <div>
+        <div class="mc-ttl">本番形式ミニ模試（4択×10問・無料）<span class="mc-new">NEW!</span></div>
+        <div class="mc-sub">本試験と同じ形式で腕試し →（目安24分）</div>
+      </div>
+    </a>
+
     <a class="free" href="https://takken2026-quiz.vercel.app/" data-umami-event="weekly_cta_sample">無料おためし 5問（登録不要・目安1分）</a>
     <a class="buy" href="https://note.com/fond_bison5155/n/nb59bbfa5b01d" data-umami-event="weekly_cta_note">全4分野230問以上を解く（980円）</a>
     <p class="note">スマホで解ける一問一答問題集／解説をじっくり読める設計です</p>
+
+    <a class="moshi-card" href="https://takken2026-quiz.vercel.app/shindan.html" data-umami-event="weekly_cta_shindan">
+      <span class="mc-icon">🧭</span>
+      <div>
+        <div class="mc-ttl">現在地診断（6問・1分）</div>
+        <div class="mc-sub">いまの学習状況が気になる方はこちら →</div>
+      </div>
+    </a>
+
+    <a class="moshi-card" href="https://takken2026-quiz.vercel.app/kyozai.html" data-umami-event="weekly_cta_kyozai">
+      <span class="mc-icon">📚</span>
+      <div>
+        <div class="mc-ttl">教材一覧</div>
+        <div class="mc-sub">直前期のまとめ教材はこちらに並んでいます →</div>
+      </div>
+    </a>
   </div>
-
-  <a class="moshi-card" href="https://takken2026-quiz.vercel.app/shindan.html" data-umami-event="weekly_cta_shindan">
-    <span class="mc-icon">🧭</span>
-    <div>
-      <div class="mc-ttl">現在地診断（6問・1分）</div>
-      <div class="mc-sub">いまの学習状況が気になる方はこちら →</div>
-    </div>
-  </a>
-
-  <a class="moshi-card" href="https://takken2026-quiz.vercel.app/kyozai.html" data-umami-event="weekly_cta_kyozai">
-    <span class="mc-icon">📚</span>
-    <div>
-      <div class="mc-ttl">教材一覧</div>
-      <div class="mc-sub">直前期のまとめ教材はこちらに並んでいます →</div>
-    </div>
-  </a>
 
   <div class="sec">これまでの出題</div>
   <div id="archive"></div>
