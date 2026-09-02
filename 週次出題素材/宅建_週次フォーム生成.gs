@@ -34,9 +34,9 @@ function makeWeeklyForm() {
   form.addTextItem().setTitle("お名前（ニックネーム可）");
   form.addMultipleChoiceItem().setTitle("今週、学習時間は確保できましたか？（継続）")
       .setChoiceValues(["十分に確保できた", "なんとか最低限はできた", "ほぼ確保できなかった★"]);
-  w.q.forEach(function (item) {
+  w.q.forEach(function (item, idx) {
     const mc = form.addMultipleChoiceItem();
-    mc.setTitle(item.t).setPoints(10);
+    mc.setTitle("【問" + (idx + 1) + "】" + item.t).setPoints(10);
     if (item.choices && item.choices.length) {
       // 4択問題（v3）: choices=[肢1,肢2,肢3,肢4], answer=0始まりの正解インデックス
       const correctFeedback = FormApp.createFeedback()
