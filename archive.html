@@ -24,7 +24,6 @@
   const SFM  = "https://stand.fm/episodes/";
   const NOTE = "https://note.com/fond_bison5155/n/";
   const TRACKER_URL = "https://obofam.github.io/takken2026-quiz/tracker.html";
-  const SUBSTACK_SUBSCRIBE_URL = "https://mimiobo.substack.com/subscribe"; // ★2026-09-02: Kit→Substackへ移行
 
   // ── 1. リスナーが選んだ神回 TOP3（データ＝再生率/熱心率で選定）──
   const TOP3 = [
@@ -233,13 +232,8 @@
         <h2>耳で覚える宅建2027 超・先行案内</h2>
         <p class="desc">2027年度版は、区分所有法の大改正に対応した新録でパワーアップ予定。配信開始や先行特典のお知らせを、どこよりも早くメールでお届けします。</p>
 
-        <form class="kit-form" id="kitForm" action="" method="post">
-          <input type="email" name="email_address" inputmode="email" autocomplete="email" required placeholder="メールアドレス" aria-label="メールアドレス">
-          <button type="submit" class="btn btn-primary">先行案内を受け取る</button>
-        </form>
-        <p class="kit-note">登録ボタンを押すと配信サービス（Substack）の確認画面に移ります。そこでもう一度「登録」を押せば完了です。</p>
-        <p class="kit-err" id="kitErr" hidden></p>
-        <p class="kit-msg" id="kitMsg" hidden>ご登録ありがとうございます！確認メールをお送りしました。メール内のリンクをタップすると登録完了です☕</p>
+        <a class="btn btn-primary" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="archive_mail2027_click">先行案内を受け取る（無料）</a>
+        <p class="kit-note">登録ページ（Substack）が開きます。メールアドレスを入れて「登録」を押してください。アプリやシェアの案内が出たら「スキップ」で大丈夫です。いつでも解除できます。</p>
       </div>
     </section>
 
@@ -287,27 +281,6 @@
   KENRI.forEach(e => document.getElementById('kenri').appendChild(card(e,'kenri')));
   GYOHO.forEach(e => document.getElementById('gyoho').appendChild(card(e,'gyoho')));
   document.getElementById('trackerLink').href = TRACKER_URL;
-
-  // 先行案内フォーム：バリデーション後にSubstackの登録ページへ遷移（2026-09-02: Kit→Substackへ移行）
-  (function(){
-    var form = document.getElementById('kitForm');
-    if (!form) return;
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      var btn = form.querySelector('button');
-      var err = document.getElementById('kitErr');
-      var email = form.email_address.value.trim();
-      err.hidden = true;
-      if (!/.+@.+\..+/.test(email)){
-        err.hidden = false;
-        err.textContent = 'メールアドレスの形式をご確認ください。';
-        return;
-      }
-      btn.disabled = true; btn.textContent = '送信中…';
-      if (window.umami) umami.track('archive_kit_submit');
-      location.href = SUBSTACK_SUBSCRIBE_URL + '?email=' + encodeURIComponent(email);
-    });
-  })();
 </script>
 </body>
 </html>
