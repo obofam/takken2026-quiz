@@ -63,7 +63,15 @@ function makeWeeklyForm() {
   form.setDestination(FormApp.DestinationType.SPREADSHEET, masterId);
   SpreadsheetApp.flush();
   const old = ss.getSheetByName(WEEK);
-  if (old) ss.deleteSheet(old);
+  if (old) {
+    // 古いタブがフォームとリンクしたままだと削除できないので、先にリンクを解除する
+    const oldFormUrl = old.getFormUrl();
+    if (oldFormUrl) {
+      try { FormApp.openByUrl(oldFormUrl).removeDestination(); } catch (e) {}
+      SpreadsheetApp.flush();
+    }
+    ss.deleteSheet(ss.getSheetByName(WEEK));
+  }
   const added = ss.getSheets().filter(function (s) { return before.indexOf(s.getName()) < 0; });
   if (added.length) added[added.length - 1].setName(WEEK);
 
