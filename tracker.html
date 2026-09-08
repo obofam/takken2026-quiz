@@ -313,6 +313,12 @@
     outline:2px solid #B8860B;outline-offset:2px;
   }
 
+  .col-ep.promo-ep{background:var(--cyan-soft);border-color:var(--cyan)}
+  .col-ep.promo-ep .col-num{color:var(--cyan-dark);border-color:var(--cyan)}
+  .col-ep.promo-ep .col-en{color:var(--cyan-dark)}
+  a.col-ep.promo-ep:hover{background:#C9EEF7;box-shadow:0 4px 12px rgba(14,162,194,.18)}
+  a.col-ep.promo-ep:focus-visible{outline-color:var(--cyan-dark)}
+
   /* ---------- Product link (subtle) ---------- */
   .product-link{
     margin:28px 16px 12px;
@@ -642,6 +648,18 @@ const COLUMNS = [
   {num:3, field:"法令・税その他", afterEp:26, title:"コラム：宅建メンタル道場 その3", url:"https://note.com/fond_bison5155/n/n11724b84cd93"},
 ];
 
+// ラスト30日プログラムの案内（法令税タブ・メンタル道場その3の直下）。日付はJST。
+const PROMO = {
+  field:"法令・税その他", afterEp:26,
+  title:"宅建 ラスト30日プログラム",
+  url:"https://note.com/fond_bison5155/n/n77de293e23fe",
+  linkFrom:"2026-09-13",   // この日からnoteへリンク（それまでは「予告」）
+  earlyUntil:"2026-09-18", // この日から早割文言を消す
+  hideFrom:"2026-10-18",   // 試験当日から非表示
+};
+function jstToday(){ const n = new Date(Date.now() + 9*3600*1000); return Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate()); }
+function ymd(str){ const p = str.split("-"); return Date.UTC(+p[0], +p[1]-1, +p[2]); }
+
 const BADGES = [
   {id:"first",   icon:"🎧", name:"はじめの一歩",   check:s => s.listened >= 1},
   {id:"ten",     icon:"📻", name:"10回達成",        check:s => s.listened >= 10},
@@ -742,6 +760,25 @@ function renderEpisodes(){
     return `<div class="col-ep ${unlocked ? "" : "locked"}" aria-label="コラム">${inner}</div>`;
   };
 
+  // ラスト30日プログラムの案内カード
+  const renderPromoCard = () => {
+    if(PROMO.field !== currentField) return "";
+    const today = jstToday();
+    if(today >= ymd(PROMO.hideFrom)) return "";
+    const live = today >= ymd(PROMO.linkFrom);
+    const early = today < ymd(PROMO.earlyUntil) ? "　9/17まで早割 6,800円" : "";
+    const inner = `
+      <div class="col-num">${live ? "NEW" : "予告"}</div>
+      <div class="col-main">
+        <p class="col-title">${PROMO.title}　7,800円${early}</p>
+        <div class="col-status"><span class="col-en">${live ? "📖 noteで見る" : "9/14（月）発売"}</span><span class="col-jp">9/18からのラスト30日、今日すべきことが毎朝LINEで届きます</span></div>
+      </div>`;
+    if(live){
+      return `<a class="col-ep col-link promo-ep" href="${PROMO.url}" target="_blank" rel="noopener" data-umami-event="promo_last30" aria-label="${PROMO.title}（noteを開く）">${inner}</a>`;
+    }
+    return `<div class="col-ep promo-ep" aria-label="${PROMO.title}（発売予定）">${inner}</div>`;
+  };
+
   // その分野の教材リンク（母数には含めない・任意の深掘り）
   const renderProductCard = () => {
     const p = PRODUCTS[currentField];
@@ -795,7 +832,7 @@ function renderEpisodes(){
     </article>`;
     // このエピソードのあとにコラムを差し込む
     if(column && ep.n === column.afterEp){
-      return epHtml + renderColumnCard();
+      return epHtml + renderColumnCard() + (ep.n === PROMO.afterEp ? renderPromoCard() : "");
     }
     return epHtml;
   }).join("") + renderProductCard() + renderFieldNav();
