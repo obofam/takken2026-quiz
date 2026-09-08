@@ -35,7 +35,7 @@ HOME_HOSTS = ["www.mimiobo.com", "mimiobo.vercel.app"]
 PAGE_DEFS = [
     {"key": "tracker", "name": "進捗トラッカー", "icon": "\U0001F4CA",
      "path": "/takken2026-quiz/tracker.html", "hostnames": TRACKER_HOSTS,
-     "prefixes": ["tracker_", "progress_toggle", "revisit", "stand_fm", "note_summary"]},
+     "prefixes": ["tracker_", "progress_toggle", "revisit", "stand_fm", "note_summary", "promo_"]},
     {"key": "kyozai", "name": "教材一覧", "icon": "\U0001F5C2",
      "path": "/kyozai.html", "hostnames": [QUIZ_HOST],
      "prefixes": ["kyozai_"]},
@@ -112,7 +112,7 @@ def esc(x):
 
 # 「送り先」＝そのページから外へ出ていくCTA。それ以外は「中の動き」に回す。
 OUTBOUND_HINTS = ("_cta_", "_nav_", "_link", "_plat_", "_sns_", "_ep_", "_mat_",
-                  "_tokushoho", "_share", "_mail_")
+                  "_tokushoho", "_share", "_mail_", "_last30")  # _last30: ラスト30日プログラム（note）への送り出し
 # 名前からは判別できないが外部へ飛ばしているもの（stand.fm / note の各記事）
 OUTBOUND_NAMES = {"stand_fm", "note_summary"}
 

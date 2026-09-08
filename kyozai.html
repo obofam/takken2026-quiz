@@ -277,6 +277,12 @@
     .container { padding-top: 48px; }
     .hero h1 { font-size: 1.7rem; }
   }
+  [hidden]{display:none!important}
+  .sub-details{margin-top:10px}
+  .sub-details summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border:1px dashed var(--line);border-radius:12px;font-size:.88rem;font-weight:700;color:var(--muted)}
+  .sub-details summary::-webkit-details-marker{display:none}
+  .sd-caret{font-size:.7rem;transition:transform .2s}
+  .sub-details[open] .sd-caret{transform:rotate(180deg)}
 </style>
 </head>
 <body>
@@ -346,6 +352,36 @@
 
   <div class="section-divider"></div>
 
+  <!-- 3b. ラスト30日プログラム（発売前は予告・9/13からnoteへ） -->
+  <div class="section-block" id="sec-last30">
+    <div class="section-head">
+      <h2>9/18からのラスト30日</h2>
+      <p class="section-lead" style="font-size:0.95rem; color:var(--muted); line-height:1.8; margin:10px 0 0;">9/14発売。試験前の30日、今日すべきことが毎朝LINEで届きます。</p>
+    </div>
+    <div class="material-list">
+
+      <article class="material-card" id="card-last30">
+        <div class="mc-head">
+          <span class="mc-icon">🏁</span>
+          <h3 class="mc-title">宅建 ラスト30日プログラム</h3>
+        </div>
+        <p class="mc-point">最後の30日を、何をやるかで迷わないために。毎朝、その日にやることが届きます。</p>
+        <p class="mc-content">限定音声12本／30日ロードマップPDF／最終チェック1枚／毎朝のLINEペース便</p>
+        <div class="mc-price-row">
+          <span class="mc-price-lbl">価格</span>
+          <span class="mc-price">7,800円</span>
+        </div>
+        <p class="mc-note" data-hide-from="2026-09-18">9/17（木）までのお申し込みは早割で1,000円引きの6,800円</p>
+        <!-- 日付ゲート: 9/13からnoteへのリンクを表示、それまでは「発売予定」 -->
+        <span class="btn-disabled" data-hide-from="2026-09-13">9/14（月）発売予定</span>
+        <a class="btn-cta" hidden data-show-from="2026-09-13" href="https://note.com/fond_bison5155/n/n77de293e23fe?utm_source=kyozai&utm_content=card_last30" target="_blank" rel="noopener" data-umami-event="kyozai_cta_last30">詳細（note）へ →</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
   <!-- 4. 教材（有料） -->
   <div class="section-block" id="sec-paid">
     <div class="section-head">
@@ -396,9 +432,17 @@
       <article class="material-card" id="card-bunya">
         <div class="mc-head">
           <span class="mc-icon">📘</span>
-          <h3 class="mc-title">分野別 要点まとめ<span style="font-size:.85rem; font-weight:700; color:var(--muted);">（各980円）</span></h3>
+          <h3 class="mc-title">分野別 要点まとめ</h3>
         </div>
         <div class="free-list" style="gap:8px;">
+          <a class="free-card" style="padding:13px 14px; box-shadow:none; border:1.5px solid var(--cyan); background:var(--cyan-soft);" id="card-set3" href="https://note.com/fond_bison5155/m/m373c85a7e952" target="_blank" rel="noopener" data-umami-event="kyozai_cta_set3">
+            <span class="fc-body"><span class="fc-title" style="font-size:1.08rem;">📚 3冊セット <span style="color:var(--cyan-dark); font-weight:900;">2,400円</span></span><span class="fc-desc" style="margin-top:2px;">業法・権利関係・法令税の3冊。単品合計より540円お得</span></span>
+            <span class="fc-arrow">›</span>
+          </a>
+        </div>
+        <details class="sub-details">
+          <summary data-umami-event="kyozai_bunya_open"><span>1冊ずつ買う（各980円）</span><span class="sd-caret">▼</span></summary>
+          <div class="free-list" style="gap:8px; margin-top:8px;">
           <a class="free-card" style="padding:10px 14px; box-shadow:none;" href="https://note.com/fond_bison5155/n/n21bbbcab9add" target="_blank" rel="noopener" data-umami-event="kyozai_cta_gyoho">
             <span class="fc-body"><span class="fc-title" style="font-size:.95rem;">宅建業法で20点とる</span><span class="fc-desc" style="margin-top:1px;">一問一答 全50問つき</span></span>
             <span class="fc-arrow">›</span>
@@ -411,11 +455,8 @@
             <span class="fc-body"><span class="fc-title" style="font-size:.95rem;">法令上の制限＋税その他で16点を落とさない</span><span class="fc-desc" style="margin-top:1px;">一問一答 全60問つき</span></span>
             <span class="fc-arrow">›</span>
           </a>
-          <a class="free-card" style="padding:13px 14px; box-shadow:none; border:1.5px solid var(--cyan); background:var(--cyan-soft);" id="card-set3" href="https://note.com/fond_bison5155/m/m373c85a7e952" target="_blank" rel="noopener" data-umami-event="kyozai_cta_set3">
-            <span class="fc-body"><span class="fc-title" style="font-size:1.08rem;">📚 3冊セット <span style="color:var(--cyan-dark); font-weight:900;">2,400円</span></span><span class="fc-desc" style="margin-top:2px;">まとめて派はこちら。単品合計より540円お得</span></span>
-            <span class="fc-arrow">›</span>
-          </a>
-        </div>
+          </div>
+        </details>
       </article>
 
       <article class="material-card" id="card-quiz">
@@ -459,21 +500,6 @@
         </div>
         <p class="mc-note">発売中</p>
         <a class="btn-cta" href="https://note.com/fond_bison5155/n/na9740956174c" target="_blank" rel="noopener" data-umami-event="kyozai_cta_chokuzen">詳細（note）へ →</a>
-      </article>
-
-      <article class="material-card" id="card-last30">
-        <div class="mc-head">
-          <span class="mc-icon">🏁</span>
-          <h3 class="mc-title">宅建 ラスト30日プログラム</h3>
-        </div>
-        <p class="mc-point">最後の30日を、何をやるかで迷わないために。毎朝、その日にやることが届きます。</p>
-        <p class="mc-content">限定音声12本／30日ロードマップPDF／最終チェック1枚／毎朝のLINEペース便</p>
-        <div class="mc-price-row">
-          <span class="mc-price-lbl">価格</span>
-          <span class="mc-price">7,800円</span>
-        </div>
-        <!-- 9/14にhref追加（販売ページ未公開） ／ data-umami-event="kyozai_cta_last30" -->
-        <span class="btn-disabled">9/14（月）発売予定</span>
       </article>
 
     </div>
@@ -549,6 +575,18 @@
       setTimeout(function () { el.classList.remove('ch-flash'); }, 2000);
     });
   });
+  // 日付ゲート（JST基準）: data-show-from=その日から表示（それまで hidden） / data-hide-from=その日から要素を削除
+  (function () {
+    var jstNow = new Date(Date.now() + 9 * 3600 * 1000);
+    var today = Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth(), jstNow.getUTCDate());
+    function d(str) { var p = str.split('-'); return Date.UTC(+p[0], +p[1] - 1, +p[2]); }
+    document.querySelectorAll('[data-hide-from]').forEach(function (el) {
+      if (today >= d(el.getAttribute('data-hide-from'))) el.parentNode.removeChild(el);
+    });
+    document.querySelectorAll('[data-show-from]').forEach(function (el) {
+      if (today >= d(el.getAttribute('data-show-from'))) el.removeAttribute('hidden');
+    });
+  })();
   // 試験日カウントダウン（2026-10-18・JST基準）
   (function () {
     var el = document.getElementById('exam-countdown');
