@@ -53,7 +53,7 @@
 - buyguide_cta_note は廃止済み→0が正常
 - utm_source別流入（x_prof/ig_prof/yt_prof/note_prof/standfm/line）※プロフ貼り替え後から
 - kyozai_cta_chokuzen 初動（直前対策の主計測）
-- **ラスト30日プログラム（9/13公開・9/14発売・7,800円/早割9/17まで）の主計測**: home_hero_last30（LPお知らせ帯）/ home_mat_last30（LP教材カード）/ kyozai_cta_last30（教材一覧）/ promo_last30（トラッカー法令税タブ）。9/13以前は0が正常（リンク未活性）。内訳付きは kyozai_bunya_open（分野別の単品折りたたみ開封）。10/18以降は自動非表示なので0に戻る
+- **ラスト30日プログラム（9/13公開・9/14発売・7,800円/早割9/17まで）の主計測**: home_hero_last30（LPお知らせ帯）/ home_mat_last30（LP教材カード）/ kyozai_cta_last30（教材一覧）/ promo_last30（トラッカー法令税タブ）/ weekly_cta_last30（今週の過去問ページ）。9/13以前は0が正常（リンク未活性）。内訳付きは kyozai_bunya_open（分野別の単品折りたたみ開封）。10/18以降は自動非表示なので0に戻る
 
 ## ホストの読み方（2026-08-31 確定）
 - **進捗トラッカー＝`obofam.github.io/takken2026-quiz/tracker.html` が本番。** 学習記録の蓄積がこのURLに紐づくため意図的にGitHub Pages側を使っている。**「旧URLの残存」「導線の穴」と書かないこと**（8/27の週報にそう書いてあったのは誤り）。vercel版への一本化は来期。

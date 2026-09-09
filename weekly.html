@@ -166,6 +166,12 @@
   }
   footer{margin-top:34px;font-size:.82rem;color:var(--muted);line-height:1.9;text-align:center}
   footer a{color:var(--muted)}
+  [hidden]{display:none!important}
+  .last30{display:flex;align-items:center;gap:10px;margin:22px 0 0;padding:11px 14px;background:var(--cyan-soft);border:1px solid var(--cyan);border-radius:12px;text-decoration:none;color:inherit;text-align:left}
+  .last30-k{flex:none;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--cyan-dark);background:#fff;border:1px solid var(--cyan);border-radius:999px;padding:3px 9px}
+  .last30-t{flex:1;font-size:13px;line-height:1.6}
+  .last30-t b{font-weight:800}
+  .last30-a{flex:none;color:var(--cyan-dark);font-weight:800}
 </style>
 </head>
 <body>
@@ -176,6 +182,13 @@
   <p class="lead">その週の放送テーマに合わせて、本試験で実際に出た問題を毎週1問。本試験と同じ4択形式で、正解だと思う肢を押してみてください。</p>
 
   <div id="current"></div>
+
+  <!-- ラスト30日プログラム（日付ゲート: 9/13からリンク・9/18で早割消し・10/18で非表示） -->
+  <a class="last30" id="last30" hidden data-show-from="2026-09-13" data-hide-from="2026-10-18" href="https://note.com/fond_bison5155/n/n77de293e23fe?utm_source=weekly&utm_content=cta_last30" target="_blank" rel="noopener" data-umami-event="weekly_cta_last30">
+    <span class="last30-k">NEW</span>
+    <span class="last30-t"><b>宅建 ラスト30日プログラム</b> 7,800円<span data-hide-from="2026-09-18">（9/17まで早割 6,800円）</span><br>9/18からのラスト30日、今日すべきことが毎朝LINEで届きます</span>
+    <span class="last30-a">›</span>
+  </a>
 
   <div class="cta" id="cta">
     <h2>1問では物足りない方へ</h2>
@@ -219,6 +232,20 @@
   </footer>
 </div>
 
+<script>
+  // 日付ゲート（JST基準）: data-show-from=その日から表示（それまで hidden） / data-hide-from=その日から要素を削除
+  (function () {
+    var jstNow = new Date(Date.now() + 9 * 3600 * 1000);
+    var today = Date.UTC(jstNow.getUTCFullYear(), jstNow.getUTCMonth(), jstNow.getUTCDate());
+    function d(str) { var p = str.split('-'); return Date.UTC(+p[0], +p[1] - 1, +p[2]); }
+    document.querySelectorAll('[data-hide-from]').forEach(function (el) {
+      if (today >= d(el.getAttribute('data-hide-from'))) el.parentNode.removeChild(el);
+    });
+    document.querySelectorAll('[data-show-from]').forEach(function (el) {
+      if (today >= d(el.getAttribute('data-show-from'))) el.removeAttribute('hidden');
+    });
+  })();
+</script>
 <script>
 // ===== 出題データ（新しい週を先頭に1件追記していく）=====
 // answer: "○" or "×"（この記述が正しいか誤りか）※旧スキーマ（○×形式）
