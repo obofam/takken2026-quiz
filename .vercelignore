@@ -9,3 +9,6 @@ node_modules/
 umami_fetch.py
 umami_snapshot.py
 umami_artifact_url.txt
+umami_*
+scripts/
+*.cjs
