@@ -11,6 +11,7 @@
 | おみくじ利用者（8月限定） | https://takken2026-quiz.vercel.app/omikuji.html | LINEリッチメニュー（8月・「使い方」枠と差し替え） | `vercel --prod` |
 | 週替わり1問利用者 | https://takken2026-quiz.vercel.app/weekly.html | LINEリッチメニューB枠「今週の過去問」（2026-08から） | `vercel --prod` |
 | 教材一覧LP利用者 | https://takken2026-quiz.vercel.app/kyozai.html | **LINEリッチメニューD枠（差し替え済み・稼働中）** | `vercel --prod` |
+| 伴走参加者 | https://takken2026-quiz.vercel.app/karte.html | 未設置（LINE手動案内） | `vercel --prod` |
 
 **weekly.htmlの問題更新＝ファイル内 QUESTIONS 配列の先頭に1問追加（先頭が今週の1問、2件目以降は自動でアーカイブ表示）→ `vercel --prod`**
 
