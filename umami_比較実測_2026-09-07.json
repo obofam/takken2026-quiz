@@ -1,0 +1,1491 @@
+{
+  "retrievedAt": "2026-09-07T03:53:46.754Z",
+  "periods": {
+    "current": {
+      "startAt": 1788148426754,
+      "endAt": 1788753226754
+    },
+    "previous": {
+      "startAt": 1787543626754,
+      "endAt": 1788148426753
+    }
+  },
+  "data": {
+    "current": {
+      "japan": {
+        "pageviews": 448,
+        "visitors": 186,
+        "visits": 271,
+        "bounces": 64,
+        "totaltime": 46436,
+        "comparison": {
+          "pageviews": 450,
+          "visitors": 158,
+          "visits": 236,
+          "bounces": 82,
+          "totaltime": 60035
+        }
+      },
+      "event": [
+        {
+          "x": "quiz_answer",
+          "y": 319
+        },
+        {
+          "x": "revisit",
+          "y": 137
+        },
+        {
+          "x": "stand_fm",
+          "y": 128
+        },
+        {
+          "x": "progress_toggle",
+          "y": 113
+        },
+        {
+          "x": "週1問_回答",
+          "y": 38
+        },
+        {
+          "x": "note_summary",
+          "y": 31
+        },
+        {
+          "x": "visit_new",
+          "y": 26
+        },
+        {
+          "x": "section_open",
+          "y": 21
+        },
+        {
+          "x": "weekly_complete",
+          "y": 19
+        },
+        {
+          "x": "kyozai_nav_free",
+          "y": 19
+        },
+        {
+          "x": "moshi_start",
+          "y": 19
+        },
+        {
+          "x": "lock_prompt",
+          "y": 16
+        },
+        {
+          "x": "shindan_start",
+          "y": 16
+        },
+        {
+          "x": "shindan_complete",
+          "y": 15
+        },
+        {
+          "x": "kyozai_cta_sample",
+          "y": 14
+        },
+        {
+          "x": "quiz_start",
+          "y": 14
+        },
+        {
+          "x": "moshi_open",
+          "y": 14
+        },
+        {
+          "x": "sample_complete",
+          "y": 11
+        },
+        {
+          "x": "moshi_finish",
+          "y": 9
+        },
+        {
+          "x": "kyozai_cta_standfm",
+          "y": 9
+        },
+        {
+          "x": "section_unlock",
+          "y": 8
+        },
+        {
+          "x": "weekly_cta_moshi",
+          "y": 8
+        },
+        {
+          "x": "shindan_type_rebuild",
+          "y": 8
+        },
+        {
+          "x": "kyozai_flow_open",
+          "y": 7
+        },
+        {
+          "x": "kyozai_nav_paid",
+          "y": 7
+        },
+        {
+          "x": "kyozai_cta_set3",
+          "y": 7
+        },
+        {
+          "x": "shindan_cta_gyoho",
+          "y": 6
+        },
+        {
+          "x": "sample_start",
+          "y": 5
+        },
+        {
+          "x": "product",
+          "y": 5
+        },
+        {
+          "x": "sample_cta_shindan",
+          "y": 4
+        },
+        {
+          "x": "shindan_type_sprout",
+          "y": 4
+        },
+        {
+          "x": "kyozai_cta_gyoho",
+          "y": 4
+        },
+        {
+          "x": "home_mail_sample",
+          "y": 3
+        },
+        {
+          "x": "kyozai_cta_weekly",
+          "y": 3
+        },
+        {
+          "x": "kyozai_cta_moshi",
+          "y": 3
+        },
+        {
+          "x": "buyguide_open",
+          "y": 3
+        },
+        {
+          "x": "kyozai_cta_chokuzen",
+          "y": 2
+        },
+        {
+          "x": "home_mail_submit",
+          "y": 2
+        },
+        {
+          "x": "shindan_type_finish",
+          "y": 2
+        },
+        {
+          "x": "home_mail_click",
+          "y": 2
+        },
+        {
+          "x": "home_mail_focus",
+          "y": 2
+        },
+        {
+          "x": "home_cta_standfm",
+          "y": 2
+        },
+        {
+          "x": "kyozai_cta_line_footer",
+          "y": 2
+        },
+        {
+          "x": "home_cta_line_bottom",
+          "y": 1
+        },
+        {
+          "x": "modal_cta_kyozai",
+          "y": 1
+        },
+        {
+          "x": "home_nav_line",
+          "y": 1
+        },
+        {
+          "x": "home_step_line",
+          "y": 1
+        },
+        {
+          "x": "kyozai_nav_chokuzen",
+          "y": 1
+        },
+        {
+          "x": "weekly_cta_shindan",
+          "y": 1
+        },
+        {
+          "x": "home_cta_line",
+          "y": 1
+        },
+        {
+          "x": "kyozai_cta_horei",
+          "y": 1
+        },
+        {
+          "x": "home_cta_sample",
+          "y": 1
+        },
+        {
+          "x": "kyozai_cta_bansou",
+          "y": 1
+        },
+        {
+          "x": "buyguide_cta_kyozai",
+          "y": 1
+        },
+        {
+          "x": "moshi_cta_kyozai",
+          "y": 1
+        },
+        {
+          "x": "home_cta_note_column",
+          "y": 1
+        },
+        {
+          "x": "weekly_cta_sample",
+          "y": 1
+        },
+        {
+          "x": "archive_kit_submit",
+          "y": 1
+        },
+        {
+          "x": "kyozai_flow_set3",
+          "y": 1
+        },
+        {
+          "x": "mailsample_mail_submit",
+          "y": 1
+        },
+        {
+          "x": "kyozai_cta_kenri",
+          "y": 1
+        },
+        {
+          "x": "chintai_official",
+          "y": 1
+        },
+        {
+          "x": "shindan_type_stack",
+          "y": 1
+        },
+        {
+          "x": "knock_finish",
+          "y": 1
+        },
+        {
+          "x": "weekly_cta_kyozai",
+          "y": 1
+        },
+        {
+          "x": "tracker_cta_kyozai",
+          "y": 1
+        },
+        {
+          "x": "knock_start",
+          "y": 1
+        }
+      ],
+      "query": [
+        {
+          "x": "utm_source=stf&utm_content=profile",
+          "y": 19
+        },
+        {
+          "x": "utm_source=note",
+          "y": 7
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep02",
+          "y": 4
+        },
+        {
+          "x": "utm_source=note_prof",
+          "y": 3
+        },
+        {
+          "x": "utm_source=line&utm_content=step_d2",
+          "y": 3
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep01",
+          "y": 2
+        },
+        {
+          "x": "v=btn1",
+          "y": 1
+        },
+        {
+          "x": "v=embed1",
+          "y": 1
+        },
+        {
+          "x": "v=embed4",
+          "y": 1
+        },
+        {
+          "x": "v=embed5",
+          "y": 1
+        },
+        {
+          "x": "v=embed8",
+          "y": 1
+        },
+        {
+          "x": "v=embed7",
+          "y": 1
+        },
+        {
+          "x": "v=embed2",
+          "y": 1
+        },
+        {
+          "x": "v=embed3",
+          "y": 1
+        },
+        {
+          "x": "v=center1",
+          "y": 1
+        },
+        {
+          "x": "utm_source=yt_prof",
+          "y": 1
+        },
+        {
+          "x": "utm_source=substack&utm_medium=welcome",
+          "y": 1
+        },
+        {
+          "x": "utm_source=stf&utm_content=epnaki3",
+          "y": 1
+        },
+        {
+          "x": "utm_source=mail&utm_medium=weekly&utm_content=tracker",
+          "y": 1
+        },
+        {
+          "x": "utm_source=line&utm_content=step_d14",
+          "y": 1
+        },
+        {
+          "x": "utm_source=note&utm_content=roadmap",
+          "y": 1
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep03",
+          "y": 1
+        }
+      ],
+      "overall": {
+        "pageviews": 466,
+        "visitors": 203,
+        "visits": 288,
+        "bounces": 80,
+        "totaltime": 46475,
+        "comparison": {
+          "pageviews": 506,
+          "visitors": 207,
+          "visits": 287,
+          "bounces": 130,
+          "totaltime": 60077
+        }
+      },
+      "referrer": [
+        {
+          "x": "note.com",
+          "y": 12
+        },
+        {
+          "x": "mimiobo.com",
+          "y": 2
+        },
+        {
+          "x": "obofam.github.io",
+          "y": 1
+        },
+        {
+          "x": "youtube.com",
+          "y": 1
+        },
+        {
+          "x": "mimiipass.substack.com",
+          "y": 1
+        },
+        {
+          "x": "jp.naver.line.android",
+          "y": 1
+        },
+        {
+          "x": "mimiobo.substack.com",
+          "y": 1
+        }
+      ],
+      "country": [
+        {
+          "x": "JP",
+          "y": 186
+        },
+        {
+          "x": "US",
+          "y": 14
+        },
+        {
+          "x": "CA",
+          "y": 2
+        },
+        {
+          "x": "NG",
+          "y": 1
+        }
+      ],
+      "tracker": {
+        "pageviews": 163,
+        "visitors": 79,
+        "visits": 126,
+        "bounces": 0,
+        "totaltime": 20960,
+        "comparison": {
+          "pageviews": 134,
+          "visitors": 61,
+          "visits": 88,
+          "bounces": 0,
+          "totaltime": 24424
+        }
+      },
+      "tracker_jp": {
+        "pageviews": 163,
+        "visitors": 79,
+        "visits": 126,
+        "bounces": 0,
+        "totaltime": 20960,
+        "comparison": {
+          "pageviews": 134,
+          "visitors": 61,
+          "visits": 88,
+          "bounces": 0,
+          "totaltime": 24424
+        }
+      },
+      "kyozai": {
+        "pageviews": 86,
+        "visitors": 54,
+        "visits": 65,
+        "bounces": 19,
+        "totaltime": 8211,
+        "comparison": {
+          "pageviews": 69,
+          "visitors": 39,
+          "visits": 46,
+          "bounces": 15,
+          "totaltime": 3502
+        }
+      },
+      "kyozai_jp": {
+        "pageviews": 86,
+        "visitors": 54,
+        "visits": 65,
+        "bounces": 19,
+        "totaltime": 8211,
+        "comparison": {
+          "pageviews": 69,
+          "visitors": 39,
+          "visits": 46,
+          "bounces": 15,
+          "totaltime": 3502
+        }
+      },
+      "weekly": {
+        "pageviews": 46,
+        "visitors": 39,
+        "visits": 43,
+        "bounces": 11,
+        "totaltime": 825,
+        "comparison": {
+          "pageviews": 43,
+          "visitors": 30,
+          "visits": 35,
+          "bounces": 7,
+          "totaltime": 3121
+        }
+      },
+      "weekly_jp": {
+        "pageviews": 46,
+        "visitors": 39,
+        "visits": 43,
+        "bounces": 11,
+        "totaltime": 825,
+        "comparison": {
+          "pageviews": 43,
+          "visitors": 30,
+          "visits": 35,
+          "bounces": 7,
+          "totaltime": 3121
+        }
+      },
+      "quiz": {
+        "pageviews": 45,
+        "visitors": 31,
+        "visits": 40,
+        "bounces": 23,
+        "totaltime": 3459,
+        "comparison": {
+          "pageviews": 40,
+          "visitors": 26,
+          "visits": 35,
+          "bounces": 26,
+          "totaltime": 3206
+        }
+      },
+      "quiz_jp": {
+        "pageviews": 41,
+        "visitors": 27,
+        "visits": 36,
+        "bounces": 19,
+        "totaltime": 3459,
+        "comparison": {
+          "pageviews": 39,
+          "visitors": 25,
+          "visits": 34,
+          "bounces": 25,
+          "totaltime": 3206
+        }
+      },
+      "shindan": {
+        "pageviews": 26,
+        "visitors": 22,
+        "visits": 22,
+        "bounces": 2,
+        "totaltime": 786,
+        "comparison": {
+          "pageviews": 25,
+          "visitors": 21,
+          "visits": 24,
+          "bounces": 3,
+          "totaltime": 68
+        }
+      },
+      "shindan_jp": {
+        "pageviews": 26,
+        "visitors": 22,
+        "visits": 22,
+        "bounces": 2,
+        "totaltime": 786,
+        "comparison": {
+          "pageviews": 25,
+          "visitors": 21,
+          "visits": 24,
+          "bounces": 3,
+          "totaltime": 68
+        }
+      },
+      "last30": {
+        "pageviews": 0,
+        "visitors": 0,
+        "visits": 0,
+        "bounces": 0,
+        "totaltime": 0,
+        "comparison": {
+          "pageviews": 0,
+          "visitors": 0,
+          "visits": 0,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "last30_jp": {
+        "pageviews": 0,
+        "visitors": 0,
+        "visits": 0,
+        "bounces": 0,
+        "totaltime": 0,
+        "comparison": {
+          "pageviews": 0,
+          "visitors": 0,
+          "visits": 0,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "home_jp": {
+        "pageviews": 48,
+        "visitors": 16,
+        "visits": 25,
+        "bounces": 12,
+        "totaltime": 6530,
+        "comparison": {
+          "pageviews": 30,
+          "visitors": 15,
+          "visits": 21,
+          "bounces": 13,
+          "totaltime": 668
+        }
+      },
+      "home": {
+        "pageviews": 59,
+        "visitors": 27,
+        "visits": 36,
+        "bounces": 23,
+        "totaltime": 6530,
+        "comparison": {
+          "pageviews": 80,
+          "visitors": 58,
+          "visits": 66,
+          "bounces": 55,
+          "totaltime": 710
+        }
+      },
+      "homeOld": {
+        "pageviews": 3,
+        "visitors": 2,
+        "visits": 2,
+        "bounces": 1,
+        "totaltime": 39,
+        "comparison": {
+          "pageviews": 26,
+          "visitors": 19,
+          "visits": 23,
+          "bounces": 17,
+          "totaltime": 1403
+        }
+      },
+      "homeOld_jp": {
+        "pageviews": 0,
+        "visitors": 0,
+        "visits": 0,
+        "bounces": 0,
+        "totaltime": 0,
+        "comparison": {
+          "pageviews": 21,
+          "visitors": 14,
+          "visits": 18,
+          "bounces": 12,
+          "totaltime": 1403
+        }
+      },
+      "kyozai_query": [
+        {
+          "x": "utm_source=stf&utm_content=profile",
+          "y": 19
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep02",
+          "y": 4
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep01",
+          "y": 2
+        },
+        {
+          "x": "utm_source=stf&utm_content=epnaki3",
+          "y": 1
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep03",
+          "y": 1
+        }
+      ]
+    },
+    "previous": {
+      "overall": {
+        "pageviews": 506,
+        "visitors": 207,
+        "visits": 287,
+        "bounces": 130,
+        "totaltime": 60077,
+        "comparison": {
+          "pageviews": 291,
+          "visitors": 116,
+          "visits": 161,
+          "bounces": 43,
+          "totaltime": 21351
+        }
+      },
+      "japan": {
+        "pageviews": 450,
+        "visitors": 158,
+        "visits": 236,
+        "bounces": 82,
+        "totaltime": 60035,
+        "comparison": {
+          "pageviews": 284,
+          "visitors": 111,
+          "visits": 156,
+          "bounces": 41,
+          "totaltime": 21325
+        }
+      },
+      "event": [
+        {
+          "x": "revisit",
+          "y": 118
+        },
+        {
+          "x": "stand_fm",
+          "y": 85
+        },
+        {
+          "x": "週1問_回答",
+          "y": 63
+        },
+        {
+          "x": "progress_toggle",
+          "y": 58
+        },
+        {
+          "x": "note_summary",
+          "y": 25
+        },
+        {
+          "x": "sample_complete",
+          "y": 25
+        },
+        {
+          "x": "weekly_complete",
+          "y": 23
+        },
+        {
+          "x": "sample_start",
+          "y": 20
+        },
+        {
+          "x": "visit_new",
+          "y": 16
+        },
+        {
+          "x": "shindan_start",
+          "y": 15
+        },
+        {
+          "x": "shindan_complete",
+          "y": 14
+        },
+        {
+          "x": "home_mat_bansou",
+          "y": 11
+        },
+        {
+          "x": "kyozai_cta_standfm",
+          "y": 10
+        },
+        {
+          "x": "shindan_type_rebuild",
+          "y": 8
+        },
+        {
+          "x": "kyozai_flow_open",
+          "y": 7
+        },
+        {
+          "x": "kyozai_cta_sample",
+          "y": 7
+        },
+        {
+          "x": "shindan_cta_gyoho",
+          "y": 6
+        },
+        {
+          "x": "weekly_cta_sample",
+          "y": 6
+        },
+        {
+          "x": "kyozai_cta_weekly",
+          "y": 5
+        },
+        {
+          "x": "home_cta_shindan",
+          "y": 5
+        },
+        {
+          "x": "home_share",
+          "y": 5
+        },
+        {
+          "x": "home_tokushoho",
+          "y": 4
+        },
+        {
+          "x": "kyozai_cta_chokuzen",
+          "y": 4
+        },
+        {
+          "x": "kyozai_nav_free",
+          "y": 3
+        },
+        {
+          "x": "omikuji_cta_quiz",
+          "y": 3
+        },
+        {
+          "x": "sokuhou_link",
+          "y": 3
+        },
+        {
+          "x": "home_plat_apple",
+          "y": 3
+        },
+        {
+          "x": "sample_cta_shindan",
+          "y": 3
+        },
+        {
+          "x": "knock_start",
+          "y": 3
+        },
+        {
+          "x": "kyozai_nav_paid",
+          "y": 3
+        },
+        {
+          "x": "modal_cta_kyozai",
+          "y": 2
+        },
+        {
+          "x": "kyozai_cta_gyoho",
+          "y": 2
+        },
+        {
+          "x": "home_sns_youtube",
+          "y": 2
+        },
+        {
+          "x": "home_mat_chokuzen",
+          "y": 2
+        },
+        {
+          "x": "home_sns_x",
+          "y": 2
+        },
+        {
+          "x": "shindan_type_finish",
+          "y": 2
+        },
+        {
+          "x": "sample_cta_kyozai",
+          "y": 2
+        },
+        {
+          "x": "shindan_type_stack",
+          "y": 2
+        },
+        {
+          "x": "shindan_type_sprout",
+          "y": 2
+        },
+        {
+          "x": "home_sns_instagram",
+          "y": 2
+        },
+        {
+          "x": "kyozai_flow_chokuzen",
+          "y": 2
+        },
+        {
+          "x": "home_mail_sample",
+          "y": 2
+        },
+        {
+          "x": "buyguide_open",
+          "y": 2
+        },
+        {
+          "x": "lock_prompt",
+          "y": 1
+        },
+        {
+          "x": "shindan_cta_chokuzen",
+          "y": 1
+        },
+        {
+          "x": "home_cta_roadmap",
+          "y": 1
+        },
+        {
+          "x": "home_mat_bunya",
+          "y": 1
+        },
+        {
+          "x": "home_cta_line",
+          "y": 1
+        },
+        {
+          "x": "kyozai_cta_quiz",
+          "y": 1
+        },
+        {
+          "x": "home_ep_kubun",
+          "y": 1
+        },
+        {
+          "x": "kyozai_cta_line_footer",
+          "y": 1
+        },
+        {
+          "x": "home_ep_nakidokoro",
+          "y": 1
+        },
+        {
+          "x": "home_cta_note_column",
+          "y": 1
+        },
+        {
+          "x": "shindan_cta_quiz",
+          "y": 1
+        },
+        {
+          "x": "home_cta_line_bottom",
+          "y": 1
+        },
+        {
+          "x": "tracker_cta_kyozai",
+          "y": 1
+        },
+        {
+          "x": "home_mat_quiz",
+          "y": 1
+        },
+        {
+          "x": "home_mat_set3",
+          "y": 1
+        },
+        {
+          "x": "home_plat_amazon",
+          "y": 1
+        },
+        {
+          "x": "knock_unlock",
+          "y": 1
+        },
+        {
+          "x": "kyozai_cta_bansou",
+          "y": 1
+        },
+        {
+          "x": "kyozai_cta_kenri",
+          "y": 1
+        },
+        {
+          "x": "weekly_cta_note",
+          "y": 1
+        },
+        {
+          "x": "home_plat_standfm",
+          "y": 1
+        },
+        {
+          "x": "home_ep_gyoho",
+          "y": 1
+        },
+        {
+          "x": "home_privacy",
+          "y": 1
+        },
+        {
+          "x": "home_cta_note",
+          "y": 1
+        },
+        {
+          "x": "kyozai_flow_set3",
+          "y": 1
+        },
+        {
+          "x": "home_mail_submit",
+          "y": 1
+        },
+        {
+          "x": "mailsample_cta_register",
+          "y": 1
+        },
+        {
+          "x": "to_newsletter",
+          "y": 1
+        },
+        {
+          "x": "home_ep_honpen",
+          "y": 1
+        },
+        {
+          "x": "knock_finish",
+          "y": 1
+        },
+        {
+          "x": "home_cta_kyozai",
+          "y": 1
+        }
+      ],
+      "query": [
+        {
+          "x": "utm_source=note",
+          "y": 8
+        },
+        {
+          "x": "utm_source=stf&utm_content=profile",
+          "y": 7
+        },
+        {
+          "x": "auto=1&from=richmenu",
+          "y": 6
+        },
+        {
+          "x": "utm_source=line&utm_content=step_d2",
+          "y": 5
+        },
+        {
+          "x": "utm_source=yt_prof",
+          "y": 5
+        },
+        {
+          "x": "utm_source=standfm",
+          "y": 3
+        },
+        {
+          "x": "utm_source=mail&utm_medium=weekly&utm_content=kyozai",
+          "y": 2
+        },
+        {
+          "x": "utm_source=yt_comment",
+          "y": 2
+        },
+        {
+          "x": "utm_source=note_prof",
+          "y": 1
+        },
+        {
+          "x": "utm_source=ig_prof&fbclid=IwcGRvZgRleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAwyNTYyODEwNDA1NTgAAR6QVasoeVv0eEfTCq62a-wvH9wYI1NG8zCLOd6XWvpleBSYcmmlz97ja6GgQA_aem_shUEXlIdioanj_C8fqgXtQ",
+          "y": 1
+        },
+        {
+          "x": "utm_source=mail&utm_medium=weekly&utm_content=weekly",
+          "y": 1
+        },
+        {
+          "x": "utm_source=ig_prof&fbclid=IwcGRvZgRleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAwyNTYyODEwNDA1NTgAAR7sMpBDbFoVD56Z1lhbjuCJS0viqKWh-6imjLNnZYBMaYQfFYPWRSUXDx8ynw_aem_1gmM1nlEt5sq5YUKBv-5rA",
+          "y": 1
+        },
+        {
+          "x": "fbclid=IwcGRvZgRleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAwyNTYyODEwNDA1NTgAAR6Ph1ttFXa4HkHpIdC6lPk62qilU1_8b2O5QzYAQ4aQhOCGKBGsndb24CMLgg_aem_iAJ4gerc2nswKNvBeE_Nkg",
+          "y": 1
+        },
+        {
+          "x": "fbclid=IwcGRvZgRleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAwyNTYyODEwNDA1NTgAAR4a3wy9BsOo6EK46D4juFkSAbYyLlwoRPKZcz0ZUdnGfzGT0EnlQiyPc_TXfA_aem_MW_HurbR2PoGD9GNDZnQxw",
+          "y": 1
+        },
+        {
+          "x": "utm_source=x_prof",
+          "y": 1
+        },
+        {
+          "x": "utm_source=ig_prof&utm_medium=social&utm_content=link_in_bio&fbclid=PAcGRvZgJmZGlkFlDUcw9J7Dv0y1WKA9H3VqlK3DOvM4hleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAafwIJdPbjYhDcaCVVEx30EBX-ApNHHQHdsewgTyAWzuk2tv15NiLfte_JujYA_aem_dEnNuIJAk0wiIVuJFHOf5A",
+          "y": 1
+        },
+        {
+          "x": "utm_source=ig_prof&fbclid=IwcGRvZgRleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAwyNTYyODEwNDA1NTgAAR7UbmwaU2CcuaSf9ljjpxKqPWFf7IbGLzLC4mi4NX7jecxKHvuxXisO4qzvSg_aem_At8feytI53MQVs3WSRLvQQ",
+          "y": 1
+        },
+        {
+          "x": "utm_source=stf&utm_content=epnaki5",
+          "y": 1
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep01",
+          "y": 1
+        },
+        {
+          "x": "utm_source=ig_prof&fbclid=IwcGRvZgRleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAwyNTYyODEwNDA1NTgAAR5DJFwyMya6ariVWv4lHIBeJIh51eNATo0eha0-6PWzWMsEQeCFmm12Pubk8Q_aem_H9Qm1OHT_dkJWxnsmbMwXQ",
+          "y": 1
+        },
+        {
+          "x": "utm_source=mail&utm_medium=weekly&utm_content=tracker",
+          "y": 1
+        },
+        {
+          "x": "utm_source=line&utm_content=step_d4",
+          "y": 1
+        },
+        {
+          "x": "utm_source=ig_prof&utm_medium=social&utm_content=link_in_bio&fbclid=PAcGRvZgJmZGlkFlDTCmSdUF4XpAE8BrXa6Y_TMlYB9_RleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAafiYM9wvprJoXt9G9JprVnlZNBJPaKFziDKTYsd2LGttKpcTJaex8pDbePtSg_aem_TO0NRUH17Q-99wHwHJU63w",
+          "y": 1
+        },
+        {
+          "x": "utm_source=note&utm_content=roadmap",
+          "y": 1
+        },
+        {
+          "x": "fbclid=IwcGRvZgRleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAwyNTYyODEwNDA1NTgAAR530z9PIj8d1SZQxCW000ispvHKVX6hEE3E3WYjQBOBFySQkYRvCBeUE_QYXw_aem_Jj6zEyd5QGQBDsJ24orz9g",
+          "y": 1
+        },
+        {
+          "x": "utm_source=mail_sample&utm_content=back_to_form",
+          "y": 1
+        },
+        {
+          "x": "fbclid=IwcGRvZgRleHRuA2FlbQIxMQBzcnRjBmFwcF9pZAwyNTYyODEwNDA1NTgAAR5pbnX9QeWCPxGzY87oIiRFzBwSm6HLbfKPXBgX3FxEKJQ0IEx92bRPDP2O6g_aem_FVoWFcidHLPVjZCY4RzTKw",
+          "y": 1
+        },
+        {
+          "x": "utm_source=stf&utm_content=shindan",
+          "y": 1
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep02",
+          "y": 1
+        }
+      ],
+      "country": [
+        {
+          "x": "JP",
+          "y": 158
+        },
+        {
+          "x": "US",
+          "y": 35
+        },
+        {
+          "x": "CA",
+          "y": 3
+        },
+        {
+          "x": "BY",
+          "y": 2
+        },
+        {
+          "x": "DZ",
+          "y": 1
+        },
+        {
+          "x": "GB",
+          "y": 1
+        },
+        {
+          "x": "KR",
+          "y": 1
+        },
+        {
+          "x": "NL",
+          "y": 1
+        },
+        {
+          "x": "IE",
+          "y": 1
+        },
+        {
+          "x": "AT",
+          "y": 1
+        },
+        {
+          "x": "RU",
+          "y": 1
+        },
+        {
+          "x": "SE",
+          "y": 1
+        },
+        {
+          "x": "TR",
+          "y": 1
+        }
+      ],
+      "referrer": [
+        {
+          "x": "note.com",
+          "y": 10
+        },
+        {
+          "x": "facebook.com",
+          "y": 4
+        },
+        {
+          "x": "m.facebook.com",
+          "y": 4
+        },
+        {
+          "x": "bing.com",
+          "y": 2
+        },
+        {
+          "x": "mimiobo.com",
+          "y": 2
+        },
+        {
+          "x": "l.instagram.com",
+          "y": 2
+        },
+        {
+          "x": "t.co",
+          "y": 1
+        },
+        {
+          "x": "obofam.github.io",
+          "y": 1
+        },
+        {
+          "x": "youtube.com",
+          "y": 1
+        },
+        {
+          "x": "mimiobo.vercel.app",
+          "y": 1
+        }
+      ],
+      "tracker": {
+        "pageviews": 134,
+        "visitors": 61,
+        "visits": 88,
+        "bounces": 0,
+        "totaltime": 24424,
+        "comparison": {
+          "pageviews": 92,
+          "visitors": 51,
+          "visits": 73,
+          "bounces": 0,
+          "totaltime": 8325
+        }
+      },
+      "kyozai": {
+        "pageviews": 69,
+        "visitors": 39,
+        "visits": 46,
+        "bounces": 15,
+        "totaltime": 3502,
+        "comparison": {
+          "pageviews": 62,
+          "visitors": 40,
+          "visits": 47,
+          "bounces": 16,
+          "totaltime": 6103
+        }
+      },
+      "tracker_jp": {
+        "pageviews": 134,
+        "visitors": 61,
+        "visits": 88,
+        "bounces": 0,
+        "totaltime": 24424,
+        "comparison": {
+          "pageviews": 90,
+          "visitors": 49,
+          "visits": 71,
+          "bounces": 0,
+          "totaltime": 8325
+        }
+      },
+      "kyozai_jp": {
+        "pageviews": 69,
+        "visitors": 39,
+        "visits": 46,
+        "bounces": 15,
+        "totaltime": 3502,
+        "comparison": {
+          "pageviews": 60,
+          "visitors": 38,
+          "visits": 45,
+          "bounces": 16,
+          "totaltime": 6103
+        }
+      },
+      "weekly": {
+        "pageviews": 43,
+        "visitors": 30,
+        "visits": 35,
+        "bounces": 7,
+        "totaltime": 3121,
+        "comparison": {
+          "pageviews": 35,
+          "visitors": 28,
+          "visits": 31,
+          "bounces": 4,
+          "totaltime": 350
+        }
+      },
+      "weekly_jp": {
+        "pageviews": 43,
+        "visitors": 30,
+        "visits": 35,
+        "bounces": 7,
+        "totaltime": 3121,
+        "comparison": {
+          "pageviews": 35,
+          "visitors": 28,
+          "visits": 31,
+          "bounces": 4,
+          "totaltime": 350
+        }
+      },
+      "quiz": {
+        "pageviews": 40,
+        "visitors": 26,
+        "visits": 35,
+        "bounces": 26,
+        "totaltime": 3206,
+        "comparison": {
+          "pageviews": 36,
+          "visitors": 22,
+          "visits": 29,
+          "bounces": 20,
+          "totaltime": 1124
+        }
+      },
+      "quiz_jp": {
+        "pageviews": 39,
+        "visitors": 25,
+        "visits": 34,
+        "bounces": 25,
+        "totaltime": 3206,
+        "comparison": {
+          "pageviews": 35,
+          "visitors": 21,
+          "visits": 28,
+          "bounces": 19,
+          "totaltime": 1124
+        }
+      },
+      "shindan": {
+        "pageviews": 25,
+        "visitors": 21,
+        "visits": 24,
+        "bounces": 3,
+        "totaltime": 68,
+        "comparison": {
+          "pageviews": 13,
+          "visitors": 10,
+          "visits": 12,
+          "bounces": 3,
+          "totaltime": 10
+        }
+      },
+      "shindan_jp": {
+        "pageviews": 25,
+        "visitors": 21,
+        "visits": 24,
+        "bounces": 3,
+        "totaltime": 68,
+        "comparison": {
+          "pageviews": 12,
+          "visitors": 9,
+          "visits": 11,
+          "bounces": 3,
+          "totaltime": 10
+        }
+      },
+      "last30": {
+        "pageviews": 0,
+        "visitors": 0,
+        "visits": 0,
+        "bounces": 0,
+        "totaltime": 0,
+        "comparison": {
+          "pageviews": 0,
+          "visitors": 0,
+          "visits": 0,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "last30_jp": {
+        "pageviews": 0,
+        "visitors": 0,
+        "visits": 0,
+        "bounces": 0,
+        "totaltime": 0,
+        "comparison": {
+          "pageviews": 0,
+          "visitors": 0,
+          "visits": 0,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "home": {
+        "pageviews": 80,
+        "visitors": 58,
+        "visits": 66,
+        "bounces": 55,
+        "totaltime": 710,
+        "comparison": {
+          "pageviews": 0,
+          "visitors": 0,
+          "visits": 0,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "home_jp": {
+        "pageviews": 30,
+        "visitors": 15,
+        "visits": 21,
+        "bounces": 13,
+        "totaltime": 668,
+        "comparison": {
+          "pageviews": 0,
+          "visitors": 0,
+          "visits": 0,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "homeOld": {
+        "pageviews": 26,
+        "visitors": 19,
+        "visits": 23,
+        "bounces": 17,
+        "totaltime": 1403,
+        "comparison": {
+          "pageviews": 0,
+          "visitors": 0,
+          "visits": 0,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "homeOld_jp": {
+        "pageviews": 21,
+        "visitors": 14,
+        "visits": 18,
+        "bounces": 12,
+        "totaltime": 1403,
+        "comparison": {
+          "pageviews": 0,
+          "visitors": 0,
+          "visits": 0,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "kyozai_query": [
+        {
+          "x": "utm_source=stf&utm_content=profile",
+          "y": 7
+        },
+        {
+          "x": "utm_source=mail&utm_medium=weekly&utm_content=kyozai",
+          "y": 2
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep01",
+          "y": 1
+        },
+        {
+          "x": "utm_source=stf&utm_content=epnaki5",
+          "y": 1
+        },
+        {
+          "x": "utm_source=note&utm_content=roadmap",
+          "y": 1
+        },
+        {
+          "x": "utm_source=stf&utm_content=ep02",
+          "y": 1
+        }
+      ]
+    }
+  }
+}

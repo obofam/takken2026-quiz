@@ -1,0 +1,263 @@
+{
+  "retrievedAt": "2026-09-09T00:53:06.125Z",
+  "periods": {
+    "current": {
+      "startAt": 1788310277881,
+      "endAt": 1788915077881
+    },
+    "previous": {
+      "startAt": 1787705477881,
+      "endAt": 1788310277880
+    }
+  },
+  "data": {
+    "current": {
+      "q1_kakomon": [
+        {
+          "value": "1周目の途中",
+          "total": 6
+        },
+        {
+          "value": "2周以上",
+          "total": 5
+        },
+        {
+          "value": "1周終わった",
+          "total": 4
+        },
+        {
+          "value": "まだこれから",
+          "total": 4
+        }
+      ],
+      "q3_gyoho": [
+        {
+          "value": "なし",
+          "total": 13
+        },
+        {
+          "value": "あり",
+          "total": 6
+        }
+      ],
+      "q2_tooshi": [
+        {
+          "value": "〜25点",
+          "total": 7
+        },
+        {
+          "value": "まだ通しでは解いていない",
+          "total": 6
+        },
+        {
+          "value": "26〜32点",
+          "total": 5
+        },
+        {
+          "value": "33点以上",
+          "total": 1
+        }
+      ],
+      "q3_kenri": [
+        {
+          "value": "あり",
+          "total": 13
+        },
+        {
+          "value": "なし",
+          "total": 6
+        }
+      ],
+      "q3_zei": [
+        {
+          "value": "なし",
+          "total": 12
+        },
+        {
+          "value": "あり",
+          "total": 7
+        }
+      ],
+      "q3_hourei": [
+        {
+          "value": "あり",
+          "total": 11
+        },
+        {
+          "value": "なし",
+          "total": 8
+        }
+      ],
+      "q5_nayami": [
+        {
+          "value": "覚えたはずが抜けていく",
+          "total": 7
+        },
+        {
+          "value": "計画どおり進まない・時間がない",
+          "total": 6
+        },
+        {
+          "value": "問題文の意味が取りづらい",
+          "total": 5
+        },
+        {
+          "value": "不安・モチベーションが続かない",
+          "total": 1
+        }
+      ],
+      "q4_jikan": [
+        {
+          "value": "1時間以上",
+          "total": 9
+        },
+        {
+          "value": "30分〜1時間",
+          "total": 4
+        },
+        {
+          "value": "30分未満",
+          "total": 3
+        },
+        {
+          "value": "ほぼ取れていない",
+          "total": 3
+        }
+      ],
+      "q6_moshi": [
+        {
+          "value": "検討中",
+          "total": 9
+        },
+        {
+          "value": "受けない予定",
+          "total": 6
+        },
+        {
+          "value": "申込済み・受験済",
+          "total": 4
+        }
+      ]
+    },
+    "previous": {
+      "q2_tooshi": [
+        {
+          "value": "まだ通しでは解いていない",
+          "total": 8
+        },
+        {
+          "value": "26〜32点",
+          "total": 6
+        },
+        {
+          "value": "〜25点",
+          "total": 1
+        }
+      ],
+      "q1_kakomon": [
+        {
+          "value": "1周目の途中",
+          "total": 7
+        },
+        {
+          "value": "2周以上",
+          "total": 3
+        },
+        {
+          "value": "まだこれから",
+          "total": 3
+        },
+        {
+          "value": "1周終わった",
+          "total": 2
+        }
+      ],
+      "q3_gyoho": [
+        {
+          "value": "なし",
+          "total": 10
+        },
+        {
+          "value": "あり",
+          "total": 5
+        }
+      ],
+      "q3_kenri": [
+        {
+          "value": "あり",
+          "total": 8
+        },
+        {
+          "value": "なし",
+          "total": 7
+        }
+      ],
+      "q3_hourei": [
+        {
+          "value": "あり",
+          "total": 8
+        },
+        {
+          "value": "なし",
+          "total": 7
+        }
+      ],
+      "q3_zei": [
+        {
+          "value": "なし",
+          "total": 13
+        },
+        {
+          "value": "あり",
+          "total": 2
+        }
+      ],
+      "q4_jikan": [
+        {
+          "value": "30分〜1時間",
+          "total": 7
+        },
+        {
+          "value": "1時間以上",
+          "total": 5
+        },
+        {
+          "value": "30分未満",
+          "total": 3
+        }
+      ],
+      "q5_nayami": [
+        {
+          "value": "計画どおり進まない・時間がない",
+          "total": 6
+        },
+        {
+          "value": "覚えたはずが抜けていく",
+          "total": 5
+        },
+        {
+          "value": "問題文の意味が取りづらい",
+          "total": 3
+        },
+        {
+          "value": "不安・モチベーションが続かない",
+          "total": 1
+        }
+      ],
+      "q6_moshi": [
+        {
+          "value": "検討中",
+          "total": 6
+        },
+        {
+          "value": "申込済み・受験済",
+          "total": 6
+        },
+        {
+          "value": "受けない予定",
+          "total": 3
+        }
+      ]
+    }
+  }
+}

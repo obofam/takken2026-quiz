@@ -1,0 +1,183 @@
+{
+  "retrievedAt": "2026-09-09T00:51:17.881Z",
+  "periods": {
+    "current": {
+      "startAt": 1788310277881,
+      "endAt": 1788915077881
+    },
+    "previous": {
+      "startAt": 1787705477881,
+      "endAt": 1788310277880
+    }
+  },
+  "data": {
+    "current": {
+      "japan": {
+        "pageviews": 34,
+        "visitors": 29,
+        "visits": 30,
+        "bounces": 4,
+        "totaltime": 821,
+        "comparison": {
+          "pageviews": 26,
+          "visitors": 23,
+          "visits": 24,
+          "bounces": 4,
+          "totaltime": 139
+        }
+      },
+      "stats": {
+        "pageviews": 34,
+        "visitors": 29,
+        "visits": 30,
+        "bounces": 4,
+        "totaltime": 821,
+        "comparison": {
+          "pageviews": 26,
+          "visitors": 23,
+          "visits": 24,
+          "bounces": 4,
+          "totaltime": 139
+        }
+      },
+      "events": [
+        {
+          "x": "shindan_start",
+          "y": 20
+        },
+        {
+          "x": "shindan_complete",
+          "y": 19
+        },
+        {
+          "x": "shindan_type_rebuild",
+          "y": 9
+        },
+        {
+          "x": "shindan_cta_gyoho",
+          "y": 6
+        },
+        {
+          "x": "shindan_type_stack",
+          "y": 4
+        },
+        {
+          "x": "shindan_type_sprout",
+          "y": 4
+        },
+        {
+          "x": "shindan_type_finish",
+          "y": 2
+        },
+        {
+          "x": "shindan_cta_quiz",
+          "y": 1
+        }
+      ],
+      "queries": [
+        {
+          "x": "utm_source=line&utm_content=step_d2",
+          "y": 3
+        },
+        {
+          "x": "utm_source=note&utm_content=roadmap",
+          "y": 2
+        },
+        {
+          "x": "utm_source=line&utm_content=step_d14",
+          "y": 1
+        }
+      ],
+      "referrers": [
+        {
+          "x": "note.com",
+          "y": 2
+        }
+      ]
+    },
+    "previous": {
+      "stats": {
+        "pageviews": 26,
+        "visitors": 23,
+        "visits": 24,
+        "bounces": 4,
+        "totaltime": 139,
+        "comparison": {
+          "pageviews": 7,
+          "visitors": 5,
+          "visits": 7,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "events": [
+        {
+          "x": "shindan_start",
+          "y": 16
+        },
+        {
+          "x": "shindan_complete",
+          "y": 15
+        },
+        {
+          "x": "shindan_type_rebuild",
+          "y": 8
+        },
+        {
+          "x": "shindan_cta_gyoho",
+          "y": 8
+        },
+        {
+          "x": "shindan_type_sprout",
+          "y": 3
+        },
+        {
+          "x": "shindan_type_stack",
+          "y": 2
+        },
+        {
+          "x": "shindan_type_finish",
+          "y": 2
+        },
+        {
+          "x": "shindan_cta_quiz",
+          "y": 1
+        },
+        {
+          "x": "shindan_cta_chokuzen",
+          "y": 1
+        }
+      ],
+      "japan": {
+        "pageviews": 26,
+        "visitors": 23,
+        "visits": 24,
+        "bounces": 4,
+        "totaltime": 139,
+        "comparison": {
+          "pageviews": 7,
+          "visitors": 5,
+          "visits": 7,
+          "bounces": 0,
+          "totaltime": 0
+        }
+      },
+      "queries": [
+        {
+          "x": "utm_source=line&utm_content=step_d2",
+          "y": 5
+        },
+        {
+          "x": "utm_source=stf&utm_content=shindan",
+          "y": 1
+        }
+      ],
+      "referrers": [
+        {
+          "x": "mimiobo.com",
+          "y": 3
+        }
+      ]
+    }
+  }
+}
