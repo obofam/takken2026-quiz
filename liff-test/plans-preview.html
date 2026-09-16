@@ -69,7 +69,7 @@ li{margin:8px 0}
 .plan-lead{text-align:center;color:var(--muted);max-width:520px;margin:0 auto 32px}
 .plan-card{margin:0 0 24px}
 .plan-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
-.plan-axis{font-size:22px;font-weight:900}
+.plan-axis{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font-size:22px;font-weight:900;line-height:1.4}.plan-axis .plan-dot{font-size:15px}
 .plan-axis .plan-dot{font-size:17px}
 .plan-price{text-align:right;font-size:20px;font-weight:700;white-space:nowrap}
 .plan-price small{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:2px}
@@ -101,7 +101,7 @@ li{margin:8px 0}
 .compare-table{width:100%;min-width:600px;border-collapse:collapse;font-size:15px}
 .compare-table th,.compare-table td{padding:12px 10px;text-align:center;border-bottom:1px solid var(--line)}
 .compare-table thead th{vertical-align:bottom;padding-top:16px}
-.compare-table th[scope=row]{text-align:left;position:sticky;left:0;background:#fff;font-weight:500}
+.compare-table th[scope=row]{text-align:left;position:sticky;left:0;background:#fff;font-weight:500}@media(max-width:600px){.compare-table th[scope=row]{width:150px;min-width:150px;font-size:14px}}
 .compare-table thead .plan-dot{font-size:14px}
 .compare-head-price{display:block;font-size:13px;color:var(--muted);margin-top:6px}
 .compare-yes{color:#126981;font-weight:700}
