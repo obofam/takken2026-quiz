@@ -12,3 +12,4 @@ umami_artifact_url.txt
 umami_*
 scripts/
 *.cjs
+liff-test/

@@ -233,12 +233,13 @@
       <hr class="divider">
 
       <div class="closing">
-        <p>診断はいまの現在地であって、合否ではありません。直前期は、ここからどう動くかで一番差がつく時期です。一歩ずつ、淡々と積み上げていきましょう。</p>
+        <p>診断はいまの現在地であって、合否ではありません。いま取り組むことを絞って、一歩ずつ、淡々と積み上げていきましょう。</p>
       </div>
 
       <div class="bansou" id="resultBansou">
-        <p>「一人だと途中で止まりそう…」という方向けに、試験日まで伴走する少人数サポートもご用意しています。</p>
-        <p>気になる方は、LINEのトークに戻って「伴走」と送ってみてください。</p>
+        <p><b>2027年に向けて、個別伴走のご案内</b></p>
+        <p>「最後まで伴走」は、毎週の小テストと報告をもとに、学習の進み具合に合わせてサポートする少人数のプログラムです。2026年第1期の受付は終了しています。</p>
+        <p>2027年の募集案内を希望する方は、<a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="shindan_cta_bansou2027">公式LINE</a>で「伴走」とお送りください。</p>
       </div>
 
       <div class="memo" id="resultMemo"></div>
@@ -358,6 +359,21 @@
     return TYPES.finish;
   }
 
+  function getRecommendation(type, concern, now = Date.now()){
+    const today = new Date(now + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    const needsLast30 = ["計画どおり進まない・時間がない", "覚えたはずが抜けていく"].includes(concern);
+    if (needsLast30 && today >= "2026-09-14" && today < "2026-10-18") {
+      return {
+        heading: concern === "覚えたはずが抜けていく" ? "覚えたことを、毎日少しずつ復習したい方へ" : "毎日の「何をやるか」を決めてほしい方へ",
+        description: "試験前の30日（9/18〜10/17）、その日に聴く音声と机でやることを毎朝LINEでお届けします。",
+        label: "ラスト30日プログラムを見る",
+        url: "https://note.com/fond_bison5155/n/n77de293e23fe?utm_source=shindan&utm_content=result_last30",
+        event: "shindan_cta_last30"
+      };
+    }
+    return type.cta;
+  }
+
   function showResult(){
     const score = state.q1.value + state.q2.value + state.q4.value;
     const type = getType(score);
@@ -373,8 +389,10 @@
       type.reco.map(item => `<li>・${item}</li>`).join("");
 
     const ctaWrap = document.getElementById("resultCtaWrap");
-    if (type.cta) {
-      ctaWrap.innerHTML = `<a class="cta-btn" href="${type.cta.url}" target="_blank" rel="noopener" data-umami-event="${type.cta.event}">${type.cta.label}</a>`;
+    const recommendation = getRecommendation(type, state.q5 && state.q5.label);
+    if (recommendation) {
+      const description = recommendation.description ? `<p><b>${recommendation.heading}</b><br>${recommendation.description}</p>` : "";
+      ctaWrap.innerHTML = `${description}<a class="cta-btn" href="${recommendation.url}" target="_blank" rel="noopener" data-umami-event="${recommendation.event}">${recommendation.label}</a>`;
     } else {
       ctaWrap.innerHTML = "";
     }

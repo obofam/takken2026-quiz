@@ -1,0 +1,1 @@
+window.TEST_LIFF_ID = '2011606963-hH0DzETc';
