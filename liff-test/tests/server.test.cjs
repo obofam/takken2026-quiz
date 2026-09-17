@@ -78,7 +78,7 @@ test('email normalization and malformed addresses',()=>{
   assert.equal(s.email('  Tester@Example.COM  '),address);
   for(const bad of [null,'no-at','x@@example.com','A <a@example.com>','a,b@example.com','x@localhost'])assert.throws(()=>s.email(bad),e=>e.status===400);
 });
-test('email request uses normalized allowlist and fixed callback; cookie is signed and HttpOnly',async()=>{
+test('email request uses normalized allowlist and fixed callback and clears any old linking flow',async()=>{
   let sent=0;
   mock((u,options,body)=>{
     if(u.pathname.endsWith('/allowlist')){assert.equal(u.searchParams.get('subject'),'eq.'+address);return [{}];}
@@ -87,7 +87,7 @@ test('email request uses normalized allowlist and fixed callback; cookie is sign
   const res=response();await emailApi(request({email:' Tester@Example.COM ',redirect:'https://attacker.example'}),res);
   assert.equal(res.code,200);assert.equal(sent,1);
   const line=res.headers['Set-Cookie'][0];assert.match(line,/HttpOnly; SameSite=Lax/);
-  const token=line.split(';')[0].split('=')[1];assert.equal(s.verify(token,'email').email,address);
+  assert.match(line,/^mimiobo_email_flow=;.*Max-Age=0/);
 });
 test('disallowed email never requests an OTP',async()=>{
   mock(u=>{assert.equal(u.pathname,'/rest/v1/allowlist');return [];});
@@ -107,6 +107,74 @@ test('production email request explicitly targets the callback instead of the Si
 });
 function emailRequest(){const req=request({tokenHash:'not-a-real-token-hash'});req.headers.cookie='mimiobo_email_flow='+s.sign({purpose:'email',email:address,exp:Date.now()/1000+600});return req;}
 function accessRequest(){const req=emailRequest();req.body={accessToken:'test-browser-access-only'};return req;}
+for(const [kind,makeRequest] of [['access-token',accessRequest],['token-hash',emailRequest]]){
+  test(kind+' callback accepts valid tokens without a requesting browser cookie',async()=>{
+    let resolved=0;mock((u,options,body)=>{
+      if(u.pathname==='/auth/v1/verify')return {access_token:'test-access-only'};
+      if(u.pathname==='/auth/v1/user')return {email:address,email_confirmed_at:now};
+      assert.equal(u.pathname,'/rest/v1/rpc/resolve_identity');
+      assert.deepEqual(body,{p_provider:'email',p_subject:address,p_link_token_hash:null});resolved++;return user;
+    });
+    const req=makeRequest();delete req.headers.cookie;req.body.linkToken='b'.repeat(64);
+    const res=response();await verifyApi(req,res);
+    assert.equal(res.code,200);assert.equal(resolved,1);assert.equal(res.data.userId,user);
+    assert.ok(res.headers['Set-Cookie'].some(line=>line.startsWith(s.COOKIE+'=')));
+  });
+  test(kind+' callback denies an email outside the allowlist without a browser cookie',async()=>{
+    const seen=[];global.fetch=async(url,options)=>{
+      const path=new URL(url).pathname;seen.push(path);
+      if(path==='/auth/v1/verify')return {ok:true,status:200,json:async()=>({access_token:'test-access-only'})};
+      if(path==='/auth/v1/user')return {ok:true,status:200,json:async()=>({email:'outsider@example.com',email_confirmed_at:now})};
+      assert.equal(path,'/rest/v1/rpc/resolve_identity');
+      assert.deepEqual(JSON.parse(options.body),{p_provider:'email',p_subject:'outsider@example.com',p_link_token_hash:null});
+      return {ok:false,status:400,json:async()=>({message:'not_allowed'})};
+    };
+    const req=makeRequest();delete req.headers.cookie;const res=response();await verifyApi(req,res);
+    assert.equal(res.code,403);assert.deepEqual(res.data,{error:'not_allowed'});assert.equal(res.headers['Set-Cookie'],undefined);
+    assert.equal(seen.at(-1),'/rest/v1/rpc/resolve_identity');
+  });
+  test(kind+' callback ignores expired, tampered and unrelated ordinary flow cookies',async()=>{
+    const expired=s.sign({purpose:'email',email:address,linkToken:'a'.repeat(64),exp:Date.now()/1000-1});
+    const valid=s.sign({purpose:'email',email:address,linkToken:'a'.repeat(64),exp:Date.now()/1000+600});
+    const [payload,mac]=valid.split('.');const tampered=payload+'.'+(mac[0]==='A'?'B':'A')+mac.slice(1);
+    const ordinary=s.sign({purpose:'email',email:'different@example.com',exp:Date.now()/1000+600});
+    for(const flow of [expired,tampered,ordinary]){
+      let resolved=0;mock((u,options,body)=>{
+        if(u.pathname==='/auth/v1/verify')return {access_token:'test-access-only'};
+        if(u.pathname==='/auth/v1/user')return {email:address,email_confirmed_at:now};
+        assert.equal(u.pathname,'/rest/v1/rpc/resolve_identity');assert.equal(body.p_subject,address);assert.equal(body.p_link_token_hash,null);resolved++;return user;
+      });
+      const req=makeRequest();req.headers.cookie='mimiobo_email_flow='+flow;const res=response();await verifyApi(req,res);
+      assert.equal(res.code,200);assert.equal(resolved,1);
+    }
+  });
+  test(kind+' callback rejects a valid linking flow for a different verified email',async()=>{
+    mock(u=>{
+      if(u.pathname==='/auth/v1/verify')return {access_token:'test-access-only'};
+      assert.equal(u.pathname,'/auth/v1/user');return {email:'different@example.com',email_confirmed_at:now};
+    });
+    const req=makeRequest();req.headers.cookie='mimiobo_email_flow='+s.sign({purpose:'email',email:address,linkToken:'a'.repeat(64),exp:Date.now()/1000+600});
+    const res=response();await verifyApi(req,res);assert.equal(res.code,401);assert.equal(res.headers['Set-Cookie'],undefined);
+  });
+  test(kind+' callback rejects an invalid token without a browser cookie',async()=>{
+    let calls=0;global.fetch=async url=>{
+      assert.equal(new URL(url).pathname,kind==='token-hash'?'/auth/v1/verify':'/auth/v1/user');calls++;
+      return {ok:false,status:401,json:async()=>({message:'invalid token'})};
+    };
+    const req=makeRequest();delete req.headers.cookie;const res=response();await verifyApi(req,res);
+    assert.equal(res.code,401);assert.equal(calls,1);assert.equal(res.headers['Set-Cookie'],undefined);
+  });
+}
+test('email send limit returns 429 try_later without issuing a new flow cookie',async()=>{
+  global.fetch=async url=>{
+    const path=new URL(url).pathname;
+    if(path==='/rest/v1/allowlist')return {ok:true,status:200,json:async()=>[{}]};
+    assert.equal(path,'/auth/v1/otp');return {ok:false,status:429,json:async()=>({message:'email rate limit exceeded'})};
+  };
+  const res=response();await emailApi(request({email:address}),res);
+  assert.equal(res.code,429);assert.deepEqual(res.data,{error:'try_later'});
+  assert.ok((res.headers['Set-Cookie']||[]).every(line=>line.startsWith('mimiobo_email_flow=;')&&line.includes('Max-Age=0')));
+});
 test('access-token callback validates with getUser and issues only an application session',async()=>{
   const seen=[];mock((u,options,body)=>{
     seen.push(u.pathname);
@@ -145,16 +213,11 @@ test('access-token callback rejects malformed or ambiguous credentials before up
     assert.equal(res.code,400);assert.equal(res.headers['Set-Cookie'],undefined);
   }
 });
-test('access-token callback requires the same confirmed email and a live browser flow',async()=>{
-  for(const userData of [{email:'different@example.com',email_confirmed_at:now},{email:address},{email:address,email_confirmed_at:null}]){
+test('access-token callback requires a confirmed email',async()=>{
+  for(const userData of [{email:address},{email:address,email_confirmed_at:null}]){
     let calls=0;mock(u=>{assert.equal(u.pathname,'/auth/v1/user');calls++;return userData;});
     const res=response();await verifyApi(accessRequest(),res);
     assert.equal(res.code,401);assert.equal(calls,1);assert.equal(res.headers['Set-Cookie'],undefined);
-  }
-  global.fetch=async()=>assert.fail('expired or absent flow must not call Supabase');
-  for(const value of [undefined,'mimiobo_email_flow='+s.sign({purpose:'email',email:address,exp:Date.now()/1000-1})]){
-    const req=accessRequest();req.headers.cookie=value;const res=response();await verifyApi(req,res);
-    assert.equal(res.code,401);assert.equal(res.headers['Set-Cookie'],undefined);
   }
 });
 test('access-token callback preserves the email linking ticket from the signed flow',async()=>{
@@ -178,12 +241,11 @@ test('email verification trusts auth user endpoint, not browser or verify respon
   const req=emailRequest();req.body.email='attacker@example.com';const res=response();await verifyApi(req,res);
   assert.equal(res.code,200);assert.equal(res.data.userId,user);assert.deepEqual(seen,['/auth/v1/verify','/auth/v1/user','/rest/v1/rpc/resolve_identity']);
 });
-test('email mismatch, unconfirmed email and absent browser flow cannot establish a session',async()=>{
-  for(const userData of [{email:'different@example.com',email_confirmed_at:now},{email:address}]){
+test('token-hash callback rejects unconfirmed email',async()=>{
+  for(const userData of [{email:address},{email:address,email_confirmed_at:null}]){
     mock(u=>{if(u.pathname==='/auth/v1/verify')return {access_token:'test-only'};assert.equal(u.pathname,'/auth/v1/user');return userData;});
     const res=response();await verifyApi(emailRequest(),res);assert.equal(res.code,401);
   }
-  const req=request({tokenHash:'not-a-real-token-hash'});const res=response();await verifyApi(req,res);assert.equal(res.code,401);
 });
 test('link tickets require a live session and store only a hash',async()=>{
   let stored;authenticated((u,options,body)=>{assert.equal(u.pathname,'/rest/v1/link_tickets');stored=body;return null;});
@@ -195,6 +257,10 @@ test('email linking uses authenticated owner and binds ticket to normalized emai
   let stored;authenticated((u,options,body)=>{if(u.pathname==='/rest/v1/link_tickets')stored=body;else assert.equal(u.pathname,'/auth/v1/otp');return {};});
   const res=response();await emailApi(request({email:address,link:true,userId:other}),res);
   assert.equal(res.code,200);assert.equal(stored.user_id,user);assert.equal(stored.subject,address);assert.equal(stored.provider,'email');
+  const line=res.headers['Set-Cookie'].find(line=>line.startsWith('mimiobo_email_flow='));
+  assert.match(line,/HttpOnly; SameSite=Lax/);
+  const flow=s.verify(line.split(';')[0].slice('mimiobo_email_flow='.length),'email');
+  assert.equal(flow.email,address);assert.match(flow.linkToken,/^[0-9a-f]{64}$/);assert.equal(s.hash(flow.linkToken),stored.token_hash);
 });
 test('answer validator distinguishes unknown from unanswered and rejects invalid fields or chronology',()=>{
   assert.equal(answersApi.validate(answer({value:null})).p_value,null);

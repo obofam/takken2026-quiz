@@ -4,6 +4,7 @@
   const fallback='ログインを確認できませんでした。もう一度お試しください。';
   const messages={
     not_allowed:'この試作は招待した方だけが使えます。',
+    try_later:'メールの送信回数が上限に達しました。しばらくしてからもう一度お試しください。',
     invalid_line_claims:'LINEの確認ができませんでした。LINEでログインし直してください。',
     invalid_line_token:'LINEの確認ができませんでした。LINEでログインし直してください。',
     service_unavailable:'接続できませんでした。時間をおいてもう一度お試しください。',

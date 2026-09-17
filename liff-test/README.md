@@ -2,14 +2,15 @@
 
 ## 2026-09-17 の状態
 
-共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。9/17レビューA-1〜A-11を修正。A-11でSupabase既定メールテンプレートのaccess_tokenコールバックに対応した。今回の作業ではデプロイ・実メール送信・画面変更を行っていない。
+共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。9/17レビューA-1〜A-12を修正。A-12でメールログインの要求Cookie必須を廃止し、送信上限の文言を追加した。今回の作業ではデプロイ・実メール送信を行っていない。
 
-**A-11の実装・自動テスト後、KeiかClaudeが配信と実機確認を判断する。** レビューE節のClaude報告を反映した状態は以下。
+**A-12の修正をKeiかClaudeが配信し、Gmailからのログインを再確認する。** レビューE節のClaude報告を反映した状態は以下。
 
 - Supabaseのmigration・allowlistはClaudeが適用済みと報告。下記SQLを再実行しない。
 - Claudeがメール／LINEログイン・連携・同期状態の枠、正式文言、`privacy.html` の案内を追加済み。
 - Site URL・Redirect URLs・Vercelの `LINE_CHANNEL_ID` もClaudeが設定済みと報告。
-- メールテンプレートは既定のまま利用する。カスタムSMTPはSprint 2以降にKeiが判断。実メール・LINE・別ブラウザでの一周は未確認。
+- ClaudeがA-11を配信し、PCでメールログイン・3回答のサーバー保存を確認済みと報告。Gmailから開く経路のCookie欠如による401を今回修正。LINE・別端末復元は未確認。
+- 既定メールは本人テスト用。レビューE節のKei判断により、受講生へ見せる前に独自SMTP・差出人「耳で覚える宅建」・日本語文面が必須（Sprint 2冒頭）。
 
 同期とログイン枠は検証用の `/ep10-preview.html?server=1` で有効。通常URL／localhostの従来端末内試作は維持。
 
@@ -22,7 +23,8 @@
 - [x] テストSupabaseへSQL適用・Auth設定（レビューE節のClaude報告）
 - [x] Claudeのログイン／連携／保存状態UI・privacy案内
 - [x] 既定メールテンプレートのaccess_token着地への対応
-- [ ] 実メール・LINE・別ブラウザでの手動確認
+- [x] PCメール入口と3回答保存（レビューE節のClaude報告）
+- [ ] A-12配信後のGmail経由・LINE・別ブラウザでの手動確認
 - [ ] 上記完了後、KeiまたはClaudeがデプロイ判断
 
 ## セットアップ（テスト環境のみ）
@@ -35,7 +37,7 @@
 2. 続いて `supabase/allowlist.local.sql` を適用する。今回指定されたメールと既存のKei本人LINEハッシュを登録済みのローカル専用ファイル。gitとVercel配信から除外している。未登録者のメール送信・ログイン・保存は拒否する。
 3. Supabase AuthのRedirect URLsに `https://mimiobo-liff-test.vercel.app/auth-callback.html` を追加する。ローカル検証時のみ `http://127.0.0.1:3000/auth-callback.html` も追加。プレビューURLを使う場合はその正確なコールバックURLを登録する。
 4. Magic LinkとConfirm signupは既定の `{{ .ConfirmationURL }}` を利用する。`api/email.js` はOTP要求の `redirect_to` に、要求元の許可済みorigin＋`/auth-callback.html` を明示する。ホスト環境では `https://mimiobo-liff-test.vercel.app/auth-callback.html`、ローカルではそのローカルorigin。Site URLには依存しない。着地のaccess_tokenをサーバー検証し、refresh_tokenは利用・保存せず破棄する。既存のtoken_hash経路も維持。テンプレート編集やSMTP追加は今回不要。
-5. メールは要求したブラウザで10分以内に開く。要求時のhttpOnly Cookieと検証済みメールの一致を確認するため、別ブラウザでは拒否する。別端末でログインするときは、その端末で改めてメールを要求する。LINEアプリからメールを連結する場合も、LINEログイン済みの同じブラウザでリンクを開く必要がある。失敗時の案内はClaudeのUIで実装する。
+5. 通常ログインは、要求Cookieがなくても有効なトークンと許可された確認済みメールで許可する。Gmailアプリ／別ブラウザで開ける。通常のメール要求では古いflow Cookieを削除し、新たに発行しない。メール連携時だけ10分の署名CookieでlinkTokenを運び、本人メールの一致を確認する。連携Cookieがない・無効な場合は通常ログインとなり、自動連携しない。連携は要求したブラウザで開く。
 
 Supabase secret keyはData API用で、今回の環境にはSQL適用用DB接続情報／管理API接続がない。ログイン済み管理画面での適用・Auth設定はプロジェクト分担どおり **Claudeで**。
 
@@ -43,7 +45,7 @@ Supabase secret keyはData API用で、今回の環境にはSQL適用用DB接続
 
 - `lib/server.js`: Supabase REST、HMAC-SHA256セッション、Origin/JSON検査、許可リスト再確認。Originがない場合のみ同一オリジンのSec-Fetch-Site／Refererを代替とする。明示された異Origin・null・矛盾は拒否。CookieはHttpOnly / SameSite=Lax / HTTPSでSecure、7日。想定外例外は固定イベントと安全な例外型だけログに残し、トークン・上流の生エラーは出さない。Cookieは署名済みで暗号化ではない。
 - `api/session.js`: LINEのID tokenを公式verify endpointで検証、aud/iss/expを照合。利用者UUIDに対応するCookieを発行。GETで復元、DELETEで当ブラウザをログアウト。
-- `api/email.js`, `api/email-verify.js`: 許可メールにOTPリンクを要求。`{tokenHash}` はサーバーで交換し、`{accessToken}` はそのまま `GET /auth/v1/user`（`auth.getUser`相当）で検証する。両方同時の指定は拒否。どちらも要求時Cookie・確認済みメール・許可リストの検証を共用し、同じ利用者セッションCookieを発行する。APIからSupabaseトークンを返さない。
+- `api/email.js`, `api/email-verify.js`: 許可メールにOTPリンクを要求。`{tokenHash}` はサーバーで交換し、`{accessToken}` はそのまま `GET /auth/v1/user`（`auth.getUser`相当）で検証する。両方同時の指定は拒否。確認済みメールを本人IDの根拠とし、RPC内の許可リスト検査後にセッションCookieを発行する。要求Cookieは通常ログインには不要。有効な連携Cookieがある場合だけそのメールとの一致も必須。APIからSupabaseトークンを返さない。
 - `auth-callback.js`: fragment全体を通信前に消し、token_hashかaccess_tokenの一方だけをPOSTする。refresh_tokenは送信も保存もしない。localStorage／sessionStorageへSupabaseトークンを残さず、成功・失敗とも資格情報を含まないURLへ移動する。
 - `api/link.js`: ログイン中の本人に、10分有効のLINE連携チケットを発行。DBにはSHA256だけを保存。消費・identity追加は単一トランザクション。既に別利用者IDのidentityは409として拒否し、自動統合しない。**初回から連結操作で第2の入口を通ること**。両方で独立ログイン済みの場合の統合は別途検討。
 - `api/answers.js`: 本人IDはCookieから取得。POSTは `X-Mimiobo-User` がCookieのIDと一致しなければ拒否し、別タブのアカウント切替による混入を防ぐ。同一attempt/questionは最初のサーバー回答を採用。GETは所有者で絞り500件ずつ取得、1000attempt超は黙って切らずエラー。
@@ -67,6 +69,7 @@ SDK依存を増やさずNode標準fetchでRESTを呼ぶ構成にした。PGlite�
 - `await MimioboAuth.logout()`：当ブラウザのCookieを削除。UI側で記録表示も閉じる。他の端末やコピーされた有効Cookieの強制失効は対象外。
 - `mimiobo:sync` CustomEventの `event.detail.state` / `html[data-sync-state]`：`syncing` / `pending` / `synced` / `unauthorized` / `failed`。初期接続不能は `unavailable`。failedは永久失敗や隔離済み行がある状態なので、単純な再試行案内にしない。端末保存とサーバーへの到達を区別する。
 - コールバックの `?auth=failed|unavailable|invalid_token` は初期化時に読み取り、`ui-messages.js` の `auth:*` 項目を表示する。APIエラーも同じ `MimioboMessages.text(code)` だけを通し、未知コード／例外の生文言は表示しない。Claudeが確定した文言はこのファイルのmessagesに集約済み。今回その文言・画面は変更していない。
+- A-12指定の `try_later` 文言を追加済み。OTPの429は既存のメール送信ハンドラ経由でこの文言を表示する。通常メール送信成功時の「10分以内にこのブラウザで」という旧案内は、不要になった制約なのでClaudeの次の文言更新で修正する（連携時の案内は維持）。
 
 LIFFは既存ID `2011606963-hH0DzETc`、エンドポイント `https://mimiobo-liff-test.vercel.app/` を維持。サーバーモード／liff.state付きの初期化は `liff.init()` → `captureLink()` → セッション・連携の判定の順。同一実行内でURLが変わってもserver=1を再評価する。旧appはSDK後にreadyへ進み、ep10にパスが変わった場合は対象ページを読み直す。チケットを保持したまま無言でreturnしない。実LINEでのリダイレクト・連携は未検証。
 
@@ -87,6 +90,8 @@ node 'C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js' run dev
 2026-09-17 A-1〜A-10修正後：`npm test`（上記npm本体経由）**61件すべて通過**。LIFFの同一実行内URL変更、旧indexのready、認証失敗表示、enqueue失敗からの再試行・操作停止も実際のクライアントJSをVMで評価して確認した。HTML/CSSと保護区間の不変確認も実施。
 
 2026-09-17 A-11対応後：回帰テスト9件を追加し、**70件すべて通過**。access_tokenの200／不正401、メール・要求Cookieの照合、連携チケット保持、明示redirect_to、通信前のfragment削除、refresh_token非使用、ブラウザ保存なしを検証。実メール送信は行っていない。
+
+2026-09-17 A-12対応後：旧Cookie必須の期待値を更新し12件追加、**82件すべて通過**。両トークンのCookieなし200／allowlist外403／不正401、失効・改ざんCookieの連携不成立、有効連携Cookieのメール不一致拒否、429のAPI応答と画面表示を確認。実機でのGmail経由確認は配信後に行う。
 
 ## 手動検証（スクリーンショット不要）
 

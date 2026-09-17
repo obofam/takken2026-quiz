@@ -2,7 +2,9 @@
 const s=require('../lib/server');
 module.exports=s.endpoint(['POST'],async(req,res)=>{
   s.mutation(req);
-  const flow=s.verify(s.cookies(req).mimiobo_email_flow,'email');if(!flow)s.fail(401,'email_request_required');
+  // Login proves email ownership through Supabase, even in a different browser.
+  // The signed flow cookie carries only optional account-linking intent.
+  const flow=s.verify(s.cookies(req).mimiobo_email_flow,'email');
   const {tokenHash,accessToken}=req.body;
   if(tokenHash!==undefined&&accessToken!==undefined)s.fail(400,'invalid_token');
   let verifiedToken=accessToken;
@@ -16,8 +18,11 @@ module.exports=s.endpoint(['POST'],async(req,res)=>{
   }
   // REST equivalent of auth.getUser; browser claims / decoded JWTs are not trusted.
   const user=await s.supabase('/auth/v1/user',{accessToken:verifiedToken});
-  if(!user?.email_confirmed_at||s.email(user.email)!==flow.email)s.fail(401,'email_mismatch');
-  const result=await s.login(req,res,'email',flow.email,flow.linkToken);
+  if(!user?.email_confirmed_at||typeof user.email!=='string')s.fail(401,'email_mismatch');
+  const address=s.email(user.email);
+  const linkToken=flow?.linkToken;
+  if(linkToken&&address!==flow.email)s.fail(401,'email_mismatch');
+  const result=await s.login(req,res,'email',address,linkToken);
   s.setCookie(req,res,'mimiobo_email_flow','',0);
   return res.status(200).json(result);
 });

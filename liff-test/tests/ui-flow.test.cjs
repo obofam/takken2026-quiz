@@ -33,6 +33,18 @@ function harness(url='https://mimiobo-liff-test.vercel.app/ep10-preview.html?ser
   }
   return {context,node,requests,refreshes,events,preview,run:code=>vm.runInContext(code,context)};
 }
+
+test('email request 429 displays the approved rate-limit message and re-enables the button',async()=>{
+  const h=harness();h.preview();h.run(read('ui-messages.js'));h.run(read('auth-client.js'));
+  h.node('accountEmail').value='tester@example.com';
+  h.context.fetch=async(url,options)=>{
+    assert.equal(url,'/api/email');assert.equal(options.method,'POST');
+    return {ok:false,status:429,json:async()=>({error:'try_later'})};
+  };
+  await h.node('accountEmailSend').onclick();
+  assert.equal(h.node('accountMessage').textContent,'メールの送信回数が上限に達しました。しばらくしてからもう一度お試しください。');
+  assert.equal(h.node('accountEmailSend').disabled,false);
+});
 test('LIFF state unwrap captures linking ticket before existing-session shortcut; click sends link',async()=>{
   const h=harness('https://mimiobo-liff-test.vercel.app/ep10-preview.html?liff.state=wrapped'),ticket='b'.repeat(64);
   let inits=0;

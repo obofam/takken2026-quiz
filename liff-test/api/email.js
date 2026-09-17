@@ -9,6 +9,7 @@ module.exports=s.endpoint(['POST'],async(req,res)=>{
   // Explicit callback for both hosted and local flows; never fall back to Site URL.
   const redirect=s.origin(req)+'/auth-callback.html';
   await s.supabase('/auth/v1/otp?redirect_to='+encodeURIComponent(redirect),{method:'POST',body:{email:address,create_user:true}});
-  s.setCookie(req,res,'mimiobo_email_flow',s.sign({purpose:'email',email:address,linkToken,exp:Math.floor(Date.now()/1000)+600}),600);
+  if(linkToken)s.setCookie(req,res,'mimiobo_email_flow',s.sign({purpose:'email',email:address,linkToken,exp:Math.floor(Date.now()/1000)+600}),600);
+  else s.setCookie(req,res,'mimiobo_email_flow','',0);
   return res.status(200).json({ok:true});
 });
