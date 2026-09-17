@@ -73,7 +73,7 @@
   <label for="accountEmail">メールアドレス</label>
   <input id="accountEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
   <button id="accountEmailSend" class="primary" type="button">ログインのメールを受け取る</button>
-  <p class="small muted">届いたリンクは10分以内にこのブラウザで開いてください。</p>
+  <p class="small muted">届いたリンクを10分以内に開いてください。</p>
   <button id="accountLine" class="secondary" type="button">LINEでログイン</button>
 </div>
 
@@ -307,7 +307,7 @@ function accountEmailFlow(button,input,{link=false}={}){
     try{
       if(button)button.disabled=true;
       await MimioboAuth.email(value,{link});
-      if($('accountMessage'))$('accountMessage').textContent=link?'連携のメールを送りました。10分以内にこのブラウザで開いてください。':'メールを送りました。10分以内にこのブラウザで開いてください。';
+      if($('accountMessage'))$('accountMessage').textContent=link?'連携のメールを送りました。10分以内にこのブラウザで開いてください。':'メールを送りました。届いたリンクを10分以内に開いてください。';
     }catch(e){if($('accountMessage'))$('accountMessage').textContent=window.MimioboMessages?.text(e.message)||e.message;}
     finally{if(button)button.disabled=false;}
   };
