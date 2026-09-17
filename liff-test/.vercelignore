@@ -1,3 +1,7 @@
 tests/
 README.md
 .env*
+*.local.sql
+supabase/
+SPRINT1_*.md
+scripts/
