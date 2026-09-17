@@ -35,6 +35,33 @@ test('mutations require same origin, JSON body and approved host',()=>{
   assert.throws(()=>s.mutation({...request(),headers:{...request().headers,'content-type':'text/plain'}}),e=>e.status===415);
   assert.throws(()=>s.mutation(request([])),e=>e.status===400);
 });
+test('Origin-less WebViews require same-origin fetch metadata or Referer without conflicting signals',()=>{
+  const check=patch=>s.mutation({...request(),headers:{...request().headers,origin:undefined,...patch}});
+  for(const patch of [{'sec-fetch-site':'same-origin'},{referer:'http://localhost:3000/ep10-preview.html?x=1'},{'sec-fetch-site':'none',referer:'http://localhost:3000/'}])check(patch);
+  for(const patch of [
+    {},{'sec-fetch-site':'none'}, {referer:'garbage'}, {referer:'https://attacker.example/'},
+    {referer:'http://localhost:3000.attacker.example/'},
+    {'sec-fetch-site':'cross-site',referer:'http://localhost:3000/'},
+    {'sec-fetch-site':'same-origin',referer:'https://attacker.example/'},
+    {origin:'null','sec-fetch-site':'same-origin'},
+    {origin:'https://attacker.example',referer:'http://localhost:3000/'},
+    {origin:'','sec-fetch-site':'same-origin'},
+    {origin:'http://localhost:3000','sec-fetch-site':'cross-site'},
+    {origin:'http://localhost:3000','sec-fetch-site':'same-site'}
+  ])assert.throws(()=>check(patch),e=>e.status===403&&e.message==='origin_not_allowed');
+});
+test('unexpected endpoint errors log only a fixed safe classification',async()=>{
+  const originalError=console.error,logs=[];console.error=(...args)=>logs.push(args);
+  try{
+    for(const err of [new TypeError('secret-token-in-message'),Object.assign(new Error('secret'),{name:'secret-name',url:'secret-url',body:'secret-body'}),null]){
+      const res=response();await s.endpoint(['GET'],async()=>{throw err;})(request({},'GET'),res);
+      assert.equal(res.code,503);assert.deepEqual(res.data,{error:'service_unavailable'});
+    }
+    assert.deepEqual(logs,[['endpoint_unexpected_error',{name:'TypeError'}],['endpoint_unexpected_error',{name:'UnknownError'}],['endpoint_unexpected_error',{name:'UnknownError'}]]);
+    const res=response();await s.endpoint(['GET'],async()=>s.fail(403,'not_allowed'))(request({},'GET'),res);
+    assert.equal(res.code,403);assert.equal(logs.length,3);
+  }finally{console.error=originalError;}
+});
 test('session rechecks allowlist and exact identity to support revocation',async()=>{
   for(const [allowed,identity,status] of [[false,true,403],[true,false,401],[true,true,200]]){
     mock(u=>{if(u.pathname.endsWith('/allowlist'))return allowed?[{}]:[];assert.equal(u.searchParams.get('user_id'),'eq.'+user);assert.equal(u.searchParams.get('subject'),'eq.'+address);return identity?[{user_id:user}]:[];});

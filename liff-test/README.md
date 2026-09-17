@@ -2,7 +2,7 @@
 
 ## 2026-09-17 の状態
 
-共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。画面の見た目・文言・問題・比較ページは変更していない。デプロイ・実メール送信は未実施。
+共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。9/17レビューA-1〜A-10を修正。見た目・問題・比較ページは今回の修正対象外。保存待ち表示と安全なエラー表示だけレビュー指示に沿って接続した。デプロイ・実メール送信は未実施。
 
 **まだ「デプロイ可」ではない。** 次の依存が残る。
 
@@ -38,13 +38,15 @@ Supabase secret keyはData API用で、今回の環境にはSQL適用用DB接続
 
 ## 実装の構成
 
-- `lib/server.js`: Supabase REST、HMAC-SHA256セッション、Origin/JSON検査、許可リスト再確認。CookieはHttpOnly / SameSite=Lax / HTTPSでSecure、7日。トークンや上流エラーの生データは返さない。Cookieは署名済みで暗号化ではない。
+- `lib/server.js`: Supabase REST、HMAC-SHA256セッション、Origin/JSON検査、許可リスト再確認。Originがない場合のみ同一オリジンのSec-Fetch-Site／Refererを代替とする。明示された異Origin・null・矛盾は拒否。CookieはHttpOnly / SameSite=Lax / HTTPSでSecure、7日。想定外例外は固定イベントと安全な例外型だけログに残し、トークン・上流の生エラーは出さない。Cookieは署名済みで暗号化ではない。
 - `api/session.js`: LINEのID tokenを公式verify endpointで検証、aud/iss/expを照合。利用者UUIDに対応するCookieを発行。GETで復元、DELETEで当ブラウザをログアウト。
 - `api/email.js`, `api/email-verify.js`: 許可メールにOTPリンクを要求、hashをサーバーで交換し `GET /auth/v1/user`（`auth.getUser`相当）で本人メールを検証。Supabaseのセッショントークンはブラウザに返さない。
 - `api/link.js`: ログイン中の本人に、10分有効のLINE連携チケットを発行。DBにはSHA256だけを保存。消費・identity追加は単一トランザクション。既に別利用者IDのidentityは409として拒否し、自動統合しない。**初回から連結操作で第2の入口を通ること**。両方で独立ログイン済みの場合の統合は別途検討。
 - `api/answers.js`: 本人IDはCookieから取得。POSTは `X-Mimiobo-User` がCookieのIDと一致しなければ拒否し、別タブのアカウント切替による混入を防ぐ。同一attempt/questionは最初のサーバー回答を採用。GETは所有者で絞り500件ずつ取得、1000attempt超は黙って切らずエラー。
 - `supabase/`: 全テーブルRLSとブラウザロールの権限剥奪。secret keyが対応するサーバーロールだけが利用。空のentitlements以外のStripe処理はない。
-- `sync.js`: 本人IDごとのキュー、回答ごとのPOST、読込時GET、競合時サーバー優先。新たに答えた行だけ送る。旧ローカル履歴を本人の確認なく取り込まない。再挑戦の未回答attemptは端末内だけで保持し、最初の回答時にサーバーへ作る。
+- `sync.js`: 本人IDごとのキュー、回答ごとのPOST、読込時GET、競合時サーバー優先。送信前に復元し、POSTバッチ後にGETを1回行う。新たに答えた行だけ送る。旧ローカル履歴を本人の確認なく取り込まない。再挑戦の未回答attemptは端末内だけで保持し、最初の回答時にサーバーへ作る。400/409等の永久失敗行は本人別dead-letterへ隔離して自動再送しない。履歴GETの409も未送信行を隔離する。503／通信断は再試行、401/403は停止。
+
+自動refresh（focus／online／storage）は2.5秒のデバウンス。初期取得済みセッションは `refresh({sessionVerified:true})` へ渡し、GET sessionを重複させない。端末保存とenqueueは別々に扱う。キュー書込失敗でも端末保存済みの回答を「未保存」に戻さず、再試行ボタンで現在のattemptをキューへ登録し直せる。書込失敗中は次回答・再挑戦を止めて取り残しを防ぎ、登録できたら再開する。二重のメモリキューはない。dead-letterは `mimiobo-answer-dead-letter-v1:<userId>:` 以下に回答とHTTP statusを保存し、原因を確認するまで保持する（削除・再投入UIはB以降）。entitlementsの内部plan値は `ume` / `take` / `matsu`。
 
 SDK依存を増やさずNode標準fetchでRESTを呼ぶ構成にした。PGliteは開発テスト専用で本番APIからimportしない。`PROGRESS_STORE` / `KARTE_SUMMARY`の保護区間は変更していない。
 
@@ -59,10 +61,10 @@ SDK依存を増やさずNode標準fetchでRESTを呼ぶ構成にした。PGlite�
 - `await MimioboAuth.linkLine()`：連携用LIFF URLを返す。本人が連携を選んだ後にだけ開く。リンク先ではLINE本人確認ボタンの操作が必要。**誰の記録にLINEを結ぶかの確認・同意UIをClaudeが仕上げてから公開する**。リンクの転送・共有はさせない。
 - `await MimioboAuth.line(liff.getIDToken())`：LINE本人検証とチケット消費。既存ページから接続済み。
 - `await MimioboAuth.logout()`：当ブラウザのCookieを削除。UI側で記録表示も閉じる。他の端末やコピーされた有効Cookieの強制失効は対象外。
-- `mimiobo:sync` CustomEventの `event.detail.state` / `html[data-sync-state]`：`syncing` / `pending` / `synced` / `unauthorized`。初期接続不能は `unavailable`。既存の保存文言は端末保存を指しており、サーバーへの到達はこの状態で区別する。
-- コールバック失敗は `?server=1&auth=failed` 等へ戻す。失敗理由に応じた再送案内・メール入力UIは未実装。APIの `error` は内部コードなので利用者へそのまま表示しない。
+- `mimiobo:sync` CustomEventの `event.detail.state` / `html[data-sync-state]`：`syncing` / `pending` / `synced` / `unauthorized` / `failed`。初期接続不能は `unavailable`。failedは永久失敗や隔離済み行がある状態なので、単純な再試行案内にしない。端末保存とサーバーへの到達を区別する。
+- コールバックの `?auth=failed|unavailable|invalid_token` は初期化時に読み取り、`ui-messages.js` の `auth:*` 項目を表示する。APIエラーも同じ `MimioboMessages.text(code)` だけを通し、未知コード／例外の生文言は表示しない。**Bの正式文言はこのファイルのmessagesに集約する**。現時点は既存画面の日本語を暫定使用。pendingの文言だけレビューA-5指定の「端末には保存済み・サーバー送信待ち」を採用。再送案内・メール入力UIは未実装。
 
-LIFFは既存ID `2011606963-hH0DzETc`、エンドポイント `https://mimiobo-liff-test.vercel.app/` を維持。初回ルートの `liff.state` 処理中に旧appが別利用者を作らないようガードした。チケットは二次リダイレクト後のfragmentから取り込み、SDK初期化後にURLを消す。実LINEでのリダイレクト・連携は未検証。
+LIFFは既存ID `2011606963-hH0DzETc`、エンドポイント `https://mimiobo-liff-test.vercel.app/` を維持。サーバーモード／liff.state付きの初期化は `liff.init()` → `captureLink()` → セッション・連携の判定の順。同一実行内でURLが変わってもserver=1を再評価する。旧appはSDK後にreadyへ進み、ep10にパスが変わった場合は対象ページを読み直す。チケットを保持したまま無言でreturnしない。実LINEでのリダイレクト・連携は未検証。
 
 ## ローカル起動と自動検証
 
@@ -77,6 +79,8 @@ node 'C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js' run dev
 ```
 
 テストは既存13件の意図を維持（GET sessionは新仕様に更新）し、署名改ざん・期限・Origin・許可撤回・メール照合・所有者・同期・DB権限を追加。DBテストはメモリ内Postgres(PGlite)にSupabase相当ロールを作り、実際の移行とSQL回帰を実行する。Supabase Auth／PostgREST／LINEの実サービス一周を代替するものではない。
+
+2026-09-17 A-1〜A-10修正後：`npm test`（上記npm本体経由）**61件すべて通過**。LIFFの同一実行内URL変更、旧indexのready、認証失敗表示、enqueue失敗からの再試行・操作停止も実際のクライアントJSをVMで評価して確認した。HTML/CSSと保護区間の不変確認も実施。
 
 ## 手動検証（スクリーンショット不要）
 

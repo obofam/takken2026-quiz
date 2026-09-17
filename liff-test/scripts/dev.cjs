@@ -2,7 +2,7 @@
 // Small local harness for the Vercel handlers; serves only listed public assets.
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const root=path.join(__dirname,'..');
-const files=new Set(['index.html','ep10-preview.html','plans-preview.html','privacy.html','auth-callback.html','app.js','config.js','style.css','sync.js','auth-client.js','auth-callback.js']);
+const files=new Set(['index.html','ep10-preview.html','plans-preview.html','privacy.html','auth-callback.html','app.js','config.js','style.css','sync.js','auth-client.js','auth-callback.js','ui-messages.js']);
 const handlers=Object.fromEntries(['session','answers','email','email-verify','link'].map(name=>['/api/'+name,require('../api/'+name)]));
 const server=http.createServer(async(req,res)=>{
   res.setHeader('Cache-Control','no-store');res.setHeader('Referrer-Policy','no-referrer');res.setHeader('X-Content-Type-Options','nosniff');

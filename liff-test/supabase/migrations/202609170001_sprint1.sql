@@ -50,7 +50,7 @@ create index answers_user_quiz_idx on public.answers(user_id, quiz_id, answered_
 create table public.entitlements (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.users(id),
-  plan text not null check (plan in ('karte', 'navi', 'bansou')),
+  plan text not null check (plan in ('ume', 'take', 'matsu')),
   valid_until timestamptz,
   source text not null
 );

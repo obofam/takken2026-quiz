@@ -23,7 +23,15 @@ function origin(req){
   return (local?'http://':'https://')+host;
 }
 function mutation(req){
-  if(req.headers?.origin!==origin(req))fail(403,'origin_not_allowed');
+  const expected=origin(req),headers=req.headers||{},sentOrigin=headers.origin,site=headers['sec-fetch-site'];
+  if(site!==undefined&&!['same-origin','none'].includes(site))fail(403,'origin_not_allowed');
+  let sameReferer=false;
+  if(headers.referer!==undefined){
+    try{sameReferer=typeof headers.referer==='string'&&new URL(headers.referer).origin===expected;}catch{}
+    if(!sameReferer)fail(403,'origin_not_allowed');
+  }
+  // Only an absent Origin may use WebView fallbacks; explicit null/mismatches fail closed.
+  if(sentOrigin!==undefined?sentOrigin!==expected:site!=='same-origin'&&!sameReferer)fail(403,'origin_not_allowed');
   if(!/^application\/json(?:;|$)/i.test(req.headers?.['content-type']||''))fail(415,'json_required');
   if(!req.body||typeof req.body!=='object'||Array.isArray(req.body)||JSON.stringify(req.body).length>16000)fail(400,'invalid_body');
 }
@@ -69,5 +77,12 @@ async function login(req,res,provider,subject,linkToken){
 }
 async function ticket(userId,provider,subject=null){const token=randomBytes(32).toString('hex');await supabase('/rest/v1/link_tickets',{method:'POST',body:{token_hash:hash(token),user_id:userId,provider,subject,expires_at:new Date(Date.now()+600000).toISOString()}});return token;}
 function email(value){if(typeof value!=='string')fail(400,'invalid_email');const normalized=value.trim().toLowerCase();if(normalized.length>254||! /^[^\s@,()<>]+@[^\s@,()<>]+\.[^\s@,()<>]+$/.test(normalized))fail(400,'invalid_email');return normalized;}
-function endpoint(methods,run){return async(req,res)=>{res.setHeader('Cache-Control','no-store');res.setHeader('Referrer-Policy','no-referrer');try{if(!methods.includes(req.method)){res.setHeader('Allow',methods.join(', '));fail(405,'method_not_allowed');}return await run(req,res);}catch(e){return res.status(e instanceof HttpError?e.status:503).json({error:e instanceof HttpError?e.message:'service_unavailable'});}};}
+function endpoint(methods,run){return async(req,res)=>{res.setHeader('Cache-Control','no-store');res.setHeader('Referrer-Policy','no-referrer');try{if(!methods.includes(req.method)){res.setHeader('Allow',methods.join(', '));fail(405,'method_not_allowed');}return await run(req,res);}catch(e){
+  if(!(e instanceof HttpError)){
+    // Never log the exception itself: messages, stacks and request data may contain secrets.
+    const name=['Error','TypeError','RangeError','SyntaxError','AbortError','TimeoutError'].includes(e?.name)?e.name:'UnknownError';
+    console.error('endpoint_unexpected_error',{name});
+  }
+  return res.status(e instanceof HttpError?e.status:503).json({error:e instanceof HttpError?e.message:'service_unavailable'});
+}};}
 module.exports={UUID,COOKIE,HttpError,fail,hash,sign,verify,cookies,origin,mutation,setCookie,supabase,allowed,session,sessionData,login,ticket,email,endpoint};

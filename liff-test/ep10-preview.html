@@ -125,8 +125,10 @@ function summarizeKarte(attempts,questions){
 }
 // KARTE_SUMMARY_END
 const $=id=>document.getElementById(id);let answers=[],progressStore=null,canAnswer=false,saveProblem=false;
-const serverMode=new URLSearchParams(location.search).get('server')==='1';
-let answerSync=null;const unsentAnswers=new Map();
+let serverMode=new URLSearchParams(location.search).get('server')==='1';
+let answerSync=null,lineReady=false,enqueueProblem=false;
+function showAuthError(code){$('saveStatus').textContent=window.MimioboMessages?.text(code)||'本人確認できませんでした。';}
+function syncState(state){document.documentElement.dataset.syncState=state;window.dispatchEvent(new CustomEvent('mimiobo:sync',{detail:{state}}));if(state==='pending'&&!saveProblem)$('saveStatus').textContent=window.MimioboMessages?.text('pending')||'自動保存しました。';if(state==='unauthorized'){canAnswer=false;paintQuestions();}}
 document.querySelectorAll('.audioLink').forEach(a=>a.href='https://stand.fm/episodes/69dc7ba498eff95c436a4549');
 function paintQuestions(){
   $('quiz').replaceChildren();
@@ -141,17 +143,22 @@ function paintQuestions(){
   });
 }
 function saveProgress(){
-  if(!progressStore){$('saveStatus').textContent='この画面の回答は未保存です。';return;}
-  try{progressStore.save();if(answerSync){for(const [key,row] of unsentAnswers){answerSync.enqueue(row.attempt,row.index);unsentAnswers.delete(key);}}saveProblem=false;$('retrySave').hidden=true;$('saveStatus').textContent='自動保存しました。';}
-  catch(e){saveProblem=true;$('retrySave').hidden=e.message.includes('別の画面');$('saveStatus').textContent=e.message.includes('別の画面')?e.message:'保存できませんでした。この画面の回答は未保存です。';}
+  if(!progressStore){$('saveStatus').textContent='この画面の回答は未保存です。';return false;}
+  try{progressStore.save();saveProblem=false;$('retrySave').hidden=!enqueueProblem;$('saveStatus').textContent='自動保存しました。';return true;}
+  catch(e){saveProblem=true;canAnswer=false;paintQuestions();const conflict=e.message.includes('別の画面');$('retrySave').hidden=conflict;$('saveStatus').textContent=conflict?'別の画面で記録が更新されました。この画面の回答は未保存です。':'保存できませんでした。この画面の回答は未保存です。';return false;}
+}
+function sendAnswer(attempt,index){
+  try{answerSync.enqueue(attempt,index);return true;}
+  catch{enqueueProblem=true;canAnswer=false;paintQuestions();if(answerSync.active===false){syncState('unauthorized');return false;}syncState('pending');$('retrySave').hidden=false;return false;}
 }
 function answer(i,value){
   if(!canAnswer||answers[i])return;
   try{
-    if(progressStore){progressStore.record(i,value);answers=progressStore.current.answers;if(answerSync)unsentAnswers.set(progressStore.current.id+':'+i,{attempt:JSON.parse(JSON.stringify(progressStore.current)),index:i});}
+    if(progressStore){progressStore.record(i,value);answers=progressStore.current.answers;}
     else answers[i]={value,at:new Date().toISOString()};
-    paintAnswer(i);results();saveProgress();
-  }catch(e){$('saveStatus').textContent=e.message;}
+    paintAnswer(i);results();const saved=saveProgress();
+    if(saved&&answerSync&&progressStore)sendAnswer(progressStore.current,i);
+  }catch{showAuthError('invalid_answer');}
 }
 function paintAnswer(i){
   const value=answers[i].value,q=questions[i],card=$(q.id),correct=value===q.answer;
@@ -223,8 +230,9 @@ function renderAttemptHistory(){
   if(!$('attemptHistory').children.length)$('attemptHistory').textContent='保存済みの記録はありません。';
 }
 $('restart').onclick=()=>{
+  if(enqueueProblem){syncState('pending');window.scrollTo({top:0,behavior:'instant'});return;}
   if(saveProblem){$('saveStatus').textContent='未保存の回答があります。保存の問題を解決してから再挑戦してください。';window.scrollTo({top:0,behavior:'instant'});return;}
-  if(progressStore){try{progressStore.begin();answers=progressStore.current.answers;saveProgress();}catch(e){$('saveStatus').textContent=e.message;return;}}
+  if(progressStore){try{progressStore.begin();answers=progressStore.current.answers;saveProgress();}catch{showAuthError('local_failed');return;}}
   else answers=[];
   paintQuestions();for(const id of ['intro','quiz'])$(id).hidden=false;for(const id of ['karte','results'])$(id).hidden=true;window.scrollTo({top:0,behavior:'instant'});$('intro').focus({preventScroll:true});
 };
@@ -234,29 +242,29 @@ function openProgress(key){
     answers=progressStore.current?.answers||[];
     $('saveStatus').textContent=answers.some(Boolean)?'前回の回答を復元しました。':'回答すると自動保存します。';
   }catch(e){progressStore=null;saveProblem=true;$('saveStatus').textContent='保存済みの記録を読み込めません。既存の記録は変更せず、今回は保存なしで試せます。';}
-  canAnswer=true;paintQuestions();results();
+  canAnswer=!enqueueProblem;paintQuestions();results();
 }
 function loadClient(src){
   return new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(Error('SYNC_UNAVAILABLE'));document.head.append(script);});
 }
 async function openServerProgress(session){
   if(typeof session.userId!=='string'||!/^mimiobo-test-v1-[0-9a-f]{64}$/.test(session.storageKey))throw Error('SESSION_INVALID');
-  answerSync?.stop();unsentAnswers.clear();
+  answerSync?.stop();
   answerSync=MimioboSync.create({userId:session.userId,storageKey:session.storageKey,storage:localStorage,
     fetch:(url,options)=>fetch(url,{...options,signal:AbortSignal.timeout(15000)}),validate:ProgressStore.validate,
-    onData:()=>{if(saveProblem)return;openProgress(session.storageKey+'-ep10-v1');if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}},
-    onState:state=>{document.documentElement.dataset.syncState=state;window.dispatchEvent(new CustomEvent('mimiobo:sync',{detail:{state}}));if(state==='unauthorized'){canAnswer=false;paintQuestions();}}
+    onData:()=>{if(saveProblem||enqueueProblem)return;openProgress(session.storageKey+'-ep10-v1');if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}},
+    onState:syncState
   });
   openProgress(answerSync.key);$('connectLine').hidden=true;
-  await answerSync.refresh();
+  await answerSync.refresh({sessionVerified:true});
 }
-window.addEventListener('online',()=>answerSync?.refresh());
-window.addEventListener('focus',()=>answerSync?.refresh());
+window.addEventListener('online',()=>answerSync?.scheduleRefresh());
+window.addEventListener('focus',()=>answerSync?.scheduleRefresh());
 window.addEventListener('mimiobo:logout',()=>answerSync?.stop());
 window.addEventListener('storage',event=>{
-  if(!answerSync?.active||saveProblem)return;
+  if(!answerSync?.active||saveProblem||enqueueProblem)return;
   if(event.key===answerSync.key){openProgress(answerSync.key);if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}}
-  if(event.key?.startsWith(answerSync.prefix))answerSync.refresh();
+  if(event.key===answerSync.key||event.key?.startsWith(answerSync.prefix))answerSync.scheduleRefresh();
 });
 async function verifyLine(){
   $('saveStatus').textContent='LINEで本人確認しています…';
@@ -270,32 +278,43 @@ async function verifyLine(){
   $('storageScope').textContent='運営者本人のテスト · このブラウザーに保存／別端末同期なし';
   $('connectLine').hidden=true;openProgress(data.storageKey+'-ep10-v1');
 }
+async function initializeLine(){
+  if(lineReady)return;
+  if(!window.liff)await loadClient('https://static.line-scdn.net/liff/edge/2/sdk.js');
+  await liff.init({liffId:'2011606963-hH0DzETc'});
+  lineReady=true;
+}
 async function initialize(){
   paintQuestions();
-  if(serverMode){
+  try{await loadClient('/ui-messages.js');}catch{}
+  const hasLiffState=new URLSearchParams(location.search).has('liff.state');
+  if(serverMode||hasLiffState){
     try{
       await Promise.all([loadClient('/sync.js'),loadClient('/auth-client.js')]);
-      const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
-      if(response.ok&&!MimioboAuth.hasPendingLink()){await openServerProgress(await response.json());return;}
-      if(response.ok&&MimioboAuth.hasPendingLink()){
-        // Continue through LINE verification to consume the explicit link ticket.
-      }else
-      if(response.status!==401&&response.status!==403)throw Error('SESSION_UNAVAILABLE');
-    }catch(e){document.documentElement.dataset.syncState='unavailable';return;}
+      // LIFF unwraps state in init, possibly without a new page execution.
+      await initializeLine();
+      serverMode=serverMode||new URLSearchParams(location.search).get('server')==='1';
+      MimioboAuth.captureLink();
+      const authResult=new URLSearchParams(location.search).get('auth');
+      if(authResult&&authResult!=='ok'){showAuthError('auth:'+authResult);return;}
+      if(serverMode){
+        const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
+        if(response.ok&&!MimioboAuth.hasPendingLink()){await openServerProgress(await response.json());return;}
+        if(!response.ok&&response.status!==401&&response.status!==403)throw Error('SESSION_UNAVAILABLE');
+      }
+    }catch(e){document.documentElement.dataset.syncState='unavailable';showAuthError(e.message);return;}
   }
   const local=['127.0.0.1','localhost',''].includes(location.hostname);
   if(local&&!serverMode){$('storageScope').textContent='ローカル試作 · LINE連携なし／このブラウザーに自動保存';openProgress('mimiobo-local-preview-ep10-v1');return;}
   $('storageScope').textContent='運営者テスト · LINEで本人確認後、このブラウザーに保存';
   try{
-    await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://static.line-scdn.net/liff/edge/2/sdk.js';script.onload=resolve;script.onerror=()=>reject(Error('LINEの読み込みに失敗しました。'));document.head.append(script);});
-    await liff.init({liffId:'2011606963-hH0DzETc'});
-    if(serverMode)MimioboAuth.captureLink();
-    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){liff.login({redirectUri:location.origin+location.pathname+(serverMode?'?server=1':'')});return;}await verifyLine();}catch(e){$('saveStatus').textContent=e.message;$('connectLine').disabled=false;}};
+    await initializeLine();
+    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){liff.login({redirectUri:location.origin+location.pathname+(serverMode?'?server=1':'')});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
     if(liff.isLoggedIn()&&!(serverMode&&MimioboAuth.hasPendingLink()))await verifyLine();
     else{$('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;}
-  }catch(e){$('saveStatus').textContent=e.message;if(typeof $('connectLine').onclick==='function')$('connectLine').hidden=false;}
+  }catch(e){showAuthError(e.message);if(typeof $('connectLine').onclick==='function')$('connectLine').hidden=false;}
 }
-$('retrySave').onclick=()=>{saveProgress();if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}};
+$('retrySave').onclick=()=>{const saved=saveProgress();let queued=true;if(saved&&answerSync&&progressStore.current)progressStore.current.answers.forEach((a,i)=>{if(a&&!sendAnswer(progressStore.current,i))queued=false;});if(saved&&queued){enqueueProblem=false;canAnswer=answerSync?.active!==false;$('retrySave').hidden=true;paintQuestions();}if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}};
 initialize();
 </script>
 </body></html>

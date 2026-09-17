@@ -13,6 +13,7 @@ declare
   v_ticket text := repeat('b', 64);
   v_table text;
   v_count integer;
+  v_plan text;
 begin
   foreach v_table in array array['users','identities','allowlist','attempts','answers','entitlements','link_tickets'] loop
     if has_table_privilege('anon', 'public.' || v_table, 'SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER')
@@ -40,6 +41,16 @@ begin
     ('email', 'sprint1-one@example.invalid'), ('email', 'sprint1-two@example.invalid'), ('line', v_line);
   v_user := public.resolve_identity('email', 'sprint1-one@example.invalid');
   v_other := public.resolve_identity('email', 'sprint1-two@example.invalid');
+  foreach v_plan in array array['ume','take','matsu'] loop
+    insert into public.entitlements(user_id, plan, source) values (v_user, v_plan, 'test');
+  end loop;
+  foreach v_plan in array array['karte','navi','bansou','unknown'] loop
+    begin
+      insert into public.entitlements(user_id, plan, source) values (v_user, v_plan, 'test');
+      raise exception 'invalid entitlement plan accepted: %', v_plan;
+    exception when check_violation then null;
+    end;
+  end loop;
   if public.resolve_identity('email', 'sprint1-one@example.invalid') <> v_user then
     raise exception 'identity not stable';
   end if;
