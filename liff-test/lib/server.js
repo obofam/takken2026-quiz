@@ -68,6 +68,12 @@ async function session(req){
   return s;
 }
 function sessionData(userId){return {userId,storageKey:'mimiobo-test-v1-'+hash(userId)};}
+async function linkedSessionData(userId){
+  const q=new URLSearchParams({select:'provider',user_id:'eq.'+userId});
+  const identities=await supabase('/rest/v1/identities?'+q);
+  if(!Array.isArray(identities))fail(503,'database_unavailable');
+  return {...sessionData(userId),providers:['email','line'].filter(provider=>identities.some(identity=>identity?.provider===provider))};
+}
 async function login(req,res,provider,subject,linkToken){
   if(linkToken!==undefined&&(typeof linkToken!=='string'||!/^[0-9a-f]{64}$/.test(linkToken)))fail(400,'invalid_link');
   const userId=await supabase('/rest/v1/rpc/resolve_identity',{method:'POST',body:{p_provider:provider,p_subject:subject,p_link_token_hash:linkToken?hash(linkToken):null}});
@@ -85,4 +91,4 @@ function endpoint(methods,run){return async(req,res)=>{res.setHeader('Cache-Cont
   }
   return res.status(e instanceof HttpError?e.status:503).json({error:e instanceof HttpError?e.message:'service_unavailable'});
 }};}
-module.exports={UUID,COOKIE,HttpError,fail,hash,sign,verify,cookies,origin,mutation,setCookie,supabase,allowed,session,sessionData,login,ticket,email,endpoint};
+module.exports={UUID,COOKIE,HttpError,fail,hash,sign,verify,cookies,origin,mutation,setCookie,supabase,allowed,session,sessionData,linkedSessionData,login,ticket,email,endpoint};

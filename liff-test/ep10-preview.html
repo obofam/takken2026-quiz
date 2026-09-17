@@ -342,6 +342,7 @@ async function initialize(){
   if(serverMode||hasLiffState){
     try{
       await Promise.all([loadClient('/sync.js'),loadClient('/auth-client.js')]);
+      MimioboAuth.captureLink({clean:false});
       // LIFF unwraps state in init, possibly without a new page execution.
       await initializeLine();
       serverMode=serverMode||new URLSearchParams(location.search).get('server')==='1';
@@ -353,7 +354,7 @@ async function initialize(){
         const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
         if(response.ok&&!MimioboAuth.hasPendingLink()){await openServerProgress(await response.json());return;}
         if(!response.ok&&response.status!==401&&response.status!==403)throw Error('SESSION_UNAVAILABLE');
-        if(!response.ok)setAccountState(false);
+        setAccountState(response.ok);
       }
     }catch(e){document.documentElement.dataset.syncState='unavailable';showAuthError(e.message);return;}
   }
@@ -362,7 +363,7 @@ async function initialize(){
   $('storageScope').textContent='運営者テスト · LINEで本人確認後、このブラウザーに保存';
   try{
     await initializeLine();
-    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){liff.login({redirectUri:location.origin+location.pathname+(serverMode?'?server=1':'')});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
+    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){const redirectUri=location.origin+location.pathname+(serverMode?'?server=1':'');liff.login({redirectUri:serverMode?MimioboAuth.lineRedirectUri(redirectUri):redirectUri});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
     if(liff.isLoggedIn()&&!(serverMode&&MimioboAuth.hasPendingLink()))await verifyLine();
     else{$('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;}
   }catch(e){showAuthError(e.message);if(typeof $('connectLine').onclick==='function')$('connectLine').hidden=false;}

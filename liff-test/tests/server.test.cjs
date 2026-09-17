@@ -64,7 +64,7 @@ test('unexpected endpoint errors log only a fixed safe classification',async()=>
 });
 test('session rechecks allowlist and exact identity to support revocation',async()=>{
   for(const [allowed,identity,status] of [[false,true,403],[true,false,401],[true,true,200]]){
-    mock(u=>{if(u.pathname.endsWith('/allowlist'))return allowed?[{}]:[];assert.equal(u.searchParams.get('user_id'),'eq.'+user);assert.equal(u.searchParams.get('subject'),'eq.'+address);return identity?[{user_id:user}]:[];});
+    mock(u=>{if(u.pathname.endsWith('/allowlist'))return allowed?[{}]:[];assert.equal(u.searchParams.get('user_id'),'eq.'+user);if(u.searchParams.get('select')==='provider')return [{provider:'email'}];assert.equal(u.searchParams.get('subject'),'eq.'+address);return identity?[{user_id:user}]:[];});
     const res=response();await sessionApi(request({},'GET'),res);assert.equal(res.code,status);
     if(status===200){assert.equal(res.data.userId,user);assert.equal(res.data.storageKey,'mimiobo-test-v1-'+s.hash(user));}
   }
@@ -73,6 +73,49 @@ test('session rejects a stale client user header',async()=>{
   authenticated(()=>assert.fail('unexpected query'));
   const req=request({},'GET');req.headers['x-mimiobo-user']=other;
   const res=response();await sessionApi(req,res);assert.equal(res.code,401);assert.equal(res.data.error,'user_changed');
+});
+
+test('GET session returns only linked providers for its authenticated user, independent of login provider',async()=>{
+  for(const [linked,expected] of [[['email'],['email']],[['line'],['line']],[['line','email'],['email','line']],[['line','email','line','unsupported'],['email','line']]]){
+    const loginProvider=expected[0],subject=loginProvider==='email'?address:s.hash('line-user');
+    const rows=[...linked.map(provider=>({user_id:user,provider,subject:'must-not-leak'})),{user_id:other,provider:'email',subject:'other@example.com'}];
+    let providerReads=0;
+    mock(u=>{
+      if(u.pathname==='/rest/v1/allowlist')return [{provider:loginProvider}];
+      assert.equal(u.pathname,'/rest/v1/identities');assert.equal(u.searchParams.get('user_id'),'eq.'+user);
+      if(u.searchParams.get('select')==='user_id'){
+        assert.equal(u.searchParams.get('provider'),'eq.'+loginProvider);assert.equal(u.searchParams.get('subject'),'eq.'+subject);
+        return [{user_id:user}];
+      }
+      providerReads++;
+      assert.deepEqual([...u.searchParams.keys()].sort(),['select','user_id']);
+      assert.equal(u.searchParams.get('select'),'provider');
+      return rows.filter(row=>'eq.'+row.user_id===u.searchParams.get('user_id')).map(({provider})=>({provider}));
+    });
+    const req=request({userId:other},'GET');req.query={userId:other};req.url='/api/session?userId='+other;
+    req.headers.cookie=s.COOKIE+'='+s.sign({purpose:'session',userId:user,provider:loginProvider,subject,exp:Date.now()/1000+600});
+    const res=response();await sessionApi(req,res);
+    assert.equal(res.code,200);assert.equal(providerReads,1);
+    assert.deepEqual(res.data,{...s.sessionData(user),providers:expected});
+    assert.equal(res.headers['Cache-Control'],'no-store');
+    assert.doesNotMatch(JSON.stringify(res.data),/subject|must-not-leak|other@example.com/);
+  }
+});
+
+test('GET session fails closed when the linked providers query fails or returns malformed data',async()=>{
+  for(const broken of [{ok:false,status:500,data:{message:'private database details'}},{ok:true,status:200,data:null}]){
+    global.fetch=async url=>{
+      const u=new URL(url);
+      if(u.pathname==='/rest/v1/allowlist')return {ok:true,json:async()=>[{provider:'email'}]};
+      assert.equal(u.pathname,'/rest/v1/identities');
+      if(u.searchParams.get('select')==='user_id')return {ok:true,json:async()=>[{user_id:user}]};
+      assert.equal(u.searchParams.get('select'),'provider');
+      return {ok:broken.ok,status:broken.status,json:async()=>broken.data};
+    };
+    const res=response();await sessionApi(request({},'GET'),res);
+    assert.equal(res.code,503);assert.deepEqual(res.data,{error:'database_unavailable'});
+    assert.equal(res.headers['Set-Cookie'],undefined);
+  }
 });
 test('email normalization and malformed addresses',()=>{
   assert.equal(s.email('  Tester@Example.COM  '),address);

@@ -2,14 +2,15 @@
 
 ## 2026-09-17 の状態
 
-共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。9/17レビューA-1〜A-12を修正。A-12でメールログインの要求Cookie必須を廃止し、送信上限の文言を追加した。今回の作業ではデプロイ・実メール送信を行っていない。
+共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。9/17レビューA-1〜A-14を修正。A-13はLINEログインをまたぐ連携チケットの保持、A-14は `GET /api/session` の連携済みprovider一覧に対応。今回の作業ではデプロイ・実メール送信を行っていない。
 
-**A-12の修正をKeiかClaudeが配信し、Gmailからのログインを再確認する。** レビューE節のClaude報告を反映した状態は以下。
+**A-13・A-14は未配信。KeiかClaudeが配信し、LINE連携を実機で再確認する。** レビューE節のClaude報告を反映した状態は以下。
 
 - Supabaseのmigration・allowlistはClaudeが適用済みと報告。下記SQLを再実行しない。
 - Claudeがメール／LINEログイン・連携・同期状態の枠、正式文言、`privacy.html` の案内を追加済み。
 - Site URL・Redirect URLs・Vercelの `LINE_CHANNEL_ID` もClaudeが設定済みと報告。
-- ClaudeがA-11を配信し、PCでメールログイン・3回答のサーバー保存を確認済みと報告。Gmailから開く経路のCookie欠如による401を今回修正。LINE・別端末復元は未確認。
+- ClaudeがA-12まで配信済み。Gmail経由ログイン、PC3問＋スマホ3問の計6回答保存、別端末での復元、429の日本語表示を確認済みと報告。
+- LINE連携の実機再確認が残る。以前の試行で作られた別利用者のLINE identityが残っているため、連携すると `409 identity_conflict` になる。自動統合・削除はしない。KeiかClaudeが既存のテストidentityの扱いを確認してから再試験する。
 - 既定メールは本人テスト用。レビューE節のKei判断により、受講生へ見せる前に独自SMTP・差出人「耳で覚える宅建」・日本語文面が必須（Sprint 2冒頭）。
 
 同期とログイン枠は検証用の `/ep10-preview.html?server=1` で有効。通常URL／localhostの従来端末内試作は維持。
@@ -23,9 +24,10 @@
 - [x] テストSupabaseへSQL適用・Auth設定（レビューE節のClaude報告）
 - [x] Claudeのログイン／連携／保存状態UI・privacy案内
 - [x] 既定メールテンプレートのaccess_token着地への対応
-- [x] PCメール入口と3回答保存（レビューE節のClaude報告）
-- [ ] A-12配信後のGmail経由・LINE・別ブラウザでの手動確認
-- [ ] 上記完了後、KeiまたはClaudeがデプロイ判断
+- [x] Gmail経由ログイン、PC＋スマホで6回答保存、別端末復元（レビューE節のClaude報告）
+- [x] LINEログインをまたぐ連携チケット保持とGET sessionのproviders追加
+- [ ] Claudeによるprovidersを使ったログイン状態の表示
+- [ ] KeiまたはClaudeによるA-13・A-14の配信とLINE連携の実機再確認
 
 ## セットアップ（テスト環境のみ）
 
@@ -44,7 +46,7 @@ Supabase secret keyはData API用で、今回の環境にはSQL適用用DB接続
 ## 実装の構成
 
 - `lib/server.js`: Supabase REST、HMAC-SHA256セッション、Origin/JSON検査、許可リスト再確認。Originがない場合のみ同一オリジンのSec-Fetch-Site／Refererを代替とする。明示された異Origin・null・矛盾は拒否。CookieはHttpOnly / SameSite=Lax / HTTPSでSecure、7日。想定外例外は固定イベントと安全な例外型だけログに残し、トークン・上流の生エラーは出さない。Cookieは署名済みで暗号化ではない。
-- `api/session.js`: LINEのID tokenを公式verify endpointで検証、aud/iss/expを照合。利用者UUIDに対応するCookieを発行。GETで復元、DELETEで当ブラウザをログアウト。
+- `api/session.js`: LINEのID tokenを公式verify endpointで検証、aud/iss/expを照合。利用者UUIDに対応するCookieを発行。GETで復元し連携済みprovidersも返す。DELETEで当ブラウザをログアウト。
 - `api/email.js`, `api/email-verify.js`: 許可メールにOTPリンクを要求。`{tokenHash}` はサーバーで交換し、`{accessToken}` はそのまま `GET /auth/v1/user`（`auth.getUser`相当）で検証する。両方同時の指定は拒否。確認済みメールを本人IDの根拠とし、RPC内の許可リスト検査後にセッションCookieを発行する。要求Cookieは通常ログインには不要。有効な連携Cookieがある場合だけそのメールとの一致も必須。APIからSupabaseトークンを返さない。
 - `auth-callback.js`: fragment全体を通信前に消し、token_hashかaccess_tokenの一方だけをPOSTする。refresh_tokenは送信も保存もしない。localStorage／sessionStorageへSupabaseトークンを残さず、成功・失敗とも資格情報を含まないURLへ移動する。
 - `api/link.js`: ログイン中の本人に、10分有効のLINE連携チケットを発行。DBにはSHA256だけを保存。消費・identity追加は単一トランザクション。既に別利用者IDのidentityは409として拒否し、自動統合しない。**初回から連結操作で第2の入口を通ること**。両方で独立ログイン済みの場合の統合は別途検討。
@@ -62,16 +64,18 @@ SDK依存を増やさずNode標準fetchでRESTを呼ぶ構成にした。PGlite�
 
 `auth-client.js` に文言なしの `window.MimioboAuth` を用意。
 
+- `GET /api/session`：認証済み本人の `{userId, storageKey, providers}` を返す。providersは `['email']`／`['line']`／`['email','line']`（email→line順、重複なし）。Cookieの入口だけでなく本人のidentitiesから取得し、メールアドレス・LINE識別子は返さない。認証の拒否条件は従来どおりで、取得障害は503。POSTのログイン成功応答は従来の `{userId, storageKey}` のままなので、ClaudeのUIはログイン・連携成功後にGETで一覧を取得して状態表示に使う。今回の修正に画面文言の変更は含まない。
 - `await MimioboAuth.email(address)`：ログインメールを要求。
 - `await MimioboAuth.email(address, {link:true})`：現在の利用者にメールを結ぶ。認証済みCookie必須。
-- `await MimioboAuth.linkLine()`：連携用LIFF URLを返す。本人が連携を選んだ後にだけ開く。リンク先ではLINE本人確認ボタンの操作が必要。**誰の記録にLINEを結ぶかの確認・同意UIをClaudeが仕上げてから公開する**。リンクの転送・共有はさせない。
+- `await MimioboAuth.linkLine()`：連携チケットをsessionStorageに保持してから連携用LIFF URLを返す。本人が連携を選んだ後にだけ開く。リンク先ではLINE本人確認ボタンの操作が必要。**誰の記録にLINEを結ぶかの確認・同意UIをClaudeが仕上げてから公開する**。リンクの転送・共有はさせない。
+- `MimioboAuth.lineRedirectUri(base)`：未消費チケットがあればLINEログインの戻り先へ `link` と `link_expires` クエリを付ける。新しいsessionStorageでも着地時に復元し、SDK初期化後にURLから除く。URLに載せるのは10分・単回の連携チケットだけで、LINE ID tokenやSupabaseトークンは載せない。
 - `await MimioboAuth.line(liff.getIDToken())`：LINE本人検証とチケット消費。既存ページから接続済み。
 - `await MimioboAuth.logout()`：当ブラウザのCookieを削除。UI側で記録表示も閉じる。他の端末やコピーされた有効Cookieの強制失効は対象外。
 - `mimiobo:sync` CustomEventの `event.detail.state` / `html[data-sync-state]`：`syncing` / `pending` / `synced` / `unauthorized` / `failed`。初期接続不能は `unavailable`。failedは永久失敗や隔離済み行がある状態なので、単純な再試行案内にしない。端末保存とサーバーへの到達を区別する。
 - コールバックの `?auth=failed|unavailable|invalid_token` は初期化時に読み取り、`ui-messages.js` の `auth:*` 項目を表示する。APIエラーも同じ `MimioboMessages.text(code)` だけを通し、未知コード／例外の生文言は表示しない。Claudeが確定した文言はこのファイルのmessagesに集約済み。今回その文言・画面は変更していない。
-- A-12指定の `try_later` 文言を追加済み。OTPの429は既存のメール送信ハンドラ経由でこの文言を表示する。通常メール送信成功時の「10分以内にこのブラウザで」という旧案内は、不要になった制約なのでClaudeの次の文言更新で修正する（連携時の案内は維持）。
+- A-12指定の `try_later` 文言を追加済み。OTPの429は既存のメール送信ハンドラ経由でこの文言を表示する。通常メール送信成功時の「このブラウザで」という旧制約の案内はClaudeが修正済み（連携時の案内は維持）。
 
-LIFFは既存ID `2011606963-hH0DzETc`、エンドポイント `https://mimiobo-liff-test.vercel.app/` を維持。サーバーモード／liff.state付きの初期化は `liff.init()` → `captureLink()` → セッション・連携の判定の順。同一実行内でURLが変わってもserver=1を再評価する。旧appはSDK後にreadyへ進み、ep10にパスが変わった場合は対象ページを読み直す。チケットを保持したまま無言でreturnしない。実LINEでのリダイレクト・連携は未検証。
+LIFFは既存ID `2011606963-hH0DzETc`、エンドポイント `https://mimiobo-liff-test.vercel.app/` を維持。サーバーモード／liff.state付きの初期化は `captureLink({clean:false})` → `liff.init()` → `captureLink()` → セッション・連携の判定の順。SDK前は到着済みチケットの退避だけを行い、[LIFFの追加情報展開](https://developers.line.biz/en/tips/2026/07/16/liff-url-additional-info/)に必要なURLを変えない。SDK後にチケットを回収し、専用のlink／link_expiresだけをURLから除く。同一実行内でURLが変わってもserver=1を再評価する。期限切れ・不正なチケットや保存不能は通常ログインへ切り替えず停止する。APIエラーでは連携状態を保持し、成功またはログアウトでsessionStorageから消す。旧appはSDK後にreadyへ進み、ep10にパスが変わった場合は対象ページを読み直す。A-13修正後の実LINEでのリダイレクト・連携は未検証。
 
 ## ローカル起動と自動検証
 
@@ -91,14 +95,16 @@ node 'C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js' run dev
 
 2026-09-17 A-11対応後：回帰テスト9件を追加し、**70件すべて通過**。access_tokenの200／不正401、メール・要求Cookieの照合、連携チケット保持、明示redirect_to、通信前のfragment削除、refresh_token非使用、ブラウザ保存なしを検証。実メール送信は行っていない。
 
-2026-09-17 A-12対応後：旧Cookie必須の期待値を更新し12件追加、**82件すべて通過**。両トークンのCookieなし200／allowlist外403／不正401、失効・改ざんCookieの連携不成立、有効連携Cookieのメール不一致拒否、429のAPI応答と画面表示を確認。実機でのGmail経由確認は配信後に行う。
+2026-09-17 A-12対応後：旧Cookie必須の期待値を更新し12件追加、**82件すべて通過**。両トークンのCookieなし200／allowlist外403／不正401、失効・改ざんCookieの連携不成立、有効連携Cookieのメール不一致拒否、429のAPI応答と画面表示を確認。Gmail経由の実機確認は、その後ClaudeとKeiが配信後に完了。
+
+2026-09-17 A-13・A-14対応後：回帰テスト8件を追加し、**90件すべて通過**。LINE未ログインからの連携と新しいsessionStorageへの戻り、期限切れ・不正チケット、保存不能・API失敗、GET sessionのprovidersと本人範囲を検証。期限切れ等の連携待ちでも有効なメールセッションがあれば、既存の連携開始／ログアウト操作を使ってやり直せる。HTML/CSSとPROGRESS_STORE／KARTE_SUMMARYの保護区間は不変を確認。実LINEによる確認と配信は未実施。
 
 ## 手動検証（スクリーンショット不要）
 
-SQL・Auth設定・ClaudeのUIを接続した後に実施する。
+SQL・Auth設定は適用済み。A-13・A-14配信後、LINE連携から再確認する。以前の別利用者LINE identityは本修正で変更していないため、テスト用identityの扱いをKeiかClaudeが確認する。既存記録を無断で削除して検証しない。
 
-1. PCの `ep10-preview.html?server=1` で許可メールを入力し、届いたリンクを同じブラウザで開く。`GET /api/session` が200、userIdが得られること。
-2. そのままLINE連携を選び、返されたLIFF URLをLINEで開く。本人確認・連携確認を経て、PCと同じuserIdになること。初めてのLINEログインを先に独立実行しない。
+1. PCの `ep10-preview.html?server=1` で許可メールを入力し、届いたリンクを開く。`GET /api/session` が200、userIdと `providers: ['email']` が得られること。Gmail経由・別ブラウザでも通常メールログインは可能。
+2. LINE未ログイン状態で、そのまま「LINEと連携」を選ぶ。LIFFで本人確認を押し、LINEログインを経て戻った後に連携を完了する。`POST /api/session` にlinkTokenが渡り、PCのメールと同じuserIdになること。続く `GET /api/session` が `providers: ['email','line']` を返し、連携チケットがURLとsessionStorageから消えること。LINEの独立ログインを先に実行しない。
 3. 3問で○・×・まだ分からないをそれぞれ答える。answersが3行になり、同じPOSTを再送しても増えないこと。
 4. 別ブラウザで新たにメールを要求・ログインし、同じ3回答と結果が復元すること。再挑戦後も旧attemptが残ること。
 5. 認証済み画面で通信を切り、新しいattemptに回答。端末保存とpendingを確認し、再接続でsyncedとDB行数を確認すること。

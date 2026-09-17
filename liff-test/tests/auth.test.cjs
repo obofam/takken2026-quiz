@@ -39,7 +39,11 @@ test('allowed LINE login issues a signed secure session that restores through GE
    assert.equal(u.searchParams.get('provider'),'eq.line');assert.equal(u.searchParams.get('subject'),'eq.'+subject);data=[{provider:'line'}];
   }else{
    assert.equal(u.pathname,'/rest/v1/identities');assert.equal(u.searchParams.get('user_id'),'eq.'+user);
-   assert.equal(u.searchParams.get('provider'),'eq.line');assert.equal(u.searchParams.get('subject'),'eq.'+subject);data=[{user_id:user}];
+   if(u.searchParams.get('select')==='provider'){
+    assert.equal(u.searchParams.get('provider'),null);assert.equal(u.searchParams.get('subject'),null);data=[{provider:'line'}];
+   }else{
+    assert.equal(u.searchParams.get('provider'),'eq.line');assert.equal(u.searchParams.get('subject'),'eq.'+subject);data=[{user_id:user}];
+   }
   }
   return {ok:true,status:200,json:async()=>data};
  };
@@ -52,6 +56,6 @@ test('allowed LINE login issues a signed secure session that restores through GE
  assert.equal(payload.userId,user);assert.equal(payload.provider,'line');assert.equal(payload.subject,subject);
  assert.ok(payload.exp>=start+604800&&payload.exp<=Math.floor(Date.now()/1000)+604800);
  const restored=response();await handler({method:'GET',headers:{cookie}},restored);
- assert.equal(restored.code,200);assert.deepEqual(restored.data,res.data);
- assert.deepEqual(seen,['/oauth2/v2.1/verify','/rest/v1/rpc/resolve_identity','/rest/v1/allowlist','/rest/v1/identities']);
+ assert.equal(restored.code,200);assert.deepEqual(restored.data,{...res.data,providers:['line']});
+ assert.deepEqual(seen,['/oauth2/v2.1/verify','/rest/v1/rpc/resolve_identity','/rest/v1/allowlist','/rest/v1/identities','/rest/v1/identities']);
 });

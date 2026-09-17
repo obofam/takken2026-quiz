@@ -14,6 +14,35 @@ test('LINE link is captured after SDK initialization, sent once, and cleared on 
   await auth.line('test-line-token');assert.equal(JSON.parse(c.requests[0].options.body).linkToken,'a'.repeat(64));assert.equal(c.values.size,0);
   await auth.line('test-line-token');assert.equal(JSON.parse(c.requests[1].options.body).linkToken,undefined);
 });
+test('LINE linking invalid or expired state fails closed without creating an identity',async()=>{
+  for(const value of ['not-json',JSON.stringify({token:'a'.repeat(64),expires:Date.now()-1}),JSON.stringify({token:'bad',expires:Date.now()+600000})]){
+    const c=context();c.values.set('mimiobo-link-ticket',value);vm.runInNewContext(source('auth-client.js'),c.ctx);
+    const auth=c.ctx.window.MimioboAuth;assert.equal(auth.hasPendingLink(),true);
+    assert.throws(()=>auth.lineRedirectUri('https://example.test/ep10-preview.html?server=1'),/invalid_link/);
+    await assert.rejects(auth.line('token'),/invalid_link/);assert.equal(c.requests.length,0);
+  }
+  for(const hash of ['#link=invalid','#link=','#link='+'a'.repeat(64)+'&link='+'b'.repeat(64)]){
+    const c=context(hash);vm.runInNewContext(source('auth-client.js'),c.ctx);const auth=c.ctx.window.MimioboAuth;
+    auth.captureLink();await assert.rejects(auth.line('token'),/invalid_link/);assert.equal(c.requests.length,0);
+  }
+});
+test('LINE request failures retain linking intent until success or logout',async()=>{
+  for(const failure of ['network','rejected']){
+    const c=context('#link='+'a'.repeat(64));vm.runInNewContext(source('auth-client.js'),c.ctx);
+    const auth=c.ctx.window.MimioboAuth;auth.captureLink();const fetch=c.ctx.fetch;
+    c.ctx.fetch=async()=>{if(failure==='network')throw Error('offline');return {ok:false,status:409,json:async()=>({error:'identity_conflict'})};};
+    await assert.rejects(auth.line('token'));assert.equal(auth.hasPendingLink(),true);
+    c.ctx.fetch=fetch;await auth.logout();assert.equal(auth.hasPendingLink(),false);
+  }
+});
+test('new LINE link is stored before navigation and uses only the opaque ticket in redirect',async()=>{
+  const c=context(),ticket='b'.repeat(64);vm.runInNewContext(source('auth-client.js'),c.ctx);
+  c.ctx.fetch=async()=>({ok:true,json:async()=>({linkToken:ticket,expiresIn:600})});
+  const auth=c.ctx.window.MimioboAuth;assert.equal(await auth.linkLine(),'https://liff.line.me/2011606963-hH0DzETc/ep10-preview.html?server=1#link='+ticket);
+  assert.equal(auth.hasPendingLink(),true);const redirect=new URL(auth.lineRedirectUri('https://example.test/ep10-preview.html?server=1'));
+  assert.equal(redirect.searchParams.get('link'),ticket);assert.equal(redirect.searchParams.get('server'),'1');
+  assert.ok(Number(redirect.searchParams.get('link_expires'))>Date.now());
+});
 test('email callback removes token fragment before verification and redirects without credentials',async()=>{
   const c=context('#token_hash=test-token-hash');c.ctx.location.pathname='/auth-callback.html';
   await vm.runInNewContext(source('auth-callback.js'),c.ctx);

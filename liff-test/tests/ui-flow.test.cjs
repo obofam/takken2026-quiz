@@ -66,6 +66,55 @@ test('existing server session checks session only once and marks initial sync ve
   assert.equal(h.requests[0].options.method,undefined);assert.equal(h.refreshes.length,1);
   assert.equal(h.refreshes[0].sessionVerified,true);assert.equal(h.run('canAnswer'),true);
 });
+test('email to LINE linking survives logged-out LINE redirect and fresh session storage',async()=>{
+  const ticket='c'.repeat(64),email=harness();email.preview();await email.run('initialize()');
+  email.context.fetch=async(url,options)=>{assert.equal(url,'/api/link');assert.deepEqual(JSON.parse(options.body),{provider:'line'});return {ok:true,json:async()=>({linkToken:ticket,expiresIn:600})};};
+  await email.node('accountLinkLine').onclick();
+  const liffUrl=new URL(email.context.location.href);
+  assert.equal(liffUrl.origin,'https://liff.line.me');assert.equal(email.context.MimioboAuth.hasPendingLink(),true);
+  const first=harness('https://mimiobo-liff-test.vercel.app/ep10-preview.html'+liffUrl.search+liffUrl.hash);
+  first.context.liff.isLoggedIn=()=>false;
+  first.context.liff.init=async()=>{
+    assert.equal(first.context.location.hash,'#link='+ticket,'URL must remain intact until SDK init');
+    assert.equal(JSON.parse(first.context.sessionStorage.getItem('mimiobo-link-ticket')).token,ticket,'capture precedes SDK');
+  };
+  let redirect;first.context.liff.login=options=>{redirect=options.redirectUri;};
+  first.preview();await first.run('initialize()');await first.node('connectLine').onclick();
+  assert.equal(first.refreshes.length,0);assert.equal(new URL(redirect).searchParams.get('link'),ticket);
+  const returned=harness(redirect);
+  returned.context.liff.init=async()=>{returned.context.history.replaceState(null,'','/ep10-preview.html?server=1');};
+  assert.equal(returned.context.sessionStorage.getItem('mimiobo-link-ticket'),null,'new browser storage context');
+  returned.preview();await returned.run('initialize()');
+  assert.equal(returned.context.location.search,'?server=1');assert.equal(returned.context.location.hash,'');
+  assert.equal(returned.refreshes.length,0,'existing email cookie cannot bypass pending link');
+  returned.context.fetch=async(url,options)=>{
+    assert.equal(url,'/api/session');assert.equal(options.method,'POST');
+    assert.deepEqual(JSON.parse(options.body),{idToken:'test-line-token',linkToken:ticket});
+    return {ok:true,status:200,json:async()=>session};
+  };
+  await returned.node('connectLine').onclick();
+  assert.equal(returned.refreshes.length,1);assert.equal(returned.context.MimioboAuth.hasPendingLink(),false);
+  assert.equal(returned.run('answerSync.key'),session.storageKey+'-ep10-v1');
+});
+test('query capture preserves SDK state and rejects expired or malformed return tickets',async()=>{
+  for(const suffix of ['&link_expires=1','&link_expires=invalid','&link='+'b'.repeat(64)]){
+    const h=harness('https://mimiobo-liff-test.vercel.app/ep10-preview.html?server=1&liff.state=wrapped&link='+'a'.repeat(64)+suffix+'#sdk=value');
+    h.preview();await h.run('initialize()');await h.node('connectLine').onclick();
+    assert.equal(h.context.location.search,'?server=1&liff.state=wrapped');assert.equal(h.context.location.hash,'#sdk=value');
+    assert.equal(h.requests.filter(r=>r.options.method==='POST').length,0);assert.equal(h.refreshes.length,0);
+    assert.equal(h.node('accountLoggedIn').hidden,false,'existing email account can reissue link or logout');
+    const fresh='d'.repeat(64);h.context.fetch=async()=>({ok:true,json:async()=>({linkToken:fresh})});
+    await h.node('accountLinkLine').onclick();
+    assert.equal(new URL(h.context.location.href).hash,'#link='+fresh);
+  }
+});
+test('unavailable session storage blocks link navigation before credentials are removed',async()=>{
+  const h=harness('https://mimiobo-liff-test.vercel.app/ep10-preview.html?server=1#link='+'a'.repeat(64));
+  h.context.sessionStorage.setItem=()=>{throw Error('storage unavailable');};
+  h.preview();await h.run('initialize()');assert.equal(h.requests.length,0);assert.equal(h.refreshes.length,0);
+  assert.equal(h.context.document.documentElement.dataset.syncState,'unavailable');
+  assert.match(h.context.location.hash,/^#link=/);
+});
 test('callback failure queries display safe Japanese fallback instead of silently opening session',async()=>{
   for(const code of ['failed','unavailable','invalid_token']){
     const h=harness('https://mimiobo-liff-test.vercel.app/ep10-preview.html?server=1&auth='+code);

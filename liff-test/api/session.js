@@ -1,7 +1,7 @@
 'use strict';
 const s=require('../lib/server');
 module.exports=s.endpoint(['GET','POST','DELETE'],async(req,res)=>{
-  if(req.method==='GET')return res.status(200).json(s.sessionData((await s.session(req)).userId));
+  if(req.method==='GET')return res.status(200).json(await s.linkedSessionData((await s.session(req)).userId));
   s.mutation(req);
   if(req.method==='DELETE'){s.setCookie(req,res,s.COOKIE,'',0);s.setCookie(req,res,'mimiobo_email_flow','',0);return res.status(200).json({ok:true});}
   const token=req.body.idToken;
