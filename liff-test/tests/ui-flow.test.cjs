@@ -45,20 +45,18 @@ test('email request 429 displays the approved rate-limit message and re-enables 
   assert.equal(h.node('accountMessage').textContent,'メールの送信回数が上限に達しました。しばらくしてからもう一度お試しください。');
   assert.equal(h.node('accountEmailSend').disabled,false);
 });
-test('LIFF state unwrap captures linking ticket before existing-session shortcut; click sends link',async()=>{
+test('LIFF state unwrap captures linking ticket before existing-session shortcut and auto-completes link on return',async()=>{
   const h=harness('https://mimiobo-liff-test.vercel.app/ep10-preview.html?liff.state=wrapped'),ticket='b'.repeat(64);
   let inits=0;
   h.context.liff.init=async()=>{inits++;h.context.history.replaceState(null,'','/ep10-preview.html?server=1#link='+ticket);};
   h.preview();await h.run('initialize()');
   assert.equal(inits,1);assert.equal(h.context.location.hash,'');
-  assert.equal(h.context.MimioboAuth.hasPendingLink(),true);
-  assert.equal(h.refreshes.length,0,'must not open existing session before consuming link');
-  assert.equal(h.node('connectLine').hidden,false);assert.equal(typeof h.node('connectLine').onclick,'function');
-  await h.node('connectLine').onclick();
+  // Already logged in to LINE on return from the redirect: no second click is required to consume the link.
   const posted=h.requests.filter(r=>r.options.method==='POST');assert.equal(posted.length,1);
   assert.equal(posted[0].url,'/api/session');
   assert.deepEqual(JSON.parse(posted[0].options.body),{idToken:'test-line-token',linkToken:ticket});
   assert.equal(h.context.MimioboAuth.hasPendingLink(),false);assert.equal(h.refreshes.length,1);
+  assert.equal(h.node('connectLine').hidden,true);
 });
 test('existing server session checks session only once and marks initial sync verified',async()=>{
   const h=harness();h.preview();await h.run('initialize()');
@@ -86,13 +84,11 @@ test('email to LINE linking survives logged-out LINE redirect and fresh session 
   assert.equal(returned.context.sessionStorage.getItem('mimiobo-link-ticket'),null,'new browser storage context');
   returned.preview();await returned.run('initialize()');
   assert.equal(returned.context.location.search,'?server=1');assert.equal(returned.context.location.hash,'');
-  assert.equal(returned.refreshes.length,0,'existing email cookie cannot bypass pending link');
-  returned.context.fetch=async(url,options)=>{
-    assert.equal(url,'/api/session');assert.equal(options.method,'POST');
-    assert.deepEqual(JSON.parse(options.body),{idToken:'test-line-token',linkToken:ticket});
-    return {ok:true,status:200,json:async()=>session};
-  };
-  await returned.node('connectLine').onclick();
+  // Already logged in to LINE on return: the existing email cookie's session is not used as a shortcut,
+  // the pending link is consumed via an automatic sign-in that includes the linkToken.
+  const posted=returned.requests.filter(r=>r.options.method==='POST');assert.equal(posted.length,1);
+  assert.equal(posted[0].url,'/api/session');
+  assert.deepEqual(JSON.parse(posted[0].options.body),{idToken:'test-line-token',linkToken:ticket});
   assert.equal(returned.refreshes.length,1);assert.equal(returned.context.MimioboAuth.hasPendingLink(),false);
   assert.equal(returned.run('answerSync.key'),session.storageKey+'-ep10-v1');
 });

@@ -6,8 +6,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#141b21;--muted:#59636c;--cyan:#17c5e8;--soft:#e9f9fc;--line:#e4e9ec;--success:#f4fbd2}*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:17px/1.9 'Noto Sans JP',system-ui,'Yu Gothic',sans-serif}button,a{touch-action:manipulation}button{font:inherit;cursor:pointer}button:disabled{cursor:default}a{color:#08637c;text-underline-offset:4px}.wrap{max-width:720px;margin:auto;padding:0 24px}header{padding:24px 0;border-bottom:1px solid var(--line)}header p{margin:0;font-weight:700;font-size:15px}.preview{font-size:13px;color:var(--muted);background:#f7f8fa;padding:12px 0}.preview p{margin:0}.preview-status{display:flex;gap:12px;flex-wrap:wrap;font-size:12px}.hero{padding:40px 0 24px}.label{font-size:13px;letter-spacing:.09em;color:#126981;font-weight:700;margin:0 0 12px}h1{font-size:clamp(28px,5.5vw,38px);line-height:1.55;font-weight:900;margin:0 0 20px}h2{font-size:24px;line-height:1.65;margin:0 0 16px}h3{font-size:19px;margin:0 0 8px}p{margin:0 0 16px}.muted{color:var(--muted)}.card{border:1px solid var(--line);border-radius:16px;padding:28px;margin:20px 0;box-shadow:0 2px 8px rgba(20,27,33,.04)}.soft{background:var(--soft);border-color:transparent}.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:24px 0 12px}.primary,.secondary{border-radius:999px;padding:13px 24px;font-weight:700;min-height:52px;border:1px solid transparent}.primary{background:var(--cyan);color:#12313b}.secondary{background:#fff;border-color:#91cbd7;color:#164a59}.textbutton{background:none;border:0;padding:10px 0;color:#405965;text-decoration:underline;text-underline-offset:4px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0 8px}.answer{background:#fff;border:2px solid #c6dce2;border-radius:16px;font-weight:700;min-height:76px;font-size:24px}.answer[aria-pressed=true]{border-color:#10758a;background:var(--soft)}.answers:has(button:disabled) button:not([aria-pressed=true]){opacity:.55}.explanation{border-top:1px solid var(--line);padding-top:24px;margin-top:24px}.verdict{font-size:18px;font-weight:700;padding:8px 14px;display:inline-block;border-radius:12px;background:#f1f4f5}.verdict.correct{background:var(--success)}.small{font-size:14px}.progress{height:5px;background:#ecf0f2;border-radius:999px;margin:12px 0 28px;overflow:hidden}.progress span{display:block;height:100%;background:var(--cyan)}.score{font-size:25px;font-weight:900}.row{border-bottom:1px solid var(--line);padding:16px 0}.row:last-child{border:0}.row p{margin:0}.row small{font-size:14px;color:var(--muted)}.status{padding:4px 10px;border-radius:999px;background:#f0f3f5;font-size:13px;margin-right:10px;display:inline-block}.status.ok{background:var(--success)}footer{margin-top:40px;padding:28px 0;border-top:1px solid var(--line);color:var(--muted);font-size:14px}.screen{padding-bottom:8px}.screen:focus{outline:none}[hidden]{display:none!important}:focus-visible{outline:3px solid #106e85;outline-offset:4px}details{margin-top:18px;font-size:14px}summary{cursor:pointer}ul{padding-left:1.4em}li{margin:8px 0}@media(max-width:480px){.wrap{padding:0 20px}.card{padding:22px}.hero{padding-top:30px}.actions .primary{width:100%}h2{font-size:22px}}
-.question-card{padding:24px 0 32px;border-top:1px solid var(--line)}.question-text{font-size:22px;font-weight:700;line-height:1.8}.question-card .answers{margin-top:18px}.question-card .label{margin-bottom:12px}.result-title{font-size:28px;font-weight:900}#intro .hero{padding:24px 0 8px}#results{border-top:1px solid var(--line)}
+:root{--ink:#141b21;--muted:#59636c;--cyan:#17c5e8;--soft:#e9f9fc;--line:#e4e9ec;--success:#f4fbd2}*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:17px/1.9 'Noto Sans JP',system-ui,'Yu Gothic',sans-serif}button,a{touch-action:manipulation}button{font:inherit;cursor:pointer}button:disabled{cursor:default}a{color:#08637c;text-underline-offset:4px}.wrap{max-width:720px;margin:auto;padding:0 24px}header{padding:24px 0;border-bottom:1px solid var(--line)}header p{margin:0;font-weight:700;font-size:15px}.preview{font-size:14px;color:var(--muted);background:#f7f8fa;padding:10px 0}.preview .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 16px}.preview p{margin:0}#storageScope{font-weight:700;color:var(--ink)}.preview-actions{display:flex;gap:8px;flex-wrap:wrap}.pillbutton{border-radius:999px;border:1px solid #91cbd7;background:#fff;color:#164a59;font-size:14px;min-height:40px;padding:6px 16px;font-weight:700}.chip{display:inline-block;background:#fff;border:1px solid #91cbd7;color:#164a59;border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700}.badge{display:inline-block;background:#fff;border:1px solid #91cbd7;color:#164a59;font-size:11px;letter-spacing:.06em;border-radius:999px;padding:2px 10px;font-weight:700;vertical-align:middle;margin-left:6px}.divider{text-align:center}.hero{padding:40px 0 24px}.label{font-size:12px;letter-spacing:.15em;color:#126981;font-weight:700;margin:0 0 12px}h1{font-size:clamp(28px,5.5vw,38px);line-height:1.55;font-weight:900;margin:0 0 20px}h2{font-size:24px;line-height:1.65;margin:0 0 16px}h3{font-size:19px;margin:0 0 8px}p{margin:0 0 16px}.muted{color:var(--muted)}.card{border:1px solid var(--line);border-radius:16px;padding:28px;margin:20px 0;box-shadow:0 2px 8px rgba(20,27,33,.04)}.soft{background:var(--soft);border-color:transparent}.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:24px 0 12px}.primary,.secondary{border-radius:999px;padding:13px 24px;font-weight:700;min-height:52px;border:1px solid transparent}.primary{background:var(--cyan);color:#12313b}.secondary{background:#fff;border-color:#91cbd7;color:#164a59}.textbutton{background:none;border:0;padding:10px 0;color:#405965;text-decoration:underline;text-underline-offset:4px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0 8px}.answer{background:#fff;border:2px solid #c6dce2;border-radius:16px;font-weight:700;min-height:72px;font-size:26px}.answer[aria-pressed=true]{border-color:#10758a;background:var(--soft)}.answers:has(button:disabled) button:not([aria-pressed=true]){opacity:.55}.explanation{border-top:1px solid var(--line);padding-top:24px;margin-top:24px}.verdict{font-size:18px;font-weight:700;padding:8px 14px;display:inline-block;border-radius:999px;background:#f1f4f5}.verdict.correct{background:var(--success);color:#4F6300}.answer-explanation{font-size:16px}.small{font-size:14px}.progress{height:5px;background:#ecf0f2;border-radius:999px;margin:12px 0 28px;overflow:hidden}.progress span{display:block;height:100%;background:var(--cyan)}.score{font-size:25px;font-weight:900}.row{border-bottom:1px solid var(--line);padding:16px 0}.row:last-child{border:0}.row p{margin:0}.row small{font-size:14px;color:var(--muted)}.status{padding:4px 10px;border-radius:999px;background:#f0f3f5;font-size:13px;margin-right:10px;display:inline-block}.status.ok{background:var(--success);color:#4F6300}#counts{font-size:15px}#nextTitle{font-size:20px}footer{margin-top:40px;padding:28px 0;border-top:1px solid var(--line);color:var(--muted);font-size:14px}.screen{padding-bottom:8px}.screen:focus{outline:none}[hidden]{display:none!important}:focus-visible{outline:3px solid #106e85;outline-offset:4px}details{margin-top:18px;font-size:14px}summary{cursor:pointer}ul{padding-left:1.4em}li{margin:8px 0}@media(max-width:480px){.wrap{padding:0 20px}.card{padding:22px}.hero{padding-top:30px}.actions .primary{width:100%}h2{font-size:22px}}
+.question-card{padding:24px 0 32px;border-top:1px solid var(--line)}.question-text{font-size:19px;font-weight:700;line-height:1.8}.question-card .answers{margin-top:18px}.question-card .label{margin-bottom:12px;letter-spacing:.12em}.question-card .textbutton{font-size:15px}.result-title{font-size:28px;font-weight:900}#intro .hero{padding:32px 0 20px}#results{border-top:1px solid var(--line)}
 #intro h1{font-size:24px;font-weight:700;line-height:1.6}.episode-number{white-space:nowrap;color:var(--muted);margin-right:.5em}.footer-brand{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}.footer-brand p{margin:0 0 8px}
 .karte-heading{font-size:26px;font-weight:700}.karte-list{padding-left:1.2em;margin:0}.sample-options{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}.sample-options button{font-size:15px;padding:8px 14px}.sample-options button[aria-pressed=true]{background:var(--soft);border-color:#10758a}.sample-note{border-left:3px solid var(--cyan);padding-left:14px}.preview-links{display:flex;flex-wrap:wrap;gap:20px;padding-top:24px;border-top:1px solid var(--line);margin-top:24px}
  .recommendation .recommendation-basis{font-size:15px;line-height:1.8;border-left:3px solid #8acbd9;padding:3px 0 3px 12px;margin:18px 0 22px;color:#405965}.recommendation-basis strong{display:block;font-size:14px;margin-bottom:3px}
@@ -33,22 +33,28 @@
 </style>
 <style>
 .monthly-report{margin-top:30px;padding-top:28px;border-top:1px solid var(--line)}.monthly-report>p{font-size:17px}.monthly-report>details{border:1px solid var(--line);border-radius:12px;padding:16px;font-size:17px}.monthly-report summary{font-size:16px;font-weight:700;color:#126981}.monthly-report .report-notice{font-size:14px;color:var(--muted);margin:18px 0 14px}.monthly-report h4{font-size:18px;margin:22px 0 10px}.monthly-report .report-copy{font-size:17px;line-height:1.85;margin:0}.report-grid{overflow-x:auto}.report-grid table{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;margin:0}.report-grid caption{font-weight:700;text-align:left;font-size:17px;margin:0 0 12px}.report-grid th{font-size:13px;line-height:1.6;text-align:center;color:var(--muted);padding:4px 0}.report-grid th[scope=row]{font-size:14px;color:var(--ink);text-align:left}.report-grid td{text-align:center;font-size:15px;font-weight:700;height:43px;border-radius:5px;font-variant-numeric:tabular-nums}.report-grid .heat-low{background:#f0f5f6;color:#334d55}.report-grid .heat-mid{background:#cbeef5;color:#174e5b}.report-grid .heat-high{background:#12809a;color:#fff}.report-grid .heat-na{background:#f4f5f6;color:#59636c;font-size:13px}.report-grid .mock-cell{box-shadow:inset 0 0 0 1px #7c969f}.heat-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;font-size:13px;color:var(--muted)}.heat-legend span{display:flex;gap:5px;align-items:center}.heat-legend i{display:inline-block;width:13px;height:13px;border-radius:3px}.monthly-report .report-note{font-size:13px;color:var(--muted);margin:12px 0 0}.report-next{border-left:3px solid var(--cyan);padding-left:14px;margin-top:22px}.report-next h4{margin:0 0 8px}@media(max-width:480px){.monthly-report>details{padding:12px}.report-grid table{border-spacing:3px}.report-grid td{font-size:14px}.report-grid th[scope=row]{font-size:13px}}
-.account{margin-top:28px}.account h2{font-size:20px;margin-bottom:8px}.account label{display:block;font-size:14px;font-weight:700;margin:14px 0 6px}.account input{width:100%;padding:12px;border:1px solid #c6d3d8;border-radius:10px;font:inherit}.account .primary,.account .secondary{width:100%;margin:12px 0 0}.account details{margin-top:16px}.account .textbutton{margin-top:12px}#syncStatus{margin:0 0 12px}
+.account{margin-top:28px}.account h2{font-size:20px;margin-bottom:8px}.account label{display:block;font-size:14px;font-weight:700;margin:14px 0 6px}.account input{width:100%;padding:12px;border:1px solid #c6d3d8;border-radius:10px;font:inherit;min-height:48px}.account .primary,.account .secondary{width:100%;margin:12px 0 0}.account details{margin-top:16px}.account .textbutton{margin-top:12px}#syncStatus{margin:0 0 12px}
 </style>
 </head>
 <body>
-<div class="preview"><div class="wrap"><div class="preview-status"><p id="storageScope">本人用試作 · 保存の準備中</p><p id="saveStatus" role="status" aria-live="polite"></p></div><button id="retrySave" class="textbutton" hidden>保存を再試行</button><button id="connectLine" class="textbutton" hidden>LINEで本人確認</button></div></div>
+<div class="preview"><div class="wrap"><p id="storageScope">本人用試作 · 保存の準備中</p><div class="preview-actions"><button id="retrySave" class="pillbutton" hidden>保存を再試行</button><button id="connectLine" class="pillbutton" hidden>LINEで本人確認</button></div><p id="saveStatus" role="status" aria-live="polite"></p></div></div>
 <header><div class="wrap"><p>耳で覚える宅建 <span class="muted">｜学習便</span></p></div></header>
 <main class="wrap">
+<section id="signinPrompt" class="card soft" hidden>
+<p class="label">記録を見るには</p>
+<p>LINEで本人確認すると、保存した記録が見られます。</p>
+<div class="actions"><button id="signinPromptLine" class="primary" type="button">LINEで本人確認</button></div>
+<p class="small muted">メールでログインする場合は、下の「記録を残す」から。</p>
+</section>
 <section id="intro" class="screen" tabindex="-1">
-<div class="hero"><h1>定着3問チェック</h1><p><span class="episode-number">第10回</span>「<a class="audioLink" target="_blank" rel="noopener noreferrer">1000万円 vs 60万円の差 ── 営業保証金と保証協会どっちが得か</a>」の定着確認です。</p></div>
+<div class="hero"><p class="label">第10回 · 営業保証金と保証協会</p><h1>定着3問チェック</h1><p>聴いた内容を3問で確かめます。○か×で答えると、すぐに解説が出ます。</p><p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で聴く（約17分）</a></p><p id="progressChip" class="chip">回答 0 / 3</p></div>
 </section>
 <section id="quiz" aria-label="確認問題"></section>
 <section id="results" class="screen" tabindex="-1" hidden>
-<div class="hero"><p class="label">第10回</p><h2 id="score" class="result-title"></h2><p id="counts" class="muted small"></p></div>
+<div class="hero"><p class="label">第10回の結果</p><h2 id="score" class="result-title"></h2><p id="counts" class="muted small"></p></div>
 <div id="resultRows" class="card"></div>
 <article class="card soft"><h2 id="nextTitle"></h2><p id="nextBody"></p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で復習する（約17分）</a></article>
-<p class="small muted">今回の結果はこの端末にだけ残ります。</p>
+<p id="resultsStorageNote" class="small muted"></p>
 <div class="actions"><button id="showKarte" class="primary">結果と復習を見る</button></div>
 <p class="muted small">この3問の振り返りです。分野全体の習得度ではありません。</p>
 </section>
@@ -61,26 +67,27 @@
 <article class="card"><p class="label">第10回 · 営業保証金と保証協会</p><h2 id="karteScore"></h2><p id="karteTime" class="muted small"></p><div id="karteRows"></div></article>
 <section class="card"><h2>これまでのチェック</h2><div id="attemptHistory"></div></section>
 </details>
-<p class="small muted">回答はこのブラウザーに自動保存します。別端末との同期はまだありません。ブラウザーのデータを消すと記録も消えます。</p>
-<p class="small"><a href="plans-preview.html#ume">記録をためて弱点を見るなら学習カルテへ →</a></p>
+<p id="karteStorageNote" class="small muted"></p>
+<p class="small"><a href="plans-preview.html#ume">記録をためて弱点を見るなら、学習カルテを見る</a></p>
 <div class="actions"><button id="backResults" class="secondary">結果に戻る</button><button id="restart" class="textbutton">最初からもう一度試す</button></div>
 </section>
 <section id="account" class="card account" hidden>
-<h2>記録を残す（テスト中）</h2>
+<h2>記録を残す <span class="badge">テスト中</span></h2>
 <p id="accountStatus" class="small muted">ログインすると別の端末でも同じ記録を見られます。</p>
 
 <div id="accountLoggedOut">
+  <button id="accountLine" class="primary" type="button">LINEでログイン</button>
+  <p class="small muted divider">または、メールで</p>
   <label for="accountEmail">メールアドレス</label>
   <input id="accountEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
-  <button id="accountEmailSend" class="primary" type="button">ログインのメールを受け取る</button>
+  <button id="accountEmailSend" class="secondary" type="button">ログインのメールを受け取る</button>
   <p class="small muted">届いたリンクを10分以内に開いてください。</p>
-  <button id="accountLine" class="secondary" type="button">LINEでログイン</button>
 </div>
 
 <div id="accountLoggedIn" hidden>
   <p id="syncStatus" class="small"></p>
   <button id="accountLinkLine" class="secondary" type="button">LINEと連携</button><div id="accountLinkPending" hidden><p class="small">LINEと連携する準備ができました。</p><button id="accountLinkPendingGo" class="primary" type="button">LINEで本人確認して連携を完了する</button><p class="small muted">LINEのログイン画面が開きます。</p></div>
-  <p class="small muted">この記録にLINEを結びます。LINEで本人確認の画面が開きます。</p>
+  <p id="accountLinkNote" class="small muted">この記録にLINEを結びます。LINEで本人確認の画面が開きます。</p>
   <details><summary>メールを連携する</summary>
     <label for="accountLinkEmail">メールアドレス</label>
     <input id="accountLinkEmail" type="email" inputmode="email" autocomplete="email">
@@ -159,12 +166,15 @@ function providerLabel(providers){
   const names={email:'メール',line:'LINE'};const list=Array.isArray(providers)?providers.filter(p=>names[p]).map(p=>names[p]):[];
   return list.length?`ログイン中（${list.join('＋')}）。`:'ログイン中。';
 }
+function updateSigninPrompt(show){const el=$('signinPrompt');if(el)el.hidden=!(serverMode&&show);}
 function setAccountState(loggedIn,providers){
-  const in_=$('accountLoggedIn'),out_=$('accountLoggedOut'),status=$('accountStatus'),linkBtn=$('accountLinkLine');
+  const in_=$('accountLoggedIn'),out_=$('accountLoggedOut'),status=$('accountStatus'),linkBtn=$('accountLinkLine'),linkNote=$('accountLinkNote');
   if(in_)in_.hidden=!loggedIn;
   if(out_)out_.hidden=loggedIn;
   if(status)status.textContent=loggedIn?providerLabel(providers):'ログインすると別の端末でも同じ記録を見られます。';
-  if(linkBtn&&Array.isArray(providers))linkBtn.hidden=providers.includes('line');
+  if(linkBtn&&Array.isArray(providers)){const hasLine=providers.includes('line');linkBtn.hidden=hasLine;if(linkNote)linkNote.hidden=hasLine;}
+  if(serverMode)$('storageScope').textContent=loggedIn?'記録：アカウントに保存':'記録：未保存（ログインで保存）';
+  if(loggedIn)updateSigninPrompt(false);
 }
 async function refreshProviders(){
   try{const r=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});if(!r.ok)return;const d=await r.json();if(Array.isArray(d.providers))setAccountState(true,d.providers);}catch{}
@@ -212,6 +222,7 @@ function counts(){return{done:answers.filter(Boolean).length,right:questions.fil
 function rows(target){$(target).replaceChildren();questions.forEach((q,i)=>{const row=document.createElement('div');row.className='row';const line=document.createElement('p'),tag=document.createElement('span');const a=answers[i],correct=a&&a.value===q.answer;tag.className='status'+(correct?' ok':'');tag.textContent=!a?'未回答':a.value===null?'まだ分からない':correct?'正解':'見直す候補';line.append(tag,document.createTextNode(q.topic));row.append(line);if(a){const info=document.createElement('small');info.textContent=`あなたの回答：${a.value===null?'まだ分からない':a.value?'○':'×'} ／ 正解：${q.answer?'○':'×'}`;row.append(info);}$(target).append(row);});}
 function results(){
   const c=counts();$('results').hidden=c.done===0;
+  $('progressChip').textContent=`回答 ${c.done} / 3`;
   $('score').textContent=`${questions.length}問中${c.right}問正解`;
   $('counts').textContent=`まだ分からない：${c.unknown}問 ／ 未回答：${questions.length-c.done}問`;
   rows('resultRows');
@@ -276,13 +287,18 @@ $('restart').onclick=()=>{
   else answers=[];
   paintQuestions();for(const id of ['intro','quiz'])$(id).hidden=false;for(const id of ['karte','results'])$(id).hidden=true;window.scrollTo({top:0,behavior:'instant'});$('intro').focus({preventScroll:true});
 };
+function paintStorageNotes(){
+  const text=answerSync?.active?'記録はログイン中のアカウントに保存しています。別の端末でも見られます。':'記録はこの端末にだけ残ります。ブラウザーのデータを消すと記録も消えます。';
+  if($('resultsStorageNote'))$('resultsStorageNote').textContent=text;
+  if($('karteStorageNote'))$('karteStorageNote').textContent=text;
+}
 function openProgress(key){
   try{
     progressStore=ProgressStore.open(localStorage,key);
     answers=progressStore.current?.answers||[];
     $('saveStatus').textContent=answers.some(Boolean)?'前回の回答を復元しました。':'回答すると自動保存します。';
   }catch(e){progressStore=null;saveProblem=true;$('saveStatus').textContent='保存済みの記録を読み込めません。既存の記録は変更せず、今回は保存なしで試せます。';}
-  canAnswer=!enqueueProblem;paintQuestions();results();
+  canAnswer=!enqueueProblem;paintQuestions();results();paintStorageNotes();
 }
 function loadClient(src){
   return new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(Error('SYNC_UNAVAILABLE'));document.head.append(script);});
@@ -298,10 +314,11 @@ async function openServerProgress(session){
   });
   openProgress(answerSync.key);$('connectLine').hidden=true;
   await answerSync.refresh({sessionVerified:true});
+  paintStorageNotes();
 }
 window.addEventListener('online',()=>answerSync?.scheduleRefresh());
 window.addEventListener('focus',()=>answerSync?.scheduleRefresh());
-window.addEventListener('mimiobo:logout',()=>answerSync?.stop());
+window.addEventListener('mimiobo:logout',()=>{answerSync?.stop();paintStorageNotes();});
 window.addEventListener('storage',event=>{
   if(!answerSync?.active||saveProblem||enqueueProblem)return;
   if(event.key===answerSync.key){openProgress(answerSync.key);if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}}
@@ -323,6 +340,7 @@ function accountEmailFlow(button,input,{link=false}={}){
 if($('accountEmailSend'))$('accountEmailSend').onclick=accountEmailFlow($('accountEmailSend'),$('accountEmail'));
 if($('accountLinkEmailSend'))$('accountLinkEmailSend').onclick=accountEmailFlow($('accountLinkEmailSend'),$('accountLinkEmail'),{link:true});
 if($('accountLine'))$('accountLine').onclick=()=>$('connectLine')?.onclick?.();
+if($('signinPromptLine'))$('signinPromptLine').onclick=()=>$('connectLine')?.onclick?.();
 if($('accountLinkLine'))$('accountLinkLine').onclick=async()=>{try{location.href=await MimioboAuth.linkLine();}catch(e){if($('accountMessage'))$('accountMessage').textContent=window.MimioboMessages?.text(e.message)||e.message;}};
 if($('accountLogout'))$('accountLogout').onclick=async()=>{try{await MimioboAuth.logout();}catch{}location.reload();};
 async function verifyLine(){
@@ -368,13 +386,14 @@ async function initialize(){
   }
   const local=['127.0.0.1','localhost',''].includes(location.hostname);
   if(local&&!serverMode){$('storageScope').textContent='ローカル試作 · LINE連携なし／このブラウザーに自動保存';openProgress('mimiobo-local-preview-ep10-v1');return;}
-  $('storageScope').textContent='運営者テスト · LINEで本人確認後、このブラウザーに保存';
+  if(serverMode)$('storageScope').textContent='記録：未保存（ログインで保存）';
+  else $('storageScope').textContent='運営者テスト · LINEで本人確認後、このブラウザーに保存';
   try{
     await initializeLine();
     $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){const redirectUri=location.origin+location.pathname+(serverMode?'?server=1':'');liff.login({redirectUri:serverMode?MimioboAuth.lineRedirectUri(redirectUri):redirectUri});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
-    if(liff.isLoggedIn()&&!(serverMode&&MimioboAuth.hasPendingLink()))await verifyLine();
-    else{$('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;if(serverMode&&MimioboAuth.hasPendingLink()&&$('accountLinkPending')){$('accountLinkPending').hidden=false;if($('accountLinkLine'))$('accountLinkLine').hidden=true;if($('accountStatus'))$('accountStatus').textContent='LINE連携の途中です。';$('accountLinkPendingGo').onclick=()=>$('connectLine').onclick();}}
-  }catch(e){showAuthError(e.message);if(typeof $('connectLine').onclick==='function')$('connectLine').hidden=false;}
+    if(liff.isLoggedIn())await verifyLine();
+    else{$('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;updateSigninPrompt(true);if(serverMode&&MimioboAuth.hasPendingLink()&&$('accountLinkPending')){$('accountLinkPending').hidden=false;if($('accountLinkLine'))$('accountLinkLine').hidden=true;if($('accountStatus'))$('accountStatus').textContent='LINE連携の途中です。';$('accountLinkPendingGo').onclick=()=>$('connectLine').onclick();}}
+  }catch(e){showAuthError(e.message);if(typeof $('connectLine').onclick==='function'){$('connectLine').hidden=false;updateSigninPrompt(true);}}
 }
 $('retrySave').onclick=()=>{const saved=saveProgress();let queued=true;if(saved&&answerSync&&progressStore.current)progressStore.current.answers.forEach((a,i)=>{if(a&&!sendAnswer(progressStore.current,i))queued=false;});if(saved&&queued){enqueueProblem=false;canAnswer=answerSync?.active!==false;$('retrySave').hidden=true;paintQuestions();}if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}};
 initialize();
