@@ -33,6 +33,7 @@
 </style>
 <style>
 .monthly-report{margin-top:30px;padding-top:28px;border-top:1px solid var(--line)}.monthly-report>p{font-size:17px}.monthly-report>details{border:1px solid var(--line);border-radius:12px;padding:16px;font-size:17px}.monthly-report summary{font-size:16px;font-weight:700;color:#126981}.monthly-report .report-notice{font-size:14px;color:var(--muted);margin:18px 0 14px}.monthly-report h4{font-size:18px;margin:22px 0 10px}.monthly-report .report-copy{font-size:17px;line-height:1.85;margin:0}.report-grid{overflow-x:auto}.report-grid table{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;margin:0}.report-grid caption{font-weight:700;text-align:left;font-size:17px;margin:0 0 12px}.report-grid th{font-size:13px;line-height:1.6;text-align:center;color:var(--muted);padding:4px 0}.report-grid th[scope=row]{font-size:14px;color:var(--ink);text-align:left}.report-grid td{text-align:center;font-size:15px;font-weight:700;height:43px;border-radius:5px;font-variant-numeric:tabular-nums}.report-grid .heat-low{background:#f0f5f6;color:#334d55}.report-grid .heat-mid{background:#cbeef5;color:#174e5b}.report-grid .heat-high{background:#12809a;color:#fff}.report-grid .heat-na{background:#f4f5f6;color:#59636c;font-size:13px}.report-grid .mock-cell{box-shadow:inset 0 0 0 1px #7c969f}.heat-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;font-size:13px;color:var(--muted)}.heat-legend span{display:flex;gap:5px;align-items:center}.heat-legend i{display:inline-block;width:13px;height:13px;border-radius:3px}.monthly-report .report-note{font-size:13px;color:var(--muted);margin:12px 0 0}.report-next{border-left:3px solid var(--cyan);padding-left:14px;margin-top:22px}.report-next h4{margin:0 0 8px}@media(max-width:480px){.monthly-report>details{padding:12px}.report-grid table{border-spacing:3px}.report-grid td{font-size:14px}.report-grid th[scope=row]{font-size:13px}}
+.account{margin-top:28px}.account h2{font-size:20px;margin-bottom:8px}.account label{display:block;font-size:14px;font-weight:700;margin:14px 0 6px}.account input{width:100%;padding:12px;border:1px solid #c6d3d8;border-radius:10px;font:inherit}.account .primary,.account .secondary{width:100%;margin:12px 0 0}.account details{margin-top:16px}.account .textbutton{margin-top:12px}#syncStatus{margin:0 0 12px}
 </style>
 </head>
 <body>
@@ -63,6 +64,31 @@
 <p class="small muted">回答はこのブラウザーに自動保存します。別端末との同期はまだありません。ブラウザーのデータを消すと記録も消えます。</p>
 <p class="small"><a href="plans-preview.html#ume">記録をためて弱点を見るなら学習カルテへ →</a></p>
 <div class="actions"><button id="backResults" class="secondary">結果に戻る</button><button id="restart" class="textbutton">最初からもう一度試す</button></div>
+</section>
+<section id="account" class="card account" hidden>
+<h2>記録を残す（テスト中）</h2>
+<p id="accountStatus" class="small muted">ログインすると別の端末でも同じ記録を見られます。</p>
+
+<div id="accountLoggedOut">
+  <label for="accountEmail">メールアドレス</label>
+  <input id="accountEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+  <button id="accountEmailSend" class="primary" type="button">ログインのメールを受け取る</button>
+  <p class="small muted">届いたリンクは10分以内にこのブラウザで開いてください。</p>
+  <button id="accountLine" class="secondary" type="button">LINEでログイン</button>
+</div>
+
+<div id="accountLoggedIn" hidden>
+  <p id="syncStatus" class="small"></p>
+  <button id="accountLinkLine" class="secondary" type="button">LINEと連携</button>
+  <p class="small muted">この記録にLINEを結びます。LINEで本人確認の画面が開きます。</p>
+  <details><summary>メールを連携する</summary>
+    <label for="accountLinkEmail">メールアドレス</label>
+    <input id="accountLinkEmail" type="email" inputmode="email" autocomplete="email">
+    <button id="accountLinkEmailSend" class="secondary" type="button">連携のメールを受け取る</button>
+  </details>
+  <button id="accountLogout" class="textbutton" type="button">このブラウザからログアウト</button>
+</div>
+<p id="accountMessage" class="small" role="status" aria-live="polite"></p>
 </section>
 <nav class="preview-links" aria-label="試作用の表示"><button id="openKarte" class="textbutton">結果と復習</button><a href="plans-preview.html">学習サポートの一覧を見る</a></nav>
 </main>
@@ -129,6 +155,12 @@ let serverMode=new URLSearchParams(location.search).get('server')==='1';
 let answerSync=null,lineReady=false,enqueueProblem=false;
 function showAuthError(code){$('saveStatus').textContent=window.MimioboMessages?.text(code)||'本人確認できませんでした。';}
 function syncState(state){document.documentElement.dataset.syncState=state;window.dispatchEvent(new CustomEvent('mimiobo:sync',{detail:{state}}));if(state==='pending'&&!saveProblem)$('saveStatus').textContent=window.MimioboMessages?.text('pending')||'自動保存しました。';if(state==='unauthorized'){canAnswer=false;paintQuestions();}}
+function setAccountState(loggedIn){
+  const in_=$('accountLoggedIn'),out_=$('accountLoggedOut'),status=$('accountStatus');
+  if(in_)in_.hidden=!loggedIn;
+  if(out_)out_.hidden=loggedIn;
+  if(status)status.textContent=loggedIn?'ログイン中。':'ログインすると別の端末でも同じ記録を見られます。';
+}
 document.querySelectorAll('.audioLink').forEach(a=>a.href='https://stand.fm/episodes/69dc7ba498eff95c436a4549');
 function paintQuestions(){
   $('quiz').replaceChildren();
@@ -249,6 +281,7 @@ function loadClient(src){
 }
 async function openServerProgress(session){
   if(typeof session.userId!=='string'||!/^mimiobo-test-v1-[0-9a-f]{64}$/.test(session.storageKey))throw Error('SESSION_INVALID');
+  setAccountState(true);
   answerSync?.stop();
   answerSync=MimioboSync.create({userId:session.userId,storageKey:session.storageKey,storage:localStorage,
     fetch:(url,options)=>fetch(url,{...options,signal:AbortSignal.timeout(15000)}),validate:ProgressStore.validate,
@@ -266,6 +299,24 @@ window.addEventListener('storage',event=>{
   if(event.key===answerSync.key){openProgress(answerSync.key);if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}}
   if(event.key===answerSync.key||event.key?.startsWith(answerSync.prefix))answerSync.scheduleRefresh();
 });
+window.addEventListener('mimiobo:sync',e=>{if($('syncStatus'))$('syncStatus').textContent=window.MimioboMessages?.text(e.detail.state)||'';});
+function accountEmailFlow(button,input,{link=false}={}){
+  return async()=>{
+    const value=input?input.value:'';
+    if(!value||input?.validity?.valid===false){if($('accountMessage'))$('accountMessage').textContent='メールアドレスを確認してください。';return;}
+    try{
+      if(button)button.disabled=true;
+      await MimioboAuth.email(value,{link});
+      if($('accountMessage'))$('accountMessage').textContent=link?'連携のメールを送りました。10分以内にこのブラウザで開いてください。':'メールを送りました。10分以内にこのブラウザで開いてください。';
+    }catch(e){if($('accountMessage'))$('accountMessage').textContent=window.MimioboMessages?.text(e.message)||e.message;}
+    finally{if(button)button.disabled=false;}
+  };
+}
+if($('accountEmailSend'))$('accountEmailSend').onclick=accountEmailFlow($('accountEmailSend'),$('accountEmail'));
+if($('accountLinkEmailSend'))$('accountLinkEmailSend').onclick=accountEmailFlow($('accountLinkEmailSend'),$('accountLinkEmail'),{link:true});
+if($('accountLine'))$('accountLine').onclick=()=>$('connectLine')?.onclick?.();
+if($('accountLinkLine'))$('accountLinkLine').onclick=async()=>{try{location.href=await MimioboAuth.linkLine();}catch(e){if($('accountMessage'))$('accountMessage').textContent=window.MimioboMessages?.text(e.message)||e.message;}};
+if($('accountLogout'))$('accountLogout').onclick=async()=>{try{await MimioboAuth.logout();}catch{}location.reload();};
 async function verifyLine(){
   $('saveStatus').textContent='LINEで本人確認しています…';
   let data;
@@ -298,9 +349,11 @@ async function initialize(){
       const authResult=new URLSearchParams(location.search).get('auth');
       if(authResult&&authResult!=='ok'){showAuthError('auth:'+authResult);return;}
       if(serverMode){
+        if($('account'))$('account').hidden=false;
         const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
         if(response.ok&&!MimioboAuth.hasPendingLink()){await openServerProgress(await response.json());return;}
         if(!response.ok&&response.status!==401&&response.status!==403)throw Error('SESSION_UNAVAILABLE');
+        if(!response.ok)setAccountState(false);
       }
     }catch(e){document.documentElement.dataset.syncState='unavailable';showAuthError(e.message);return;}
   }
