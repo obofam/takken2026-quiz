@@ -290,7 +290,6 @@ function loadClient(src){
 async function openServerProgress(session){
   if(typeof session.userId!=='string'||!/^mimiobo-test-v1-[0-9a-f]{64}$/.test(session.storageKey))throw Error('SESSION_INVALID');
   setAccountState(true,session.providers);
-  if(!Array.isArray(session.providers))refreshProviders();
   answerSync?.stop();
   answerSync=MimioboSync.create({userId:session.userId,storageKey:session.storageKey,storage:localStorage,
     fetch:(url,options)=>fetch(url,{...options,signal:AbortSignal.timeout(15000)}),validate:ProgressStore.validate,
@@ -333,7 +332,7 @@ async function verifyLine(){
   else{const response=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idToken:liff.getIDToken()}),signal:AbortSignal.timeout(15000)});
   data=await response.json();
   if(!response.ok)throw Error(data.error||'本人確認できませんでした。');}
-  if(serverMode){await openServerProgress(data);return;}
+  if(serverMode){await openServerProgress(data);refreshProviders();return;}
   if(typeof data.storageKey!=='string'||!/^mimiobo-test-v1-[0-9a-f]{64}$/.test(data.storageKey))throw Error('保存先を確認できませんでした。');
   $('storageScope').textContent='運営者本人のテスト · このブラウザーに保存／別端末同期なし';
   $('connectLine').hidden=true;openProgress(data.storageKey+'-ep10-v1');
