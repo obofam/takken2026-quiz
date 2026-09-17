@@ -58,14 +58,14 @@ test('callback failure queries display safe Japanese fallback instead of silentl
   for(const code of ['failed','unavailable','invalid_token']){
     const h=harness('https://mimiobo-liff-test.vercel.app/ep10-preview.html?server=1&auth='+code);
     h.preview();await h.run('initialize()');
-    assert.equal(h.node('saveStatus').textContent,'本人確認できませんでした。');
+    assert.equal(h.node('saveStatus').textContent,h.run("MimioboMessages.text('auth:"+code+"')"));
     assert.equal(h.requests.length,0);assert.equal(h.refreshes.length,0);
   }
 });
 test('unknown internal initialization errors never reach visible status',async()=>{
   const h=harness();h.context.liff.init=async()=>{throw Error('INTERNAL_SECRET_TOKEN');};
   h.preview();await h.run('initialize()');
-  assert.equal(h.node('saveStatus').textContent,'本人確認できませんでした。');
+  assert.equal(h.node('saveStatus').textContent,h.run('MimioboMessages.fallback'));
   assert.equal(h.context.document.documentElement.dataset.syncState,'unavailable');
 });
 test('successful local save remains saved when enqueue fails, with pending status and retry',async()=>{
@@ -75,7 +75,7 @@ test('successful local save remains saved when enqueue fails, with pending statu
   const cached=h.context.localStorage.getItem('local-test');
   assert.equal(JSON.parse(cached).attempts[0].answers[0].value,true);
   assert.equal(h.run('saveProblem'),false);assert.equal(h.context.document.documentElement.dataset.syncState,'pending');
-  assert.equal(h.node('saveStatus').textContent,'端末には保存済み・サーバー送信待ち');
+  assert.equal(h.node('saveStatus').textContent,h.run("MimioboMessages.text('pending')"));
   assert.equal(h.node('retrySave').hidden,false);assert.equal(enqueues,1);
   const attempt=h.run('progressStore.current.id');
   h.run('answer(1,false)');h.node('restart').onclick();
@@ -104,5 +104,5 @@ test('old index login errors use the shared fallback instead of internal error c
   await h.run(read('app.js'));h.context.liff.isLoggedIn=()=>true;
   h.context.fetch=async()=>({ok:false,json:async()=>({error:'not_allowed'})});
   await h.node('connect').onclick();
-  assert.equal(h.node('message').textContent,'本人確認できませんでした。');assert.equal(h.node('connect').disabled,false);
+  assert.equal(h.node('message').textContent,h.run("MimioboMessages.text('not_allowed')"));assert.equal(h.node('connect').disabled,false);
 });
