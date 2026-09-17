@@ -6,6 +6,7 @@ module.exports=s.endpoint(['POST'],async(req,res)=>{
   let linkToken;
   if(req.body.link===true)linkToken=await s.ticket((await s.session(req)).userId,'email',address);
   else if(req.body.link!==undefined&&req.body.link!==false)s.fail(400,'invalid_link');
+  // Explicit callback for both hosted and local flows; never fall back to Site URL.
   const redirect=s.origin(req)+'/auth-callback.html';
   await s.supabase('/auth/v1/otp?redirect_to='+encodeURIComponent(redirect),{method:'POST',body:{email:address,create_user:true}});
   s.setCookie(req,res,'mimiobo_email_flow',s.sign({purpose:'email',email:address,linkToken,exp:Math.floor(Date.now()/1000)+600}),600);

@@ -93,7 +93,81 @@ test('disallowed email never requests an OTP',async()=>{
   mock(u=>{assert.equal(u.pathname,'/rest/v1/allowlist');return [];});
   const res=response();await emailApi(request({email:address}),res);assert.equal(res.code,403);
 });
+test('production email request explicitly targets the callback instead of the Site URL',async()=>{
+  let sent=0;
+  mock((u,options,body)=>{
+    if(u.pathname==='/rest/v1/allowlist')return [{}];
+    assert.equal(u.pathname,'/auth/v1/otp');
+    assert.equal(u.searchParams.get('redirect_to'),'https://mimiobo-liff-test.vercel.app/auth-callback.html');
+    assert.deepEqual(body,{email:address,create_user:true});sent++;return {};
+  });
+  const req=request({email:address,redirect_to:'https://attacker.example'});
+  req.headers.host='mimiobo-liff-test.vercel.app';req.headers.origin='https://mimiobo-liff-test.vercel.app';
+  const res=response();await emailApi(req,res);assert.equal(res.code,200);assert.equal(sent,1);
+});
 function emailRequest(){const req=request({tokenHash:'not-a-real-token-hash'});req.headers.cookie='mimiobo_email_flow='+s.sign({purpose:'email',email:address,exp:Date.now()/1000+600});return req;}
+function accessRequest(){const req=emailRequest();req.body={accessToken:'test-browser-access-only'};return req;}
+test('access-token callback validates with getUser and issues only an application session',async()=>{
+  const seen=[];mock((u,options,body)=>{
+    seen.push(u.pathname);
+    if(u.pathname==='/auth/v1/user'){
+      assert.equal(options.method,'GET');assert.equal(options.headers.Authorization,'Bearer test-browser-access-only');
+      assert.equal(options.headers.apikey,'sb_secret_test_only');assert.equal(body,undefined);
+      return {email:address,email_confirmed_at:now};
+    }
+    assert.equal(u.pathname,'/rest/v1/rpc/resolve_identity');
+    assert.deepEqual(body,{p_provider:'email',p_subject:address,p_link_token_hash:null});return user;
+  });
+  const req=accessRequest();req.body.email='attacker@example.com';req.body.refreshToken='refresh-must-not-persist';
+  const res=response();await verifyApi(req,res);
+  assert.equal(res.code,200);assert.deepEqual(res.data,s.sessionData(user));
+  assert.deepEqual(seen,['/auth/v1/user','/rest/v1/rpc/resolve_identity']);
+  const lines=res.headers['Set-Cookie'];const sessionLine=lines.find(line=>line.startsWith(s.COOKIE+'='));
+  assert.match(sessionLine,/HttpOnly; SameSite=Lax/);
+  const payload=s.verify(sessionLine.split(';')[0].slice(s.COOKIE.length+1),'session');
+  assert.equal(payload.userId,user);assert.equal(payload.provider,'email');assert.equal(payload.subject,address);
+  assert.deepEqual(Object.keys(payload).sort(),['exp','provider','purpose','subject','userId']);
+  assert.ok(lines.some(line=>line.startsWith('mimiobo_email_flow=;')&&line.includes('Max-Age=0')));
+  assert.doesNotMatch(JSON.stringify({data:res.data,headers:res.headers,payload}),/test-browser-access-only|refresh-must-not-persist|access_token|refresh_token|accessToken|refreshToken/);
+});
+test('invalid access token from getUser returns 401 without identity resolution or cookies',async()=>{
+  let calls=0;global.fetch=async(url,options)=>{
+    assert.equal(url,'https://test.supabase.co/auth/v1/user');
+    assert.equal(options.headers.Authorization,'Bearer test-browser-access-only');calls++;
+    return {ok:false,status:401,json:async()=>({message:'invalid JWT'})};
+  };
+  const res=response();await verifyApi(accessRequest(),res);
+  assert.equal(res.code,401);assert.equal(calls,1);assert.equal(res.headers['Set-Cookie'],undefined);
+});
+test('access-token callback rejects malformed or ambiguous credentials before upstream requests',async()=>{
+  for(const body of [{accessToken:''},{accessToken:null},{accessToken:123},{accessToken:{}},{accessToken:'x'.repeat(10001)},{accessToken:'has whitespace'},{accessToken:' token'},{accessToken:'token\n'},{accessToken:'valid',tokenHash:'not-a-real-token-hash'},{accessToken:'valid',tokenHash:''}]){
+    const req=accessRequest();req.body=body;const res=response();await verifyApi(req,res);
+    assert.equal(res.code,400);assert.equal(res.headers['Set-Cookie'],undefined);
+  }
+});
+test('access-token callback requires the same confirmed email and a live browser flow',async()=>{
+  for(const userData of [{email:'different@example.com',email_confirmed_at:now},{email:address},{email:address,email_confirmed_at:null}]){
+    let calls=0;mock(u=>{assert.equal(u.pathname,'/auth/v1/user');calls++;return userData;});
+    const res=response();await verifyApi(accessRequest(),res);
+    assert.equal(res.code,401);assert.equal(calls,1);assert.equal(res.headers['Set-Cookie'],undefined);
+  }
+  global.fetch=async()=>assert.fail('expired or absent flow must not call Supabase');
+  for(const value of [undefined,'mimiobo_email_flow='+s.sign({purpose:'email',email:address,exp:Date.now()/1000-1})]){
+    const req=accessRequest();req.headers.cookie=value;const res=response();await verifyApi(req,res);
+    assert.equal(res.code,401);assert.equal(res.headers['Set-Cookie'],undefined);
+  }
+});
+test('access-token callback preserves the email linking ticket from the signed flow',async()=>{
+  const linkToken='a'.repeat(64);let resolved=0;
+  mock((u,options,body)=>{
+    if(u.pathname==='/auth/v1/user')return {email:address,email_confirmed_at:now};
+    assert.equal(u.pathname,'/rest/v1/rpc/resolve_identity');
+    assert.deepEqual(body,{p_provider:'email',p_subject:address,p_link_token_hash:s.hash(linkToken)});resolved++;return user;
+  });
+  const req=accessRequest();req.headers.cookie='mimiobo_email_flow='+s.sign({purpose:'email',email:address,linkToken,exp:Date.now()/1000+600});
+  req.body.linkToken='b'.repeat(64);const res=response();await verifyApi(req,res);
+  assert.equal(res.code,200);assert.equal(resolved,1);assert.equal(res.data.userId,user);
+});
 test('email verification trusts auth user endpoint, not browser or verify response claims',async()=>{
   const seen=[];mock((u,options,body)=>{
     seen.push(u.pathname);

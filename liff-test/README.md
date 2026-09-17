@@ -2,16 +2,16 @@
 
 ## 2026-09-17 の状態
 
-共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。9/17レビューA-1〜A-10を修正。見た目・問題・比較ページは今回の修正対象外。保存待ち表示と安全なエラー表示だけレビュー指示に沿って接続した。デプロイ・実メール送信は未実施。
+共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。9/17レビューA-1〜A-11を修正。A-11でSupabase既定メールテンプレートのaccess_tokenコールバックに対応した。今回の作業ではデプロイ・実メール送信・画面変更を行っていない。
 
-**まだ「デプロイ可」ではない。** 次の依存が残る。
+**A-11の実装・自動テスト後、KeiかClaudeが配信と実機確認を判断する。** レビューE節のClaude報告を反映した状態は以下。
 
-- Supabase接続は確認済み。`allowlist` の読み取りは HTTP 404 で、今回のスキーマは未適用。下記SQLをテスト用プロジェクトに適用する。
-- メール入力／送信結果／LINE連携確認／認証失敗／同期状態の画面と `privacy.html` のサーバー保存案内は **Claudeで**。指示書§0の「画面の見た目と文言は Claude の担当」、§4の文面依頼に従い、新しい画面文言は足していない。
-- Supabaseメールテンプレート・許可Redirect URL設定と実機一周確認が未了。
-- ローカル `.env.local` に既存チャネルの `LINE_CHANNEL_ID` を補完済み。Vercel側にも同名を設定する。Vercel環境設定は変更していない。
+- Supabaseのmigration・allowlistはClaudeが適用済みと報告。下記SQLを再実行しない。
+- Claudeがメール／LINEログイン・連携・同期状態の枠、正式文言、`privacy.html` の案内を追加済み。
+- Site URL・Redirect URLs・Vercelの `LINE_CHANNEL_ID` もClaudeが設定済みと報告。
+- メールテンプレートは既定のまま利用する。カスタムSMTPはSprint 2以降にKeiが判断。実メール・LINE・別ブラウザでの一周は未確認。
 
-同期は検証用の `/ep10-preview.html?server=1` でのみ有効。通常URL／localhostの従来端末内試作は維持。サーバー保存案内が完成してからClaudeが標準導線を接続する。既存の「このブラウザーに保存／別端末同期なし」は検証モードに合わないため、そのまま配布しない。
+同期とログイン枠は検証用の `/ep10-preview.html?server=1` で有効。通常URL／localhostの従来端末内試作は維持。
 
 ## 作業チェック
 
@@ -19,8 +19,9 @@
 - [x] 許可された本人間のメール→LINE／LINE→メール連結API
 - [x] 回答POST、所有者ごとのGET、重複保存防止、オフライン再送
 - [x] ローカルDBで移行・権限・連携・保存の回帰検証
-- [ ] テストSupabaseへSQL適用・Auth設定
-- [ ] Claudeのログイン／連携／保存状態UI・privacy案内
+- [x] テストSupabaseへSQL適用・Auth設定（レビューE節のClaude報告）
+- [x] Claudeのログイン／連携／保存状態UI・privacy案内
+- [x] 既定メールテンプレートのaccess_token着地への対応
 - [ ] 実メール・LINE・別ブラウザでの手動確認
 - [ ] 上記完了後、KeiまたはClaudeがデプロイ判断
 
@@ -28,10 +29,12 @@
 
 環境変数は `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `SESSION_SECRET`（32バイト以上）, `LINE_CHANNEL_ID`（既存値 `2011606963`）。新しい `sb_secret_` キーを使用し、旧 service_role JWT は使わない。`VERCEL_URL` / `VERCEL_BRANCH_URL` はプレビューのOrigin検証にVercel自動設定値を使う。秘密値はログ・チャット・gitに出さない。
 
+以下は新規環境用。現在のテストプロジェクトは1〜3適用済みとの報告があるため、再実行しない。
+
 1. Supabase SQL Editorで `supabase/migrations/202609170001_sprint1.sql` を適用する。新規7テーブルと2RPCを作成する一回限りの移行。既存スキーマを削除／置換しない。
 2. 続いて `supabase/allowlist.local.sql` を適用する。今回指定されたメールと既存のKei本人LINEハッシュを登録済みのローカル専用ファイル。gitとVercel配信から除外している。未登録者のメール送信・ログイン・保存は拒否する。
 3. Supabase AuthのRedirect URLsに `https://mimiobo-liff-test.vercel.app/auth-callback.html` を追加する。ローカル検証時のみ `http://127.0.0.1:3000/auth-callback.html` も追加。プレビューURLを使う場合はその正確なコールバックURLを登録する。
-4. Magic LinkとConfirm signupメールテンプレートのリンク先を `{{ .RedirectTo }}#token_hash={{ .TokenHash }}` にする。**テンプレートの本文はClaude担当**。既定の `ConfirmationURL` は使わない（ブラウザへSupabase access/refresh tokenを渡さないため）。メールプロバイダーの追跡リンク機能は無効にする。Supabaseの既定メール送信制限／宛先制限によりSMTP設定が必要な場合がある。
+4. Magic LinkとConfirm signupは既定の `{{ .ConfirmationURL }}` を利用する。`api/email.js` はOTP要求の `redirect_to` に、要求元の許可済みorigin＋`/auth-callback.html` を明示する。ホスト環境では `https://mimiobo-liff-test.vercel.app/auth-callback.html`、ローカルではそのローカルorigin。Site URLには依存しない。着地のaccess_tokenをサーバー検証し、refresh_tokenは利用・保存せず破棄する。既存のtoken_hash経路も維持。テンプレート編集やSMTP追加は今回不要。
 5. メールは要求したブラウザで10分以内に開く。要求時のhttpOnly Cookieと検証済みメールの一致を確認するため、別ブラウザでは拒否する。別端末でログインするときは、その端末で改めてメールを要求する。LINEアプリからメールを連結する場合も、LINEログイン済みの同じブラウザでリンクを開く必要がある。失敗時の案内はClaudeのUIで実装する。
 
 Supabase secret keyはData API用で、今回の環境にはSQL適用用DB接続情報／管理API接続がない。ログイン済み管理画面での適用・Auth設定はプロジェクト分担どおり **Claudeで**。
@@ -40,7 +43,8 @@ Supabase secret keyはData API用で、今回の環境にはSQL適用用DB接続
 
 - `lib/server.js`: Supabase REST、HMAC-SHA256セッション、Origin/JSON検査、許可リスト再確認。Originがない場合のみ同一オリジンのSec-Fetch-Site／Refererを代替とする。明示された異Origin・null・矛盾は拒否。CookieはHttpOnly / SameSite=Lax / HTTPSでSecure、7日。想定外例外は固定イベントと安全な例外型だけログに残し、トークン・上流の生エラーは出さない。Cookieは署名済みで暗号化ではない。
 - `api/session.js`: LINEのID tokenを公式verify endpointで検証、aud/iss/expを照合。利用者UUIDに対応するCookieを発行。GETで復元、DELETEで当ブラウザをログアウト。
-- `api/email.js`, `api/email-verify.js`: 許可メールにOTPリンクを要求、hashをサーバーで交換し `GET /auth/v1/user`（`auth.getUser`相当）で本人メールを検証。Supabaseのセッショントークンはブラウザに返さない。
+- `api/email.js`, `api/email-verify.js`: 許可メールにOTPリンクを要求。`{tokenHash}` はサーバーで交換し、`{accessToken}` はそのまま `GET /auth/v1/user`（`auth.getUser`相当）で検証する。両方同時の指定は拒否。どちらも要求時Cookie・確認済みメール・許可リストの検証を共用し、同じ利用者セッションCookieを発行する。APIからSupabaseトークンを返さない。
+- `auth-callback.js`: fragment全体を通信前に消し、token_hashかaccess_tokenの一方だけをPOSTする。refresh_tokenは送信も保存もしない。localStorage／sessionStorageへSupabaseトークンを残さず、成功・失敗とも資格情報を含まないURLへ移動する。
 - `api/link.js`: ログイン中の本人に、10分有効のLINE連携チケットを発行。DBにはSHA256だけを保存。消費・identity追加は単一トランザクション。既に別利用者IDのidentityは409として拒否し、自動統合しない。**初回から連結操作で第2の入口を通ること**。両方で独立ログイン済みの場合の統合は別途検討。
 - `api/answers.js`: 本人IDはCookieから取得。POSTは `X-Mimiobo-User` がCookieのIDと一致しなければ拒否し、別タブのアカウント切替による混入を防ぐ。同一attempt/questionは最初のサーバー回答を採用。GETは所有者で絞り500件ずつ取得、1000attempt超は黙って切らずエラー。
 - `supabase/`: 全テーブルRLSとブラウザロールの権限剥奪。secret keyが対応するサーバーロールだけが利用。空のentitlements以外のStripe処理はない。
@@ -62,7 +66,7 @@ SDK依存を増やさずNode標準fetchでRESTを呼ぶ構成にした。PGlite�
 - `await MimioboAuth.line(liff.getIDToken())`：LINE本人検証とチケット消費。既存ページから接続済み。
 - `await MimioboAuth.logout()`：当ブラウザのCookieを削除。UI側で記録表示も閉じる。他の端末やコピーされた有効Cookieの強制失効は対象外。
 - `mimiobo:sync` CustomEventの `event.detail.state` / `html[data-sync-state]`：`syncing` / `pending` / `synced` / `unauthorized` / `failed`。初期接続不能は `unavailable`。failedは永久失敗や隔離済み行がある状態なので、単純な再試行案内にしない。端末保存とサーバーへの到達を区別する。
-- コールバックの `?auth=failed|unavailable|invalid_token` は初期化時に読み取り、`ui-messages.js` の `auth:*` 項目を表示する。APIエラーも同じ `MimioboMessages.text(code)` だけを通し、未知コード／例外の生文言は表示しない。**Bの正式文言はこのファイルのmessagesに集約する**。現時点は既存画面の日本語を暫定使用。pendingの文言だけレビューA-5指定の「端末には保存済み・サーバー送信待ち」を採用。再送案内・メール入力UIは未実装。
+- コールバックの `?auth=failed|unavailable|invalid_token` は初期化時に読み取り、`ui-messages.js` の `auth:*` 項目を表示する。APIエラーも同じ `MimioboMessages.text(code)` だけを通し、未知コード／例外の生文言は表示しない。Claudeが確定した文言はこのファイルのmessagesに集約済み。今回その文言・画面は変更していない。
 
 LIFFは既存ID `2011606963-hH0DzETc`、エンドポイント `https://mimiobo-liff-test.vercel.app/` を維持。サーバーモード／liff.state付きの初期化は `liff.init()` → `captureLink()` → セッション・連携の判定の順。同一実行内でURLが変わってもserver=1を再評価する。旧appはSDK後にreadyへ進み、ep10にパスが変わった場合は対象ページを読み直す。チケットを保持したまま無言でreturnしない。実LINEでのリダイレクト・連携は未検証。
 
@@ -81,6 +85,8 @@ node 'C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js' run dev
 テストは既存13件の意図を維持（GET sessionは新仕様に更新）し、署名改ざん・期限・Origin・許可撤回・メール照合・所有者・同期・DB権限を追加。DBテストはメモリ内Postgres(PGlite)にSupabase相当ロールを作り、実際の移行とSQL回帰を実行する。Supabase Auth／PostgREST／LINEの実サービス一周を代替するものではない。
 
 2026-09-17 A-1〜A-10修正後：`npm test`（上記npm本体経由）**61件すべて通過**。LIFFの同一実行内URL変更、旧indexのready、認証失敗表示、enqueue失敗からの再試行・操作停止も実際のクライアントJSをVMで評価して確認した。HTML/CSSと保護区間の不変確認も実施。
+
+2026-09-17 A-11対応後：回帰テスト9件を追加し、**70件すべて通過**。access_tokenの200／不正401、メール・要求Cookieの照合、連携チケット保持、明示redirect_to、通信前のfragment削除、refresh_token非使用、ブラウザ保存なしを検証。実メール送信は行っていない。
 
 ## 手動検証（スクリーンショット不要）
 
