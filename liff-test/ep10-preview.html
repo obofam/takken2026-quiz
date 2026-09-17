@@ -79,7 +79,7 @@
 
 <div id="accountLoggedIn" hidden>
   <p id="syncStatus" class="small"></p>
-  <button id="accountLinkLine" class="secondary" type="button">LINEと連携</button>
+  <button id="accountLinkLine" class="secondary" type="button">LINEと連携</button><div id="accountLinkPending" hidden><p class="small">LINEと連携する準備ができました。</p><button id="accountLinkPendingGo" class="primary" type="button">LINEで本人確認して連携を完了する</button><p class="small muted">LINEのログイン画面が開きます。</p></div>
   <p class="small muted">この記録にLINEを結びます。LINEで本人確認の画面が開きます。</p>
   <details><summary>メールを連携する</summary>
     <label for="accountLinkEmail">メールアドレス</label>
@@ -373,7 +373,7 @@ async function initialize(){
     await initializeLine();
     $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){const redirectUri=location.origin+location.pathname+(serverMode?'?server=1':'');liff.login({redirectUri:serverMode?MimioboAuth.lineRedirectUri(redirectUri):redirectUri});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
     if(liff.isLoggedIn()&&!(serverMode&&MimioboAuth.hasPendingLink()))await verifyLine();
-    else{$('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;}
+    else{$('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;if(serverMode&&MimioboAuth.hasPendingLink()&&$('accountLinkPending')){$('accountLinkPending').hidden=false;if($('accountLinkLine'))$('accountLinkLine').hidden=true;if($('accountStatus'))$('accountStatus').textContent='LINE連携の途中です。';$('accountLinkPendingGo').onclick=()=>$('connectLine').onclick();}}
   }catch(e){showAuthError(e.message);if(typeof $('connectLine').onclick==='function')$('connectLine').hidden=false;}
 }
 $('retrySave').onclick=()=>{const saved=saveProgress();let queued=true;if(saved&&answerSync&&progressStore.current)progressStore.current.answers.forEach((a,i)=>{if(a&&!sendAnswer(progressStore.current,i))queued=false;});if(saved&&queued){enqueueProblem=false;canAnswer=answerSync?.active!==false;$('retrySave').hidden=true;paintQuestions();}if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}};
