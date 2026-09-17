@@ -155,11 +155,19 @@ let serverMode=new URLSearchParams(location.search).get('server')==='1';
 let answerSync=null,lineReady=false,enqueueProblem=false;
 function showAuthError(code){$('saveStatus').textContent=window.MimioboMessages?.text(code)||'本人確認できませんでした。';}
 function syncState(state){document.documentElement.dataset.syncState=state;window.dispatchEvent(new CustomEvent('mimiobo:sync',{detail:{state}}));if(state==='pending'&&!saveProblem)$('saveStatus').textContent=window.MimioboMessages?.text('pending')||'自動保存しました。';if(state==='unauthorized'){canAnswer=false;paintQuestions();}}
-function setAccountState(loggedIn){
-  const in_=$('accountLoggedIn'),out_=$('accountLoggedOut'),status=$('accountStatus');
+function providerLabel(providers){
+  const names={email:'メール',line:'LINE'};const list=Array.isArray(providers)?providers.filter(p=>names[p]).map(p=>names[p]):[];
+  return list.length?`ログイン中（${list.join('＋')}）。`:'ログイン中。';
+}
+function setAccountState(loggedIn,providers){
+  const in_=$('accountLoggedIn'),out_=$('accountLoggedOut'),status=$('accountStatus'),linkBtn=$('accountLinkLine');
   if(in_)in_.hidden=!loggedIn;
   if(out_)out_.hidden=loggedIn;
-  if(status)status.textContent=loggedIn?'ログイン中。':'ログインすると別の端末でも同じ記録を見られます。';
+  if(status)status.textContent=loggedIn?providerLabel(providers):'ログインすると別の端末でも同じ記録を見られます。';
+  if(linkBtn&&Array.isArray(providers))linkBtn.hidden=providers.includes('line');
+}
+async function refreshProviders(){
+  try{const r=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});if(!r.ok)return;const d=await r.json();if(Array.isArray(d.providers))setAccountState(true,d.providers);}catch{}
 }
 document.querySelectorAll('.audioLink').forEach(a=>a.href='https://stand.fm/episodes/69dc7ba498eff95c436a4549');
 function paintQuestions(){
@@ -281,7 +289,8 @@ function loadClient(src){
 }
 async function openServerProgress(session){
   if(typeof session.userId!=='string'||!/^mimiobo-test-v1-[0-9a-f]{64}$/.test(session.storageKey))throw Error('SESSION_INVALID');
-  setAccountState(true);
+  setAccountState(true,session.providers);
+  if(!Array.isArray(session.providers))refreshProviders();
   answerSync?.stop();
   answerSync=MimioboSync.create({userId:session.userId,storageKey:session.storageKey,storage:localStorage,
     fetch:(url,options)=>fetch(url,{...options,signal:AbortSignal.timeout(15000)}),validate:ProgressStore.validate,
