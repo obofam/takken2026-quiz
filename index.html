@@ -492,6 +492,7 @@
   .result-btn:hover { opacity: .85; }
   .result-btn.primary { background: var(--cyan); color: #fff; }
   .result-btn.secondary { background: var(--gray-pill); color: var(--text); }
+  .result-btn:disabled { opacity: .4; cursor: not-allowed; }
 
   /* ── FOOTER ── */
   .site-footer {
@@ -640,6 +641,8 @@
     cursor: pointer; transition: all .15s; width: 100%; font-family: inherit;
   }
   .moshi-choice:hover { border-color: var(--cyan); background: var(--cyan-soft); }
+  .moshi-choice.is-picked { border-color: var(--cyan); background: var(--cyan-soft); }
+  .moshi-choice.is-picked .moshi-choice-num { background: var(--cyan); color: #fff; }
   .moshi-choice-num {
     flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
     background: var(--cyan-soft); color: var(--cyan-dark); font-weight: 800; font-size: .78rem;
@@ -676,6 +679,16 @@
 
   .moshi-point { font-size: .82rem; font-weight: 700; color: var(--cyan-dark); margin-bottom: 6px; }
   .moshi-source { font-size: .68rem; color: var(--muted); margin-top: 8px; }
+
+  .moshi-chip-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin: 12px 0; }
+  .moshi-chip {
+    width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line);
+    background: var(--surface); color: var(--muted); font-size: .74rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-family: inherit; transition: all .15s;
+  }
+  .moshi-chip.answered { background: var(--cyan); color: #fff; border-color: var(--cyan); }
+  .moshi-chip.current { box-shadow: 0 0 0 2px var(--cyan-dark); }
 </style>
 </head>
 <body>
@@ -1806,6 +1819,15 @@ function moshiTickTimer() {
 function renderMoshiQuestion() {
   const total = moshiSet.questions.length;
   const q = moshiSet.questions[moshiIdx];
+  const isLast = moshiIdx === total - 1;
+  const answeredCount = moshiAnswers.filter(a => a !== null).length;
+  const unansweredCount = total - answeredCount;
+  const chipsHtml = moshiSet.questions.map((_, i) => {
+    const cls = ["moshi-chip"];
+    if (moshiAnswers[i] !== null) cls.push("answered");
+    if (i === moshiIdx) cls.push("current");
+    return `<button type="button" class="${cls.join(" ")}" onclick="moshiJump(${i})">${i + 1}</button>`;
+  }).join("");
   document.getElementById("moshiBody").innerHTML = `
     <div class="moshi-head-row">
       <div class="quiz-breadcrumb">${moshiSet.title}・本番形式ミニ模試</div>
@@ -1815,9 +1837,10 @@ function renderMoshiQuestion() {
       </div>
     </div>
     <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" style="width:${(moshiIdx / total * 100)}%"></div></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${(answeredCount / total * 100)}%"></div></div>
       <div class="progress-txt">Q${moshiIdx + 1}/${total}</div>
     </div>
+    <div class="moshi-chip-row">${chipsHtml}</div>
     <div class="q-card">
       <div class="q-meta">
         <div class="q-num">Q${String(moshiIdx + 1).padStart(2, "0")}</div>
@@ -1826,11 +1849,18 @@ function renderMoshiQuestion() {
       <div class="q-text">${q.q}</div>
       <div class="moshi-choices">
         ${q.choices.map((c, i) => `
-          <button type="button" class="moshi-choice" onclick="moshiSelect(${i})">
+          <button type="button" class="moshi-choice${moshiAnswers[moshiIdx] === i ? " is-picked" : ""}" onclick="moshiSelect(${i})">
             <span class="moshi-choice-num">${i + 1}</span>
             <span>${c}</span>
           </button>
         `).join("")}
+      </div>
+      ${isLast && unansweredCount > 0 ? `<div class="knock-set-meta">未回答 ${unansweredCount}問（未回答は不正解として採点します）</div>` : ""}
+      <div class="result-actions">
+        <button type="button" class="result-btn secondary" onclick="moshiPrev()" ${moshiIdx === 0 ? "disabled" : ""}>&larr; 前へ</button>
+        ${isLast
+          ? `<button type="button" class="result-btn primary" onclick="finishMoshi()">採点する</button>`
+          : `<button type="button" class="result-btn primary" onclick="moshiNext()">次へ &rarr;</button>`}
       </div>
     </div>
   `;
@@ -1839,12 +1869,22 @@ function renderMoshiQuestion() {
 
 function moshiSelect(choiceIdx) {
   moshiAnswers[moshiIdx] = choiceIdx;
-  moshiIdx++;
-  if (moshiIdx >= moshiSet.questions.length) {
-    finishMoshi();
-  } else {
-    renderMoshiQuestion();
-  }
+  if (moshiIdx < moshiSet.questions.length - 1) moshiIdx++;
+  renderMoshiQuestion();
+}
+
+function moshiPrev() {
+  if (moshiIdx > 0) { moshiIdx--; renderMoshiQuestion(); }
+}
+
+function moshiNext() {
+  if (moshiIdx < moshiSet.questions.length - 1) { moshiIdx++; renderMoshiQuestion(); }
+}
+
+function moshiJump(i) {
+  if (i < 0 || i >= moshiSet.questions.length) return;
+  moshiIdx = i;
+  renderMoshiQuestion();
 }
 
 function moshiJudgeMsg(correct) {
