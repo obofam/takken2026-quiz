@@ -180,6 +180,8 @@
   }
   .back-btn:hover { background: var(--cyan-soft); border-color: var(--cyan); }
   .quiz-topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .review-btn { background: var(--cyan); border-color: var(--cyan); color: #fff; font-weight: 700; box-shadow: var(--shadow); }
+  .review-btn:hover { background: var(--cyan-dark); border-color: var(--cyan-dark); }
 
   .subj-head {
     text-align: center;
@@ -777,7 +779,7 @@
   <div id="quizPage" class="page">
     <div class="quiz-topbar">
       <button class="back-btn" onclick="confirmExitQuiz()">&larr; 戻る</button>
-      <button class="back-btn" id="knockReviewBtn" onclick="openKnockReview()" hidden>振り返り</button>
+      <button class="back-btn review-btn" id="knockReviewBtn" onclick="openKnockReview()" hidden>振り返り</button>
     </div>
     <div class="quiz-head">
       <div class="quiz-breadcrumb" id="quizBreadcrumb"></div>
