@@ -179,6 +179,7 @@
     margin-bottom: 16px;
   }
   .back-btn:hover { background: var(--cyan-soft); border-color: var(--cyan); }
+  .quiz-topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
 
   .subj-head {
     text-align: center;
@@ -774,7 +775,10 @@
 
   <!-- ========== QUIZ PAGE ========== -->
   <div id="quizPage" class="page">
-    <button class="back-btn" onclick="confirmExitQuiz()">&larr; 戻る</button>
+    <div class="quiz-topbar">
+      <button class="back-btn" onclick="confirmExitQuiz()">&larr; 戻る</button>
+      <button class="back-btn" id="knockReviewBtn" onclick="openKnockReview()" hidden>振り返り</button>
+    </div>
     <div class="quiz-head">
       <div class="quiz-breadcrumb" id="quizBreadcrumb"></div>
       <div class="quiz-mode-label" id="quizModeLabel"></div>
@@ -785,6 +789,15 @@
     </div>
     <div id="quizBody"></div>
     <div id="resultArea"></div>
+  </div>
+
+  <!-- ========== KNOCK REVIEW PAGE ========== -->
+  <div id="knockReviewPage" class="page">
+    <button class="back-btn" onclick="showPage('quizPage')">&larr; 戻る</button>
+    <div class="subj-head">
+      <h2>千本ノック 振り返り</h2>
+    </div>
+    <div id="knockReviewBody"></div>
   </div>
 
   <!-- ========== MOSHI（本番形式ミニ模試） ========== -->
@@ -1176,8 +1189,32 @@ const KNOCK_SECTION_KEYS = ["gyouhou", "kenri", "houreizei", "chokuzen"];
 let knockQueue = [];
 let knockPos = 0;
 let knockSession = null; // { answered, correct, setAnswered, setCorrect, sets }
+let knockFilter = "all"; // "all" | "mistakes"
 
-function buildKnockQueue() {
+function knockMistakesCount(sec) {
+  return Object.keys((STATE.mistakes[sec] || {})).length;
+}
+
+function knockMistakesTotal() {
+  return KNOCK_SECTION_KEYS.reduce((sum, sec) => sum + knockMistakesCount(sec), 0);
+}
+
+function buildKnockQueue(filter) {
+  filter = filter || "all";
+  if (filter === "mistakes") {
+    const list = [];
+    for (const sec of KNOCK_SECTION_KEYS) {
+      if (!SECTIONS[sec]) continue;
+      const mistakes = STATE.mistakes[sec] || {};
+      Object.keys(mistakes).forEach(key => {
+        const idx = Number(key);
+        const q = SECTIONS[sec].questions[idx];
+        if (!q) return;
+        list.push({ sec: sec, qIdx: idx, q: q.q, a: q.a, exp: q.exp });
+      });
+    }
+    return shuffle(list);
+  }
   const unseen = [], seen = [];
   for (const sec of KNOCK_SECTION_KEYS) {
     if (!SECTIONS[sec]) continue;
@@ -1190,19 +1227,26 @@ function buildKnockQueue() {
   return shuffle(unseen).concat(shuffle(seen)); // 未出題優先→ランダム
 }
 
-function startKnock() {
+function startKnock(filter) {
+  knockFilter = filter || "all";
   if (window.umami) umami.track("knock_start");
   currentSection = "__knock";
   currentMode = "knock";
-  knockQueue = buildKnockQueue();
+  knockQueue = buildKnockQueue(knockFilter);
   knockPos = 0;
   knockSession = { answered: 0, correct: 0, setAnswered: 0, setCorrect: 0, sets: 0 };
   document.getElementById("quizBreadcrumb").textContent = KNOCK.title;
-  document.getElementById("quizModeLabel").textContent = "エンドレス";
+  document.getElementById("quizModeLabel").textContent = knockFilter === "mistakes" ? "間違えた問題だけ" : "エンドレス";
   document.getElementById("resultArea").innerHTML = "";
   knockUpdateProgress();
   knockRenderQuestion();
   showPage("quizPage");
+}
+
+function startKnockMistakes() {
+  const count = knockMistakesTotal();
+  uTrack("knock_mistakes_start", { count: count });
+  startKnock("mistakes");
 }
 
 function knockUpdateProgress() {
@@ -1212,9 +1256,10 @@ function knockUpdateProgress() {
 }
 
 function knockRenderQuestion() {
-  if (knockPos >= knockQueue.length) { // プール切れ→組み直してエンドレス続行
-    knockQueue = buildKnockQueue();
+  if (knockPos >= knockQueue.length) { // プール切れ→組み直し（mistakesは空になったら終了）
+    knockQueue = buildKnockQueue(knockFilter);
     knockPos = 0;
+    if (knockFilter === "mistakes" && knockQueue.length === 0) { knockFinish(); return; }
   }
   const item = knockQueue[knockPos];
   const secTitle = SECTIONS[item.sec].title;
@@ -1291,9 +1336,13 @@ function knockAnswer(userAnswer) {
     }
   }
 
-  // ── 千本ノック通算の記録 ──
+  // ── 千本ノック通算の記録（分野別も加算） ──
   STATE.knock.totalAnswered++;
   if (correct) STATE.knock.totalCorrect++;
+  if (!STATE.knock.bySec) STATE.knock.bySec = {};
+  if (!STATE.knock.bySec[sec]) STATE.knock.bySec[sec] = { answered: 0, correct: 0 };
+  STATE.knock.bySec[sec].answered++;
+  if (correct) STATE.knock.bySec[sec].correct++;
   saveState();
   knockUpdateProgress();
 
@@ -1324,7 +1373,7 @@ function knockInterstitial() {
       <div class="result-title">${s.sets}セット目 終了</div>
       <div class="result-score">${s.setCorrect} / ${KNOCK.setSize}</div>
       <div class="result-pct">このセットの正答率 ${setPct}%</div>
-      <div class="knock-set-meta">本日通算 ${s.answered}問 ・ 正答率 ${Math.round(s.correct / s.answered * 100)}%</div>
+      <div class="knock-set-meta">本日通算 ${s.answered}問 ・ 正答率 ${Math.round(s.correct / s.answered * 100)}%${knockMistakesTotal() > 0 ? '<br>間違えた問題は「振り返り」から解き直せます' : ''}</div>
       <div class="result-actions">
         <button class="result-btn secondary" onclick="knockFinish()">今日はここまで</button>
         <button class="result-btn primary" onclick="knockContinue()">続ける</button>
@@ -1350,13 +1399,68 @@ function knockFinish() {
       <div class="result-title">おつかれさまでした</div>
       <div class="result-score">${s.correct} / ${s.answered}</div>
       <div class="result-pct">本日の正答率 ${pct}%</div>
-      <div class="knock-set-meta">間違えた問題は各科目の「間違えた問題だけ」に入っています。<br>累計 ${STATE.knock.totalAnswered}問ノック済み。</div>
+      <div class="knock-set-meta">間違えた問題は右上の「振り返り」から解き直せます。<br>累計 ${STATE.knock.totalAnswered}問ノック済み。</div>
       <div class="result-actions">
         <button class="result-btn primary" onclick="showTop()">TOPへ</button>
       </div>
     </div>
   `;
   document.getElementById("resultArea").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+/* ── 振り返り画面 ── */
+function openKnockReview() {
+  uTrack("knock_review_open");
+  renderKnockReview();
+  showPage("knockReviewPage");
+}
+
+function renderKnockReview() {
+  let barsHtml = "";
+  for (const sec of KNOCK_SECTION_KEYS) {
+    const title = SECTIONS[sec] ? SECTIONS[sec].title : sec;
+    const b = (STATE.knock.bySec && STATE.knock.bySec[sec]) || { answered: 0, correct: 0 };
+    if (!b.answered) {
+      barsHtml += `
+        <div class="bar-block">
+          <div class="bar-row">
+            <span class="bar-lbl">${title}</span>
+            <span class="bar-meta">未出題</span>
+          </div>
+        </div>`;
+    } else {
+      const pct = Math.round(b.correct / b.answered * 100);
+      barsHtml += `
+        <div class="bar-block">
+          <div class="bar-row">
+            <span class="bar-lbl">${title}</span>
+            <span class="bar-meta">${b.correct}/${b.answered} ・ ${pct}%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill ${pct >= 80 ? "master" : "cover"}" style="width:${pct}%"></div></div>
+        </div>`;
+    }
+  }
+
+  const mistakeCounts = KNOCK_SECTION_KEYS.map(sec => knockMistakesCount(sec));
+  const mistakeTotal = mistakeCounts.reduce((a, b) => a + b, 0);
+  const mistakeBreakdown = KNOCK_SECTION_KEYS.map((sec, i) => `${SECTIONS[sec].title} ${mistakeCounts[i]}`).join("・");
+
+  const k = STATE.knock;
+  const totalPct = k.totalAnswered > 0 ? Math.round(k.totalCorrect / k.totalAnswered * 100) : 0;
+
+  document.getElementById("knockReviewBody").innerHTML = `
+    <div class="mode-section-label">分野別の正答率</div>
+    <div class="subj-bars">${barsHtml}</div>
+
+    <div class="mode-section-label">間違えた問題</div>
+    <div class="knock-set-meta">${mistakeBreakdown}</div>
+    <div class="result-actions" style="margin-top:10px">
+      <button class="result-btn primary" onclick="startKnockMistakes()" ${mistakeTotal === 0 ? "disabled" : ""}>${mistakeTotal === 0 ? "間違いはまだありません" : `間違えた問題だけを解く（${mistakeTotal}問）`}</button>
+    </div>
+
+    <div class="mode-section-label">累計</div>
+    <div class="knock-set-meta">累計 ${k.totalAnswered}問ノック済み ・ 通算正答率 ${totalPct}% ・ ベストセット ${k.bestSetPct || 0}%</div>
+  `;
 }
 
 function toggleBuyGuide() {
@@ -1491,7 +1595,10 @@ function makeEmptyState() {
     state.coverage[k] = { seen: {}, laps: 0 }; // 今の周で解いた問題 / 完走した周数
     state.everWrong[k] = {};                   // これまで一度でも間違えた問題
   }
-  state.knock = { totalAnswered: 0, totalCorrect: 0, bestSetPct: 0 }; // 千本ノック通算
+  state.knock = { totalAnswered: 0, totalCorrect: 0, bestSetPct: 0, bySec: {} }; // 千本ノック通算
+  for (const k of KNOCK_SECTION_KEYS) {
+    state.knock.bySec[k] = { answered: 0, correct: 0 };
+  }
   return state;
 }
 
@@ -1817,6 +1924,10 @@ function renderMoshiResult(correct, total, elapsedSec, fieldStats) {
 function showPage(id) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  if (id === "quizPage") {
+    const btn = document.getElementById("knockReviewBtn");
+    if (btn) btn.hidden = (currentMode !== "knock");
+  }
   window.scrollTo(0, 0);
 }
 
