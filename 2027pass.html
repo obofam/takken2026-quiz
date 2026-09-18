@@ -30,6 +30,15 @@
 
   section{padding:48px 0}
   .band-soft{background:var(--accent-soft)}
+  /* 差し色ライム＝安心・確約の強調（無料更新の項だけ） */
+  .hl{background:#F4FBD2;border:2px solid #D6F034;border-radius:18px;padding:28px 22px 22px;margin:0 0 4px}
+  .hl .eyebrow{color:#4F6300}
+  .hl h2{margin-top:6px}
+  .hl .hl-badge{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#4F6300;background:#fff;
+    border:1px solid #D6F034;border-radius:999px;padding:8px 16px;margin:0 0 14px}
+  .hl .hl-badge .ic{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#D6F034;color:#4F6300;font-size:13px;font-weight:900;line-height:1}
+  .hl .hl-center{text-align:center}
+  .hl p.note{color:#4F6300;opacity:.85}
 
   .badge{display:inline-block;font-size:13px;font-weight:700;color:var(--accent);background:#fff;
     border:1px solid var(--accent);border-radius:999px;padding:8px 18px;margin:0 0 22px}
@@ -135,11 +144,14 @@
 
   <section class="band-white">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">02 — FREE UPDATE</p>
-      <h2><span style="display:inline-block;white-space:nowrap">2027年度版が完成したら、</span><span style="display:inline-block;white-space:nowrap">無料で更新します</span></h2>
-      <p>「今2026年度版を買っても、来年また買い直すことになるのでは」という点は心配いりません。上の対象教材を購入いただいた方には、2027年度対応版が完成したあと、無料で最新版をお渡しします。</p>
-      <p>今は2026年度版で復習を始めて、2027年度版が出たらそのまま最新版へ、という形です。</p>
-      <p class="note">※ 無料更新の対象は、対象教材の2027年度対応版です。新しく追加される別の商品・サービスは対象外です。</p>
+      <div class="hl">
+        <div class="hl-center"><span class="hl-badge"><span class="ic" aria-hidden="true">✓</span>買い直しは不要です</span></div>
+        <p class="eyebrow eyebrow-center">02 — FREE UPDATE</p>
+        <h2><span style="display:inline-block;white-space:nowrap">2027年度版が完成したら、</span><span style="display:inline-block;white-space:nowrap">無料で更新します</span></h2>
+        <p>「今2026年度版を買っても、来年また買い直すことになるのでは」という点は心配いりません。上の対象教材を購入いただいた方には、2027年度対応版が完成したあと、無料で最新版をお渡しします。</p>
+        <p>今は2026年度版で復習を始めて、2027年度版が出たらそのまま最新版へ、という形です。</p>
+        <p class="note">※ 無料更新の対象は、対象教材の2027年度対応版です。新しく追加される別の商品・サービスは対象外です。</p>
+      </div>
     </div>
   </section>
 
