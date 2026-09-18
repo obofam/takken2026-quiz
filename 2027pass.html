@@ -54,9 +54,15 @@
     padding:22px 20px}
   .card .label{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:0 0 10px}
   .card .name{font-size:17px;font-weight:700;line-height:1.7;margin:0 0 14px}
-  .card .price{font-size:17px;margin:0 0 16px}
-  .card .price s{color:var(--muted);text-decoration:line-through;margin-right:10px}
-  .card .price strong{font-weight:700;font-size:1.15em}
+  .card .price{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin:0 0 18px}
+  .card .p-was,.card .p-now{display:flex;flex-direction:column;gap:2px}
+  .card .p-lab{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+  .card .p-now .p-lab{color:var(--accent)}
+  .card .p-was s{color:var(--muted);text-decoration:line-through;font-size:17px}
+  .card .p-now strong{font-weight:900;font-size:28px;line-height:1.2;letter-spacing:-.01em}
+  .card .p-now strong small{font-size:15px;font-weight:700;margin-left:2px}
+  .card .p-arrow{width:10px;height:10px;border-top:3px solid var(--accent);border-right:3px solid var(--accent);transform:rotate(45deg);margin:0 2px;flex:none}
+  .card .p-off{font-size:12px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;background:#fff;align-self:center}
   .card .btn{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:15px;
     text-decoration:none;border-radius:999px;padding:12px 26px}
 
@@ -89,31 +95,31 @@
         <div class="card">
           <p class="label">GYOHO</p>
           <p class="name">宅建業法 総まとめPDF＋一問一答50問</p>
-          <p class="price"><s>980円</s><strong>500円</strong></p>
+          <div class="price"><div class="p-was"><span class="p-lab">通常価格</span><s>980円</s></div><div class="p-arrow" aria-hidden="true"></div><div class="p-now"><span class="p-lab">再挑戦者 限定価格</span><strong>500<small>円</small></strong></div><span class="p-off">480円引き</span></div>
           <a class="btn" href="https://note.com/fond_bison5155/n/n21bbbcab9add?magazine_key=m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="pass2027_note_click" data-umami-event-title="gyoho">noteで購入する</a>
         </div>
         <div class="card">
           <p class="label">KENRI</p>
           <p class="name">権利関係 総まとめPDF＋一問一答52問</p>
-          <p class="price"><s>980円</s><strong>500円</strong></p>
+          <div class="price"><div class="p-was"><span class="p-lab">通常価格</span><s>980円</s></div><div class="p-arrow" aria-hidden="true"></div><div class="p-now"><span class="p-lab">再挑戦者 限定価格</span><strong>500<small>円</small></strong></div><span class="p-off">480円引き</span></div>
           <a class="btn" href="https://note.com/fond_bison5155/n/n10bb0e89fe64?magazine_key=m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="pass2027_note_click" data-umami-event-title="kenri">noteで購入する</a>
         </div>
         <div class="card">
           <p class="label">HOREI / ZEI</p>
           <p class="name">法令制限＋税 総まとめPDF＋○×問題集60問</p>
-          <p class="price"><s>980円</s><strong>500円</strong></p>
+          <div class="price"><div class="p-was"><span class="p-lab">通常価格</span><s>980円</s></div><div class="p-arrow" aria-hidden="true"></div><div class="p-now"><span class="p-lab">再挑戦者 限定価格</span><strong>500<small>円</small></strong></div><span class="p-off">480円引き</span></div>
           <a class="btn" href="https://note.com/fond_bison5155/n/nd131a0a57d4b?magazine_key=m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="pass2027_note_click" data-umami-event-title="horei-zei">noteで購入する</a>
         </div>
         <div class="card">
           <p class="label">MONDAI</p>
           <p class="name">スマホで解ける一問一答問題集 230問以上（業法・権利・法令制限・税）</p>
-          <p class="price"><s>980円</s><strong>500円</strong></p>
+          <div class="price"><div class="p-was"><span class="p-lab">通常価格</span><s>980円</s></div><div class="p-arrow" aria-hidden="true"></div><div class="p-now"><span class="p-lab">再挑戦者 限定価格</span><strong>500<small>円</small></strong></div><span class="p-off">480円引き</span></div>
           <a class="btn" href="https://note.com/fond_bison5155/n/nb59bbfa5b01d?magazine_key=m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="pass2027_note_click" data-umami-event-title="mondai">noteで購入する</a>
         </div>
         <div class="card">
           <p class="label">CHOKUZEN</p>
           <p class="name">直前対策 総まとめPDF＋一問一答70問</p>
-          <p class="price"><s>2,200円</s><strong>1,200円</strong></p>
+          <div class="price"><div class="p-was"><span class="p-lab">通常価格</span><s>2,200円</s></div><div class="p-arrow" aria-hidden="true"></div><div class="p-now"><span class="p-lab">再挑戦者 限定価格</span><strong>1,200<small>円</small></strong></div><span class="p-off">1,000円引き</span></div>
           <a class="btn" href="https://note.com/fond_bison5155/n/na9740956174c?magazine_key=m81b6c01b758f" target="_blank" rel="noopener" data-umami-event="pass2027_note_click" data-umami-event-title="chokuzen">noteで購入する</a>
         </div>
       </div>
