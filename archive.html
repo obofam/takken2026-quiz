@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>名作アーカイブ｜耳で覚える宅建</title>
+<title>ずっと使える回｜耳で覚える宅建</title>
 
 <!-- Umami analytics (トラッカー等と同一ID・パス/ホスト名で分離) -->
 <script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
 
 <!-- ============================================================
@@ -60,14 +60,14 @@
       desc:"超頻出。図ではなく耳で入れると、定着が速いところ。",
       url:SFM+"69ddd8b7e60f6035692bb3dd", note:NOTE+"n8d0e42f0d1e1" },
     { catch:"家は住んだまま担保になる", title:"抵当権の設定・順位・法定地上権",
-      desc:"苦手にする人が多い分、ここを通すと差がつきます。",
+      desc:"苦手にする人が多い分、ここを通しておくと安心です。",
       url:SFM+"69ddd8f0a46200ccc5f4ace0", note:NOTE+"n755e2c7f92d6" },
   ];
 
   // ── 3. 配点が大きい「宅建業法」のはずせない回 ──
   const GYOHO = [
     { catch:"3%+6万円だけでは解けない", title:"報酬計算の落とし穴",
-      desc:"覚えれば確実に取れる。差がつく計算問題です。",
+      desc:"覚えれば確実に取れる、得点源の計算問題です。",
       url:SFM+"69dc7c44f87676817ebf104a", note:NOTE+"nc3ba012bba47" },
     { catch:"プロが素人に負ける8つのルール", title:"自ら売主の8種制限",
       desc:"出題定番。横断で理解しておきたいところ。",
@@ -80,182 +80,190 @@
 
 <style>
   :root{
-    --cyan:#17C5E8; --cyan-dark:#0B93B0; --cyan-soft:#E4F6FB;
-    --lime:#D6F034; --lime-ink:#4F6300; --lime-soft:#F4FBD2;
-    --surface:#FAFAF9; --card:#FFF; --text:#141B21; --muted:#6B7A85; --line:#E8EBEC;
-    --shadow:0 1px 2px rgba(20,27,33,.04);
-    --shadow-lg:0 12px 34px rgba(20,27,33,.10);
+    --bg:#ffffff;
+    --text:#141B21;
+    --muted:#6B6B76;
+    --border:#ececec;
+    --accent:#17C5E8;
+    --accent-soft: color-mix(in srgb, #17C5E8 12%, white);
     --font:"Noto Sans JP",system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;
-    --display:"Outfit","Noto Sans JP",system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{background:var(--surface);color:var(--text);font-family:var(--font);line-height:1.9;-webkit-font-smoothing:antialiased}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.9;-webkit-font-smoothing:antialiased}
   a{color:inherit}
-  .wrap{max-width:640px;margin:0 auto;padding:0 20px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 24px}
 
-  /* header */
-  .top{padding:22px 0 8px}
-  .back{display:inline-block;font-size:.78rem;font-weight:700;color:var(--muted);text-decoration:none}
-  .back:hover{color:var(--cyan-dark)}
+  .top{padding:22px 0 0}
+  .back{display:inline-block;font-size:15px;font-weight:700;color:var(--muted);text-decoration:none}
 
-  .hero{padding:22px 0 6px}
-  .pill{display:inline-block;font-family:var(--display);font-weight:600;font-size:.66rem;letter-spacing:.22em;
-    color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 14px;margin:0 0 1em}
-  h1{font-size:clamp(1.5rem,7vw,1.9rem);font-weight:900;line-height:1.5;letter-spacing:.01em;margin:0 0 .6em}
-  .lead{color:var(--muted);font-size:.92rem;margin:0}
+  section{padding:40px 0}
+  .band-soft{background:var(--accent-soft)}
 
-  .evergreen{background:var(--cyan-soft);border-radius:14px;padding:16px 18px;font-size:.85rem;color:var(--text);
-    margin:20px 0 0;line-height:1.85}
-  .evergreen b{color:var(--cyan-dark);font-weight:800}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin:0 0 12px}
+  .eyebrow-center{text-align:center}
 
-  .proto{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:12px 15px;font-size:.78rem;
-    color:var(--muted);margin:14px 0 0;line-height:1.8}
+  h1{font-size:36px;font-weight:900;line-height:1.5;margin:0 0 20px}
+  h2{font-size:32px;font-weight:900;line-height:1.4;text-align:center;margin:0 0 24px}
 
-  .band{padding:44px 0 0}
-  .band:last-of-type{padding-bottom:8px}
-  .sec-label{font-family:var(--display);font-weight:600;font-size:.68rem;letter-spacing:.2em;
-    color:var(--muted);margin:0 0 .5em}
-  .sec-title{font-size:1.14rem;font-weight:900;line-height:1.5;margin:0 0 .25em}
-  .sec-sub{color:var(--muted);font-size:.83rem;margin:0 0 1.2em}
+  p{margin:0 0 20px}
+  p:last-child{margin-bottom:0}
 
-  /* episode cards */
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
-  .ep{padding:18px 18px;margin-bottom:12px}
-  .ep.top{display:flex;gap:14px;align-items:flex-start}
-  .rank{flex:none;width:32px;height:32px;border-radius:50%;background:var(--cyan);color:#fff;
-    font-family:var(--display);font-weight:800;font-size:.92rem;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .lead{font-size:17px;color:var(--muted);margin:0}
+
+  .evergreen{background:var(--accent-soft);border-radius:12px;padding:18px 20px;font-size:15px;color:var(--text);
+    margin:24px 0 0;line-height:1.85}
+  .evergreen b{color:var(--accent);font-weight:700}
+
+  .sec-sub{color:var(--muted);font-size:15px;text-align:center;margin:0 0 28px}
+
+  .epcard{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 8px rgba(20,27,33,.04);
+    padding:22px 20px;margin-bottom:16px}
+  .epcard.top{display:flex;gap:16px;align-items:flex-start}
+  .rank{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;
+    font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center;margin-top:2px}
   .ep-body{flex:1}
-  .ep-catch{font-size:.78rem;color:var(--cyan-dark);font-weight:800;margin:0 0 .3em}
-  .ep-title{font-size:1.02rem;font-weight:800;line-height:1.6;margin:0}
-  .ep-desc{font-size:.83rem;color:var(--muted);margin:.5em 0 0;line-height:1.8}
-  .ep-voice{font-size:.82rem;color:var(--text);margin:.8em 0 0;padding:10px 13px;
-    background:var(--lime-soft);border-radius:10px;line-height:1.75}
-  .ep-voice::before{content:"合格者の声　";font-weight:800;color:var(--lime-ink);font-size:.74rem}
+  .ep-catch{font-size:15px;color:var(--accent);font-weight:700;margin:0 0 6px}
+  .ep-title{font-size:17px;font-weight:700;line-height:1.6;margin:0}
+  .ep-desc{font-size:15px;color:var(--muted);margin:10px 0 0;line-height:1.8}
+  .ep-voice{font-size:15px;color:var(--text);margin:14px 0 0;padding:12px 14px;
+    background:#F4FBD2;border-radius:10px;line-height:1.8}
+  .ep-voice::before{content:"合格者の声　";font-weight:700;color:#4F6300;font-size:13px}
 
-  .ep-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-  .ep-actions a{text-decoration:none;font-weight:800;border-radius:999px;padding:8px 16px;font-size:.8rem;
-    transition:transform .15s,box-shadow .15s}
-  .ep-actions a:active{transform:scale(.97)}
-  .btn-listen{background:var(--cyan);color:#fff;box-shadow:0 3px 10px rgba(23,197,232,.32)}
-  .btn-note{background:#fff;color:var(--text);border:1px solid var(--line)}
+  .ep-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  .ep-actions a{text-decoration:none;font-weight:700;border-radius:999px;padding:10px 20px;font-size:15px}
+  .btn-listen{background:var(--accent);color:#fff}
+  .btn-note{background:#fff;color:var(--accent);border:1px solid var(--accent)}
 
-  /* generic CTA boxes */
-  .box{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:16px;
-    padding:22px 20px;text-align:center;box-shadow:var(--shadow)}
-  .box p{margin:0 0 12px;font-size:.86rem;color:var(--muted)}
-  .btn{display:inline-block;text-decoration:none;font-weight:800;border-radius:999px;transition:transform .15s,box-shadow .15s}
-  .btn:active{transform:scale(.97)}
-  .btn-primary{background:var(--cyan);color:#fff;padding:13px 26px;font-size:.9rem;box-shadow:0 4px 14px rgba(23,197,232,.32)}
-  .btn-ghost{background:#fff;color:var(--text);border:1px solid var(--line);padding:12px 24px;font-size:.88rem}
+  .ctabox{background:#fff;border:1px solid var(--border);border-radius:14px;padding:26px 22px;text-align:center;
+    box-shadow:0 2px 8px rgba(20,27,33,.04)}
+  .ctabox p{font-size:15px;color:var(--muted)}
 
-  /* kit form */
-  .kit-box{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:16px;
-    padding:24px 20px;box-shadow:var(--shadow)}
-  .kit-box h2{font-size:1rem;font-weight:900;line-height:1.6;margin:0 0 .6em}
-  .kit-box .desc{font-size:.85rem;color:var(--muted);margin:0 0 1.1em;line-height:1.85}
-  .kit-form{display:flex;gap:10px;flex-wrap:wrap}
-  .kit-form input[type=email]{flex:1 1 200px;min-width:0;padding:13px 18px;font-size:16px;
-    font-family:var(--font);color:var(--text);background:var(--surface);
-    border:1px solid var(--line);border-radius:999px}
-  .kit-form input[type=email]:focus{outline:2px solid var(--cyan);outline-offset:1px;background:#fff}
-  .kit-form input::placeholder{color:var(--muted)}
-  .kit-form .btn{border:0;cursor:pointer;font-family:var(--font);flex-shrink:0;width:100%;margin-top:2px}
-  @media(min-width:420px){.kit-form .btn{width:auto;margin-top:0}}
-  .kit-form .btn:disabled{opacity:.6;transform:none}
-  .kit-note{font-size:.72rem;color:var(--muted);margin:.9em 0 0}
-  .kit-msg{font-size:.85rem;margin:0;color:var(--text);background:var(--lime-soft);border-radius:10px;padding:14px 16px;line-height:1.85}
-  .kit-err{font-size:.8rem;color:#B0483B;margin:.8em 0 0}
+  .mailbox{background:#fff;border:1px solid var(--border);border-radius:16px;padding:26px 22px;text-align:center;
+    box-shadow:0 2px 8px rgba(20,27,33,.04)}
+  .mailbox p{font-size:15px;color:var(--muted)}
+  .mail-note{font-size:13px;margin:16px 0 0}
 
-  hr.div{border:none;border-top:1px solid var(--line);margin:38px 0 0}
-  footer{padding:22px 0 56px;font-size:.76rem;color:var(--muted);line-height:1.8;text-align:center}
-  footer .small{font-size:.72rem;color:var(--muted);opacity:.8;margin-top:10px;display:block}
+  .btn-fill{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:15px;
+    text-decoration:none;border-radius:999px;padding:12px 28px}
+  .btn-ghost{display:inline-block;background:#fff;color:var(--accent);border:2px solid var(--accent);font-weight:700;
+    font-size:15px;border-radius:999px;padding:12px 26px;text-decoration:none}
+
+  footer{text-align:center;padding:40px 0 56px;font-size:13px;color:var(--muted)}
+  footer p{font-size:13px}
+  footer .foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin:20px 0 0;padding:0;list-style:none}
+  footer .foot-links a{color:var(--accent);text-decoration:none;font-weight:700;font-size:14px}
+  footer .foot-links a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
-  <div class="wrap">
+<main>
 
-    <div class="top"><a class="back" href="https://www.mimiobo.com/">← 耳で覚える宅建</a></div>
+  <div class="wrap top"><a class="back" href="https://www.mimiobo.com/">← 耳で覚える宅建</a></div>
 
-    <header class="hero">
-      <span class="pill">ARCHIVE</span>
-      <h1>ずっと使える、宅建の名回。</h1>
+  <section class="band-white">
+    <div class="wrap">
+      <p class="eyebrow">ARCHIVE</p>
+      <h1>ずっと使える回だけ、集めました。</h1>
       <p class="lead">今年の復習にも、来年の予習にも。続けている人がよく聴いている回と、独学でこぼれやすい回を、静かに選んで並べました。迷ったら、まずはこの数本から。</p>
 
       <div class="evergreen">
         ここで選んだのは、<b>法改正がない限り毎年通用する“骨組み”の回</b>です。年ごとに変わる税の数字・統計・改正点は、あえて入れていません。来年も再来年も、最初の一歩に使えます。
       </div>
 
-      <div class="proto">⚠ これは仮ページです。掲載する回・URLは、ファイル先頭の「エピソード表」を編集すると差し替わります（実在タイトルで仮選定中）。</div>
-    </header>
+      <!-- ⚠ これは仮ページです。掲載する回・URLは、ファイル先頭の「エピソード表」を編集すると差し替わります（実在タイトルで仮選定中）。 -->
+    </div>
+  </section>
 
-    <section class="band">
-      <p class="sec-label">01 — TOP 3</p>
-      <h2 class="sec-title">リスナーが選んだ神回 TOP3</h2>
+  <section class="band-soft">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-center">01 — TOP 3</p>
+      <h2>よく聴かれている回 TOP3</h2>
       <p class="sec-sub">よく聴かれている順に。最初の一本にどうぞ。</p>
       <div id="top3"></div>
-    </section>
+    </div>
+  </section>
 
-    <section class="band">
-      <p class="sec-label">02 — VOICES</p>
-      <h2 class="sec-title">合格者が選んだ、心に残った回</h2>
+  <section class="band-white" id="voicesSection">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-center">02 — VOICES</p>
+      <h2>合格者が選んだ、心に残った回</h2>
       <p class="sec-sub">受かった人が「これが効いた」と挙げてくれた回です。</p>
       <div id="goukaku"></div>
-    </section>
+    </div>
+  </section>
 
-    <section class="band">
-      <p class="sec-label">03 — 宅建業法</p>
-      <h2 class="sec-title">配点が大きい「宅建業法」のはずせない回</h2>
+  <section class="band-soft">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-center">03 — GYOHO</p>
+      <h2>配点が大きい「宅建業法」のはずせない回</h2>
       <p class="sec-sub">いちばん点になる科目。ここを固めると安定します。</p>
       <div id="gyoho"></div>
-    </section>
+    </div>
+  </section>
 
-    <section class="band">
-      <p class="sec-label">04 — 権利関係</p>
-      <h2 class="sec-title">独学者がつまずく「権利関係」の重要回</h2>
-      <p class="sec-sub">差がつくところ。耳で先に通しておくと、後がラクです。</p>
+  <section class="band-white">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-center">04 — KENRI</p>
+      <h2>独学者がつまずく「権利関係」の重要回</h2>
+      <p class="sec-sub">独学でこぼれやすいところ。耳で先に通しておくと、後がラクです。</p>
       <div id="kenri"></div>
-    </section>
+    </div>
+  </section>
 
-    <section class="band">
-      <div class="box">
+  <section class="band-soft">
+    <div class="wrap">
+      <div class="ctabox">
         <p>その年の全エピソードを記録しながら回したい方へ</p>
-        <a class="btn btn-ghost" id="trackerLink" href="#" target="_blank" rel="noopener" data-umami-event="to_tracker">2026年のアーカイブ（進捗トラッカー）へ →</a>
+        <a class="btn-ghost" id="trackerLink" href="#" target="_blank" rel="noopener" data-umami-event="to_tracker">2026年のアーカイブ（進捗トラッカー）へ</a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- 2027年度版・先行案内フォーム（Substackの登録ページへ遷移。2026-09-02: Kit→Substackへ移行）
-         id="mail2027" はLINEキーワード応答からのアンカーリンク先。変更しないこと -->
-    <section class="band" id="mail2027">
-      <div class="kit-box" id="kitBox">
-        <p class="sec-label" style="margin-bottom:.4em">GET NOTIFIED</p>
-        <h2>耳で覚える宅建2027 超・先行案内</h2>
-        <p class="desc">2027年度版は、区分所有法の大改正に対応した新録でパワーアップ予定。配信開始や先行特典のお知らせを、どこよりも早くメールでお届けします。</p>
-
-        <a class="btn btn-primary" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="archive_mail2027_click">先行案内を受け取る（無料）</a>
-        <p class="kit-note">登録ページ（Substack）が開きます。メールアドレスを入れて「登録」を押してください。アプリやシェアの案内が出たら「スキップ」で大丈夫です。いつでも解除できます。</p>
+  <!-- 2027年度版・先行案内フォーム（Substackの登録ページへ遷移。2026-09-02: Kit→Substackへ移行）
+       id="mail2027" はLINEキーワード応答からのアンカーリンク先。変更しないこと -->
+  <section class="band-white" id="mail2027">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-center">NEWSLETTER</p>
+      <h2>耳で覚える宅建2027 先行案内</h2>
+      <div class="mailbox">
+        <p>2027年度版は新録で準備中です。配信開始や先行案内を、メールでお知らせします。</p>
+        <a class="btn-fill" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="archive_mail2027_click">先行案内を受け取る（無料）</a>
+        <p class="mail-note">登録ページ（Substack）が開きます。メールアドレスを入れて「登録」を押してください。アプリやシェアの案内が出たら「スキップ」で大丈夫です。いつでも解除できます。</p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <hr class="div">
-    <footer>
-      耳で覚える宅建　名作アーカイブ（仮）<br>
-      <span class="small">選定は配信データ（再生率・熱心度など）をもとにしています。</span>
-    </footer>
-  </div>
+  <footer>
+    <div class="wrap">
+      <p>耳で覚える宅建　アーカイブ<br>
+      選定は配信データ（再生率・熱心度など）をもとにしています。</p>
+      <ul class="foot-links">
+        <li><a href="https://www.mimiobo.com/" target="_blank" rel="noopener">公式サイト</a></li>
+        <li><a href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener">Spotify</a></li>
+        <li><a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener">Apple Podcasts</a></li>
+        <li><a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener">Amazon Music</a></li>
+        <li><a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener">stand.fm</a></li>
+        <li><a href="https://x.com/takken_kei" target="_blank" rel="noopener">X</a></li>
+        <li><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener">LINE</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</main>
 
 <script>
   function actions(e, section){
     return `<div class="ep-actions">
       <a class="btn-listen" href="${e.url}" target="_blank" rel="noopener"
-         data-umami-event="shinkai_listen" data-umami-event-section="${section}" data-umami-event-title="${e.title}">▶ 聴く</a>
+         data-umami-event="shinkai_listen" data-umami-event-section="${section}" data-umami-event-title="${e.title}">聴く</a>
       <a class="btn-note" href="${e.note}" target="_blank" rel="noopener"
-         data-umami-event="shinkai_note" data-umami-event-section="${section}" data-umami-event-title="${e.title}">📝 図解・要点</a>
+         data-umami-event="shinkai_note" data-umami-event-section="${section}" data-umami-event-title="${e.title}">図解・要点</a>
     </div>`;
   }
   function card(e, section){
     const d = document.createElement('div');
-    d.className = 'ep card';
+    d.className = 'epcard';
     const voice = e.voice ? `<p class="ep-voice">${e.voice}</p>` : "";
     d.innerHTML = `<p class="ep-catch">${e.catch}</p>
                    <p class="ep-title">${e.title}</p>
@@ -266,7 +274,7 @@
   }
   function topCard(e, rank){
     const d = document.createElement('div');
-    d.className = 'ep card top';
+    d.className = 'epcard top';
     d.innerHTML = `<div class="rank">${rank}</div>
                    <div class="ep-body">
                      <p class="ep-catch">${e.catch}</p>
@@ -277,7 +285,15 @@
     return d;
   }
   TOP3.forEach((e,i) => document.getElementById('top3').appendChild(topCard(e, i+1)));
-  GOUKAKU.forEach(e => document.getElementById('goukaku').appendChild(card(e,'goukaku')));
+
+  // 合格者の声が全て「（仮）」の間はセクションごと非表示。1件でも本物があれば表示し、（仮）の項目だけ描画しない。
+  const realGoukaku = GOUKAKU.filter(e => !e.voice.startsWith("（仮）"));
+  if (realGoukaku.length === 0) {
+    document.getElementById('voicesSection').style.display = 'none';
+  } else {
+    realGoukaku.forEach(e => document.getElementById('goukaku').appendChild(card(e,'goukaku')));
+  }
+
   KENRI.forEach(e => document.getElementById('kenri').appendChild(card(e,'kenri')));
   GYOHO.forEach(e => document.getElementById('gyoho').appendChild(card(e,'gyoho')));
   document.getElementById('trackerLink').href = TRACKER_URL;
