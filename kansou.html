@@ -9,7 +9,7 @@
 <script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@600&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 
 <style>
   :root{
@@ -180,6 +180,13 @@
   });
   bgImg.src = "img/kansou_bg.png";
 
+  var hankoImg = new Image();
+  var hankoReady = new Promise(function(resolve){
+    hankoImg.onload = function(){ resolve(); };
+    hankoImg.onerror = function(){ resolve(); };
+  });
+  hankoImg.src = "img/kansou_hanko.png";
+
   function fitFont(ctx, text, weight, size, maxWidth){
     var s = size;
     ctx.font = weight + " " + s + "px 'Noto Sans JP'";
@@ -244,33 +251,49 @@
     ctx.font = "700 36px 'Noto Sans JP'";
     ctx.fillText("2026年10月18日", W / 2, 960);
 
-    // 発行（ライムの丸の左）
-    ctx.fillStyle = "#6B6B76";
-    ctx.font = "400 28px 'Noto Sans JP'";
-    ctx.fillText("発行　耳で覚える宅建2026", 430, 1142);
+    // ひとこと（手書き風）
+    ctx.fillStyle = "#3A4148";
+    ctx.font = "600 36px 'Klee One'";
+    ctx.fillText("毎週、本当によく続けてこられました。", W / 2, 1040);
 
-    // 達成の印（画像のライムの丸の中を塗る）
+    // 署名
+    ctx.fillStyle = "#141B21";
+    ctx.font = "600 30px 'Klee One'";
+    ctx.fillText("耳で覚える宅建", 430, 1122);
+    ctx.font = "600 44px 'Klee One'";
+    ctx.fillText("松永 慶", 430, 1180);
+
+    // 完走ハンコ（画像があれば画像、なければライムの丸）
     var cx = 905, cy = 1132;
-    ctx.beginPath();
-    ctx.arc(cx, cy, 88, 0, Math.PI * 2);
-    ctx.fillStyle = "#D6F034";
-    ctx.fill();
-    ctx.fillStyle = "#4F6300";
-    ctx.font = "900 48px 'Noto Sans JP'";
-    ctx.textBaseline = "middle";
-    ctx.fillText("完走", cx, cy + 2);
+    if(hankoImg.complete && hankoImg.naturalWidth > 0){
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(-0.12);
+      ctx.drawImage(hankoImg, -110, -110, 220, 220);
+      ctx.restore();
+    } else {
+      ctx.beginPath();
+      ctx.arc(cx, cy, 88, 0, Math.PI * 2);
+      ctx.fillStyle = "#D6F034";
+      ctx.fill();
+      ctx.fillStyle = "#4F6300";
+      ctx.font = "900 48px 'Noto Sans JP'";
+      ctx.textBaseline = "middle";
+      ctx.fillText("完走", cx, cy + 2);
+    }
     ctx.textBaseline = "alphabetic";
   }
 
   function waitForFonts(){
     if(!("fonts" in document)){
-      return bgReady;
+      return Promise.all([bgReady, hankoReady]);
     }
     return Promise.all([
       document.fonts.load("700 28px 'Noto Sans JP'"),
       document.fonts.load("900 128px 'Noto Sans JP'"),
-      document.fonts.load("400 34px 'Noto Sans JP'")
-    ]).then(function(){ return document.fonts.ready; }).then(function(){ return bgReady; });
+      document.fonts.load("400 34px 'Noto Sans JP'"),
+      document.fonts.load("600 36px 'Klee One'", "毎週松永慶耳で覚える宅建続")
+    ]).then(function(){ return document.fonts.ready; }).then(function(){ return Promise.all([bgReady, hankoReady]); });
   }
 
   makeBtn.addEventListener("click", function(){
