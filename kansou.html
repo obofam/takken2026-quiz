@@ -264,16 +264,22 @@
     ctx.fillText("松永 慶", W / 2, 1160);
 
     // 完走ハンコ（画像があれば画像、なければライムの丸）
-    var cx = 905, cy = 1150;
+    // 背景画像のライムの丸線を白で消す
+    ctx.beginPath();
+    ctx.arc(905, 1132, 106, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+
+    var cx = 900, cy = 1140;
     if(hankoImg.complete && hankoImg.naturalWidth > 0){
       // うさとりがハンコを持つ画像（520px・バッジ中心は(256,379)）を右に少し傾けて置く
-      var size = 240, k = size / 520;
+      var size = 270, k = size / 520;
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(0.14);
       ctx.drawImage(hankoImg, -size / 2, -size / 2, size, size);
       ctx.fillStyle = "#4F6300";
-      ctx.font = "900 40px 'Noto Sans JP'";
+      ctx.font = "900 46px 'Noto Sans JP'";
       ctx.textBaseline = "middle";
       ctx.fillText("完走", (256 - 260) * k, (379 - 260) * k + 2);
       ctx.restore();
