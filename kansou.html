@@ -269,7 +269,11 @@
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(-0.12);
-      ctx.drawImage(hankoImg, -110, -110, 220, 220);
+      ctx.drawImage(hankoImg, -105, -105, 210, 210);
+      ctx.fillStyle = "#4F6300";
+      ctx.font = "900 50px 'Noto Sans JP'";
+      ctx.textBaseline = "middle";
+      ctx.fillText("完走", 0, 2);
       ctx.restore();
     } else {
       ctx.beginPath();

@@ -59,6 +59,8 @@
     text-align:center;display:none;opacity:0;transform:translateY(14px);
     transition:opacity .5s ease, transform .5s ease}
   .result-card.show{display:block;opacity:1;transform:none}
+  .hero-img{display:block;width:100%;max-width:360px;height:auto;margin:8px auto 16px}
+  .result-img{display:block;width:100%;max-width:280px;height:auto;margin:4px auto 8px}
 
   .today-label{font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--accent);margin:0 0 14px}
   .result-title{font-size:24px;font-weight:900;margin:0 0 16px;line-height:1.5}
@@ -76,6 +78,7 @@
     .result-card{transition:none}
   }
 </style>
+<link rel="preload" as="image" href="img/omikuji_usatori.png">
 </head>
 <body>
 <main>
@@ -86,6 +89,7 @@
     <div class="wrap">
       <p class="eyebrow eyebrow-center">OMIKUJI</p>
       <h2>合格発表までの過ごし方おみくじ</h2>
+      <img class="hero-img" src="img/omikuji_usatori.png" alt="おみくじを引くうさぎとハト" width="800" height="560">
       <p class="lead">合格発表（11月25日）まで、少し落ち着かない日が続くかもしれません。今日の過ごし方を、ひとつ引いてみてください。</p>
     </div>
   </section>
@@ -96,6 +100,7 @@
 
       <div class="result-card" id="resultCard" aria-live="polite">
         <p class="today-label">TODAY</p>
+        <img class="result-img" id="resultImg" src="" alt="" width="600" height="600">
         <p class="result-title" id="resultTitle"></p>
         <p class="result-line" id="resultLine"></p>
       </div>
@@ -152,7 +157,11 @@
   var reduce = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
 
   function doDraw(kind){
-    var r = RESULTS[Math.floor(Math.random() * RESULTS.length)];
+    var idx = Math.floor(Math.random() * RESULTS.length);
+    var r = RESULTS[idx];
+    var img = document.getElementById("resultImg");
+    img.src = "img/omikuji/" + String(idx + 1).padStart(2, "0") + ".png";
+    img.alt = r.title + "のうさぎとハト";
     resultTitle.textContent = "今日は " + r.title;
     resultLine.textContent = r.line;
 
