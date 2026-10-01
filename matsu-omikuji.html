@@ -112,7 +112,7 @@
       </div>
 
       <p class="footnote">結果は11月25日に発表されます。それまで、どうぞゆっくりお過ごしください。</p>
-      <p class="footnote whisper">どうしてウサギとハトなのか……そう、あなたならわかるはず。ヒント：<a href="https://www.fudousanhosho.or.jp/" target="_blank" rel="noopener">🐰</a><a href="https://www.hosyo.or.jp/" target="_blank" rel="noopener">🕊️</a></p>
+      <p class="footnote whisper">どうしてウサギとハトなのか……そう、あなたならわかるはず。ヒント：<a href="https://www.fudousanhosho.or.jp/" target="_blank" rel="noopener" data-umami-event="omikuji_hint_usagi">🐰</a><a href="https://www.hosyo.or.jp/" target="_blank" rel="noopener" data-umami-event="omikuji_hint_hato">🕊️</a></p>
     </div>
   </section>
 
@@ -176,7 +176,7 @@
     againBtn.style.display = "inline-block";
 
     if(window.umami){
-      umami.track(kind === "draw" ? "matsu_omikuji_draw" : "matsu_omikuji_redraw");
+      umami.track(kind === "draw" ? "matsu_omikuji_draw" : "matsu_omikuji_redraw", { result: r.title });
     }
   }
 
