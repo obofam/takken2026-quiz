@@ -173,81 +173,104 @@
     ctx.textAlign = prevAlign;
   }
 
+  var bgImg = new Image();
+  var bgReady = new Promise(function(resolve){
+    bgImg.onload = function(){ resolve(); };
+    bgImg.onerror = function(){ resolve(); };
+  });
+  bgImg.src = "img/kansou_bg.png";
+
+  function fitFont(ctx, text, weight, size, maxWidth){
+    var s = size;
+    ctx.font = weight + " " + s + "px 'Noto Sans JP'";
+    while(ctx.measureText(text).width > maxWidth && s > 28){
+      s -= 2;
+      ctx.font = weight + " " + s + "px 'Noto Sans JP'";
+    }
+  }
+
   function draw(name){
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, W, H);
 
-    // 背景
+    // 背景（枠・ヘッドホン・葉・ライムの丸は画像側）
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, W, H);
-
-    // 外周の水色の細枠
-    ctx.strokeStyle = "#17C5E8";
-    ctx.lineWidth = 8;
-    ctx.strokeRect(44, 44, W - 88, H - 88);
-    ctx.strokeStyle = "#ececec";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(70, 70, W - 140, H - 140);
+    if(bgImg.complete && bgImg.naturalWidth > 0){
+      ctx.drawImage(bgImg, 0, 0, W, H);
+    }
 
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
 
     // オーバーライン
     ctx.fillStyle = "#17C5E8";
-    ctx.font = "700 28px 'Noto Sans JP'";
-    drawSpaced(ctx, "CERTIFICATE OF COMPLETION", W / 2, 200, 10);
+    ctx.font = "700 26px 'Noto Sans JP'";
+    drawSpaced(ctx, "CERTIFICATE OF COMPLETION", W / 2, 300, 9);
 
     // 完走証
     ctx.fillStyle = "#141B21";
-    ctx.font = "900 128px 'Noto Sans JP'";
-    ctx.fillText("完走証", W / 2, 350);
+    ctx.font = "900 140px 'Noto Sans JP'";
+    ctx.fillText("完走証", W / 2, 460);
 
-    // 名前
-    ctx.font = "700 46px 'Noto Sans JP'";
-    ctx.fillText(name + " 様", W / 2, 440);
+    // 名前（長い名前は縮める）
+    fitFont(ctx, name + " 様", "700", 52, 820);
+    ctx.fillText(name + " 様", W / 2, 572);
 
-    // 達成の印（ライム）
-    var cx = W - 180, cy = 260, r = 76;
+    // 区切り線
+    ctx.strokeStyle = "#17C5E8";
+    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = "#D6F034";
-    ctx.fill();
-    ctx.fillStyle = "#4F6300";
-    ctx.font = "900 34px 'Noto Sans JP'";
-    ctx.fillText("完走", cx, cy + 12);
+    ctx.moveTo(W / 2 - 60, 628);
+    ctx.lineTo(W / 2 + 60, 628);
+    ctx.stroke();
 
-    // 本文
-    ctx.fillStyle = "#6B6B76";
-    ctx.font = "400 34px 'Noto Sans JP'";
-    var body = "2026年度 宅地建物取引士試験に向けて、最後まで学習を続けられたことを、ここに記します。";
-    var lines = wrapLines(ctx, body, W - 260);
-    var ly = 560;
+    // 本文（意味の切れ目で改行）
+    ctx.fillStyle = "#3A4148";
+    ctx.font = "400 38px 'Noto Sans JP'";
+    var lines = [
+      "2026年度 宅地建物取引士試験に向けて、",
+      "最後まで学習を続けられたことを、",
+      "ここに記します。"
+    ];
+    var ly = 730;
     for(var i=0;i<lines.length;i++){
       ctx.fillText(lines[i], W / 2, ly);
-      ly += 58;
+      ly += 64;
     }
 
     // 日付
     ctx.fillStyle = "#141B21";
-    ctx.font = "700 32px 'Noto Sans JP'";
-    ctx.fillText("2026年10月18日", W / 2, ly + 70);
+    ctx.font = "700 36px 'Noto Sans JP'";
+    ctx.fillText("2026年10月18日", W / 2, 960);
 
-    // 発行
-    ctx.textAlign = "right";
+    // 発行（ライムの丸の左）
     ctx.fillStyle = "#6B6B76";
-    ctx.font = "400 26px 'Noto Sans JP'";
-    ctx.fillText("発行　耳で覚える宅建2026", W - 110, H - 110);
+    ctx.font = "400 28px 'Noto Sans JP'";
+    ctx.fillText("発行　耳で覚える宅建2026", 430, 1142);
+
+    // 達成の印（画像のライムの丸の中を塗る）
+    var cx = 905, cy = 1132;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 88, 0, Math.PI * 2);
+    ctx.fillStyle = "#D6F034";
+    ctx.fill();
+    ctx.fillStyle = "#4F6300";
+    ctx.font = "900 48px 'Noto Sans JP'";
+    ctx.textBaseline = "middle";
+    ctx.fillText("完走", cx, cy + 2);
+    ctx.textBaseline = "alphabetic";
   }
 
   function waitForFonts(){
     if(!("fonts" in document)){
-      return Promise.resolve();
+      return bgReady;
     }
     return Promise.all([
       document.fonts.load("700 28px 'Noto Sans JP'"),
       document.fonts.load("900 128px 'Noto Sans JP'"),
       document.fonts.load("400 34px 'Noto Sans JP'")
-    ]).then(function(){ return document.fonts.ready; });
+    ]).then(function(){ return document.fonts.ready; }).then(function(){ return bgReady; });
   }
 
   makeBtn.addEventListener("click", function(){
