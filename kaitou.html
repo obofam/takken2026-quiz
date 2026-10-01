@@ -157,7 +157,7 @@
       <textarea id="wrongNos" inputmode="numeric" placeholder="3, 7, 12, 28" data-umami-event="kaitou_furikaeri_focus"></textarea>
       <p class="err" id="shindanErr" hidden></p>
       <div class="res" id="shindanRes" hidden></div>
-      <p class="hint">入力した番号は、このページの外には送られません。</p>
+      <p class="hint">分野別の点数だけを、個人が分からない形で集計に使わせていただきます（入力した番号そのものは送りません）。</p>
     </div>
   </section>
 
@@ -216,13 +216,20 @@
   ];
   var ta=document.getElementById("wrongNos"),
       err=document.getElementById("shindanErr"),res=document.getElementById("shindanRes");
+  // 集計：入力欄から離れた時（またはページを閉じる時）に1ページ1回だけ、最新の点数を送る
+  var latest=null,sent=false;
+  function send(){
+    if(sent||!latest)return;
+    sent=true;
+    try{if(window.umami&&umami.track)umami.track("furikaeri_result",latest);}catch(e){}
+  }
   function run(){
     var raw=ta.value.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
     var parts=raw.split(/[^0-9]+/).filter(Boolean),wrong={},bad=[];
-    if(!parts.length){err.hidden=true;res.hidden=true;return;}
+    if(!parts.length){err.hidden=true;res.hidden=true;latest=null;return;}
     parts.forEach(function(t){var n=parseInt(t,10);if(n>=1&&n<=50)wrong[n]=true;else bad.push(t);});
     err.hidden=true;
-    if(bad.length){err.textContent="1〜50の番号で入れてください（"+bad.join("、")+"）";err.hidden=false;res.hidden=true;return;}
+    if(bad.length){err.textContent="1〜50の番号で入れてください（"+bad.join("、")+"）";err.hidden=false;res.hidden=true;latest=null;return;}
     var rows=FIELDS.map(function(f){
       var total=f.to-f.from+1,miss=0;
       for(var i=f.from;i<=f.to;i++)if(wrong[i])miss++;
@@ -254,8 +261,11 @@
     svg+='</svg>';
     var html='<p class="one">'+one+'</p>'+svg+'<table class="score">'+rows.map(function(r){return '<tr><td>'+r.name+'</td><td class="r">'+r.ok+'<small>/'+r.total+'点</small></td></tr>';}).join('')+'<tr class="sum"><td>合計</td><td class="r">'+sum+'<small>/50点</small></td></tr></table>'+'<div class="tip"><p class="tip-lab">来年も続けるなら</p><p>'+(weak.rate===100?'この調子で、今年の続きから進めましょう。':weak.tip)+'</p></div>';
     res.innerHTML=html;res.hidden=false;
+    latest={total:sum,kenri:rows[0].ok,horei:rows[1].ok,zei:rows[2].ok,gyoho:rows[3].ok,menjo:rows[4].ok,weak:weak.rate===100?"なし":weak.name};
   }
   ta.addEventListener("input",run);
+  ta.addEventListener("blur",send);
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")send();});
 })();
 </script>
 </body>
