@@ -77,6 +77,21 @@
   footer .foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin:20px 0 0;padding:0;list-style:none}
   footer .foot-links a{color:var(--accent);text-decoration:none;font-weight:700;font-size:14px}
   footer .foot-links a:hover{text-decoration:underline}
+  .shindan textarea{width:100%;font:inherit;font-size:17px;border:1px solid var(--border);border-radius:12px;padding:12px 14px;min-height:72px;resize:vertical;background:#fff}
+  .shindan .btn-row{text-align:center;margin:16px 0 0}
+  .shindan button{background:var(--accent);color:#fff;font:inherit;font-weight:700;font-size:15px;border:none;border-radius:999px;padding:12px 28px;cursor:pointer}
+  .shindan .hint{font-size:14px;color:var(--muted);margin:8px 0 0}
+  .shindan .err{font-size:14px;color:#B3261E;margin:8px 0 0}
+  .shindan .res{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin:20px 0 0}
+  .shindan .res table{width:100%;border-collapse:collapse;font-size:15px}
+  .shindan .res td{padding:8px 4px;border-top:1px solid var(--border)}
+  .shindan .res tr:first-child td{border-top:none}
+  .shindan .res td.r{text-align:right;white-space:nowrap;font-weight:700}
+  .shindan .res tr.weak td{background:var(--accent-soft)}
+  .shindan .one{font-weight:900;font-size:18px;text-align:center;margin:0 0 14px;line-height:1.6}
+  .shindan .tip{background:var(--accent-soft);border-radius:12px;padding:14px 16px;margin:14px 0 0}
+  .shindan .tip p{margin:0;font-size:15px;line-height:1.8}
+  .shindan .tip .tip-lab{font-size:12px;font-weight:700;letter-spacing:.1em;color:#0B8FAA;margin:0 0 4px}
 </style>
 </head>
 <body>
@@ -126,10 +141,24 @@
     </div>
   </section>
 
-  <!-- ===== 自己採点後アンケート ===== -->
+  <!-- ===== 自己採点のふりかえり（間違えた番号→分野別グラフ） ===== -->
   <section class="band-white">
+    <div class="wrap shindan">
+      <p class="eyebrow eyebrow-center">02 — CHECK</p>
+      <h2><span style="display:inline-block;white-space:nowrap">自己採点の</span><span style="display:inline-block;white-space:nowrap">ふりかえり</span></h2>
+      <p style="text-align:center">間違えた問題の番号を入れると、分野別の得点率がすぐグラフで出ます。</p>
+      <label for="wrongNos" class="hint" style="display:block;margin:0 0 6px">間違えた問題の番号（例：3, 7, 12, 28）</label>
+      <textarea id="wrongNos" inputmode="numeric" placeholder="3, 7, 12, 28" data-umami-event="kaitou_furikaeri_focus"></textarea>
+      <p class="err" id="shindanErr" hidden></p>
+      <div class="res" id="shindanRes" hidden></div>
+      <p class="hint">入力した番号は、このページの外には送られません。</p>
+    </div>
+  </section>
+
+  <!-- ===== 自己採点後アンケート ===== -->
+  <section class="band-soft">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">02 — SURVEY</p>
+      <p class="eyebrow eyebrow-center">03 — SURVEY</p>
       <h2>自己採点が終わったら</h2>
       <div class="survey-card">
         <p>結果がどうであれ、ここまで続けたこと自体が大きいです。よければ5分だけ、今年の振り返りアンケートにご協力ください。来年の配信づくりに使わせていただきます。</p>
@@ -139,9 +168,9 @@
   </section>
 
   <!-- ===== 公式（下） ===== -->
-  <section class="band-soft">
+  <section class="band-white">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">03 — OFFICIAL</p>
+      <p class="eyebrow eyebrow-center">04 — OFFICIAL</p>
       <h2>正式な正解はこちら</h2>
       <p class="sec-sub">後日、合格発表に合わせて公開されます。これが唯一の確定版です。</p>
 
@@ -170,5 +199,55 @@
   </footer>
 
 </main>
+<script>
+(function(){
+  var FIELDS=[
+    {name:"権利関係",from:1,to:14,tip:"借地借家法・相続・不動産登記など、ほぼ毎年出るテーマから固めると点が安定します。"},
+    {name:"法令上の制限",from:15,to:22,tip:"数字と区域の組み合わせが中心です。比較表でまとめて覚えると、短い時間でも点につながります。"},
+    {name:"税・その他",from:23,to:25,tip:"3問だけの分野です。出やすい税と地価公示・鑑定評価の基本を押さえれば十分です。"},
+    {name:"宅建業法",from:26,to:45,tip:"20問と配点が一番大きい分野です。過去問の繰り返しがそのまま点になりやすいので、ここから戻るのがおすすめです。"},
+    {name:"5問免除",from:46,to:50,tip:"統計は2027年度の最新データが出てから覚えれば大丈夫です。今は土地・建物の基本だけで十分です。"}
+  ];
+  var ta=document.getElementById("wrongNos"),
+      err=document.getElementById("shindanErr"),res=document.getElementById("shindanRes");
+  function run(){
+    var raw=ta.value.replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});
+    var parts=raw.split(/[^0-9]+/).filter(Boolean),wrong={},bad=[];
+    if(!parts.length){err.hidden=true;res.hidden=true;return;}
+    parts.forEach(function(t){var n=parseInt(t,10);if(n>=1&&n<=50)wrong[n]=true;else bad.push(t);});
+    err.hidden=true;
+    if(bad.length){err.textContent="1〜50の番号で入れてください（"+bad.join("、")+"）";err.hidden=false;res.hidden=true;return;}
+    var rows=FIELDS.map(function(f){
+      var total=f.to-f.from+1,miss=0;
+      for(var i=f.from;i<=f.to;i++)if(wrong[i])miss++;
+      return {name:f.name,tip:f.tip,total:total,ok:total-miss,rate:Math.round((total-miss)/total*100)};
+    });
+    var sum=rows.reduce(function(a,r){return a+r.ok;},0);
+    var weak=rows.reduce(function(a,r){return r.rate<a.rate||(r.rate===a.rate&&r.total>a.total)?r:a;});
+    var one=weak.rate===100?"どの分野も取れています。":"あなたの弱点は「"+weak.name+"」です（得点率"+weak.rate+"%）。";
+    var cx=180,cy=150,R=86,n=rows.length;
+    function pt(i,k){var ang=-Math.PI/2+i*2*Math.PI/n;return [cx+R*k*Math.cos(ang),cy+R*k*Math.sin(ang)];}
+    function poly(k){return rows.map(function(_,i){return pt(i,k).map(function(v){return v.toFixed(1);}).join(",");}).join(" ");}
+    var svg='<svg viewBox="0 0 360 300" role="img" aria-label="分野別の得点率" style="display:block;width:100%;max-width:360px;margin:0 auto">';
+    [0.25,0.5,0.75,1].forEach(function(k){svg+='<polygon points="'+poly(k)+'" fill="none" stroke="#ececec" stroke-width="1"/>';});
+    rows.forEach(function(_,i){var p=pt(i,1);svg+='<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'" stroke="#ececec" stroke-width="1"/>';});
+    var dataPts=rows.map(function(r,i){return pt(i,r.rate/100).map(function(v){return v.toFixed(1);}).join(",");}).join(" ");
+    svg+='<polygon points="'+dataPts+'" fill="rgba(23,197,232,.22)" stroke="#17C5E8" stroke-width="2.5" stroke-linejoin="round"/>';
+    rows.forEach(function(r,i){var p=pt(i,r.rate/100);svg+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="4" fill="#17C5E8"/>';});
+    rows.forEach(function(r,i){
+      var ang=-Math.PI/2+i*2*Math.PI/n,lx=cx+(R+26)*Math.cos(ang),ly=cy+(R+20)*Math.sin(ang);
+      var anchor=Math.abs(Math.cos(ang))<0.2?"middle":(Math.cos(ang)>0?"start":"end");
+      if(Math.abs(Math.cos(ang))>=0.2)lx=cx+(R+12)*Math.cos(ang);
+      var isWeak=(r===weak&&weak.rate<100);
+      svg+='<text x="'+lx.toFixed(1)+'" y="'+(ly-4).toFixed(1)+'" text-anchor="'+anchor+'" font-size="13" font-weight="700" fill="'+(isWeak?'#0B8FAA':'#141B21')+'">'+r.name+'</text>';
+      svg+='<text x="'+lx.toFixed(1)+'" y="'+(ly+13).toFixed(1)+'" text-anchor="'+anchor+'" font-size="13" fill="'+(isWeak?'#0B8FAA':'#6B6B76')+'">'+r.rate+'%</text>';
+    });
+    svg+='</svg>';
+    var html='<p class="one">'+one+'</p>'+svg+'<p style="text-align:center;font-weight:700;margin:4px 0 0">合計 '+sum+'/50点</p>'+'<div class="tip"><p class="tip-lab">来年も続けるなら</p><p>'+(weak.rate===100?'この調子で、今年の続きから進めましょう。':weak.tip)+'</p></div>';
+    res.innerHTML=html;res.hidden=false;
+  }
+  ta.addEventListener("input",run);
+})();
+</script>
 </body>
 </html>
