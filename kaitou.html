@@ -92,6 +92,12 @@
   .shindan .tip{background:var(--accent-soft);border-radius:12px;padding:14px 16px;margin:14px 0 0}
   .shindan .tip p{margin:0;font-size:15px;line-height:1.8}
   .shindan .tip .tip-lab{font-size:12px;font-weight:700;letter-spacing:.1em;color:#0B8FAA;margin:0 0 4px}
+  .shindan .score{width:100%;max-width:360px;margin:8px auto 0;border-collapse:collapse;font-size:16px}
+  .shindan .score td{padding:7px 4px;border-top:1px solid var(--border)}
+  .shindan .score tr:first-child td{border-top:none}
+  .shindan .score td.r{text-align:right;font-weight:700;white-space:nowrap}
+  .shindan .score td.r small{font-size:13px;font-weight:400;color:var(--muted);margin-left:1px}
+  .shindan .score tr.sum td{border-top:2px solid var(--text);font-weight:900;font-size:18px}
 </style>
 </head>
 <body>
@@ -246,7 +252,7 @@
       svg+='<text x="'+lx.toFixed(1)+'" y="'+(ly+13).toFixed(1)+'" text-anchor="'+anchor+'" font-size="13" fill="'+(isWeak?'#0B8FAA':'#6B6B76')+'">'+r.rate+'%</text>';
     });
     svg+='</svg>';
-    var html='<p class="one">'+one+'</p>'+svg+'<p style="text-align:center;font-weight:700;margin:4px 0 0">合計 '+sum+'/50点</p>'+'<div class="tip"><p class="tip-lab">来年も続けるなら</p><p>'+(weak.rate===100?'この調子で、今年の続きから進めましょう。':weak.tip)+'</p></div>';
+    var html='<p class="one">'+one+'</p>'+svg+'<table class="score">'+rows.map(function(r){return '<tr><td>'+r.name+'</td><td class="r">'+r.ok+'<small>/'+r.total+'点</small></td></tr>';}).join('')+'<tr class="sum"><td>合計</td><td class="r">'+sum+'<small>/50点</small></td></tr></table>'+'<div class="tip"><p class="tip-lab">来年も続けるなら</p><p>'+(weak.rate===100?'この調子で、今年の続きから進めましょう。':weak.tip)+'</p></div>';
     res.innerHTML=html;res.hidden=false;
   }
   ta.addEventListener("input",run);
