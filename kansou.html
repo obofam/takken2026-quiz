@@ -249,31 +249,33 @@
     // 日付
     ctx.fillStyle = "#141B21";
     ctx.font = "700 36px 'Noto Sans JP'";
-    ctx.fillText("2026年10月18日", W / 2, 960);
+    ctx.fillText("2026年10月18日", W / 2, 925);
 
     // ひとこと（手書き風）
     ctx.fillStyle = "#3A4148";
     ctx.font = "600 36px 'Klee One'";
-    ctx.fillText("毎週、本当によく続けてこられました。", W / 2, 1040);
+    ctx.fillText("毎週、本当によく続けてこられました。", W / 2, 1000);
 
     // 署名
     ctx.fillStyle = "#141B21";
     ctx.font = "600 30px 'Klee One'";
-    ctx.fillText("耳で覚える宅建", 430, 1122);
+    ctx.fillText("耳で覚える宅建", W / 2, 1100);
     ctx.font = "600 44px 'Klee One'";
-    ctx.fillText("松永 慶", 430, 1180);
+    ctx.fillText("松永 慶", W / 2, 1160);
 
     // 完走ハンコ（画像があれば画像、なければライムの丸）
-    var cx = 905, cy = 1132;
+    var cx = 905, cy = 1150;
     if(hankoImg.complete && hankoImg.naturalWidth > 0){
+      // うさとりがハンコを持つ画像（520px・バッジ中心は(256,379)）を右に少し傾けて置く
+      var size = 240, k = size / 520;
       ctx.save();
       ctx.translate(cx, cy);
-      ctx.rotate(-0.12);
-      ctx.drawImage(hankoImg, -105, -105, 210, 210);
+      ctx.rotate(0.14);
+      ctx.drawImage(hankoImg, -size / 2, -size / 2, size, size);
       ctx.fillStyle = "#4F6300";
-      ctx.font = "900 50px 'Noto Sans JP'";
+      ctx.font = "900 40px 'Noto Sans JP'";
       ctx.textBaseline = "middle";
-      ctx.fillText("完走", 0, 2);
+      ctx.fillText("完走", (256 - 260) * k, (379 - 260) * k + 2);
       ctx.restore();
     } else {
       ctx.beginPath();
