@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>完走証メーカー｜耳で覚える宅建2026</title>
+<!-- Umami analytics (トラッカー等と同一ID・パス/ホスト名で分離) -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#ffffff;
+    --text:#141B21;
+    --muted:#6B6B76;
+    --border:#ececec;
+    --accent:#17C5E8;
+    --accent-soft: color-mix(in srgb, #17C5E8 12%, white);
+    --lime:#D6F034;
+    --lime-soft:#F4FBD2;
+    --lime-text:#4F6300;
+    --font:"Noto Sans JP",system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.9;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:720px;margin:0 auto;padding:0 24px}
+
+  .top{padding:22px 0 0}
+  .back{display:inline-block;font-size:15px;font-weight:700;color:var(--muted);text-decoration:none}
+
+  section{padding:40px 0}
+  .band-soft{background:var(--accent-soft)}
+
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin:0 0 12px}
+  .eyebrow-center{text-align:center}
+
+  h2{font-size:32px;font-weight:900;line-height:1.4;text-align:center;margin:0 0 24px}
+
+  p{margin:0 0 20px}
+  p:last-child{margin-bottom:0}
+
+  .lead{font-size:17px;color:var(--muted);text-align:center;margin:0}
+
+  .card{background:#fff;border:1px solid var(--border);border-radius:16px;
+    box-shadow:0 2px 8px rgba(20,27,33,.04);padding:28px 24px}
+
+  label{display:block;font-size:15px;font-weight:700;color:var(--text);margin-bottom:10px}
+  .field{width:100%;padding:14px 16px;font-size:16px;font-family:var(--font);
+    border:1px solid var(--border);border-radius:10px;margin:0 0 20px;color:var(--text)}
+  .field:focus{outline:2px solid var(--accent);outline-offset:1px}
+
+  button, .btn-fill{font-family:var(--font);cursor:pointer}
+  .btn-fill{display:block;width:100%;text-align:center;background:var(--accent);color:#fff;
+    font-weight:700;font-size:16px;text-decoration:none;border:none;border-radius:999px;padding:15px 24px}
+  .btn-fill:disabled{opacity:.55;cursor:default}
+  .btn-outline{display:block;width:100%;text-align:center;background:#fff;color:var(--accent);
+    font-weight:700;font-size:15px;border:2px solid var(--accent);border-radius:999px;
+    padding:12px 24px;margin-top:12px}
+
+  .canvas-wrap{margin:24px 0 0;display:none}
+  canvas{width:100%;height:auto;display:block;border-radius:12px;
+    box-shadow:0 4px 16px rgba(20,27,33,.08)}
+
+  .actions{display:none;flex-direction:column;gap:12px;margin-top:20px}
+
+  .note-small{font-size:13px;color:var(--muted);text-align:center;margin-top:20px}
+
+  footer{text-align:center;padding:40px 0 56px;font-size:13px;color:var(--muted)}
+  footer p{font-size:13px}
+  footer .foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin:20px 0 0;padding:0;list-style:none}
+  footer .foot-links a{color:var(--accent);text-decoration:none;font-weight:700;font-size:14px}
+  footer .foot-links a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<main>
+
+  <div class="wrap top"><a class="back" href="https://www.mimiobo.com/">← 耳で覚える宅建</a></div>
+
+  <section class="band-white">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-center">CERTIFICATE</p>
+      <h2>完走証</h2>
+      <p class="lead">2026年度の宅建試験に向けて、ここまで学習を続けてこられた記録です。お名前を入れると、完走証の画像をお作りします。</p>
+    </div>
+  </section>
+
+  <section class="band-soft">
+    <div class="wrap">
+      <div class="card">
+        <label for="nameInput">お名前（ニックネームで構いません）</label>
+        <input class="field" type="text" id="nameInput" maxlength="16" placeholder="例：たけちゃん">
+        <button class="btn-fill" id="makeBtn">完走証をつくる</button>
+
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="canvas" width="1080" height="1350" aria-label="完走証"></canvas>
+        </div>
+
+        <div class="actions" id="actions">
+          <a class="btn-fill" id="saveLink" download="kansou_2026.png">画像を保存する</a>
+          <button class="btn-outline" id="shareBtn" style="display:none">共有する</button>
+        </div>
+
+        <p class="note-small">お名前は画像を作るためだけに使い、どこにも送信・保存しません。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p>耳で覚える宅建2026　／　本ページは試験後限定の公開です。</p>
+      <ul class="foot-links">
+        <li><a href="https://www.mimiobo.com/" target="_blank" rel="noopener">公式サイト</a></li>
+        <li><a href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener">Spotify</a></li>
+        <li><a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener">Apple Podcasts</a></li>
+        <li><a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener">Amazon Music</a></li>
+        <li><a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener">stand.fm</a></li>
+        <li><a href="https://x.com/takken_kei" target="_blank" rel="noopener">X</a></li>
+        <li><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener">LINE</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var nameInput = document.getElementById("nameInput");
+  var makeBtn = document.getElementById("makeBtn");
+  var canvasWrap = document.getElementById("canvasWrap");
+  var canvas = document.getElementById("canvas");
+  var actions = document.getElementById("actions");
+  var saveLink = document.getElementById("saveLink");
+  var shareBtn = document.getElementById("shareBtn");
+
+  var W = 1080, H = 1350;
+
+  function wrapLines(ctx, text, maxWidth){
+    var chars = Array.from(text);
+    var lines = [];
+    var line = "";
+    for(var i=0;i<chars.length;i++){
+      var test = line + chars[i];
+      if(ctx.measureText(test).width > maxWidth && line.length > 0){
+        lines.push(line);
+        line = chars[i];
+      } else {
+        line = test;
+      }
+    }
+    if(line.length > 0) lines.push(line);
+    return lines;
+  }
+
+  function drawSpaced(ctx, text, cx, y, spacing){
+    var chars = Array.from(text);
+    var widths = chars.map(function(c){ return ctx.measureText(c).width; });
+    var total = widths.reduce(function(a,b){ return a+b; }, 0) + spacing * (chars.length - 1);
+    var x = cx - total / 2;
+    var prevAlign = ctx.textAlign;
+    ctx.textAlign = "left";
+    for(var i=0;i<chars.length;i++){
+      ctx.fillText(chars[i], x, y);
+      x += widths[i] + spacing;
+    }
+    ctx.textAlign = prevAlign;
+  }
+
+  function draw(name){
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, W, H);
+
+    // 背景
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+
+    // 外周の水色の細枠
+    ctx.strokeStyle = "#17C5E8";
+    ctx.lineWidth = 8;
+    ctx.strokeRect(44, 44, W - 88, H - 88);
+    ctx.strokeStyle = "#ececec";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(70, 70, W - 140, H - 140);
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
+
+    // オーバーライン
+    ctx.fillStyle = "#17C5E8";
+    ctx.font = "700 28px 'Noto Sans JP'";
+    drawSpaced(ctx, "CERTIFICATE OF COMPLETION", W / 2, 200, 10);
+
+    // 完走証
+    ctx.fillStyle = "#141B21";
+    ctx.font = "900 128px 'Noto Sans JP'";
+    ctx.fillText("完走証", W / 2, 350);
+
+    // 名前
+    ctx.font = "700 46px 'Noto Sans JP'";
+    ctx.fillText(name + " 様", W / 2, 440);
+
+    // 達成の印（ライム）
+    var cx = W - 180, cy = 260, r = 76;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = "#D6F034";
+    ctx.fill();
+    ctx.fillStyle = "#4F6300";
+    ctx.font = "900 34px 'Noto Sans JP'";
+    ctx.fillText("完走", cx, cy + 12);
+
+    // 本文
+    ctx.fillStyle = "#6B6B76";
+    ctx.font = "400 34px 'Noto Sans JP'";
+    var body = "2026年度 宅地建物取引士試験に向けて、最後まで学習を続けられたことを、ここに記します。";
+    var lines = wrapLines(ctx, body, W - 260);
+    var ly = 560;
+    for(var i=0;i<lines.length;i++){
+      ctx.fillText(lines[i], W / 2, ly);
+      ly += 58;
+    }
+
+    // 日付
+    ctx.fillStyle = "#141B21";
+    ctx.font = "700 32px 'Noto Sans JP'";
+    ctx.fillText("2026年10月18日", W / 2, ly + 70);
+
+    // 発行
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#6B6B76";
+    ctx.font = "400 26px 'Noto Sans JP'";
+    ctx.fillText("発行　耳で覚える宅建2026", W - 110, H - 110);
+  }
+
+  function waitForFonts(){
+    if(!("fonts" in document)){
+      return Promise.resolve();
+    }
+    return Promise.all([
+      document.fonts.load("700 28px 'Noto Sans JP'"),
+      document.fonts.load("900 128px 'Noto Sans JP'"),
+      document.fonts.load("400 34px 'Noto Sans JP'")
+    ]).then(function(){ return document.fonts.ready; });
+  }
+
+  makeBtn.addEventListener("click", function(){
+    if(window.umami) umami.track("kansou_make");
+    var raw = nameInput.value.trim().slice(0, 16);
+    var name = raw.length > 0 ? raw : "受験生のあなた";
+
+    makeBtn.disabled = true;
+    waitForFonts().then(function(){
+      draw(name);
+      makeBtn.disabled = false;
+      canvasWrap.style.display = "block";
+      actions.style.display = "flex";
+
+      var dataUrl = canvas.toDataURL("image/png");
+      saveLink.href = dataUrl;
+
+      if(navigator.canShare && typeof window.File === "function"){
+        canvas.toBlob(function(blob){
+          try{
+            var file = new File([blob], "kansou_2026.png", { type: "image/png" });
+            if(navigator.canShare({ files: [file] })){
+              shareBtn.style.display = "block";
+              shareBtn.onclick = function(){
+                navigator.share({ files: [file], title: "完走証", text: "耳で覚える宅建2026 完走証" })
+                  .then(function(){ if(window.umami) umami.track("kansou_share"); })
+                  .catch(function(){});
+              };
+            }
+          }catch(e){ /* File非対応ブラウザは共有ボタンを出さない */ }
+        }, "image/png");
+      }
+
+      canvasWrap.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+
+  saveLink.addEventListener("click", function(){
+    if(window.umami) umami.track("kansou_save");
+  });
+})();
+</script>
+</body>
+</html>

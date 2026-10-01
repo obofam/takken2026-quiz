@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>合格発表までの過ごし方おみくじ｜耳で覚える宅建2026</title>
+<!-- Umami analytics (トラッカー等と同一ID・パス/ホスト名で分離) -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#ffffff;
+    --text:#141B21;
+    --muted:#6B6B76;
+    --border:#ececec;
+    --accent:#17C5E8;
+    --accent-soft: color-mix(in srgb, #17C5E8 12%, white);
+    --lime:#D6F034;
+    --lime-soft:#F4FBD2;
+    --lime-text:#4F6300;
+    --font:"Noto Sans JP",system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.9;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:720px;margin:0 auto;padding:0 24px}
+
+  .top{padding:22px 0 0}
+  .back{display:inline-block;font-size:15px;font-weight:700;color:var(--muted);text-decoration:none}
+
+  section{padding:40px 0}
+  .band-soft{background:var(--accent-soft)}
+
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin:0 0 12px}
+  .eyebrow-center{text-align:center}
+
+  h2{font-size:32px;font-weight:900;line-height:1.4;text-align:center;margin:0 0 24px}
+
+  p{margin:0 0 20px}
+  p:last-child{margin-bottom:0}
+
+  .lead{font-size:17px;color:var(--muted);text-align:center;margin:0}
+
+  .center-col{text-align:center}
+
+  button{font-family:var(--font);cursor:pointer}
+  .btn-fill{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:16px;
+    text-decoration:none;border:none;border-radius:999px;padding:15px 36px}
+  .btn-outline{display:inline-block;background:#fff;color:var(--accent);font-weight:700;font-size:15px;
+    border:2px solid var(--accent);border-radius:999px;padding:12px 32px;margin-top:20px}
+
+  .result-card{background:#fff;border:1px solid var(--border);border-radius:16px;
+    box-shadow:0 2px 8px rgba(20,27,33,.04);padding:32px 24px;margin-top:28px;
+    text-align:center;display:none;opacity:0;transform:translateY(14px);
+    transition:opacity .5s ease, transform .5s ease}
+  .result-card.show{display:block;opacity:1;transform:none}
+
+  .today-label{font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--accent);margin:0 0 14px}
+  .result-title{font-size:24px;font-weight:900;margin:0 0 16px;line-height:1.5}
+  .result-line{font-size:17px;color:var(--text);margin:0}
+
+  .footnote{text-align:center;font-size:13px;color:var(--muted);margin-top:28px}
+
+  footer{text-align:center;padding:40px 0 56px;font-size:13px;color:var(--muted)}
+  footer p{font-size:13px}
+  footer .foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin:20px 0 0;padding:0;list-style:none}
+  footer .foot-links a{color:var(--accent);text-decoration:none;font-weight:700;font-size:14px}
+  footer .foot-links a:hover{text-decoration:underline}
+
+  @media (prefers-reduced-motion:reduce){
+    .result-card{transition:none}
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <div class="wrap top"><a class="back" href="https://www.mimiobo.com/">← 耳で覚える宅建</a></div>
+
+  <section class="band-white">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-center">OMIKUJI</p>
+      <h2>合格発表までの過ごし方おみくじ</h2>
+      <p class="lead">合格発表（11月25日）まで、少し落ち着かない日が続くかもしれません。今日の過ごし方を、ひとつ引いてみてください。</p>
+    </div>
+  </section>
+
+  <section class="band-soft">
+    <div class="wrap center-col">
+      <button class="btn-fill" id="drawBtn">おみくじを引く</button>
+
+      <div class="result-card" id="resultCard" aria-live="polite">
+        <p class="today-label">TODAY</p>
+        <p class="result-title" id="resultTitle"></p>
+        <p class="result-line" id="resultLine"></p>
+      </div>
+
+      <div>
+        <button class="btn-outline" id="againBtn" style="display:none">もう一度引く</button>
+      </div>
+
+      <p class="footnote">結果は11月25日に発表されます。それまで、どうぞゆっくりお過ごしください。</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p>耳で覚える宅建2026　／　本ページは試験後限定の公開です。</p>
+      <ul class="foot-links">
+        <li><a href="https://www.mimiobo.com/" target="_blank" rel="noopener">公式サイト</a></li>
+        <li><a href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener">Spotify</a></li>
+        <li><a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener">Apple Podcasts</a></li>
+        <li><a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener">Amazon Music</a></li>
+        <li><a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener">stand.fm</a></li>
+        <li><a href="https://x.com/takken_kei" target="_blank" rel="noopener">X</a></li>
+        <li><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener">LINE</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var RESULTS = [
+    { title: "解答速報を見ない日", line: "更新ボタンは、今日はお休みです。" },
+    { title: "温泉か銭湯の日", line: "湯船につかって、肩の力を抜いてください。" },
+    { title: "好きなものを食べる日", line: "ここまでがんばった分、好きなものをどうぞ。" },
+    { title: "早めに寝る日", line: "試験前に削っていた睡眠を、少し取り戻しましょう。" },
+    { title: "散歩の日", line: "目的地は決めずに、20分だけ歩いてみてください。" },
+    { title: "積んでいたドラマを観る日", line: "後回しにしていたものを、ひとつ再生しましょう。" },
+    { title: "テキストを本棚にしまう日", line: "見えない場所にしまうだけで、少し区切りがつきます。" },
+    { title: "「終わったよ」と伝える日", line: "応援してくれた人に、ひとこと伝えてみてください。" },
+    { title: "部屋を少し片付ける日", line: "机の上だけでも、すっきりさせてみましょう。" },
+    { title: "ごほうびを選ぶ日", line: "結果に関係なく、ここまで続けたことへのごほうびです。" },
+    { title: "何もしない日", line: "何もしない予定を、きちんと守りましょう。" },
+    { title: "宅建のことを忘れる日", line: "思い出しても大丈夫です。また忘れれば十分です。" }
+  ];
+
+  var drawBtn = document.getElementById("drawBtn");
+  var againBtn = document.getElementById("againBtn");
+  var resultCard = document.getElementById("resultCard");
+  var resultTitle = document.getElementById("resultTitle");
+  var resultLine = document.getElementById("resultLine");
+  var reduce = window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  function doDraw(kind){
+    var r = RESULTS[Math.floor(Math.random() * RESULTS.length)];
+    resultTitle.textContent = "今日は " + r.title + " の日";
+    resultLine.textContent = r.line;
+
+    resultCard.classList.remove("show");
+    if(!reduce){ void resultCard.offsetWidth; }
+    resultCard.classList.add("show");
+
+    drawBtn.style.display = "none";
+    againBtn.style.display = "inline-block";
+
+    if(window.umami){
+      umami.track(kind === "draw" ? "matsu_omikuji_draw" : "matsu_omikuji_redraw");
+    }
+  }
+
+  drawBtn.addEventListener("click", function(){ doDraw("draw"); });
+  againBtn.addEventListener("click", function(){ doDraw("redraw"); });
+})();
+</script>
+</body>
+</html>
