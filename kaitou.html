@@ -224,7 +224,10 @@
     });
     var sum=rows.reduce(function(a,r){return a+r.ok;},0);
     var weak=rows.reduce(function(a,r){return r.rate<a.rate||(r.rate===a.rate&&r.total>a.total)?r:a;});
-    var one=weak.rate===100?"どの分野も取れています。":"あなたの弱点は「"+weak.name+"」です（得点率"+weak.rate+"%）。";
+    var strong=rows.reduce(function(a,r){return r.rate>a.rate||(r.rate===a.rate&&r.total>a.total)?r:a;});
+    var one=weak.rate===100?"どの分野も取れています。":
+      (strong.rate>weak.rate?"あなたの強みは「"+strong.name+"」です（得点率"+strong.rate+"%）。<br>":"")+
+      "あなたの弱点は「"+weak.name+"」です（得点率"+weak.rate+"%）。";
     var cx=180,cy=150,R=86,n=rows.length;
     function pt(i,k){var ang=-Math.PI/2+i*2*Math.PI/n;return [cx+R*k*Math.cos(ang),cy+R*k*Math.sin(ang)];}
     function poly(k){return rows.map(function(_,i){return pt(i,k).map(function(v){return v.toFixed(1);}).join(",");}).join(" ");}
