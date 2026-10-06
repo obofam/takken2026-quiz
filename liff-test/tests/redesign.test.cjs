@@ -199,8 +199,8 @@ test('ep10 markup: the dev strip, sign-in card, karte screen, account block and 
 test('ep10 hero and results use the redesigned wording and buttons',()=>{
   const html=pages.ep10;
   for(const text of ['<h1>3問チェック</h1>','<p>○か×で答えると、すぐに解説が出ます。</p>','音声で聴く（約17分）','id="progressChip" class="chip">回答 0 / 3<','>最初から解き直す</button>','<title>3問チェック｜第10回</title>',
-    'ログインすると、答えた記録が学習カルテに集まります。<a href="account.html?next=ep10">ログイン</a>',
-    '<a id="toKarte" class="primary" href="karte.html">学習カルテで記録を見る</a>','<button id="restart" class="secondary" type="button">もう一度解く</button>',
+    'ログインすると、答えた記録が<span class="plan-dot dot-ume">学習カルテ</span>に集まります。<a href="account.html?next=ep10">ログイン</a>',
+    '<a id="toKarte" class="primary" href="karte.html"><img class="btn-icon" src="img/icons/plan-karte.svg" alt="" width="20" height="20">学習カルテで記録を見る</a>','<button id="restart" class="secondary" type="button">もう一度解く</button>',
     '<a class="footer-link" href="plans-preview.html">学習サポートの一覧</a>','教材の確認範囲','静かに、淡々と。'])assert.ok(html.includes(text),text);
   for(const gone of ['定着3問チェック','聴いた内容を3問で確かめます','記録を残す <span'])assert.ok(!html.includes(gone),gone);
   // primary button comes before the secondary one, inside the results section
@@ -332,4 +332,68 @@ test('every script the three pages load is served by the local harness and exist
   for(const html of Object.values(pages))for(const m of html.matchAll(/<script src="\/([^"]+)"/g)){assert.ok(dev.includes("'"+m[1]+"'"),m[1]);assert.ok(fs.existsSync(path.join(__dirname,'..',m[1])),m[1]);}
   for(const file of ['account.html','site-header.js','ep10-preview.html','karte.html'])assert.ok(dev.includes("'"+file+"'"),file);
   assert.ok(!read('plans-preview.html').includes('site-header'));
+});
+
+// ---------- 10/6 プラン名の札とアイコン ----------
+const planCss=html=>html.match(/<style>\n\/\* plan-dot 10\/6 \*\/[\s\S]*?<\/style>/)[0];
+const cssRule=(css,selector)=>{const i=css.indexOf(selector+'{');assert.ok(i>=0,selector);return css.slice(i,css.indexOf('}',i)+1);};
+const imgTags=html=>[...html.matchAll(/<img\b[^>]*>/g)].map(m=>m[0]);
+test('plan-dot css block is identical in the three pages and uses the plan colours',()=>{
+  assert.equal(planCss(pages.karte),planCss(pages.ep10));assert.equal(planCss(pages.account),planCss(pages.ep10));
+  const css=planCss(pages.ep10);
+  assert.ok(css.includes('.plan-dot{display:inline-block;padding:2px 12px;border-radius:999px;font-weight:700;'));
+  assert.ok(css.includes('color:#153f4b;')&&css.includes('white-space:nowrap'));
+  for(const [cls,color] of [['dot-free','#EEF2F3'],['dot-ume','#F3DCE3'],['dot-take','#C5EFF8'],['dot-matsu','#D1E6DC']])assert.ok(css.includes('.'+cls+'{--dot-color:'+color+'}'),cls);
+});
+test('header tabs carry the plan icons (18px, decorative); the current tab gets the plan colour as a pill',()=>{
+  for(const [name,html] of Object.entries(pages)){
+    const header=headerOf(html);
+    assert.ok(header.includes('<a href="ep10-preview.html"')&&header.includes('<img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a>'),name);
+    assert.ok(header.includes('<img class="tab-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</a>'),name);
+  }
+  const css=headerCss(pages.ep10);
+  assert.ok(css.includes('.tab-icon{width:18px;height:18px'));
+  assert.ok(css.includes('.site-tabs a[href="ep10-preview.html"]{--tab-bg:#EEF2F3}')&&css.includes('.site-tabs a[href="karte.html"]{--tab-bg:#F3DCE3}'));
+  const pill=cssRule(css,'.site-tabs a[aria-current=page]::before');assert.ok(pill.includes('background:var(--tab-bg')&&pill.includes('border-radius:999px'));
+  assert.ok(css.includes('@media(max-width:350px){.site-brand,.tab-icon{display:none}}'));
+  // the existing cyan underline stays
+  assert.ok(css.includes('border-bottom-color:var(--cyan)'));
+});
+test('ep10: overline shows the 学習便 tag; results button and login hint use the 学習カルテ icon/tag; buttons stay cyan',()=>{
+  const html=pages.ep10;
+  assert.ok(html.includes('<p class="label"><span class="plan-dot dot-free"><img class="plan-dot-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">学習便</span><span class="label-text">第10回 · 営業保証金と保証協会</span></p><h1>3問チェック</h1>'));
+  assert.ok(html.indexOf('学習便</span>')<html.indexOf('<h1>3問チェック</h1>'));
+  assert.ok(html.includes('<a id="toKarte" class="primary" href="karte.html"><img class="btn-icon" src="img/icons/plan-karte.svg" alt="" width="20" height="20">学習カルテで記録を見る</a>'));
+  assert.ok(html.includes('<span class="plan-dot dot-ume">学習カルテ</span>に集まります。'));
+  assert.ok(/\.login-hint \.plan-dot\{font-size:\.9em/.test(html));
+  assert.match(html,/\.primary\{background:var\(--cyan\);color:#12313b\}/);
+  for(const cls of ['dot-free','dot-ume','dot-take','dot-matsu'])assert.ok(!new RegExp('<(a|button)[^>]*class="[^"]*\b'+cls).test(html),'tags are never buttons: '+cls);
+  assert.ok(!/\.primary\{[^}]*--dot-color|\.primary\{[^}]*#F3DCE3|\.primary\{[^}]*#C5EFF8/i.test(html));
+});
+test('karte: entitled view has the 学習カルテ tag overline and a 40px (32px on phones) icon beside an unchanged h1; other mentions stay plain text',()=>{
+  const html=pages.karte;const entitled=html.match(/<div id="entitled"[\s\S]*?<div id="karteBody">/)[0];
+  assert.ok(entitled.includes('<p class="label"><span class="plan-dot dot-ume"><img class="plan-dot-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</span></p>'));
+  assert.ok(entitled.includes('<div class="karte-title"><img class="karte-title-icon" src="img/icons/plan-karte.svg" alt="" width="40" height="40"><h1>学習カルテ</h1></div>'));
+  assert.ok(entitled.indexOf('plan-dot dot-ume')<entitled.indexOf('karte-title'));
+  assert.ok(html.includes('.karte-title-icon{width:40px;height:40px;flex:none}')&&html.includes('@media(max-width:480px){.karte-title{gap:10px}.karte-title-icon{width:32px;height:32px}}'));
+  // no tag in the logged-out / no-entitlement cards or in sentences
+  const rest=html.replace(entitled,'');
+  const markup=rest.replace(/<script[\s\S]*?<\/script>/g,'').replace(/<style[\s\S]*?<\/style>/g,'');
+  assert.ok(!markup.includes('plan-dot dot-'));
+  assert.ok(html.includes('<a class="secondary" href="plans-preview.html#ume">学習カルテの案内を見る</a>'));
+});
+test('every plan icon is decorative (alt="") and points at an existing file; account.html shows no plan tag',()=>{
+  for(const [name,html] of Object.entries(pages)){
+    const tags=imgTags(html);assert.ok(tags.length>=2,name);
+    for(const tag of tags){assert.ok(/ alt=""/.test(tag),name+': '+tag);const src=tag.match(/src="([^"]+)"/)[1];assert.match(src,/^img\/icons\/plan-(free|karte|navi|bansou)\.svg$/);assert.ok(fs.existsSync(path.join(__dirname,'..',src)),src);}
+  }
+  const accountMarkup=pages.account.replace(/<script[\s\S]*?<\/script>/g,'').replace(/<style[\s\S]*?<\/style>/g,'');
+  assert.ok(!accountMarkup.includes('plan-dot dot-'));
+});
+test('local harness serves the plan icons; preview.html is not shipped',()=>{
+  const dev=read('scripts/dev.cjs');
+  assert.ok(dev.includes("'img/icons/plan-'+n+'.svg'")&&dev.includes("['free','karte','navi','bansou']")&&dev.includes("'.svg':'image/svg+xml'"));
+  assert.ok(!dev.includes('icons/preview.html'));
+  assert.ok(read('.vercelignore').split(/\r?\n/).includes('img/icons/preview.html'));
+  for(const n of ['free','karte','navi','bansou'])assert.ok(fs.existsSync(path.join(__dirname,'..','img/icons/plan-'+n+'.svg')));
 });

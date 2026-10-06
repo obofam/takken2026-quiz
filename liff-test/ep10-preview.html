@@ -72,13 +72,29 @@ html{scroll-padding-top:60px}
 .site-auth{flex:none;font-size:13px;line-height:1;font-weight:700;text-decoration:none;border-radius:999px;padding:8px 14px;border:1px solid #91cbd7;color:#164a59;background:#fff;white-space:nowrap}
 .site-auth[data-state=in]{border-color:var(--line);background:#f3f5f6;color:var(--muted);font-weight:400;font-size:12px;padding:6px 10px}
 @media(max-width:480px){.site-header-in{padding:0 12px;gap:8px}.site-brand{font-size:12px}.site-tabs{gap:0}.site-tabs a{padding:0 5px}.site-auth{padding:7px 10px}.site-auth[data-state=in]{padding:6px 8px}}
-@media(max-width:350px){.site-brand{display:none}}
+.site-tabs a{position:relative;isolation:isolate}
+.site-tabs a[aria-current=page]::before{content:"";position:absolute;left:0;right:0;top:8px;bottom:8px;border-radius:999px;background:var(--tab-bg,#eef2f3);z-index:-1}
+.site-tabs a[href="ep10-preview.html"]{--tab-bg:#EEF2F3}
+.site-tabs a[href="karte.html"]{--tab-bg:#F3DCE3}
+.tab-icon{width:18px;height:18px;flex:none;margin-right:6px}
+@media(max-width:480px){.tab-icon{margin-right:4px}}
+@media(max-width:350px){.site-brand,.tab-icon{display:none}}
+</style>
+<style>
+/* plan-dot 10/6 */
+.plan-dot{display:inline-block;padding:2px 12px;border-radius:999px;font-weight:700;line-height:1.5;letter-spacing:normal;color:#153f4b;background:var(--dot-color);white-space:nowrap}
+.dot-free{--dot-color:#EEF2F3}
+.dot-ume{--dot-color:#F3DCE3}
+.dot-take{--dot-color:#C5EFF8}
+.dot-matsu{--dot-color:#D1E6DC}
+.plan-dot-icon{width:18px;height:18px;vertical-align:-4px;margin-right:6px}
 </style>
 <style>
 /* ep10-only 10/6 redesign */
 .dev-only{display:none!important}
 a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 .chip-row{display:flex;align-items:center;flex-wrap:wrap;gap:4px 16px;margin:0 0 16px}.chip-row .chip{margin:0}
+.label .plan-dot{margin-right:10px;font-size:13px}.login-hint .plan-dot{font-size:.9em;padding:1px 10px}.btn-icon{width:20px;height:20px;flex:none;margin-right:8px}
 .login-hint{font-size:14px;color:var(--muted);margin:16px 0 0}.login-hint a{margin-left:.5em;font-weight:700}
 .save-alert{margin:0 0 20px;padding:10px 14px;border:1px solid #c6d3d8;background:#f7f8fa;border-radius:10px;font-size:14px;color:var(--ink)}
 .footer-brand .footer-link{display:block;margin-bottom:8px}
@@ -86,13 +102,13 @@ a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:cen
 <style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}#intro h1{font-size:24px;line-height:1.45}.karte-hero h1,.karte-heading{font-size:21px}h2{font-size:19px}.question-card{padding:16px}.question-text{font-size:17px;line-height:1.7}.answer{min-height:60px;font-size:22px}.explanation{padding:14px}.explanation p,.answer-explanation{font-size:15px}#score{font-size:26px}.account h2{font-size:18px}.account input{min-height:44px}.preview{font-size:13px}}</style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="ep10-preview.html" aria-current="page">3問チェック</a><a href="karte.html">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
+<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="ep10-preview.html" aria-current="page"><img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a><a href="karte.html"><img class="tab-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
 <script src="/site-header.js"></script>
 <div class="preview dev-only" aria-hidden="true"><div class="wrap"><p id="storageScope"></p><div class="preview-actions"><button id="retrySave" class="pillbutton" hidden>保存を再試行</button><button id="connectLine" class="pillbutton" hidden>LINEで本人確認</button></div><p id="saveStatus" role="status" aria-live="polite"></p></div></div>
 <main>
 <section id="intro" class="screen band band-cyan" tabindex="-1"><div class="wrap">
-<div class="hero"><p class="label">第10回 · 営業保証金と保証協会</p><h1>3問チェック</h1><p>○か×で答えると、すぐに解説が出ます。</p><p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で聴く（約17分）</a></p><div class="chip-row"><p id="progressChip" class="chip">回答 0 / 3</p><button id="restartInline" class="textbutton" type="button" hidden>最初から解き直す</button></div></div>
-<p id="loginHint" class="login-hint" hidden>ログインすると、答えた記録が学習カルテに集まります。<a href="account.html?next=ep10">ログイン</a></p>
+<div class="hero"><p class="label"><span class="plan-dot dot-free"><img class="plan-dot-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">学習便</span><span class="label-text">第10回 · 営業保証金と保証協会</span></p><h1>3問チェック</h1><p>○か×で答えると、すぐに解説が出ます。</p><p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で聴く（約17分）</a></p><div class="chip-row"><p id="progressChip" class="chip">回答 0 / 3</p><button id="restartInline" class="textbutton" type="button" hidden>最初から解き直す</button></div></div>
+<p id="loginHint" class="login-hint" hidden>ログインすると、答えた記録が<span class="plan-dot dot-ume">学習カルテ</span>に集まります。<a href="account.html?next=ep10">ログイン</a></p>
 </div></section>
 <section id="linkPendingBand" class="band band-cyan" hidden><div class="wrap"><div class="card"><div id="accountLinkPending" hidden><p class="small">LINEと連携する準備ができました。</p><button id="accountLinkPendingGo" class="primary" type="button">LINEで本人確認して連携を完了する</button><p class="small muted">LINEのログイン画面が開きます。</p></div></div></div></section>
 <section id="signinPrompt" class="band band-cyan" hidden><div class="wrap"><div class="card">
@@ -107,7 +123,7 @@ a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:cen
 <div id="resultRows" class="card"></div>
 <article class="card soft"><h2 id="nextTitle"></h2><p id="nextBody"></p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で復習する（約17分）</a></article>
 <p id="resultsStorageNote" class="small muted"></p>
-<div class="actions"><a id="toKarte" class="primary" href="karte.html">学習カルテで記録を見る</a><button id="restart" class="secondary" type="button">もう一度解く</button><button id="showKarte" class="primary" type="button" hidden>結果と復習を見る</button></div>
+<div class="actions"><a id="toKarte" class="primary" href="karte.html"><img class="btn-icon" src="img/icons/plan-karte.svg" alt="" width="20" height="20">学習カルテで記録を見る</a><button id="restart" class="secondary" type="button">もう一度解く</button><button id="showKarte" class="primary" type="button" hidden>結果と復習を見る</button></div>
 <p class="muted small">この3問の振り返りです。分野全体の習得度ではありません。</p>
 </div></section>
 <section id="karte" class="screen band band-white dev-only" tabindex="-1" hidden><div class="wrap">

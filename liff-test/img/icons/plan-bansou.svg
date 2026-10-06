@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">伴走</title>
+  <rect width="64" height="64" rx="14" fill="#D1E6DC"/>
+  <g stroke="#153F4B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <g fill="none">
+      <circle cx="21" cy="22" r="6"/>
+      <path d="M13 51V39a8 8 0 0 1 16 0v12Z"/>
+    </g>
+    <g fill="#17C5E8">
+      <circle cx="43" cy="18" r="6"/>
+      <path d="M35 47V35a8 8 0 0 1 16 0v12Z"/>
+    </g>
+  </g>
+</svg>

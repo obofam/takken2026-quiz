@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">学習カルテ</title>
+  <rect width="64" height="64" rx="14" fill="#F3DCE3"/>
+  <g fill="none" stroke="#153F4B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M24 16h-7a3 3 0 0 0-3 3v31a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V19a3 3 0 0 0-3-3h-7"/>
+    <rect x="24" y="11" width="16" height="10" rx="3"/>
+    <path d="M22 44v-8m10 8V31"/>
+  </g>
+  <path d="M42 44V26" fill="none" stroke="#17C5E8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

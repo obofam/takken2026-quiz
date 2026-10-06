@@ -21,6 +21,7 @@ Kei の赤入れ「全体的にわかりづらい。全体の構成が把握し�
   - LINE：`account.html` → `liff.line.me/…/ep10-preview.html?login=line&next=karte`（LIFF 経由で ep10 に戻る既存の道）。ep10 は `login=line` で自動的に LINE ログインへ進み（`redirectUri` に `?next=` を引き継ぐ）、ログイン完了後（`verifyLine` の最後）に `next=karte` なら `karte.html` へ。`next=ep10` や指定なしは ep10 に留まる。LINE アプリ内ブラウザに切り替わっても URL に載っているので失われない。
 - 画面から「Sprint」「テスト中」「保存中」「アカウントに保存」を除去（`ui-messages.js` の `syncing` は「送っています…」、内部の記録欄ラベルは「記録：この端末／ログイン中」）。例外は `karte.html` の権利なし画面（テスト決済の説明）。`privacy.html` の見出し「保存について（テスト中）」は今回の範囲外で未変更。
 - `scripts/dev.cjs` の公開ファイルに `account.html`・`site-header.js` を追加。`vercel.json` は変更なし。
+- **プラン名の札とアイコン（10/6 追記）**：ヘッダーのタブに `img/icons/plan-free.svg`／`plan-karte.svg`（18px・`alt=""`、350px 以下は非表示）、現在地タブは下線＋プラン色の薄いピル。`.plan-dot`／`.dot-*` の CSS は3ページ共通ブロック（`/* plan-dot 10/6 */`）。ep10＝オーバーラインに札「学習便」・結果ボタンに学習カルテのアイコン・ログイン案内の「学習カルテ」を札に。karte＝権利あり画面のオーバーラインに札、h1 の左に 40px（スマホ32px）のアイコン。ボタンの色は水色のまま。`img/icons/preview.html` は `.vercelignore` で除外。
 - テスト：`npm test` 185件（156件＋新規 `tests/redesign.test.cjs` 29件）。既存の更新は `karte-page.test.cjs`（構造テストの文言・共有CSS検査から ep10 専用ブロックを除外）と `ui-sprint2.test.cjs`（`#signinPrompt`／`#account` の表示確認 → `#loginHint`、記録ラベル）。
 
 ## Sprint 3（2026-10-06）：学習カルテを本人の回答記録から表示

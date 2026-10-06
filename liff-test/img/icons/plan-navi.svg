@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">学習ナビ</title>
+  <rect width="64" height="64" rx="14" fill="#C5EFF8"/>
+  <path d="M14 51h13a8 8 0 0 0 0-16h-5a7 7 0 0 1 0-14h8" fill="none" stroke="#153F4B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 6"/>
+  <g stroke="#153F4B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M52 23c0 8-11 18-11 18S30 31 30 23a11 11 0 0 1 22 0Z" fill="#17C5E8"/>
+    <circle cx="41" cy="23" r="3" fill="none"/>
+  </g>
+</svg>

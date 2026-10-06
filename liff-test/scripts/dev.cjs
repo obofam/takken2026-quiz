@@ -2,7 +2,7 @@
 // Small local harness for the Vercel handlers; serves only listed public assets.
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const root=path.join(__dirname,'..');
-const files=new Set(['index.html','ep10-preview.html','account.html','site-header.js','plans-preview.html','privacy.html','auth-callback.html','app.js','config.js','style.css','sync.js','auth-client.js','auth-callback.js','ui-messages.js','karte.html','quiz-catalog.js','karte-core.js']);
+const files=new Set(['index.html','ep10-preview.html','account.html','site-header.js','plans-preview.html','privacy.html','auth-callback.html','app.js','config.js','style.css','sync.js','auth-client.js','auth-callback.js','ui-messages.js','karte.html','quiz-catalog.js','karte-core.js',...['free','karte','navi','bansou'].map(n=>'img/icons/plan-'+n+'.svg')]);
 const handlers=Object.fromEntries(['session','answers','email','email-verify','link','checkout','stripe-webhook','karte'].map(name=>['/api/'+name,require('../api/'+name)]));
 const server=http.createServer(async(req,res)=>{
   res.setHeader('Cache-Control','no-store');res.setHeader('Referrer-Policy','no-referrer');res.setHeader('X-Content-Type-Options','nosniff');
@@ -22,7 +22,7 @@ const server=http.createServer(async(req,res)=>{
     }
     const name=url.pathname==='/'?'index.html':url.pathname.slice(1);
     if(!['GET','HEAD'].includes(req.method)||!files.has(name))return res.status(404).json({error:'not_found'});
-    const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8'};
+    const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
     res.setHeader('Content-Type',types[path.extname(name)]);res.end(req.method==='HEAD'?undefined:await fs.readFile(path.join(root,name)));
   }catch{if(!res.writableEnded)res.status(503).json({error:'unavailable'});}
 });

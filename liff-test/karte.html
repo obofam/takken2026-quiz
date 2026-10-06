@@ -59,7 +59,7 @@
 .preview-links.band{display:block;margin-top:0;padding:36px 0;border-top:1px solid var(--line)}.preview-links .wrap{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
 @media(max-width:480px){.band{padding:28px 0}#signinPrompt{padding-top:0}#intro h1{font-size:30px}.karte-hero h1,.karte-heading{font-size:23px}.question-card{padding:20px}.preview-links.band{padding:28px 0}}
 </style>
-<style>a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}#entitled .fact{margin:16px 0}#untilRow{margin:0 0 16px}footer p{margin:0 0 8px}</style>
+<style>a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}.karte-title{display:flex;align-items:center;gap:12px;margin:0 0 4px}.karte-title h1{margin:0}.karte-title-icon{width:40px;height:40px;flex:none}@media(max-width:480px){.karte-title{gap:10px}.karte-title-icon{width:32px;height:32px}}#entitled .label{margin:0 0 10px}#entitled .fact{margin:16px 0}#untilRow{margin:0 0 16px}footer p{margin:0 0 8px}</style>
 <style>
 /* site-header 10/6 */
 html{scroll-padding-top:60px}
@@ -72,7 +72,22 @@ html{scroll-padding-top:60px}
 .site-auth{flex:none;font-size:13px;line-height:1;font-weight:700;text-decoration:none;border-radius:999px;padding:8px 14px;border:1px solid #91cbd7;color:#164a59;background:#fff;white-space:nowrap}
 .site-auth[data-state=in]{border-color:var(--line);background:#f3f5f6;color:var(--muted);font-weight:400;font-size:12px;padding:6px 10px}
 @media(max-width:480px){.site-header-in{padding:0 12px;gap:8px}.site-brand{font-size:12px}.site-tabs{gap:0}.site-tabs a{padding:0 5px}.site-auth{padding:7px 10px}.site-auth[data-state=in]{padding:6px 8px}}
-@media(max-width:350px){.site-brand{display:none}}
+.site-tabs a{position:relative;isolation:isolate}
+.site-tabs a[aria-current=page]::before{content:"";position:absolute;left:0;right:0;top:8px;bottom:8px;border-radius:999px;background:var(--tab-bg,#eef2f3);z-index:-1}
+.site-tabs a[href="ep10-preview.html"]{--tab-bg:#EEF2F3}
+.site-tabs a[href="karte.html"]{--tab-bg:#F3DCE3}
+.tab-icon{width:18px;height:18px;flex:none;margin-right:6px}
+@media(max-width:480px){.tab-icon{margin-right:4px}}
+@media(max-width:350px){.site-brand,.tab-icon{display:none}}
+</style>
+<style>
+/* plan-dot 10/6 */
+.plan-dot{display:inline-block;padding:2px 12px;border-radius:999px;font-weight:700;line-height:1.5;letter-spacing:normal;color:#153f4b;background:var(--dot-color);white-space:nowrap}
+.dot-free{--dot-color:#EEF2F3}
+.dot-ume{--dot-color:#F3DCE3}
+.dot-take{--dot-color:#C5EFF8}
+.dot-matsu{--dot-color:#D1E6DC}
+.plan-dot-icon{width:18px;height:18px;vertical-align:-4px;margin-right:6px}
 </style>
 <style>
 /* 学習カルテ本文（plans-preview.html の reports.weak と同じ部品。棒は淡々スタイルの水色） */
@@ -102,7 +117,7 @@ html{scroll-padding-top:60px}
 <style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}.card,#entitled{padding:18px}h1,#entitled h1{font-size:22px;line-height:1.45;margin-bottom:10px}.label{font-size:12px}.fact,#untilRow{font-size:15px}.rp-stats{gap:8px;margin:14px 0}.rp-stat{padding:10px 6px}.rp-stat b{font-size:17px}.rp-stat span{font-size:11px}.subject-results h2{font-size:17px}.subject-row{padding:10px 0}.subject-row>span{font-size:15px}.subject-row>b{font-size:15px}.rp-weak-main b{font-size:15px}.rp-weak-tag{font-size:11px;margin-left:6px}.rp-weak-count,.rp-weak-link{font-size:13px}.karte-note,.report-muted{font-size:12px}header p{font-size:14px}}</style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="ep10-preview.html">3問チェック</a><a href="karte.html" aria-current="page">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
+<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="ep10-preview.html"><img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a><a href="karte.html" aria-current="page"><img class="tab-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
 <script src="/site-header.js"></script>
 <main>
 <section class="band band-cyan"><div class="wrap">
@@ -120,7 +135,8 @@ html{scroll-padding-top:60px}
 <p id="buyMessage" class="small" role="status" aria-live="polite"></p>
 </div>
 <div id="entitled" class="card" hidden>
-<h1>学習カルテ</h1>
+<p class="label"><span class="plan-dot dot-ume"><img class="plan-dot-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</span></p>
+<div class="karte-title"><img class="karte-title-icon" src="img/icons/plan-karte.svg" alt="" width="40" height="40"><h1>学習カルテ</h1></div>
 <p id="untilRow" class="small muted" hidden>有効期限：<span id="until"></span></p>
 <p id="karteStatus" class="small muted" role="status" aria-live="polite"></p>
 <div id="karteBody"></div>
