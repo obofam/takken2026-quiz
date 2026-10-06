@@ -1,4 +1,17 @@
-# LIFF本人テスト・Sprint 1／2
+# LIFF本人テスト・Sprint 1／2／3
+
+## Sprint 3（2026-10-06）：学習カルテを本人の回答記録から表示
+
+実装済み（テスト環境のみ。デプロイ・migration は不要＝既存の `answers` と `entitlements` を読むだけ）。
+
+- `quiz-catalog.js`（新規・UMD、`window.MimioboCatalog`）：問題の台帳。放送ごとに `{episode, title, subject, audioUrl, page, questions:[{id, topic, answer}]}`。分野は「宅建業法／権利関係／法令上の制限／税・その他」。**放送が増えたらここに1件足すだけ**で学習カルテに反映される（`ep10-preview.html` の questions と id・topic・answer・順序が一致することを `tests/karte-core.test.cjs` が検査。`api/answers.js` の `QUESTIONS`・`sync.js` の `questionIds` との一致も検査）。
+- `karte-core.js`（新規・UMD、`window.MimioboKarteCore`）：`summarize(rows, catalog)` の純関数。台帳にない quiz・question の行は無視。正解は `value === answer`、`null`（まだ分からない）は不正解。返り値は `stats {episodes, answers, review}`、`subjects`（回答のある分野だけ、固定順）、`topics`、`review`（直近が不正解の論点を、正答率の低い順→同率は直近が古い順）。直近の判定は `answered_at`（同時刻は後の行）。
+- `GET /api/karte`（新規 `api/karte.js`）：Cookie ログイン必須（`X-Mimiobo-User` が付いていてセッションと違えば 401）。`entitlements` に期限内の `ume`／`take`／`matsu` が無ければ 403 `karte_not_entitled`（`answers` は読まない）。あれば `answers` から本人の行だけ `select=quiz_id,question_id,value,answered_at,attempt_id&order=answered_at.asc&limit=5000` で `{rows:[…]}` を返す（`user_id` は返さない）。集計はクライアント。
+- `karte.html`：権利ありの本文を、数字のタイル3つ／分野別の正答率（棒）／復習する論点（放送リンク・解き直しリンク）／注記に置き換え。見本（`plans-preview.html` の `reports.weak`）と同じ CSS 部品を使用（棒は淡々スタイルの水色）。記録0件は「まだ記録がありません。」＋「3問チェックを始める」。読み込み中は「記録を読み込んでいます…」、失敗は `service_unavailable`、`/api/karte` が 403 なら権利なし画面、401 ならログイン案内に切り替え。仮の文言（Sprint 3 の予告・「権利の確認だけです」）と「3問チェックに戻る」リンクは削除。
+- `scripts/dev.cjs`：公開ファイルに `quiz-catalog.js`・`karte-core.js`、handlers に `karte` を追加。`vercel.json` は変更なし。
+- テスト：`npm test` 156件（Sprint 2 の128件＋28件）。内訳：`karte-core.test.cjs` 11件（台帳と ep10-preview の一致・台帳の形・API／同期との id 一致・集計）、`karte-api.test.cjs` 9件、`karte-page.test.cjs` に8件追加（画面の描画・0件・403/401・失敗・読み込み中）と構造テストの更新。
+- 範囲外：模試・過去問・4択の集計、学習ナビ、週次レポート、他の放送回の問題ページ。4択の台帳ができたら ○×／4択の分け集計を足す。
+- 手動確認（ローカル）：`npm run dev` → ログイン済みで `karte.html`（権利ありなら Sprint 2 の手順どおり決済後）。`ep10-preview.html` で3問答えて（再挑戦も）`karte.html` を開き、タイル・分野の棒・復習一覧が出ること。権利のないユーザーで `/api/karte` を直接開くと 403。
 
 ## Sprint 2（2026-10-06）：Stripeテスト決済 → entitlements → karte.html
 
@@ -153,6 +166,6 @@ SQL・Auth設定は適用済み。A-13・A-14配信後、LINE連携から再確�
 
 ## 後続Sprint・保存期限
 
-Stripeテスト決済とentitlementsの書き込みは Sprint 2 で実装済み（冒頭参照）。実データの有料カルテ（`answers` からの集計表示）、学習ナビ・伴走の購入、通知・配信は未実装。記録は「年内をめどに閲覧、消す前に案内」という設計メモのみで、閲覧期限・削除処理は今回追加しない。期限の具体値・削除案内の方法は今後決める。
+Stripeテスト決済とentitlementsの書き込みは Sprint 2 で実装済み（冒頭参照）。学習カルテの `answers` 集計表示は Sprint 3 で実装済み。学習ナビ・伴走の購入、通知・配信は未実装。記録は「年内をめどに閲覧、消す前に案内」という設計メモのみで、閲覧期限・削除処理は今回追加しない。期限の具体値・削除案内の方法は今後決める。
 
 参考： [Supabaseのメール認証](https://supabase.com/docs/guides/auth/auth-email-passwordless)、[メールテンプレート](https://supabase.com/docs/guides/auth/auth-email-templates)、[secret key](https://supabase.com/docs/guides/getting-started/api-keys)、[LIFF追加パラメータ](https://developers.line.biz/ja/tips/2026/07/16/liff-url-additional-info/)。

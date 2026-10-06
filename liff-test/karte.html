@@ -60,6 +60,31 @@
 @media(max-width:480px){.band{padding:28px 0}#signinPrompt{padding-top:0}#intro h1{font-size:30px}.karte-hero h1,.karte-heading{font-size:23px}.question-card{padding:20px}.preview-links.band{padding:28px 0}}
 </style>
 <style>a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}#entitled .fact{margin:16px 0}</style>
+<style>
+/* 学習カルテ本文（plans-preview.html の reports.weak と同じ部品。棒は淡々スタイルの水色） */
+.subject-results{padding:0 0 24px}
+.subject-results h2{font-size:21px;margin:0 0 12px}
+.subject-row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:14px 0}
+.subject-row>span{font-size:17px}
+.subject-row>b{font-size:18px;font-variant-numeric:tabular-nums}
+.subject-bar{grid-column:1/-1;height:7px;background:#edf1f3;border-radius:99px;overflow:hidden}
+.subject-bar i{display:block;height:100%;background:var(--cyan);border-radius:99px}
+.report-muted{font-size:13px;color:#687980}
+.rp-stats{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
+.rp-stat{flex:1 1 130px;background:#f3f7f8;border-radius:10px;padding:14px 10px;text-align:center}
+.rp-stat b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.rp-stat span{display:block;font-size:12px;color:#637d86;margin-top:4px}
+.rp-weak-item{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 0;border-bottom:1px solid #dce5e8}
+.rp-weak-item:last-child{border-bottom:0}
+.rp-weak-main{flex:1 1 200px}
+.rp-weak-main b{font-size:17px}
+.rp-weak-tag{display:inline-block;font-size:12px;color:#637d86;background:#eef2f3;border-radius:999px;padding:2px 10px;margin-left:8px}
+.rp-weak-count{font-size:14px;color:#637d86;white-space:nowrap}
+.rp-weak-links{display:flex;flex-wrap:wrap;gap:6px 16px}
+.rp-weak-link{font-size:14px;color:#126981;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.karte-note{font-size:13px;color:var(--muted);margin:8px 0 0}
+@media(max-width:600px){.subject-row>span{font-size:16px}.rp-stat{flex:1 1 30%}.rp-weak-main{flex:1 1 100%}}
+</style>
 </head>
 <body>
 <header><div class="wrap"><p>耳で覚える宅建 <span class="muted">｜学習カルテ</span></p></div></header>
@@ -81,12 +106,14 @@
 </div>
 <div id="entitled" class="card" hidden>
 <h1>学習カルテ <span class="badge">テスト中</span></h1>
-<p>この画面は Sprint 3 で記録から作ります。今は権利の確認だけです。</p>
 <p id="untilRow" class="fact" hidden>有効期限：<span id="until"></span></p>
-<p><a class="textbutton" href="ep10-preview.html">3問チェックに戻る</a></p>
+<p id="karteStatus" class="small muted" role="status" aria-live="polite"></p>
+<div id="karteBody"></div>
 </div>
 </div></section>
 </main>
+<script src="/quiz-catalog.js"></script>
+<script src="/karte-core.js"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -115,6 +142,36 @@ function render(data){
   $('untilRow').hidden=!right.valid_until;
   if(right.valid_until)$('until').textContent=formatDate(right.valid_until);
   show('entitled');
+  return loadKarte();
+}
+// 記録はサーバーが権利を確認して返す（GET /api/karte）。集計だけこの画面で行う。
+async function fetchKarte(){
+  const response=await fetch('/api/karte',{credentials:'same-origin',headers:{'X-Mimiobo-User':userId},signal:AbortSignal.timeout(15000)});
+  if(response.status===401)return {loggedOut:true};
+  if(response.status===403)return {notEntitled:true};
+  if(!response.ok)throw Error('service_unavailable');
+  const data=await response.json();
+  return {rows:Array.isArray(data?.rows)?data.rows:[]};
+}
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function renderKarte(s){
+  if(!s.stats.answers)return '<p>まだ記録がありません。</p><div class="actions"><a class="primary" href="ep10-preview.html">3問チェックを始める</a></div>';
+  const tile=(n,unit,label)=>'<div class="rp-stat"><b>'+n+unit+'</b><span>'+label+'</span></div>';
+  const rows=s.subjects.map(x=>'<div class="subject-row"><span>'+esc(x.name)+'</span><b>'+x.correct+' / '+x.total+'問</b><div class="subject-bar"><i style="width:'+Math.round(x.correct/x.total*1000)/10+'%"></i></div></div>').join('');
+  const weak=s.review.map(t=>'<div class="rp-weak-item"><div class="rp-weak-main"><b>'+esc(t.topic)+'</b><span class="rp-weak-tag">'+esc(t.subject)+'・第'+t.episode+'回</span></div><span class="rp-weak-count">'+t.correct+' / '+t.total+'問</span><span class="rp-weak-links">'+(t.audioUrl?'<a class="rp-weak-link" href="'+esc(t.audioUrl)+'" target="_blank" rel="noopener noreferrer">放送 #'+t.episode+' を聴く</a>':'')+'<a class="rp-weak-link" href="'+esc(t.page)+'">問題を解き直す</a></span></div>').join('');
+  return '<div class="rp-stats">'+tile(s.stats.episodes,'回','放送')+tile(s.stats.answers,'問','回答')+tile(s.stats.review,'つ','復習する論点')+'</div>'
+    +'<section class="subject-results"><h2>分野別の正答率</h2>'+rows+'</section>'
+    +'<section class="subject-results"><h2>復習する論点</h2><p class="report-muted">正答率の低い順。放送に戻れます。</p>'+(weak||'<p>今の記録では、復習する論点はありません。</p>')+'</section>'
+    +'<p class="karte-note">記録は回答した時点のものです。同じ問題への再挑戦も数えます。</p>';
+}
+async function loadKarte(){
+  $('karteBody').innerHTML='';$('karteStatus').textContent='記録を読み込んでいます…';
+  try{
+    const result=await fetchKarte();
+    if(result.loggedOut||result.notEntitled){$('karteStatus').textContent='';show(result.loggedOut?'needLogin':'noEntitlement');return;}
+    $('karteBody').innerHTML=renderKarte(window.MimioboKarteCore.summarize(result.rows,window.MimioboCatalog));
+    $('karteStatus').textContent='';
+  }catch{$('karteStatus').textContent=msg('service_unavailable');}
 }
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function initialize(){
@@ -127,7 +184,7 @@ async function initialize(){
       for(let i=0;i<POLL_MAX&&!karteRight(data);i++){await sleep(POLL_MS);data=await fetchSession();if(data.loggedOut)break;}
       if(!data.loggedOut&&!karteRight(data)){$('status').textContent='反映に少し時間がかかっています。しばらくしてからこのページを開き直してください。';return;}
     }
-    render(data);
+    await render(data);
   }catch(e){$('status').textContent=msg(e.message);}
 }
 $('buy').onclick=async()=>{
