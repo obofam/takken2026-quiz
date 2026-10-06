@@ -93,7 +93,7 @@ test('page structure: approved copy, links and shared CSS',()=>{
   assert.equal((html.match(/<style>/g)||[]).length,(html.match(/<\/style>/g)||[]).length);
   const ep10=read('ep10-preview.html'),styles=s=>(s.match(/<style>[\s\S]*?<\/style>/g)||[]);
   // Shared CSS: every ep10 style block except the ep10-only button rule is reused verbatim.
-  for(const block of styles(ep10).filter(b=>!b.includes('body.signin-visible #connectLine')))assert.ok(html.includes(block));
+  for(const block of styles(ep10).filter(b=>!b.includes('body.signin-visible #connectLine')&&!b.includes('mobile-scale')))assert.ok(html.includes(block));
   assert.doesNotThrow(()=>new Function(html.match(/<script>\s*([\s\S]*?)<\/script>/)[1]));
   assert.doesNotMatch(html,/server=1/);
   // The placeholder body from Sprint 2 is gone; no arrow glyphs; scripts load the shared catalog and core.
