@@ -18,8 +18,15 @@ const session={userId:'12345678-1234-4123-8123-123456789abc',storageKey:'mimiobo
 function storage(){const values=new Map();return {values,get length(){return values.size;},key:i=>[...values.keys()][i]??null,getItem:k=>values.has(k)?values.get(k):null,setItem:(k,v)=>values.set(k,String(v)),removeItem:k=>values.delete(k)};}
 const make=(episode,subject,extra={})=>({episode,title:'テスト第'+episode+'回',subject,audioUrl:'https://stand.fm/episodes/t'+episode,page:'ep10-preview.html?ep='+episode,
   questions:[1,2,3].map(n=>({id:'ep'+episode+'-q'+n,topic:'論点'+n,text:'問題文'+n,answer:n!==2,explanation:'解説'+n,law:'根拠：宅建業法'+n+'条'})),...extra});
-const wide={...catalog,ep3:make(3,'宅建業法'),ep11:make(11,'宅建業法',{audioMinutes:9}),ep14:make(14,'権利関係')};
+// 固定の台帳（回が増えても期待値が動かないように、第10回＋テスト用の回だけ）。
+const wide={ep10:catalog.ep10,ep3:make(3,'宅建業法'),ep11:make(11,'宅建業法',{audioMinutes:9}),ep14:make(14,'権利関係')};
 const plain=v=>JSON.parse(JSON.stringify(v));
+// 実台帳に一時的にテスト用の回を入れ、終わったら元に戻す（実際の回が同じ番号で入っていても壊さない）。
+function inject(extra){
+  const had=Object.fromEntries(Object.keys(extra).map(k=>[k,Object.prototype.hasOwnProperty.call(catalog,k)?catalog[k]:undefined]));
+  Object.assign(catalog,extra);
+  return ()=>{for(const [k,v] of Object.entries(had)){if(v===undefined)delete catalog[k];else catalog[k]=v;}};
+}
 
 // ---------- ep10-preview.html を ?ep= 付きで動かす ----------
 function pageHarness(search='',{cat=wide,store=storage()}={}){
@@ -150,7 +157,7 @@ test('sync.js: episode 10 (the default) keeps its key, version, GET url and quiz
   assert.equal(JSON.parse(disk.getItem(sy.key)).version,'ep10-2026-09-15.v1');
 });
 test('sync.js: another episode has its own key, version, GET url, quizId and question ids',async()=>{
-  Object.assign(catalog,{ep3:wide.ep3});
+  const restore=inject({ep3:wide.ep3});
   try{
     const {s:sy,disk,calls}=syncSetup('ep3');
     assert.equal(sy.key,'user-u-ep3-v1');
@@ -160,7 +167,7 @@ test('sync.js: another episode has its own key, version, GET url, quizId and que
     assert.deepEqual(post,{attemptId:'a2',quizId:'ep3',startedAt:started,questionId:'ep3-q2',value:false,answeredAt:at});
     assert.equal(JSON.parse(disk.getItem(sy.key)).version,'ep3-2026-09-15.v1');
     assert.equal(disk.getItem('user-u-ep10-v1'),null,'episode 10 is untouched');
-  }finally{delete catalog.ep3;}
+  }finally{restore();}
 });
 test('sync.js: an unknown quiz is refused; merge keeps the version it is given',()=>{
   for(const quizId of ['ep99','constructor','__proto__'])assert.throws(()=>sync.create({userId:'u',storageKey:'k',storage:storage(),quizId,validate:x=>x,fetch(){}}),/UNKNOWN_QUIZ/);
@@ -168,7 +175,7 @@ test('sync.js: an unknown quiz is refused; merge keeps the version it is given',
   assert.equal(sync.merge({attempts:[]},{attempts:[]},'ep3-2026-09-15.v1').version,'ep3-2026-09-15.v1');
 });
 test("sync.js: a permanent GET failure sets aside only this episode's queued rows",async()=>{
-  Object.assign(catalog,{ep3:wide.ep3});
+  const restore=inject({ep3:wide.ep3});
   try{
     const {s:sy,disk}=syncSetup('ep3',{getReply:()=>({ok:false,status:409,json:async()=>({error:'history_limit'})})});
     disk.setItem(sy.prefix+'a3:0',JSON.stringify({attemptId:'a3',quizId:'ep3',questionId:'ep3-q1',value:true,startedAt:started,answeredAt:at}));
@@ -176,17 +183,17 @@ test("sync.js: a permanent GET failure sets aside only this episode's queued row
     await sy.refresh();
     assert.equal(disk.getItem(sy.prefix+'a3:0'),null);assert.ok(disk.getItem(sy.deadPrefix+'a3:0'));
     assert.ok(disk.getItem(sy.prefix+'b10:0'),"episode 10's queued answer is still waiting");assert.equal(disk.getItem(sy.deadPrefix+'b10:0'),null);
-  }finally{delete catalog.ep3;}
+  }finally{restore();}
 });
 test("sync.js: restoring one episode merges into that episode's cache only",async()=>{
-  Object.assign(catalog,{ep3:wide.ep3});
+  const restore=inject({ep3:wide.ep3});
   try{
     const server={version:'ep3-2026-09-15.v1',attempts:[{id:'r1',startedAt:started,answers:[{value:true,at},null,null]}]};
     const {s:sy,disk}=syncSetup('ep3',{getReply:()=>({ok:true,status:200,json:async()=>server})});
     disk.setItem('user-u-ep10-v1','{"version":"ep10-2026-09-15.v1","attempts":[]}');
     await sy.refresh();
     assert.equal(JSON.parse(disk.getItem('user-u-ep3-v1')).attempts[0].id,'r1');assert.equal(disk.getItem('user-u-ep10-v1'),'{"version":"ep10-2026-09-15.v1","attempts":[]}');
-  }finally{delete catalog.ep3;}
+  }finally{restore();}
 });
 
 // ---------- サーバーの検証（台帳） ----------
@@ -202,7 +209,7 @@ const answer=(extra={})=>({attemptId:'aaaaaaaa-1234-4123-8123-123456789abc',quiz
 test.beforeEach(()=>{Object.assign(process.env,{SESSION_SECRET:'test-secret-at-least-thirty-two-bytes-long',SUPABASE_URL:'https://test.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_test_only'});global.fetch=async()=>{throw Error('unmocked fetch');};});
 test.after(()=>{global.fetch=originalFetch;process.env=originalEnv;});
 // The API reads the same catalog object; add test episodes for the duration of one test.
-const withEpisodes=fn=>async()=>{Object.assign(catalog,{ep3:wide.ep3,ep11:wide.ep11});try{await fn();}finally{delete catalog.ep3;delete catalog.ep11;}};
+const withEpisodes=fn=>async()=>{const restore=inject({ep3:wide.ep3,ep11:wide.ep11});try{await fn();}finally{restore();}};
 test('server: the catalog decides which quiz and question are valid (400 otherwise)',withEpisodes(()=>{
   assert.equal(answersApi.validate(answer({quizId:'ep3',questionId:'ep3-q2'})).p_quiz_id,'ep3');
   assert.equal(answersApi.validate(answer({quizId:'ep11',questionId:'ep11-q3',value:null})).p_question_id,'ep11-q3');
@@ -400,7 +407,10 @@ test('import: merging keeps episode 10 exactly and the result is a catalog the a
   const source=read('quiz-catalog.js'),before=plain(catalog);
   const merged=mergeSource(source,validateEntries([goodItem(2),goodItem(1)]).entries);
   const next=plain(loadCatalog(merged.source));
-  assert.deepEqual(Object.keys(next),['ep1','ep2','ep10'],'ordered by episode');
+  const order=Object.keys(next).map(k=>Number(k.slice(2)));
+  assert.deepEqual(order,[...order].sort((a,b)=>a-b),'ordered by episode');
+  assert.ok(next.ep1&&next.ep2&&next.ep10);
+  for(const k of Object.keys(before))if(!['ep1','ep2'].includes(k))assert.deepEqual(next[k],before[k],k+' is untouched');
   assert.deepEqual(next.ep10,before.ep10,'episode 10 is unchanged (audioMinutes, hints, pairs, recommend included)');
   assert.equal(next.ep1.title,'第1回の題');assert.equal(next.ep2.questions[1].answer,false);
   // Importing again replaces the same episode, keeps the others and a hand-set audioMinutes.
@@ -421,7 +431,10 @@ test('import: run() checks without --write, writes with --write, and writes noth
     assert.ok(logs.some(l=>l.includes('検査OK'))&&logs.some(l=>l.includes('第10回は取り込みません')));
     assert.equal(run([good,'--write'],{catalogFile,log}),0);
     const written=fs.readFileSync(catalogFile,'utf8');assert.notEqual(written,original);
-    assert.deepEqual(Object.keys(loadCatalog(written)),['ep1','ep2','ep10']);
+    const after=loadCatalog(written),expected=new Set([...Object.keys(loadCatalog(original)),'ep1','ep2']);
+    assert.deepEqual(new Set(Object.keys(after)),expected,'imported episodes are added, existing ones stay');
+    assert.deepEqual(plain(after.ep10),plain(loadCatalog(original).ep10),'episode 10 is not overwritten by the file that contains it');
+    assert.equal(after.ep1.title,'第1回の題');
     const broken=path.join(dir,'broken.json');fs.writeFileSync(broken,JSON.stringify([goodItem(3),{...goodItem(4),subject:'民法'}]));
     const before=fs.readFileSync(catalogFile,'utf8');
     assert.equal(run([broken,'--write'],{catalogFile,log}),1);assert.equal(fs.readFileSync(catalogFile,'utf8'),before,'one bad entry blocks all of them');
