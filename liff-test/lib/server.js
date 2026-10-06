@@ -61,9 +61,13 @@ async function supabase(path,{method='GET',body,accessToken,headers:extra}={}){
 async function allowed(provider,subject){const q=new URLSearchParams({select:'provider',provider:'eq.'+provider,subject:'eq.'+subject,limit:'1'});return (await supabase('/rest/v1/allowlist?'+q)).length===1;}
 async function session(req){
   const s=verify(cookies(req)[COOKIE],'session');if(!s||!UUID.test(s.userId)||!['email','line'].includes(s.provider)||typeof s.subject!=='string')fail(401,'login_required');
-  if(!await allowed(s.provider,s.subject))fail(403,'not_allowed');
   const q=new URLSearchParams({select:'user_id',user_id:'eq.'+s.userId,provider:'eq.'+s.provider,subject:'eq.'+s.subject,limit:'1'});
-  if((await supabase('/rest/v1/identities?'+q)).length!==1)fail(401,'login_required');
+  // Both lookups start together (one round trip instead of two); the allowlist verdict still wins.
+  const [isAllowed,identity]=await Promise.allSettled([allowed(s.provider,s.subject),supabase('/rest/v1/identities?'+q)]);
+  if(isAllowed.status==='rejected')throw isAllowed.reason;
+  if(!isAllowed.value)fail(403,'not_allowed');
+  if(identity.status==='rejected')throw identity.reason;
+  if(identity.value.length!==1)fail(401,'login_required');
   if(req.headers?.['x-mimiobo-user']&&req.headers['x-mimiobo-user']!==s.userId)fail(401,'user_changed');
   return s;
 }
@@ -77,9 +81,13 @@ async function entitlements(userId,now=Date.now()){
 }
 async function linkedSessionData(userId){
   const q=new URLSearchParams({select:'provider',user_id:'eq.'+userId});
-  const identities=await supabase('/rest/v1/identities?'+q);
+  // Both lookups start together; the identities result is judged first, as before.
+  const [linked,granted]=await Promise.allSettled([supabase('/rest/v1/identities?'+q),entitlements(userId)]);
+  if(linked.status==='rejected')throw linked.reason;
+  const identities=linked.value;
   if(!Array.isArray(identities))fail(503,'database_unavailable');
-  return {...sessionData(userId),providers:['email','line'].filter(provider=>identities.some(identity=>identity?.provider===provider)),entitlements:await entitlements(userId)};
+  if(granted.status==='rejected')throw granted.reason;
+  return {...sessionData(userId),providers:['email','line'].filter(provider=>identities.some(identity=>identity?.provider===provider)),entitlements:granted.value};
 }
 async function login(req,res,provider,subject,linkToken){
   if(linkToken!==undefined&&(typeof linkToken!=='string'||!/^[0-9a-f]{64}$/.test(linkToken)))fail(400,'invalid_link');

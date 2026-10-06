@@ -208,9 +208,11 @@ async function loadKarte(){
 }
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function initialize(){
+  // Ask the server first; the message catalogue loads alongside instead of before it.
+  const sessionRequest=fetchSession();sessionRequest.catch(()=>{});
   try{await new Promise(resolve=>{const script=document.createElement('script');script.src='/ui-messages.js';script.onload=resolve;script.onerror=resolve;document.head.append(script);});}catch{}
   try{
-    let data=await fetchSession();
+    let data=await sessionRequest;
     // Just back from Checkout: the webhook may not have arrived yet. Re-read a few times, then stop.
     if(new URLSearchParams(location.search).get('checkout')==='ok'&&!data.loggedOut&&!karteRight(data)){
       $('status').textContent='決済の反映を待っています…';
