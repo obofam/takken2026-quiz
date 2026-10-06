@@ -35,31 +35,55 @@
 .monthly-report{margin-top:30px;padding-top:28px;border-top:1px solid var(--line)}.monthly-report>p{font-size:17px}.monthly-report>details{border:1px solid var(--line);border-radius:12px;padding:16px;font-size:17px}.monthly-report summary{font-size:16px;font-weight:700;color:#126981}.monthly-report .report-notice{font-size:14px;color:var(--muted);margin:18px 0 14px}.monthly-report h4{font-size:18px;margin:22px 0 10px}.monthly-report .report-copy{font-size:17px;line-height:1.85;margin:0}.report-grid{overflow-x:auto}.report-grid table{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;margin:0}.report-grid caption{font-weight:700;text-align:left;font-size:17px;margin:0 0 12px}.report-grid th{font-size:13px;line-height:1.6;text-align:center;color:var(--muted);padding:4px 0}.report-grid th[scope=row]{font-size:14px;color:var(--ink);text-align:left}.report-grid td{text-align:center;font-size:15px;font-weight:700;height:43px;border-radius:5px;font-variant-numeric:tabular-nums}.report-grid .heat-low{background:#f0f5f6;color:#334d55}.report-grid .heat-mid{background:#cbeef5;color:#174e5b}.report-grid .heat-high{background:#12809a;color:#fff}.report-grid .heat-na{background:#f4f5f6;color:#59636c;font-size:13px}.report-grid .mock-cell{box-shadow:inset 0 0 0 1px #7c969f}.heat-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;font-size:13px;color:var(--muted)}.heat-legend span{display:flex;gap:5px;align-items:center}.heat-legend i{display:inline-block;width:13px;height:13px;border-radius:3px}.monthly-report .report-note{font-size:13px;color:var(--muted);margin:12px 0 0}.report-next{border-left:3px solid var(--cyan);padding-left:14px;margin-top:22px}.report-next h4{margin:0 0 8px}@media(max-width:480px){.monthly-report>details{padding:12px}.report-grid table{border-spacing:3px}.report-grid td{font-size:14px}.report-grid th[scope=row]{font-size:13px}}
 .account{margin-top:28px}.account h2{font-size:20px;margin-bottom:8px}.account label{display:block;font-size:14px;font-weight:700;margin:14px 0 6px}.account input{width:100%;padding:12px;border:1px solid #c6d3d8;border-radius:10px;font:inherit;min-height:48px}.account .primary,.account .secondary{width:100%;margin:12px 0 0}.account details{margin-top:16px}.account .textbutton{margin-top:12px}#syncStatus{margin:0 0 12px}
 </style>
+<style>
+/* メリハリ改修（2026-10-06）：帯で画面を区切り、見出しと本文の差を強くする */
+.band{padding:36px 0}.band-cyan{background:#e4f6fb}.band-white{background:#fff}.band-gray{background:#f7f8fa;border-top:1px solid var(--line)}
+#signinPrompt{padding-top:0}#results{border-top:0}
+.band-cyan .card{background:#fff;border-color:var(--line)}.band-cyan .card.soft{background:#f2fbfd;border-color:#b8e4ec}.band-gray .card{background:#fff}
+.band .wrap>.card:first-child{margin-top:0}.band .wrap>.card:last-child{margin-bottom:0}
+.band .hero,#intro .hero{padding:8px 0}
+#intro .hero p{max-width:34em}
+.preview{background:#fff;border-bottom:1px solid var(--line)}#storageScope{font-weight:700}
+.label{font-size:13px;letter-spacing:.12em;color:#126981;font-weight:700;margin:0 0 12px}
+#intro h1{font-size:36px;font-weight:900;line-height:1.4;color:#141B21;margin:0 0 20px}
+#results .result-title,#score{font-size:34px;font-weight:900;line-height:1.4}
+#karte,#sampleKarte{max-width:none;margin:0}#karte .wrap{max-width:708px}#karte .karte-hero{margin-top:0}
+.karte-hero h1,.karte-heading{font-size:26px;font-weight:900}
+.question-card{padding:24px;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 2px 8px rgba(20,27,33,.04);margin:0 0 20px}.question-card:last-child{margin-bottom:0}
+.q-head{display:flex;align-items:center;gap:12px;margin:0 0 12px}.q-num{display:inline-block;background:#17C5E8;color:#12313b;font-weight:900;font-size:14px;line-height:1.7;padding:2px 12px;border-radius:999px}.q-topic{font-size:13px;color:#126981;font-weight:700;letter-spacing:.08em}
+.question-text{font-size:20px;font-weight:700;line-height:1.75;margin:0}
+.answer{background:#fff;border:2px solid #c6dce2;min-height:76px;font-size:28px;font-weight:900}.answer[aria-pressed=true]{background:#e4f6fb;border-color:#10758a}
+.explanation{background:#f7f8fa;border:0;border-radius:12px;padding:18px;margin-top:24px}.explanation .verdict{background:#fff;border:1px solid var(--line)}.explanation .verdict.correct{background:#F4FBD2;border-color:#D6F034;color:#4F6300}.explanation .answer-explanation{font-size:16px}.explanation .law{font-size:14px;color:var(--muted);margin:0}
+.row{padding:18px 0}
+.account h2{font-size:20px;font-weight:900}.account .primary{width:100%;min-height:56px}.band .card.account{margin:0}
+.preview-links.band{display:block;margin-top:0;padding:36px 0;border-top:1px solid var(--line)}.preview-links .wrap{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+@media(max-width:480px){.band{padding:28px 0}#signinPrompt{padding-top:0}#intro h1{font-size:30px}.karte-hero h1,.karte-heading{font-size:23px}.question-card{padding:20px}.preview-links.band{padding:28px 0}}
+</style>
 <style>body.signin-visible #connectLine{display:none}</style>
 </head>
 <body>
 <div class="preview"><div class="wrap"><p id="storageScope">本人用試作 · 保存の準備中</p><div class="preview-actions"><button id="retrySave" class="pillbutton" hidden>保存を再試行</button><button id="connectLine" class="pillbutton" hidden>LINEで本人確認</button></div><p id="saveStatus" role="status" aria-live="polite"></p></div></div>
 <header><div class="wrap"><p>耳で覚える宅建 <span class="muted">｜学習便</span></p></div></header>
-<main class="wrap">
-<section id="intro" class="screen" tabindex="-1">
+<main>
+<section id="intro" class="screen band band-cyan" tabindex="-1"><div class="wrap">
 <div class="hero"><p class="label">第10回 · 営業保証金と保証協会</p><h1>定着3問チェック</h1><p>聴いた内容を3問で確かめます。○か×で答えると、すぐに解説が出ます。</p><p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で聴く（約17分）</a></p><p id="progressChip" class="chip">回答 0 / 3</p></div>
-</section>
-<section id="signinPrompt" class="card soft" hidden>
+</div></section>
+<section id="signinPrompt" class="band band-cyan" hidden><div class="wrap"><div class="card">
 <p class="label">記録を見るには</p>
 <p>LINEで本人確認すると、保存した記録が見られます。</p>
 <div class="actions"><button id="signinPromptLine" class="primary" type="button">LINEで本人確認</button></div>
 <p class="small muted">メールでログインする場合は、下の「記録を残す」から。</p>
-</section>
-<section id="quiz" aria-label="確認問題"></section>
-<section id="results" class="screen" tabindex="-1" hidden>
+</div></div></section>
+<section id="quiz" class="band band-white" aria-label="確認問題"><div class="wrap" id="quizList"></div></section>
+<section id="results" class="screen band band-cyan" tabindex="-1" hidden><div class="wrap">
 <div class="hero"><p class="label">第10回の結果</p><h2 id="score" class="result-title"></h2><p id="counts" class="muted small"></p></div>
 <div id="resultRows" class="card"></div>
 <article class="card soft"><h2 id="nextTitle"></h2><p id="nextBody"></p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で復習する（約17分）</a></article>
 <p id="resultsStorageNote" class="small muted"></p>
 <div class="actions"><button id="showKarte" class="primary">結果と復習を見る</button></div>
 <p class="muted small">この3問の振り返りです。分野全体の習得度ではありません。</p>
-</section>
-<section id="karte" class="screen" tabindex="-1" hidden>
+</div></section>
+<section id="karte" class="screen band band-white" tabindex="-1" hidden><div class="wrap">
 <div class="karte-hero"><h1 class="karte-heading">今回の結果と復習</h1><p id="karteCoverage"></p><div class="karte-facts"><div class="karte-fact"><b id="karteFactScore"></b><span>今回の正解</span></div><div class="karte-fact"><b id="karteFactReview"></b><span>復習ポイント</span></div></div></div>
 <article class="card recommendation"><h2 class="eyebrow">次にやること</h2><h3 id="karteNextTitle" class="recommendation-topic"></h3><p id="karteNextReason"></p><p class="recommendation-basis"><strong>根拠：</strong><span id="karteBasis"></span></p><button id="karteNextAction" class="primary"></button></article>
 <section class="review-section"><h2>復習ポイント</h2><ul id="karteReview" class="review-items"></ul></section>
@@ -71,8 +95,8 @@
 <p id="karteStorageNote" class="small muted"></p>
 <p class="small"><a href="plans-preview.html#ume">記録をためて弱点を見るなら、学習カルテを見る</a></p>
 <div class="actions"><button id="backResults" class="secondary">結果に戻る</button><button id="restart" class="textbutton">最初からもう一度試す</button></div>
-</section>
-<section id="account" class="card account" hidden>
+</div></section>
+<section id="account" class="band band-gray" hidden><div class="wrap"><div class="card account">
 <h2>記録を残す <span class="badge">テスト中</span></h2>
 <p id="accountStatus" class="small muted">ログインすると別の端末でも同じ記録を見られます。</p>
 
@@ -97,8 +121,8 @@
   <button id="accountLogout" class="textbutton" type="button">このブラウザからログアウト</button>
 </div>
 <p id="accountMessage" class="small" role="status" aria-live="polite"></p>
-</section>
-<nav class="preview-links" aria-label="試作用の表示"><button id="openKarte" class="textbutton">結果と復習</button><a href="plans-preview.html">学習サポートの一覧を見る</a></nav>
+</div></div></section>
+<nav class="preview-links band band-white" aria-label="試作用の表示"><div class="wrap"><button id="openKarte" class="textbutton">結果と復習</button><a href="plans-preview.html">学習サポートの一覧を見る</a></div></nav>
 </main>
 <footer><div class="wrap"><details><summary>教材の確認範囲</summary><p>2026年9月15日時点の法令を照合した内容確認用の見本です。2027年向けの適用確認は別途行います。</p><p><a href="https://laws.e-gov.go.jp/law/327AC1000000176" target="_blank" rel="noopener noreferrer">宅地建物取引業法64条の9</a><br><a href="https://laws.e-gov.go.jp/law/339CO0000000383" target="_blank" rel="noopener noreferrer">施行令2条の4・7条</a></p></details><div class="footer-brand"><p>静かに、淡々と。</p><a href="https://www.mimiobo.com/" target="_blank" rel="noopener noreferrer">耳で覚える宅建｜公式サイト</a></div></div></footer>
 <script>
@@ -182,14 +206,14 @@ async function refreshProviders(){
 }
 document.querySelectorAll('.audioLink').forEach(a=>a.href='https://stand.fm/episodes/69dc7ba498eff95c436a4549');
 function paintQuestions(){
-  $('quiz').replaceChildren();
+  $('quizList').replaceChildren();
   questions.forEach((q,i)=>{
     const card=document.createElement('article');card.className='question-card';card.id=q.id;
-    card.innerHTML=`<p class="label">Q${i+1} · ${q.topic}</p><h2 class="question-text"></h2><div class="answers"><button class="answer" aria-label="Q${i+1} ○と答える" aria-pressed="false">○</button><button class="answer" aria-label="Q${i+1} ×と答える" aria-pressed="false">×</button></div><button class="textbutton" aria-label="Q${i+1} まだ分からない" aria-pressed="false">まだ分からない</button><div class="explanation" aria-live="polite" hidden><p class="verdict"></p><p class="answer-explanation"></p><p class="small muted law"></p></div>`;
+    card.innerHTML=`<div class="q-head"><span class="q-num">Q${i+1}</span><span class="q-topic">${q.topic}</span></div><h2 class="question-text"></h2><div class="answers"><button class="answer" aria-label="Q${i+1} ○と答える" aria-pressed="false">○</button><button class="answer" aria-label="Q${i+1} ×と答える" aria-pressed="false">×</button></div><button class="textbutton" aria-label="Q${i+1} まだ分からない" aria-pressed="false">まだ分からない</button><div class="explanation" aria-live="polite" hidden><p class="verdict"></p><p class="answer-explanation"></p><p class="small muted law"></p></div>`;
     card.querySelector('h2').textContent=q.text;
     card.querySelectorAll('button').forEach((button,n)=>button.onclick=()=>answer(i,[true,false,null][n]));
     card.querySelectorAll('button').forEach(button=>button.disabled=!canAnswer);
-    $('quiz').append(card);
+    $('quizList').append(card);
     if(answers[i])paintAnswer(i);
   });
 }
