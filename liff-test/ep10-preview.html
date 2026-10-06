@@ -74,7 +74,7 @@ html{scroll-padding-top:60px}
 @media(max-width:480px){.site-header-in{padding:0 12px;gap:8px}.site-brand{font-size:12px}.site-tabs{gap:0}.site-tabs a{padding:0 5px}.site-auth{padding:7px 10px}.site-auth[data-state=in]{padding:6px 8px}}
 .site-tabs a{position:relative;isolation:isolate}
 .site-tabs a[aria-current=page]::before{content:"";position:absolute;left:0;right:0;top:8px;bottom:8px;border-radius:999px;background:var(--tab-bg,#eef2f3);z-index:-1}
-.site-tabs a[href="ep10-preview.html"]{--tab-bg:#EEF2F3}
+.site-tabs a[href="checks.html"]{--tab-bg:#EEF2F3}
 .site-tabs a[href="karte.html"]{--tab-bg:#F3DCE3}
 .tab-icon{width:18px;height:18px;flex:none;margin-right:6px}
 @media(max-width:480px){.tab-icon{margin-right:4px}}
@@ -98,6 +98,7 @@ a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:cen
 .login-hint{font-size:14px;color:var(--muted);margin:16px 0 0}.login-hint a{margin-left:.5em;font-weight:700}
 .save-alert{margin:0 0 20px;padding:10px 14px;border:1px solid #c6d3d8;background:#f7f8fa;border-radius:10px;font-size:14px;color:var(--ink)}
 .footer-brand .footer-link{display:block;margin-bottom:8px}
+.more-link{margin:4px 0 0;font-size:15px;line-height:1.7}
 </style>
 <style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}#intro h1{font-size:24px;line-height:1.45}.karte-hero h1,.karte-heading{font-size:21px}h2{font-size:19px}.question-card{padding:16px}.question-text{font-size:17px;line-height:1.7}.answer{min-height:60px;font-size:22px}.explanation{padding:14px}.explanation p,.answer-explanation{font-size:15px}#score{font-size:26px}.account h2{font-size:18px}.account input{min-height:44px}.preview{font-size:13px}}</style>
 <style>
@@ -119,12 +120,13 @@ a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:cen
 </style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="ep10-preview.html" aria-current="page"><img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a><a href="karte.html"><img class="tab-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
+<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="checks.html" aria-current="page"><img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a><a href="karte.html"><img class="tab-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
 <script src="/site-header.js"></script>
 <div class="preview dev-only" aria-hidden="true"><div class="wrap"><p id="storageScope"></p><div class="preview-actions"><button id="retrySave" class="pillbutton" hidden>保存を再試行</button><button id="connectLine" class="pillbutton" hidden>LINEで本人確認</button></div><p id="saveStatus" role="status" aria-live="polite"></p></div></div>
 <main>
+<section id="missing" class="band band-cyan" hidden><div class="wrap"><p>この回の3問チェックはまだありません。</p><p class="more-link"><a href="checks.html">ほかの回を選ぶ</a></p></div></section>
 <section id="intro" class="screen band band-cyan" tabindex="-1"><div class="wrap">
-<div class="hero"><p class="label"><span class="plan-dot dot-free"><img class="plan-dot-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">学習便</span><span class="label-text">第10回 · 営業保証金と保証協会</span></p><h1>3問チェック</h1><p>○か×で答えると、すぐに解説が出ます。</p><p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で聴く（約17分）</a></p><div class="chip-row"><p id="progressChip" class="chip">回答 0 / 3</p><button id="restartInline" class="textbutton" type="button" hidden>最初から解き直す</button></div></div>
+<div class="hero"><p class="label"><span class="plan-dot dot-free"><img class="plan-dot-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">学習便</span><span id="epLabel" class="label-text">第10回 · 営業保証金と保証協会</span></p><h1>3問チェック</h1><p>○か×で答えると、すぐに解説が出ます。</p><p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で聴く（約17分）</a></p><div class="chip-row"><p id="progressChip" class="chip">回答 0 / 3</p><button id="restartInline" class="textbutton" type="button" hidden>最初から解き直す</button></div></div>
 <p id="loginHint" class="login-hint" hidden>ログインすると、答えた記録が<span class="plan-dot dot-ume">学習カルテ</span>に集まります。<a href="account.html?next=ep10">ログイン</a></p>
 </div></section>
 <section id="linkPendingBand" class="band band-cyan" hidden><div class="wrap"><div class="card"><div id="accountLinkPending" hidden><p class="small">LINEと連携する準備ができました。</p><button id="accountLinkPendingGo" class="primary" type="button">LINEで本人確認して連携を完了する</button><p class="small muted">LINEのログイン画面が開きます。</p></div></div></div></section>
@@ -136,11 +138,12 @@ a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:cen
 </div></div></section>
 <section id="quiz" class="band band-white" aria-label="確認問題"><div class="wrap"><p id="saveAlert" class="save-alert" role="alert" hidden></p><div id="quizList"></div></div></section>
 <section id="results" class="screen band band-cyan" tabindex="-1" hidden><div class="wrap">
-<div class="hero"><p class="label">第10回の結果</p><h2 id="score" class="result-title"></h2><p id="counts" class="muted small"></p></div>
+<div class="hero"><p id="resultsLabel" class="label">第10回の結果</p><h2 id="score" class="result-title"></h2><p id="counts" class="muted small"></p></div>
 <div id="resultRows" class="card"></div>
 <article class="card soft"><h2 id="nextTitle"></h2><p id="nextBody"></p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で復習する（約17分）</a></article>
 <p id="resultsStorageNote" class="small muted"></p>
 <div class="actions"><a id="toKarte" class="primary" href="karte.html"><img class="btn-icon" src="img/icons/plan-karte.svg" alt="" width="20" height="20">学習カルテで記録を見る</a><button id="restart" class="secondary" type="button">もう一度解く</button><button id="showKarte" class="primary" type="button" hidden>結果と復習を見る</button></div>
+<p class="more-link"><a id="toChecks" href="checks.html">ほかの回を選ぶ</a></p>
 </div></section>
 <section id="karte" class="screen band band-white dev-only" tabindex="-1" hidden><div class="wrap">
 <div class="karte-hero"><h1 class="karte-heading">今回の結果と復習</h1><p id="karteCoverage"></p><div class="karte-facts"><div class="karte-fact"><b id="karteFactScore"></b><span>今回の正解</span></div><div class="karte-fact"><b id="karteFactReview"></b><span>復習ポイント</span></div></div></div>
@@ -148,7 +151,7 @@ a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:cen
 <section class="review-section"><h2>復習ポイント</h2><ul id="karteReview" class="review-items"></ul></section>
 <details class="record-details"><summary>この端末の記録を見る</summary>
 <h3>正解した内容</h3><ul id="karteGains" class="karte-list"></ul><p class="small muted">同じ問題への再挑戦を含みます。今回確認した範囲の記録です。</p>
-<article class="card"><p class="label">第10回 · 営業保証金と保証協会</p><h2 id="karteScore"></h2><p id="karteTime" class="muted small"></p><div id="karteRows"></div></article>
+<article class="card"><p id="karteEpLabel" class="label">第10回 · 営業保証金と保証協会</p><h2 id="karteScore"></h2><p id="karteTime" class="muted small"></p><div id="karteRows"></div></article>
 <section class="card"><h2>これまでのチェック</h2><div id="attemptHistory"></div></section>
 </details>
 <p id="karteStorageNote" class="small muted"></p>
@@ -184,16 +187,19 @@ a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:cen
 <nav class="preview-links band band-white dev-only" aria-label="試作用の表示" hidden><div class="wrap"><button id="openKarte" class="textbutton">結果と復習</button><a href="plans-preview.html">学習サポートの一覧を見る</a></div></nav>
 </main>
 <footer><div class="wrap"><details><summary>教材の確認範囲</summary><p>2026年9月15日時点の法令を照合した内容確認用の見本です。2027年向けの適用確認は別途行います。</p><p><a href="https://laws.e-gov.go.jp/law/327AC1000000176" target="_blank" rel="noopener noreferrer">宅地建物取引業法64条の9</a><br><a href="https://laws.e-gov.go.jp/law/339CO0000000383" target="_blank" rel="noopener noreferrer">施行令2条の4・7条</a></p></details><div class="footer-brand"><p>静かに、淡々と。</p><a class="footer-link" href="plans-preview.html">学習サポートの一覧</a><a href="https://www.mimiobo.com/" target="_blank" rel="noopener noreferrer">耳で覚える宅建｜公式サイト</a></div></div></footer>
+<script src="/quiz-catalog.js"></script>
 <script>
 'use strict';
-const questions=[
-{id:'ep10-money',topic:'営業保証金の金額',text:'営業保証金は、主たる事務所につき1,000万円、その他の事務所1か所につき500万円が必要である。',answer:true,explanation:'営業保証金の額は、主たる事務所1,000万円と、その他の事務所1か所につき500万円を合計します。保証協会に納める「弁済業務保証金分担金」の60万円・30万円と区別して確認しましょう。',law:'根拠：宅建業法施行令2条の4・7条'},
-{id:'ep10-join',topic:'新規加入時の納付期限',text:'保証協会に加入しようとする宅建業者は、加入した日から2週間以内に弁済業務保証金分担金を納付すればよい。',answer:false,explanation:'新しく加入する場合は、加入しようとする日までに保証協会へ納付します。「2週間以内」は、すでに社員である業者が新たに事務所を設置したときの期限です。',law:'根拠：宅建業法64条の9第1項1号・第2項'},
-{id:'ep10-add',topic:'事務所増設時の納付期限',text:'保証協会の社員である宅建業者が、分担金納付後に新たに事務所を設置した場合、その日から2週間以内に追加の弁済業務保証金分担金を納付しなければならない。',answer:true,explanation:'事務所を増設した場合は、設置した日から2週間以内に保証協会へ分担金を納付します。新規加入の「加入しようとする日まで」と、場面ごとに分けて覚えます。',law:'根拠：宅建業法64条の9第2項'}
-];
+// 問題・タイトル・音声は台帳（quiz-catalog.js）から読む。?ep=<n> でその回（無指定は第10回）。
+const catalog=window.MimioboCatalog||{};
+const epParam=new URLSearchParams(location.search).get('ep');
+const QUIZ_ID=epParam===null?'ep10':/^\d{1,3}$/.test(epParam)?'ep'+Number(epParam):'';
+const EPISODE=Object.prototype.hasOwnProperty.call(catalog,QUIZ_ID)?catalog[QUIZ_ID]:null;
+const questions=EPISODE?EPISODE.questions:[];
 // PROGRESS_STORE_BEGIN
 const ProgressStore = (() => {
-  const version='ep10-2026-09-15.v1';
+  const make=quizId=>{
+  const version=quizId+'-2026-09-15.v1';
   const validTime=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
   function validate(data){
     if(!data||data.version!==version||!Array.isArray(data.attempts)||data.attempts.length>1000)throw Error('保存データの形式を確認できません。既存の記録は変更していません。');
@@ -228,6 +234,8 @@ const ProgressStore = (() => {
     };
   }
   return {open,validate};
+  };
+  return {...make('ep10'),forQuiz:make};
 })();
 // PROGRESS_STORE_END
 // KARTE_SUMMARY_BEGIN
@@ -241,21 +249,30 @@ function summarizeKarte(attempts,questions){
   });
 }
 // KARTE_SUMMARY_END
-const $=id=>document.getElementById(id);let answers=[],progressStore=null,canAnswer=false,saveProblem=false;
+const $=id=>document.getElementById(id);
+const Store=ProgressStore.forQuiz(QUIZ_ID||'ep10');
+let answers=[],progressStore=null,canAnswer=false,saveProblem=false;
 // Always server mode: `?server=1` from older links is ignored. Logged-out visitors answer into a device-only guest store.
-const GUEST_KEY='mimiobo-guest-v1-ep10-v1';
+const GUEST_KEY='mimiobo-guest-v1-'+(QUIZ_ID||'ep10')+'-v1';
 let answerSync=null,lineReady=false,enqueueProblem=false;
 function setAlert(text){const el=$('saveAlert');if(!el)return;el.textContent=text||'';el.hidden=!text;}
 function showAuthError(code){const text=window.MimioboMessages?.text(code)||'本人確認できませんでした。';$('saveStatus').textContent=text;setAlert(text);}
 // Where to go after a login finishes. Only these names are accepted (never a URL); a stored value expires after 10 minutes.
-const NEXT_KEY='mimiobo-next',NEXT_PAGES=['karte','ep10'];
-function queryNext(){const v=new URLSearchParams(location.search).get('next');return NEXT_PAGES.includes(v)?v:'';}
+const NEXT_KEY='mimiobo-next';
+// Accepted names only (never a URL): karte, checks, or ep<n>.
+const validNext=v=>typeof v==='string'&&/^(karte|checks|ep\d{1,3})$/.test(v);
+function queryNext(){const v=new URLSearchParams(location.search).get('next');return validNext(v)?v:'';}
 function nextPage(){
   const q=queryNext();if(q)return q;
-  try{const v=JSON.parse(localStorage.getItem(NEXT_KEY));if(v&&NEXT_PAGES.includes(v.page)&&v.expires>Date.now())return v.page;}catch{}
+  try{const v=JSON.parse(localStorage.getItem(NEXT_KEY));if(v&&validNext(v.page)&&v.expires>Date.now())return v.page;}catch{}
   return '';
 }
-function goNext(){const page=nextPage();try{localStorage.removeItem(NEXT_KEY);}catch{}if(page==='karte')location.replace('karte.html');}
+function goNext(){
+  const page=nextPage();try{localStorage.removeItem(NEXT_KEY);}catch{}
+  if(page==='karte')location.replace('karte.html');
+  else if(page==='checks')location.replace('checks.html');
+  else if(page&&page!==QUIZ_ID&&Object.prototype.hasOwnProperty.call(catalog,page))location.replace('ep10-preview.html?ep='+Number(page.slice(2)));
+}
 function syncState(state){
   document.documentElement.dataset.syncState=state;window.dispatchEvent(new CustomEvent('mimiobo:sync',{detail:{state}}));
   if(state==='pending'&&!saveProblem){const text=window.MimioboMessages?.text('pending')||'自動保存しました。';$('saveStatus').textContent=text;if(enqueueProblem)setAlert(text);}
@@ -281,7 +298,17 @@ function setAccountState(loggedIn,providers){
 async function refreshProviders(){
   try{const r=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});if(!r.ok)return;const d=await r.json();if(Array.isArray(d.providers))setAccountState(true,d.providers);}catch{}
 }
-document.querySelectorAll('.audioLink').forEach(a=>a.href='https://stand.fm/episodes/69dc7ba498eff95c436a4549');
+// Title, overline, audio links and <title> come from the catalog.
+function paintEpisode(){
+  if(!EPISODE)return;
+  const mins=EPISODE.audioMinutes?`（約${EPISODE.audioMinutes}分）`:'';
+  document.querySelectorAll('.audioLink').forEach(a=>{a.href=EPISODE.audioUrl;a.textContent=a.textContent.replace(/（約\d+分）$/,'')+mins;});
+  $('epLabel').textContent=epText();$('karteEpLabel').textContent=epText();$('resultsLabel').textContent=`第${EPISODE.episode}回の結果`;
+  document.title=`3問チェック｜第${EPISODE.episode}回`;
+  const hint=document.querySelector?.('#loginHint a');if(hint)hint.href='account.html?next='+QUIZ_ID;
+}
+function epText(){return `第${EPISODE.episode}回 · ${EPISODE.title}`;}
+function showMissing(){for(const id of ['intro','quiz','results','linkPendingBand','signinPrompt'])$(id).hidden=true;$('missing').hidden=false;document.title='3問チェック｜耳で覚える宅建';}
 function paintQuestions(){
   $('quizList').replaceChildren();
   questions.forEach((q,i)=>{
@@ -325,18 +352,24 @@ function paintAnswer(i){
 }
 function counts(){return{done:answers.filter(Boolean).length,right:questions.filter((q,i)=>answers[i]&&answers[i].value===q.answer).length,unknown:answers.filter(a=>a&&a.value===null).length};}
 function rows(target){$(target).replaceChildren();questions.forEach((q,i)=>{const row=document.createElement('div');row.className='row';const line=document.createElement('p'),tag=document.createElement('span');const a=answers[i],correct=a&&a.value===q.answer;tag.className='status'+(correct?' ok':'');tag.textContent=!a?'未回答':a.value===null?'まだ分からない':correct?'正解':'見直す';line.append(tag,document.createTextNode(q.topic));row.append(line);$(target).append(row);});}
+// 結果画面の「次にやること」。台帳の recommend があればそれを使い、無い回は間違えた論点と解説から作る。
+function nextStep(){
+  const missed=questions.map((q,i)=>i).filter(i=>answers[i]&&answers[i].value!==questions[i].answer);
+  const rec=EPISODE.recommend||{};
+  const rule=missed.length?(rec.rules||[]).find(r=>r.missed.some(i=>missed.includes(i))):null;
+  if(rule)return rule;
+  if(missed.length)return {title:'復習：'+missed.map(i=>questions[i].topic).join('・'),body:questions[missed[0]].explanation};
+  return rec.done||{title:'チェック完了',body:questions.map(q=>q.topic).join('、')+'を確認しました。'};
+}
 function results(){
   const c=counts();$('results').hidden=c.done===0;
   $('progressChip').textContent=`回答 ${c.done} / 3`;
   $('score').textContent=`${questions.length}問中${c.right}問正解`;
   $('counts').textContent=c.done<questions.length?`残り${questions.length-c.done}問`:'';
   rows('resultRows');
-  const missed=i=>answers[i]&&answers[i].value!==questions[i].answer;
   const recommendation=$('nextTitle').parentElement;
   recommendation.hidden=c.done<questions.length;
-  if(missed(1)||missed(2)){$('nextTitle').textContent='復習：加入時と増設時の期限';$('nextBody').textContent='新しく加入するときは「加入しようとする日まで」。加入後に事務所を増やすときは「設置した日から2週間以内」です。';}
-  else if(missed(0)){$('nextTitle').textContent='復習：営業保証金と分担金の金額';$('nextBody').textContent='営業保証金は本店1,000万円・支店1か所500万円。保証協会へ納める分担金は本店60万円・支店1か所30万円です。';}
-  else{$('nextTitle').textContent='チェック完了';$('nextBody').textContent='営業保証金の金額と、分担金の納付期限を確認しました。';}
+  const step=nextStep();$('nextTitle').textContent=step.title;$('nextBody').textContent=step.body;
 }
 function openKarte(){
   if(!canAnswer)return;
@@ -355,20 +388,19 @@ function returnToQuestions(target){
 $('backResults').onclick=()=>returnToQuestions(counts().done?'results':'intro');
 function listText(id,items){$(id).replaceChildren();for(const text of items){const li=document.createElement('li');li.textContent=text;$(id).append(li);}}
 function reviewRows(id,items){$(id).replaceChildren();for(const item of items){const li=document.createElement('li'),title=document.createElement('strong');title.textContent=item.title;li.append(title);if(item.pairs){const dl=document.createElement('dl');dl.className='review-comparison';for(const [label,value] of item.pairs){const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=value;row.append(dt,dd);dl.append(row);}li.append(dl);}else{const body=document.createElement('span');body.textContent=item.body;li.append(body);}$(id).append(li);}}
-const deadlinePairs=[['加入時','加入しようとする日まで'],['増設時','設置した日から2週間以内']];
-const reviewHints={'ep10-money':'営業保証金と保証協会に納める分担金。2つの金額を分けて確認します。','ep10-join':'新しく加入するときと事務所を増やすとき。納付期限の違いを確認します。','ep10-add':'「2週間以内」がどの場面の期限か。加入時と比べて確認します。'};
+const questionOf=id=>questions.find(q=>q.id===id)||{};
 function renderKarteSummary(){
   const attempts=progressStore?progressStore.data.attempts:answers.some(Boolean)?[{answers}]:[];
   const topics=summarizeKarte(attempts,questions),covered=topics.filter(t=>t.latest).length;
-  $('karteCoverage').textContent=`第10回 · 営業保証金と保証協会${saveProblem?'（未保存の回答を含む）':''}`;
+  $('karteCoverage').textContent=`${epText()}${saveProblem?'（未保存の回答を含む）':''}`;
   const gains=topics.filter(t=>t.correct),review=topics.filter(t=>t.latest&&!t.correct);
   listText('karteGains',gains.length?gains.map(t=>t.topic+(t.improved?`：再挑戦で正解（${t.days===0?'同日':t.days+'日後'}・同じ問題）`:'：直近の回答は正解')):['正解の記録はこれからです。']);
-  reviewRows('karteReview',review.length?review.map(t=>({title:t.topic,body:reviewHints[t.id],pairs:t.id==='ep10-join'||t.id==='ep10-add'?deadlinePairs:null})):[{title:covered===3?'今回の3問は正解です':'チェックすると、ここに表示されます',body:covered===3?'日を空けてもう一度確かめます。':'回答に合わせて復習する内容をまとめます。'}]);
+  reviewRows('karteReview',review.length?review.map(t=>({title:t.topic,body:questionOf(t.id).hint||questionOf(t.id).explanation,pairs:questionOf(t.id).pairs||null})):[{title:covered===questions.length?'今回の3問は正解です':'チェックすると、ここに表示されます',body:covered===questions.length?'日を空けてもう一度確かめます。':'回答に合わせて復習する内容をまとめます。'}]);
   const unanswered=questions.find((q,i)=>!answers[i]);
   const c=counts();
   $('karteFactScore').textContent=c.done?`${c.right} / 3問`:'未回答';$('karteFactReview').textContent=covered?`${review.length}つ`:'未確認';
-  $('karteBasis').textContent=unanswered?`第10回は${c.done}問回答済み。残り${3-c.done}問です。`:review.length?`第10回は3問中${c.right}問正解。「${review[0].topic}」は${review[0].latest.value===null?'「まだ分からない」':review[0].latest.value?'○':'×'}と回答しています。`:'第10回の3問すべてに正解しています。';
-  if(unanswered){$('karteNextTitle').textContent=covered?'残りの問題をチェック':'第10回を3問チェック';$('karteNextReason').textContent=covered?'今回まだ答えていない問題から再開できます。':'営業保証金の金額と納付期限を確認します。';$('karteNextAction').textContent='問題へ';$('karteNextAction').onclick=()=>returnToQuestions(unanswered.id);}
+  $('karteBasis').textContent=unanswered?`第${EPISODE.episode}回は${c.done}問回答済み。残り${3-c.done}問です。`:review.length?`第${EPISODE.episode}回は3問中${c.right}問正解。「${review[0].topic}」は${review[0].latest.value===null?'「まだ分からない」':review[0].latest.value?'○':'×'}と回答しています。`:`第${EPISODE.episode}回の3問すべてに正解しています。`;
+  if(unanswered){$('karteNextTitle').textContent=covered?'残りの問題をチェック':`第${EPISODE.episode}回を3問チェック`;$('karteNextReason').textContent=covered?'今回まだ答えていない問題から再開できます。':(EPISODE.recommend&&EPISODE.recommend.intro)||questions.map(q=>q.topic).join('・')+'を確認します。';$('karteNextAction').textContent='問題へ';$('karteNextAction').onclick=()=>returnToQuestions(unanswered.id);}
   else if(review.length){$('karteNextTitle').textContent=review[0].topic+'を復習';$('karteNextReason').textContent=review[0].latest.value===null?'「まだ分からない」と答えたところを解説で確認できます。':'今回間違えたところを解説で確認できます。';$('karteNextAction').textContent='解説で復習する';$('karteNextAction').onclick=()=>returnToQuestions(review[0].id);}
   else{$('karteNextTitle').textContent='今回のチェックは完了';$('karteNextReason').textContent='同じ3問への正解を記録しました。日を空けた確認はこれからです。';$('karteNextAction').textContent='今回の結果を見る';$('karteNextAction').onclick=()=>returnToQuestions('results');}
 }
@@ -400,7 +432,7 @@ function paintStorageNotes(){
 }
 function openProgress(key){
   try{
-    progressStore=ProgressStore.open(localStorage,key);
+    progressStore=Store.open(localStorage,key);
     answers=progressStore.current?.answers||[];
     $('saveStatus').textContent=answers.some(Boolean)?'前回の回答を復元しました。':'回答すると自動保存します。';
   }catch(e){progressStore=null;saveProblem=true;const text='保存済みの記録を読み込めません。既存の記録は変更せず、今回は保存なしで試せます。';$('saveStatus').textContent=text;setAlert(text);}
@@ -422,11 +454,11 @@ function openGuest({keepStatus=false}={}){
 function mergeGuestProgress(){
   try{
     const raw=localStorage.getItem(GUEST_KEY);if(raw===null)return;
-    const guest=ProgressStore.validate(JSON.parse(raw));
+    const guest=Store.validate(JSON.parse(raw));
     if(guest.attempts.length){
       const cache=answerSync.read(),known=new Set(cache.attempts.map(a=>a.id));
       const merged={version:cache.version,attempts:[...cache.attempts,...guest.attempts.filter(a=>!known.has(a.id))].sort((a,b)=>Date.parse(a.startedAt)-Date.parse(b.startedAt)||a.id.localeCompare(b.id))};
-      localStorage.setItem(answerSync.key,JSON.stringify(ProgressStore.validate(merged)));
+      localStorage.setItem(answerSync.key,JSON.stringify(Store.validate(merged)));
       for(const attempt of guest.attempts)attempt.answers.forEach((a,i)=>{if(a)answerSync.enqueue(attempt,i);});
     }
     localStorage.removeItem(GUEST_KEY);
@@ -437,8 +469,8 @@ async function openServerProgress(session){
   setAccountState(true,session.providers);
   answerSync?.stop();
   answerSync=MimioboSync.create({userId:session.userId,storageKey:session.storageKey,storage:localStorage,
-    fetch:(url,options)=>fetch(url,{...options,signal:AbortSignal.timeout(15000)}),validate:ProgressStore.validate,
-    onData:()=>{if(saveProblem||enqueueProblem)return;openProgress(session.storageKey+'-ep10-v1');if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}},
+    fetch:(url,options)=>fetch(url,{...options,signal:AbortSignal.timeout(15000)}),validate:Store.validate,quizId:QUIZ_ID,
+    onData:()=>{if(saveProblem||enqueueProblem)return;openProgress(session.storageKey+'-'+QUIZ_ID+'-v1');if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}},
     onState:syncState
   });
   mergeGuestProgress();
@@ -485,7 +517,8 @@ async function initializeLine(){
   lineReady=true;
 }
 async function initialize(){
-  paintQuestions();
+  if(!EPISODE){showMissing();return;}
+  paintEpisode();paintQuestions();
   try{await loadClient('/ui-messages.js');}catch{}
   const cancelled=new URLSearchParams(location.search).get('checkout')==='cancel';
   if(cancelled){if($('accountMessage'))$('accountMessage').textContent='決済を中止しました。';setAlert('決済を中止しました。');}
@@ -506,7 +539,7 @@ async function initialize(){
   // Not logged in: answers stay on this device until the visitor logs in.
   openGuest();
   try{
-    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){const next=queryNext(),redirectUri=location.origin+location.pathname+(next?'?next='+next:'');liff.login({redirectUri:MimioboAuth.lineRedirectUri(redirectUri)});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
+    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){const next=queryNext()||(QUIZ_ID!=='ep10'?QUIZ_ID:''),redirectUri=location.origin+location.pathname+(next?'?next='+next:'');liff.login({redirectUri:MimioboAuth.lineRedirectUri(redirectUri)});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
     if(liff.isLoggedIn())await verifyLine();
     else{
       $('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;updateSigninPrompt(true);

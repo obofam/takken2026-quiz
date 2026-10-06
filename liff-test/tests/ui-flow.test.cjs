@@ -14,7 +14,7 @@ function harness(url='https://mimiobo-liff-test.vercel.app/ep10-preview.html?ser
   const context=vm.createContext({URL,URLSearchParams,AbortSignal,console,crypto:{randomUUID},location:new URL(url),localStorage:storage(),sessionStorage:storage(),
     CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail;}},Event:class{constructor(type){this.type=type;}},
     addEventListener(){},dispatchEvent:event=>events.push(event),scrollTo(){},TEST_LIFF_ID:'test-liff-id'});
-  context.window=context;
+  context.window=context;context.MimioboCatalog=require('../quiz-catalog');
   context.history={replaceState(_state,_title,url){context.location=new URL(url,context.location);}};
   context.liff={init:async()=>{},isLoggedIn:()=>true,getIDToken:()=> 'test-line-token',login(){assert.fail('unexpected redirect');}};
   context.fetch=async(url,options={})=>{requests.push({url,options});return {ok:true,status:200,json:async()=>session};};

@@ -309,7 +309,7 @@ test('email linking uses authenticated owner and binds ticket to normalized emai
 });
 test('answer validator distinguishes unknown from unanswered and rejects invalid fields or chronology',()=>{
   assert.equal(answersApi.validate(answer({value:null})).p_value,null);
-  for(const patch of [{attemptId:'not-uuid'},{quizId:'ep11'},{questionId:'other'},{value:0},{value:undefined},{answeredAt:'bad'},{startedAt:'2026-01-02T00:00:00Z'},{answeredAt:new Date(Date.now()+600000).toISOString()}])assert.throws(()=>answersApi.validate(answer(patch)),e=>e.status===400);
+  for(const patch of [{attemptId:'not-uuid'},{quizId:'ep99'},{questionId:'other'},{value:0},{value:undefined},{answeredAt:'bad'},{startedAt:'2026-01-02T00:00:00Z'},{answeredAt:new Date(Date.now()+600000).toISOString()}])assert.throws(()=>answersApi.validate(answer(patch)),e=>e.status===400);
 });
 test('answer writes use cookie owner despite injected body IDs, and require matching client header',async()=>{
   let calls=0;authenticated((u,options,body)=>{assert.equal(u.pathname,'/rest/v1/rpc/save_answer');assert.equal(body.p_user_id,user);assert.equal(body.userId,undefined);calls++;return null;});

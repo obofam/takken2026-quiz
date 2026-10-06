@@ -138,7 +138,7 @@ test('entitled: stats, subject rates and the review list are drawn from the serv
   assert.ok(body.includes('<h2>復習する論点</h2><p class="karte-card-help">正答率の低い順です。</p>'));assert.ok(!body.includes('放送に戻れます'));
   assert.ok(body.includes('<b class="rp-weak-name">事務所増設時の納付期限</b><p class="rp-weak-meta">宅建業法・第10回 ｜ 1問中0問正解</p>'));
   assert.ok(!body.includes('営業保証金の金額</b>'));
-  assert.ok(body.includes('href="'+stand+'" target="_blank" rel="noopener noreferrer">放送を聴く</a>'));assert.ok(body.includes('href="ep10-preview.html">解き直す</a>'));
+  assert.ok(body.includes('href="'+stand+'" target="_blank" rel="noopener noreferrer">放送を聴く</a>'));assert.ok(body.includes('href="ep10-preview.html?ep=10">解き直す</a>'));
   assert.ok(!body.includes('問題を解き直す')&&!body.includes('放送 #'));
   assert.ok(body.includes('記録は回答した時点のものです。同じ問題への再挑戦も数えます。'));
   assert.doesNotMatch(body,/[→↗]/);
@@ -325,7 +325,7 @@ test('karte body: each review topic is three stacked rows (name, description, tw
   const anchors=[...links.matchAll(/<a class="rp-weak-link"([^>]*)>([^<]+)<\/a>/g)];
   assert.deepEqual(anchors.map(a=>a[2]),['放送を聴く','解き直す']);
   assert.ok(anchors[0][1].includes('href="'+stand+'"')&&anchors[0][1].includes('target="_blank"')&&anchors[0][1].includes('rel="noopener noreferrer"'));
-  assert.ok(anchors[1][1].includes('href="ep10-preview.html"')&&!anchors[1][1].includes('target='));
+  assert.ok(anchors[1][1].includes('href="ep10-preview.html?ep=10"')&&!anchors[1][1].includes('target='));
   assert.match(html,/\.rp-weak-item\{display:flex;flex-direction:column/);
   assert.doesNotMatch(body,/[→↗↘←]/);
 });

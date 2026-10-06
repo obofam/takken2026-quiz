@@ -1,5 +1,21 @@
 # LIFF本人テスト・Sprint 1／2／3
 
+## Sprint 4（2026-10-06）：3問チェックを全放送回へ
+
+指示書は `SPRINT4_指示書_2026-10-06.md`。**migration `supabase/migrations/202610060002_sprint4_catalog.sql` を Sprint 1・2 の後に1回だけ適用してからデプロイ**（未適用だと、ログイン中に第10回以外へ答えても DB が `invalid_answer` で拒否し、同期が「失敗」になる）。
+
+- **台帳が本体**（`quiz-catalog.js`）：各回に `episode / title / subject / audioUrl / page / questions:[{id, topic, text, answer, explanation, law}]`。任意で `audioMinutes`（音声の長さ・分。無い回は「音声で聴く」だけ）、`recommend`（結果画面の「次にやること」。無い回は間違えた論点と解説から自動）、`question.hint / pairs`（第10回の復習補足）。ページ・同期・サーバー検証・学習カルテ・回の一覧がすべてここを読む。1回は必ず3問、id は `<quizId>-<英小文字・数字>`。
+- **1枚のページで全回**：`ep10-preview.html?ep=<n>`（無指定は10。ファイル名は LINE の LIFF 入口なので不変）。台帳にない回・数字でない `ep` は「この回の3問チェックはまだありません。」＋「ほかの回を選ぶ」。
+- **回ごとの記録**：端末キー `<storageKey>-<quizId>-v1`、ゲストキー `mimiobo-guest-v1-<quizId>-v1`、version `<quizId>-2026-09-15.v1`、送信 `quizId`、`GET /api/answers?quiz=<quizId>`。**第10回は従来と同じ文字列**（`-ep10-v1`・`mimiobo-guest-v1-ep10-v1`・`ep10-2026-09-15.v1`・`ep10-money` など）。`sync.js` は `create({quizId})`（既定 `ep10`）、`ProgressStore.forQuiz(quizId)`。キューは全回共通のまま（どの回のページでも未送信を送る）。履歴取得が恒久失敗したときに隔離するのは、その回の行だけ。
+- **サーバー検証**：`api/answers.js` は `quiz-catalog.js` を `require` し、台帳にない quiz・question は 400（`invalid_answer`／GET は `invalid_quiz`）。`__proto__` などの名前・配列・数値も 400。`api/` で変えたのはここだけ。
+- **DB**：quiz_id は `^ep[0-9]{1,3}$`、question_id は `^ep[0-9]{1,3}-[a-z0-9]{1,16}$` かつ quiz_id で始まる、に check 制約と `save_answer` を置き換え（`create or replace`）。既存の ep10 の行はそのまま通る（`tests/database.test.cjs` が PGlite で確認）。どの回が有効かの判定は台帳側。
+- **`checks.html`（新規）**：共通ヘッダーの「3問チェック」タブの行き先。分野ごとの見出し（台帳にある分野だけ・固定順）の下に、回のカード（「第{n}回」「{title}」／状態「未回答」または「{right}/3」）。状態は端末の保存から（ログイン中は同期済みのキャッシュ、無ければこの端末の記録）。最新の「答えのある」挑戦の正解数。`ep10-preview.html` と `checks.html` の両方で「3問チェック」タブが現在地。
+- **結果画面**：「もう一度解く」の下にテキストリンク「ほかの回を選ぶ」（`checks.html`）。学習カルテの「解き直す」は台帳の `page` を使うので新しい回にそのまま効く。
+- **ログイン後の戻り先 `?next=`**：`karte`・`checks`・`ep<n>`（その回へ）だけ受け付ける（URL は不可）。メール：`account.html` が控え、`auth-callback.js` が成功時に `karte.html`／`checks.html`／その回へ（失敗時はその回のエラー表示）。LINE：他の回のページから始めると `?next=ep<n>` を付けて LIFF へ出て、戻ったらその回に移る。
+- **問題の取り込み**：`node scripts/import-content.mjs content/gyoho_ep1-11.json`（検査だけ）→ `--write` で `quiz-catalog.js` の `DATA_BEGIN〜DATA_END` を書き換え。形が1件でも不正なら何も書かない。第10回は上書きしない。`sourceRows`・`check` は取り込まない（`check` が条文照合OK以外なら「注意」として表示）。取り込んだら `npm test`。
+- `scripts/dev.cjs` に `checks.html` を追加。`.vercelignore` に `SPRINT4_*.md`・`content/`。
+- テスト：`npm test` 246件（213件＋新規 `tests/sprint4.test.cjs` ほか。既存の更新は下のコミット報告のとおり）。
+
 ## 画面構成（10/6 見直し）
 
 Kei の赤入れ「全体的にわかりづらい。全体の構成が把握しづらい」への対応。指示書は `REDESIGN_指示書_2026-10-06.md`。API・DB・Stripe・`plans-preview.html` は変更なし。

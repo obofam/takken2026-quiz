@@ -11,29 +11,43 @@ const read=name=>fs.readFileSync(path.join(__dirname,'..',name),'utf8');
 const row=(question,value,at,attempt='a1',quiz='ep10')=>({quiz_id:quiz,question_id:question,value,answered_at:at,attempt_id:attempt});
 const day=n=>'2026-10-0'+n+'T00:00:00.000Z';
 
-test('catalog matches the questions defined in ep10-preview.html (id, topic, answer, order)',()=>{
+test('the page reads its questions from the catalog; the static first paint matches the catalog (ep10)',()=>{
   const html=read('ep10-preview.html');
-  const source=html.match(/const questions=(\[[\s\S]*?\n\]);/)[1];
-  const page=JSON.parse(JSON.stringify(vm.runInNewContext('('+source+')')));
-  assert.deepEqual(catalog.ep10.questions,page.map(({id,topic,answer})=>({id,topic,answer})));
-  assert.equal(catalog.ep10.episode,10);
-  assert.ok(html.includes(catalog.ep10.audioUrl));
+  assert.ok(!/const questions=\[/.test(html),'no questions are written into the page any more');
+  assert.ok(html.includes('<script src="/quiz-catalog.js"></script>'));
   assert.ok(html.includes('第10回 · '+catalog.ep10.title));
+  assert.ok(html.includes('音声で聴く（約'+catalog.ep10.audioMinutes+'分）'));
+  assert.equal(catalog.ep10.episode,10);assert.equal(catalog.ep10.page,'ep10-preview.html?ep=10');
 });
-test('catalog entries are well formed: one of the four subjects, an existing page, unique question ids',()=>{
+test('ep10 keeps the ids, answers and order that existing records were saved under',()=>{
+  assert.deepEqual(catalog.ep10.questions.map(({id,topic,answer})=>({id,topic,answer})),[
+    {id:'ep10-money',topic:'営業保証金の金額',answer:true},
+    {id:'ep10-join',topic:'新規加入時の納付期限',answer:false},
+    {id:'ep10-add',topic:'事務所増設時の納付期限',answer:true}
+  ]);
+  assert.equal(catalog.ep10.audioUrl,'https://stand.fm/episodes/69dc7ba498eff95c436a4549');
+});
+test('catalog entries are well formed: one of the four subjects, an existing page, exactly 3 full questions with unique ids',()=>{
   const ids=new Set();
   for(const [quizId,quiz] of Object.entries(catalog)){
     assert.ok(SUBJECTS.includes(quiz.subject),quizId);
+    assert.equal(quizId,'ep'+quiz.episode);
     assert.ok(Number.isInteger(quiz.episode)&&quiz.title&&/^https:\/\//.test(quiz.audioUrl),quizId);
-    assert.ok(fs.existsSync(path.join(__dirname,'..',quiz.page)),quiz.page);
-    for(const q of quiz.questions){assert.equal(typeof q.answer,'boolean');assert.ok(q.topic);assert.ok(!ids.has(q.id),q.id);ids.add(q.id);}
+    assert.equal(quiz.page,'ep10-preview.html?ep='+quiz.episode);
+    assert.ok(fs.existsSync(path.join(__dirname,'..',quiz.page.split('?')[0])),quiz.page);
+    assert.equal(quiz.questions.length,3,quizId);
+    for(const q of quiz.questions){
+      assert.equal(typeof q.answer,'boolean');assert.ok(q.topic);assert.ok(!ids.has(q.id),q.id);ids.add(q.id);
+      assert.match(q.id,new RegExp('^'+quizId+'-[a-z0-9]{1,16}$'));
+      for(const key of ['text','explanation','law'])assert.ok(typeof q[key]==='string'&&q[key].length>0,quizId+' '+q.id+' '+key);
+    }
   }
   assert.deepEqual(SUBJECTS,['宅建業法','権利関係','法令上の制限','税・その他']);
 });
-test('catalog question ids agree with the answer API and the sync queue',()=>{
-  const list=catalog.ep10.questions.map(q=>"'"+q.id+"'").join(',');
-  assert.ok(read('api/answers.js').includes('QUESTIONS=['+list+']'));
-  assert.ok(read('sync.js').includes('questionIds=['+list+']'));
+test('the answer API and the sync queue take their question ids from the catalog, not from a copy',()=>{
+  assert.ok(read('api/answers.js').includes("require('../quiz-catalog')"));
+  assert.ok(!/QUESTIONS=\['/.test(read('api/answers.js')));
+  assert.ok(read('sync.js').includes("require('./quiz-catalog')")&&!/questionIds=\['/.test(read('sync.js')));
 });
 
 test('empty input gives zero stats and no sections',()=>{
@@ -45,7 +59,7 @@ test('one correct answer: counted once, no review, only the answered subject app
   const s=summarize([row('ep10-money',true,day(1))],catalog);
   assert.deepEqual(s.stats,{episodes:1,answers:1,review:0});
   assert.deepEqual(s.subjects,[{name:'宅建業法',correct:1,total:1}]);
-  assert.deepEqual(s.topics,[{quizId:'ep10',questionId:'ep10-money',topic:'営業保証金の金額',subject:'宅建業法',episode:10,audioUrl:catalog.ep10.audioUrl,page:'ep10-preview.html',correct:1,total:1,latestCorrect:true}]);
+  assert.deepEqual(s.topics,[{quizId:'ep10',questionId:'ep10-money',topic:'営業保証金の金額',subject:'宅建業法',episode:10,audioUrl:catalog.ep10.audioUrl,page:'ep10-preview.html?ep=10',correct:1,total:1,latestCorrect:true}]);
   assert.deepEqual(s.review,[]);
 });
 test('retries change the rate: a later wrong answer puts the topic back in review, a later right one takes it out',()=>{

@@ -16,7 +16,11 @@
   let target='/ep10-preview.html?server=1&auth='+result;
   try{
     const next=JSON.parse(localStorage.getItem('mimiobo-next'));
-    if(result==='ok'&&next&&next.page==='karte'&&next.expires>Date.now())target='/karte.html';
+    if(next&&typeof next.page==='string'&&next.expires>Date.now()){
+      if(result==='ok'&&next.page==='karte')target='/karte.html';
+      else if(result==='ok'&&next.page==='checks')target='/checks.html';
+      else if(/^ep\d{1,3}$/.test(next.page)&&Number(next.page.slice(2))!==10)target='/ep10-preview.html?ep='+Number(next.page.slice(2))+'&server=1&auth='+result;
+    }
   }catch{}
   try{localStorage.removeItem('mimiobo-next');}catch{}
   location.replace(target);

@@ -36,7 +36,7 @@
     },
     email:(email,{link=false}={})=>request('/api/email',{email,link}),
     // account.html: LINE login goes through the LIFF page; `next` (karte|ep10 only) tells it where to go afterwards.
-    lineLoginUrl(next){return 'https://liff.line.me/2011606963-hH0DzETc/ep10-preview.html?login=line'+(next==='karte'||next==='ep10'?'&next='+next:'');},
+    lineLoginUrl(next){return 'https://liff.line.me/2011606963-hH0DzETc/ep10-preview.html?login=line'+(typeof next==='string'&&/^(karte|checks|ep\d{1,3})$/.test(next)?'&next='+next:'');},
     async line(idToken){const result=await request('/api/session',{idToken,linkToken:pending()?.token});sessionStorage.removeItem(slot);return result;},
     async linkLine(){
       const result=await request('/api/link',{provider:'line'});

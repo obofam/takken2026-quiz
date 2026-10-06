@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
-<title>学習カルテ｜耳で覚える宅建</title>
+<title>3問チェック｜耳で覚える宅建</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -89,197 +89,94 @@ html{scroll-padding-top:60px}
 .dot-matsu{--dot-color:#D1E6DC}
 .plan-dot-icon{width:18px;height:18px;vertical-align:-4px;margin-right:6px}
 </style>
-<style>
-/* 学習カルテ本文：主役は「復習する論点」「分野別の正答率」の2枚のカード。棒は淡々スタイルの水色 */
-#entitled.card{background:transparent;border:0;box-shadow:none;padding:0;margin:0}
-.karte-summary{font-size:14px;line-height:1.6;color:var(--muted);margin:0 0 18px}
-.karte-summary b{font-weight:700}
-.karte-card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 8px rgba(20,27,33,.04);padding:18px;margin:0 0 16px}
-.karte-card h2{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900;line-height:1.5;margin:0}
-.karte-card h2::before{content:"";flex:none;align-self:stretch;width:4px;border-radius:999px;background:#17C5E8}
-.karte-card-help{font-size:14px;line-height:1.6;color:var(--muted);margin:6px 0 0}
-.karte-card-empty{margin:14px 0 0}
-.rp-weak-item{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px 0;border-bottom:1px solid var(--line)}
-.rp-weak-item:first-of-type{padding-top:12px}
-.rp-weak-item:last-child{border-bottom:0;padding-bottom:0}
-.rp-weak-name{font-size:17px;font-weight:700;line-height:1.6;color:#141B21}
-.rp-weak-meta{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
-.rp-weak-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-.rp-weak-link{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:4px 16px;border:1px solid #17C5E8;border-radius:999px;background:#fff;color:#126981;font-size:13px;font-weight:700;line-height:1.4;text-decoration:none;white-space:nowrap}
-.subject-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px 0 0}
-.subject-row:first-of-type{padding-top:14px}
-.karte-card .subject-row>span{font-size:16px;line-height:1.6}
-.karte-card .subject-row>b{font-size:16px;font-weight:700;line-height:1.6;text-align:right;font-variant-numeric:tabular-nums}
-.subject-bar{grid-column:1/-1;height:8px;background:#edf1f3;border-radius:99px;overflow:hidden}
-.subject-bar i{display:block;height:100%;background:var(--cyan);border-radius:99px}
-.karte-note{font-size:12px;line-height:1.7;color:var(--muted);margin:0}
-</style>
 <style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}.card,#entitled{padding:18px}h1,#entitled h1{font-size:22px;line-height:1.45;margin-bottom:10px}.label{font-size:12px}.fact,#untilRow{font-size:15px}.rp-stats{gap:8px;margin:14px 0}.rp-stat{padding:10px 6px}.rp-stat b{font-size:17px}.rp-stat span{font-size:11px}.subject-results h2{font-size:17px}.subject-row{padding:10px 0}.subject-row>span{font-size:15px}.subject-row>b{font-size:15px}.rp-weak-main b{font-size:15px}.rp-weak-tag{font-size:11px;margin-left:6px}.rp-weak-count,.rp-weak-link{font-size:13px}.karte-note,.report-muted{font-size:12px}header p{font-size:14px}}</style>
+<style>
+/* checks-only 10/6 sprint4：回の一覧 */
+.checks-hero{padding:8px 0 4px}
+.checks-hero h1{font-size:36px;font-weight:900;line-height:1.4;color:#141B21;margin:0 0 12px}
+.checks-hero p{margin:0;color:var(--muted)}
+.check-group{margin:32px 0 0}
+.check-group h2{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900;line-height:1.5;margin:0 0 12px}
+.check-group h2::before{content:"";flex:none;align-self:stretch;width:4px;border-radius:999px;background:#17C5E8}
+.check-list{display:flex;flex-direction:column;gap:10px}
+.check-card{display:flex;align-items:center;gap:14px;padding:16px 18px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 8px rgba(20,27,33,.04);color:var(--ink);text-decoration:none}
+.check-num{flex:none;font-size:13px;font-weight:700;letter-spacing:.08em;color:#126981;white-space:nowrap}
+.check-title{flex:1;min-width:0;font-size:17px;font-weight:700;line-height:1.5}
+.check-state{flex:none;font-size:14px;font-weight:700;line-height:1.5;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.check-state[data-done="true"]{color:#164a59;background:#e4f6fb;border-radius:999px;padding:2px 12px}
+@media(max-width:480px){.checks-hero h1{font-size:24px;line-height:1.45}.check-group{margin-top:26px}.check-group h2{font-size:18px}.check-card{padding:14px;gap:10px}.check-title{font-size:15px}.check-state{font-size:13px}}
+</style>
 </head>
 <body>
-<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="checks.html"><img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a><a href="karte.html" aria-current="page"><img class="tab-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
+<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="checks.html" aria-current="page"><img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a><a href="karte.html"><img class="tab-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
 <script src="/site-header.js"></script>
 <main>
 <section class="band band-cyan"><div class="wrap">
-<p id="status" class="small muted" role="status" aria-live="polite"></p>
-<div id="needLogin" class="card" hidden>
-<h1>学習カルテ</h1>
-<p>ログインすると、答えた記録がここに集まります。</p>
-<div class="actions"><a class="primary" href="account.html?next=karte">ログイン</a></div>
-</div>
-<div id="noEntitlement" class="card" hidden>
-<h1>学習カルテは準備中です</h1>
-<p>記録をためて弱点を見る画面です。今はテスト中で、仕組みの確認だけをしています。</p>
-<div class="actions"><button id="buy" class="primary" type="button">学習カルテを試す（テスト決済）</button><a class="secondary" href="plans-preview.html#ume">学習カルテの案内を見る</a></div>
-<p class="small muted">テスト用のカードでしか決済できません。実際の請求はありません。</p>
-<p id="buyMessage" class="small" role="status" aria-live="polite"></p>
-</div>
-<div id="entitled" class="card" hidden>
-<p class="label"><span class="plan-dot dot-ume"><img class="plan-dot-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</span></p>
-<div class="karte-title"><img class="karte-title-icon" src="img/icons/plan-karte.svg" alt="" width="40" height="40"><h1>学習カルテ</h1></div>
-<p id="untilRow" class="small muted" hidden>有効期限：<span id="until"></span></p>
-<p id="karteStatus" class="small muted" role="status" aria-live="polite"></p>
-<div id="karteBody"></div>
-</div>
+<div class="checks-hero"><h1>3問チェック</h1><p>聴いた回を、3問で確かめます。</p></div>
+<div id="checkGroups"></div>
 </div></section>
 </main>
 <footer><div class="wrap"><p>静かに、淡々と。</p><a href="plans-preview.html">学習サポートの一覧</a></div></footer>
 <script src="/quiz-catalog.js"></script>
-<script src="/karte-core.js"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
-const PLAN='ume',POLL_MS=3000,POLL_MAX=5;
-let userId='',validUntil=null,cachedUser='',cachedShown=false;
-// 端末に前回の記録を残し、開いた瞬間に出す。最終判定は常にサーバー（/api/session と /api/karte）。
-const CACHE_PREFIX='mimiobo-karte-cache-v1:',LAST_KEY='mimiobo-karte-last-user',CACHE_MAX_MS=14*24*60*60*1000;
-function saveCache(rows){
+const SUBJECTS=['宅建業法','権利関係','法令上の制限','税・その他'];
+const catalog=window.MimioboCatalog||{};
+// 端末に保存された最新の挑戦で、何問正解したか。まだ答えていなければ null。
+function rightCount(key,quizId,quiz){
   try{
-    localStorage.setItem(CACHE_PREFIX+userId,JSON.stringify({savedAt:Date.now(),validUntil,rows}));
-    localStorage.setItem(LAST_KEY,userId);
-  }catch{}
-}
-function clearUserCache(id){try{if(id)localStorage.removeItem(CACHE_PREFIX+id);localStorage.removeItem(LAST_KEY);}catch{}}
-function clearAllCache(){
-  try{
-    localStorage.removeItem(LAST_KEY);
-    for(let i=localStorage.length;i-->0;){const k=localStorage.key(i);if(k&&k.startsWith(CACHE_PREFIX))localStorage.removeItem(k);}
-  }catch{}
-}
-function readCache(){
-  try{
-    const id=localStorage.getItem(LAST_KEY);if(!id)return null;
-    const c=JSON.parse(localStorage.getItem(CACHE_PREFIX+id)||'null');
-    if(!c||!Array.isArray(c.rows)||typeof c.savedAt!=='number')return null;
-    const now=Date.now();
-    if(c.savedAt>now+60000||now-c.savedAt>CACHE_MAX_MS)return null;
-    if(c.validUntil!=null&&!(new Date(c.validUntil).getTime()>now))return null;
-    return {id,validUntil:c.validUntil??null,rows:c.rows};
-  }catch{return null;}
-}
-function showUntil(value){
-  $('untilRow').hidden=!value;
-  if(value)$('until').textContent=formatDate(value);
-}
-function paintCache(){
-  const c=readCache();if(!c)return;
-  try{
-    const html=renderKarte(window.MimioboKarteCore.summarize(c.rows,window.MimioboCatalog));
-    cachedUser=c.id;cachedShown=true;showUntil(c.validUntil);show('entitled');
-    $('karteBody').innerHTML=html;$('karteStatus').textContent='前回の記録を表示しています。';
-  }catch{cachedUser='';cachedShown=false;}
-}
-// サーバーが未ログイン・権利なし・別ユーザーと答えたら、端末の前回分は捨てる。
-function discardCache(){
-  clearUserCache(cachedUser);cachedUser='';cachedShown=false;
-  $('karteBody').innerHTML='';$('karteStatus').textContent='';show('');
-}
-const msg=code=>window.MimioboMessages?.text(code)||'接続できませんでした。時間をおいてもう一度お試しください。';
-function show(id){for(const x of ['needLogin','noEntitlement','entitled'])$(x).hidden=x!==id;}
-function formatDate(value){
-  const parts=Object.fromEntries(new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(new Date(value)).map(p=>[p.type,p.value]));
-  return parts.year+'年'+Number(parts.month)+'月'+Number(parts.day)+'日';
-}
-// The server decides: this page only displays what GET /api/session says. 401/403 = not logged in.
-async function fetchSession(){
-  const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
-  if(response.status===401||response.status===403)return {loggedOut:true};
-  if(!response.ok)throw Error('service_unavailable');
-  return response.json();
-}
-const karteRight=data=>(Array.isArray(data.entitlements)?data.entitlements:[]).find(e=>e&&e.plan===PLAN);
-function render(data){
-  $('status').textContent='';
-  window.MimioboHeader?.set?.(!data.loggedOut);
-  if(data.loggedOut){show('needLogin');return;}
-  userId=data.userId;
-  const right=karteRight(data);
-  if(!right){show('noEntitlement');return;}
-  validUntil=right.valid_until||null;
-  showUntil(right.valid_until);
-  show('entitled');
-  return loadKarte();
-}
-// 記録はサーバーが権利を確認して返す（GET /api/karte）。集計だけこの画面で行う。
-async function fetchKarte(){
-  const response=await fetch('/api/karte',{credentials:'same-origin',headers:{'X-Mimiobo-User':userId},signal:AbortSignal.timeout(15000)});
-  if(response.status===401)return {loggedOut:true};
-  if(response.status===403)return {notEntitled:true};
-  if(!response.ok)throw Error('service_unavailable');
-  const data=await response.json();
-  return {rows:Array.isArray(data?.rows)?data.rows:[]};
-}
-const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function renderKarte(s){
-  if(!s.stats.answers)return '<p>まだ記録がありません。</p><div class="actions"><a class="primary" href="ep10-preview.html">3問チェックを始める</a></div>';
-  const rows=s.subjects.map(x=>'<div class="subject-row"><span>'+esc(x.name)+'</span><b>'+x.correct+' / '+x.total+'問</b><div class="subject-bar"><i style="width:'+Math.round(x.correct/x.total*1000)/10+'%"></i></div></div>').join('');
-  const weak=s.review.map(t=>'<div class="rp-weak-item"><b class="rp-weak-name">'+esc(t.topic)+'</b><p class="rp-weak-meta">'+esc(t.subject)+'・第'+t.episode+'回 ｜ '+t.total+'問中'+t.correct+'問正解</p><div class="rp-weak-links">'+(t.audioUrl?'<a class="rp-weak-link" href="'+esc(t.audioUrl)+'" target="_blank" rel="noopener noreferrer">放送を聴く</a>':'')+'<a class="rp-weak-link" href="'+esc(t.page)+'">解き直す</a></div></div>').join('');
-  return '<p id="karteSummary" class="karte-summary">放送 <b>'+s.stats.episodes+'</b>回 ・ 回答 <b>'+s.stats.answers+'</b>問 ・ 復習 <b>'+s.stats.review+'</b>つ</p>'
-    +'<section class="karte-card"><h2>復習する論点</h2><p class="karte-card-help">正答率の低い順です。</p>'+(weak||'<p class="karte-card-empty">今の記録では、復習する論点はありません。</p>')+'</section>'
-    +'<section class="karte-card"><h2>分野別の正答率</h2>'+rows+'</section>'
-    +'<p class="karte-note">記録は回答した時点のものです。同じ問題への再挑戦も数えます。</p>';
-}
-async function loadKarte(){
-  // 前回分を出している間は、消さずに最新で差し替える。
-  if(!cachedShown){$('karteBody').innerHTML='';$('karteStatus').textContent='記録を読み込んでいます…';}
-  try{
-    const result=await fetchKarte();
-    if(result.loggedOut||result.notEntitled){clearUserCache(userId);cachedShown=false;$('karteBody').innerHTML='';$('karteStatus').textContent='';show(result.loggedOut?'needLogin':'noEntitlement');return;}
-    $('karteBody').innerHTML=renderKarte(window.MimioboKarteCore.summarize(result.rows,window.MimioboCatalog));
-    $('karteStatus').textContent='';cachedShown=false;
-    saveCache(result.rows);
-  }catch{if(!cachedShown)$('karteStatus').textContent=msg('service_unavailable');}
-}
-const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-async function initialize(){
-  // 端末に前回分があれば、サーバーの返事を待たずに先に描く。
-  paintCache();
-  // Ask the server first; the message catalogue loads alongside instead of before it.
-  const sessionRequest=fetchSession();sessionRequest.catch(()=>{});
-  try{await new Promise(resolve=>{const script=document.createElement('script');script.src='/ui-messages.js';script.onload=resolve;script.onerror=resolve;document.head.append(script);});}catch{}
-  try{
-    let data=await sessionRequest;
-    if(cachedShown&&(data.loggedOut||!karteRight(data)||data.userId!==cachedUser))discardCache();
-    // Just back from Checkout: the webhook may not have arrived yet. Re-read a few times, then stop.
-    if(new URLSearchParams(location.search).get('checkout')==='ok'&&!data.loggedOut&&!karteRight(data)){
-      $('status').textContent='決済の反映を待っています…';
-      for(let i=0;i<POLL_MAX&&!karteRight(data);i++){await sleep(POLL_MS);data=await fetchSession();if(data.loggedOut)break;}
-      if(!data.loggedOut&&!karteRight(data)){$('status').textContent='反映に少し時間がかかっています。しばらくしてからこのページを開き直してください。';return;}
+    const raw=localStorage.getItem(key);if(raw===null)return null;
+    const data=JSON.parse(raw);
+    if(!data||data.version!==quizId+'-2026-09-15.v1'||!Array.isArray(data.attempts))return null;
+    for(let i=data.attempts.length-1;i>=0;i--){
+      const a=data.attempts[i];
+      if(!a||!Array.isArray(a.answers)||!a.answers.some(Boolean))continue;
+      return quiz.questions.filter((q,n)=>a.answers[n]&&a.answers[n].value===q.answer).length;
     }
-    await render(data);
-  }catch(e){$('status').textContent=msg(e.message);}
+  }catch{}
+  return null;
 }
-window.addEventListener?.('mimiobo:logout',()=>{clearAllCache();cachedUser='';cachedShown=false;$('karteBody').innerHTML='';$('karteStatus').textContent='';show('needLogin');});
-$('buy').onclick=async()=>{
-  $('buy').disabled=true;$('buyMessage').textContent='';
+// ログイン中は同期済みのキャッシュ、未ログイン（または未同期）は端末の記録。
+function stateOf(quizId,quiz,storageKey){
+  const synced=storageKey?rightCount(storageKey+'-'+quizId+'-v1',quizId,quiz):null;
+  return synced!==null?synced:rightCount('mimiobo-guest-v1-'+quizId+'-v1',quizId,quiz);
+}
+function render(storageKey){
+  const entries=Object.entries(catalog).sort((a,b)=>a[1].episode-b[1].episode);
+  const subjects=[...SUBJECTS,...entries.map(e=>e[1].subject).filter(n=>!SUBJECTS.includes(n))].filter((n,i,all)=>all.indexOf(n)===i);
+  const root=$('checkGroups');root.replaceChildren();
+  for(const subject of subjects){
+    const list=entries.filter(e=>e[1].subject===subject);
+    if(!list.length)continue;
+    const group=document.createElement('section'),title=document.createElement('h2'),cards=document.createElement('div');
+    group.className='check-group';cards.className='check-list';title.textContent=subject;
+    for(const [quizId,quiz] of list){
+      const card=document.createElement('a'),num=document.createElement('span'),name=document.createElement('span'),state=document.createElement('span');
+      const right=stateOf(quizId,quiz,storageKey);
+      card.className='check-card';card.href=quiz.page;
+      num.className='check-num';num.textContent='第'+quiz.episode+'回';
+      name.className='check-title';name.textContent=quiz.title;
+      state.className='check-state';state.textContent=right===null?'未回答':right+'/3';state.dataset.done=String(right!==null);
+      card.append(num,name,state);cards.append(card);
+    }
+    group.append(title,cards);root.append(group);
+  }
+}
+let currentKey='';
+async function initialize(){
   try{
-    const response=await fetch('/api/checkout',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-Mimiobo-User':userId},body:'{}',signal:AbortSignal.timeout(15000)});
-    const result=await response.json().catch(()=>({}));
-    if(!response.ok||typeof result.url!=='string')throw Error(response.status===401?'SESSION_INVALID':'service_unavailable');
-    location.href=result.url;
-  }catch(e){$('buyMessage').textContent=msg(e.message);$('buy').disabled=false;}
-};
+    const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
+    if(response.ok){
+      const data=await response.json();
+      if(typeof data.storageKey==='string'&&/^mimiobo-test-v1-[0-9a-f]{64}$/.test(data.storageKey))currentKey=data.storageKey;
+      window.MimioboHeader?.set?.(true);
+    }else if(response.status===401||response.status===403)window.MimioboHeader?.set?.(false);
+  }catch{}
+  render(currentKey);
+}
+window.addEventListener('storage',()=>render(currentKey));
+window.addEventListener('pageshow',event=>{if(event.persisted)render(currentKey);});
 initialize();
 </script>
-</body>
-</html>
+</body></html>

@@ -4,10 +4,17 @@
   if(typeof module==='object'&&module.exports)module.exports=api;
   else root.MimioboSync=api;
 })(typeof window==='object'?window:globalThis,function(){
-  const version='ep10-2026-09-15.v1';
-  const questionIds=['ep10-money','ep10-join','ep10-add'];
+  // 回ごとに記録を分ける。第10回の version・端末キー・問題 id・quizId は従来のまま（'ep10'）。
+  const versionOf=quizId=>quizId+'-2026-09-15.v1';
+  const defaultQuiz='ep10';
+  function questionIdsOf(quizId){
+    const catalog=typeof module==='object'&&module.exports?require('./quiz-catalog'):(typeof window==='object'?window:globalThis).MimioboCatalog;
+    const quiz=catalog&&Object.prototype.hasOwnProperty.call(catalog,quizId)?catalog[quizId]:null;
+    if(!quiz)throw Error('UNKNOWN_QUIZ');
+    return quiz.questions.map(q=>q.id);
+  }
   const clone=value=>JSON.parse(JSON.stringify(value));
-  function merge(local,server){
+  function merge(local,server,version=versionOf(defaultQuiz)){
     const attempts=new Map(local.attempts.map(a=>[a.id,clone(a)]));
     for(const remote of server.attempts){
       const a=attempts.get(remote.id)||clone(remote);
@@ -17,8 +24,9 @@
     }
     return {version,attempts:[...attempts.values()].sort((a,b)=>Date.parse(a.startedAt)-Date.parse(b.startedAt)||a.id.localeCompare(b.id))};
   }
-  function create({userId,storageKey,storage,fetch:request,validate,onData=()=>{},onState=()=>{}}){
-    const key=storageKey+'-ep10-v1',prefix='mimiobo-answer-queue-v1:'+userId+':';
+  function create({userId,storageKey,storage,fetch:request,validate,quizId=defaultQuiz,questionIds=questionIdsOf(quizId),onData=()=>{},onState=()=>{}}){
+    const version=versionOf(quizId);
+    const key=storageKey+'-'+quizId+'-v1',prefix='mimiobo-answer-queue-v1:'+userId+':';
     const deadPrefix='mimiobo-answer-dead-letter-v1:'+userId+':';
     let stopped=false,running=null,refreshTimer=null;
     function state(value){onState(value);}
@@ -50,17 +58,17 @@
     }
     async function restore(){
       let remote;
-      try{remote=validate(await call('/api/answers?quiz=ep10'));}
+      try{remote=validate(await call('/api/answers?quiz='+encodeURIComponent(quizId)));}
       catch(error){
         // A permanent GET failure (e.g. history_limit) would otherwise prevent
-        // the queue reaching POST forever. Retain these rows outside retry work.
-        if(error.status&&!error.retryable)for(const [k,row] of pending())quarantine(k,row,error);
+        // the queue reaching POST forever. Retain this quiz's rows outside retry work (other quizzes' rows are not affected).
+        if(error.status&&!error.retryable)for(const [k,row] of pending())if(row.quizId===quizId)quarantine(k,row,error);
         throw error;
       }
       if(stopped)return;
       // Read again after the request: another tab may have saved during the fetch.
       const baseline=storage.getItem(key),local=baseline===null?{version,attempts:[]}:validate(JSON.parse(baseline));
-      const next=validate(merge(local,remote));
+      const next=validate(merge(local,remote,version));
       if(storage.getItem(key)!==baseline)throw Error('CACHE_CHANGED');
       storage.setItem(key,JSON.stringify(next));
       // A server answer is immutable. Remove any pending duplicate/conflicting slot.
@@ -117,7 +125,7 @@
       if(stopped)throw Error('SESSION_CHANGED');
       const answer=attempt.answers[index];
       if(!answer||!questionIds[index])return;
-      const row={attemptId:attempt.id,quizId:'ep10',startedAt:attempt.startedAt,questionId:questionIds[index],value:answer.value,answeredAt:answer.at};
+      const row={attemptId:attempt.id,quizId,startedAt:attempt.startedAt,questionId:questionIds[index],value:answer.value,answeredAt:answer.at};
       const k=prefix+attempt.id+':'+index;
       if(storage.getItem(deadPrefix+attempt.id+':'+index)!==null){state('failed');return Promise.resolve();}
       // One key per immutable slot avoids one tab replacing another tab's queue.

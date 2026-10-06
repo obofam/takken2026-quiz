@@ -7,7 +7,7 @@ const path=require('node:path');
 const vm=require('node:vm');
 const {randomUUID}=require('node:crypto');
 const read=name=>fs.readFileSync(path.join(__dirname,'..',name),'utf8');
-const pages={ep10:read('ep10-preview.html'),karte:read('karte.html'),account:read('account.html')};
+const pages={ep10:read('ep10-preview.html'),karte:read('karte.html'),account:read('account.html'),checks:read('checks.html')};
 const bareScript=html=>html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
 const session={userId:'12345678-1234-4123-8123-123456789abc',storageKey:'mimiobo-test-v1-'+'a'.repeat(64)};
 function storage(){const values=new Map();return {values,getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,String(value)),removeItem:key=>values.delete(key)};}
@@ -16,10 +16,10 @@ const tick=()=>new Promise(resolve=>setTimeout(resolve,0));
 // ---------- 共通ヘッダー ----------
 const headerOf=html=>html.match(/<header class="site-header">[\s\S]*?<\/header>/)[0];
 const headerCss=html=>html.match(/<style>\n\/\* site-header 10\/6 \*\/[\s\S]*?<\/style>/)[0];
-test('the same header (markup, css, script) is in all three pages; only the current tab differs',()=>{
+test('the same header (markup, css, script) is in all four pages; only the current tab differs',()=>{
   const plain=h=>headerOf(h).replace(' aria-current="page"','');
-  assert.equal(plain(pages.karte),plain(pages.ep10));assert.equal(plain(pages.account),plain(pages.ep10));
-  assert.equal(headerCss(pages.karte),headerCss(pages.ep10));assert.equal(headerCss(pages.account),headerCss(pages.ep10));
+  assert.equal(plain(pages.karte),plain(pages.ep10));assert.equal(plain(pages.account),plain(pages.ep10));assert.equal(plain(pages.checks),plain(pages.ep10));
+  assert.equal(headerCss(pages.karte),headerCss(pages.ep10));assert.equal(headerCss(pages.account),headerCss(pages.ep10));assert.equal(headerCss(pages.checks),headerCss(pages.ep10));
   for(const html of Object.values(pages)){
     assert.ok(html.includes('<script src="/site-header.js"></script>'));
     assert.ok(html.indexOf('<header class="site-header">')<html.indexOf('<main>'));
@@ -32,7 +32,8 @@ test('the same header (markup, css, script) is in all three pages; only the curr
 });
 test('the current page is marked with aria-current="page"; account.html marks neither tab',()=>{
   const current=html=>[...headerOf(html).matchAll(/<a href="([^"]+)" aria-current="page">/g)].map(m=>m[1]);
-  assert.deepEqual(current(pages.ep10),['ep10-preview.html']);assert.deepEqual(current(pages.karte),['karte.html']);assert.deepEqual(current(pages.account),[]);
+  // 3問チェックのタブの行き先は回の一覧（checks.html）。各回のページ（ep10-preview.html）でも同じタブが現在地。
+  assert.deepEqual(current(pages.ep10),['checks.html']);assert.deepEqual(current(pages.checks),['checks.html']);assert.deepEqual(current(pages.karte),['karte.html']);assert.deepEqual(current(pages.account),[]);
   assert.ok(headerCss(pages.ep10).includes('.site-tabs a[aria-current=page]{color:var(--ink);font-weight:700;border-bottom-color:var(--cyan)}'));
 });
 function headerHarness({pathname='/ep10-preview.html',reply=async()=>({ok:true,status:200})}={}){
@@ -169,7 +170,7 @@ function ep10Harness(url='https://mimiobo-liff-test.vercel.app/ep10-preview.html
   const context=vm.createContext({URL,URLSearchParams,AbortSignal,console,crypto:{randomUUID},location,localStorage:storage(),sessionStorage:storage(),
     CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail;}},Event:class{constructor(type){this.type=type;}},
     addEventListener(){},dispatchEvent(){},scrollTo(){}});
-  context.window=context;context.MimioboHeader={set:v=>headerCalls.push(v)};
+  context.window=context;context.MimioboHeader={set:v=>headerCalls.push(v)};context.MimioboCatalog=require('../quiz-catalog');
   context.history={replaceState(_s,_t,next){const r=context.location.replace;context.location=new URL(next,context.location);context.location.replace=r;}};
   context.liff={init:async()=>{},isLoggedIn:()=>true,getIDToken:()=>'test-line-token',login:options=>logins.push(options)};
   context.fetch=async(u,options={})=>{requests.push({url:u,options});return reply?reply(u,options):{ok:true,status:200,json:async()=>session};};
@@ -330,7 +331,7 @@ test('the three pages keep balanced <style> blocks, parse as scripts, and keep t
 test('every script the three pages load is served by the local harness and exists; plans-preview is untouched',()=>{
   const dev=read('scripts/dev.cjs');
   for(const html of Object.values(pages))for(const m of html.matchAll(/<script src="\/([^"]+)"/g)){assert.ok(dev.includes("'"+m[1]+"'"),m[1]);assert.ok(fs.existsSync(path.join(__dirname,'..',m[1])),m[1]);}
-  for(const file of ['account.html','site-header.js','ep10-preview.html','karte.html'])assert.ok(dev.includes("'"+file+"'"),file);
+  for(const file of ['account.html','site-header.js','ep10-preview.html','karte.html','checks.html'])assert.ok(dev.includes("'"+file+"'"),file);
   assert.ok(!read('plans-preview.html').includes('site-header'));
 });
 
@@ -348,12 +349,12 @@ test('plan-dot css block is identical in the three pages and uses the plan colou
 test('header tabs carry the plan icons (18px, decorative); the current tab gets the plan colour as a pill',()=>{
   for(const [name,html] of Object.entries(pages)){
     const header=headerOf(html);
-    assert.ok(header.includes('<a href="ep10-preview.html"')&&header.includes('<img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a>'),name);
+    assert.ok(header.includes('<a href="checks.html"')&&header.includes('<img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a>'),name);
     assert.ok(header.includes('<img class="tab-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</a>'),name);
   }
   const css=headerCss(pages.ep10);
   assert.ok(css.includes('.tab-icon{width:18px;height:18px'));
-  assert.ok(css.includes('.site-tabs a[href="ep10-preview.html"]{--tab-bg:#EEF2F3}')&&css.includes('.site-tabs a[href="karte.html"]{--tab-bg:#F3DCE3}'));
+  assert.ok(css.includes('.site-tabs a[href="checks.html"]{--tab-bg:#EEF2F3}')&&css.includes('.site-tabs a[href="karte.html"]{--tab-bg:#F3DCE3}'));
   const pill=cssRule(css,'.site-tabs a[aria-current=page]::before');assert.ok(pill.includes('background:var(--tab-bg')&&pill.includes('border-radius:999px'));
   assert.ok(css.includes('@media(max-width:350px){.site-brand,.tab-icon{display:none}}'));
   // the existing cyan underline stays
@@ -361,7 +362,7 @@ test('header tabs carry the plan icons (18px, decorative); the current tab gets 
 });
 test('ep10: overline shows the 学習便 tag; results button and login hint use the 学習カルテ icon/tag; buttons stay cyan',()=>{
   const html=pages.ep10;
-  assert.ok(html.includes('<p class="label"><span class="plan-dot dot-free"><img class="plan-dot-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">学習便</span><span class="label-text">第10回 · 営業保証金と保証協会</span></p><h1>3問チェック</h1>'));
+  assert.ok(html.includes('<p class="label"><span class="plan-dot dot-free"><img class="plan-dot-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">学習便</span><span id="epLabel" class="label-text">第10回 · 営業保証金と保証協会</span></p><h1>3問チェック</h1>'));
   assert.ok(html.indexOf('学習便</span>')<html.indexOf('<h1>3問チェック</h1>'));
   assert.ok(html.includes('<a id="toKarte" class="primary" href="karte.html"><img class="btn-icon" src="img/icons/plan-karte.svg" alt="" width="20" height="20">学習カルテで記録を見る</a>'));
   assert.ok(html.includes('<span class="plan-dot dot-ume">学習カルテ</span>に集まります。'));
