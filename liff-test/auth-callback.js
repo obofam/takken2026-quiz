@@ -12,5 +12,12 @@
       result=response.ok?'ok':'failed';
     }
   }catch{result='unavailable';}
-  location.replace('/ep10-preview.html?server=1&auth='+result);
+  // account.html?next=karte left a note in this browser: go there after a successful email login. Otherwise the usual landing.
+  let target='/ep10-preview.html?server=1&auth='+result;
+  try{
+    const next=JSON.parse(localStorage.getItem('mimiobo-next'));
+    if(result==='ok'&&next&&next.page==='karte'&&next.expires>Date.now())target='/karte.html';
+  }catch{}
+  try{localStorage.removeItem('mimiobo-next');}catch{}
+  location.replace(target);
 })();

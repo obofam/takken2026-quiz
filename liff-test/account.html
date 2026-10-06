@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>ログイン｜耳で覚える宅建</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#141b21;--muted:#59636c;--cyan:#17c5e8;--soft:#e9f9fc;--line:#e4e9ec;--success:#f4fbd2}*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:17px/1.9 'Noto Sans JP',system-ui,'Yu Gothic',sans-serif}button,a{touch-action:manipulation}button{font:inherit;cursor:pointer}button:disabled{cursor:default}a{color:#08637c;text-underline-offset:4px}.wrap{max-width:720px;margin:auto;padding:0 24px}header{padding:24px 0;border-bottom:1px solid var(--line)}header p{margin:0;font-weight:700;font-size:15px}.preview{font-size:14px;color:var(--muted);background:#f7f8fa;padding:10px 0}.preview .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 16px}.preview p{margin:0}#storageScope{font-weight:700;color:var(--ink)}.preview-actions{display:flex;gap:8px;flex-wrap:wrap}.pillbutton{border-radius:999px;border:1px solid #91cbd7;background:#fff;color:#164a59;font-size:14px;min-height:40px;padding:6px 16px;font-weight:700}.chip{display:inline-block;background:#fff;border:1px solid #91cbd7;color:#164a59;border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700}.badge{display:inline-block;background:#fff;border:1px solid #91cbd7;color:#164a59;font-size:11px;letter-spacing:.06em;border-radius:999px;padding:2px 10px;font-weight:700;vertical-align:middle;margin-left:6px}.divider{text-align:center}.hero{padding:40px 0 24px}.label{font-size:12px;letter-spacing:.15em;color:#126981;font-weight:700;margin:0 0 12px}h1{font-size:clamp(28px,5.5vw,38px);line-height:1.55;font-weight:900;margin:0 0 20px}h2{font-size:24px;line-height:1.65;margin:0 0 16px}h3{font-size:19px;margin:0 0 8px}p{margin:0 0 16px}.muted{color:var(--muted)}.card{border:1px solid var(--line);border-radius:16px;padding:28px;margin:20px 0;box-shadow:0 2px 8px rgba(20,27,33,.04)}.soft{background:var(--soft);border-color:transparent}.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:24px 0 12px}.primary,.secondary{border-radius:999px;padding:13px 24px;font-weight:700;min-height:52px;border:1px solid transparent}.primary{background:var(--cyan);color:#12313b}.secondary{background:#fff;border-color:#91cbd7;color:#164a59}.textbutton{background:none;border:0;padding:10px 0;color:#405965;text-decoration:underline;text-underline-offset:4px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0 8px}.answer{background:#fff;border:2px solid #c6dce2;border-radius:16px;font-weight:700;min-height:72px;font-size:26px}.answer[aria-pressed=true]{border-color:#10758a;background:var(--soft)}.answers:has(button:disabled) button:not([aria-pressed=true]){opacity:.55}.explanation{border-top:1px solid var(--line);padding-top:24px;margin-top:24px}.verdict{font-size:18px;font-weight:700;padding:8px 14px;display:inline-block;border-radius:999px;background:#f1f4f5}.verdict.correct{background:var(--success);color:#4F6300}.answer-explanation{font-size:16px}.small{font-size:14px}.progress{height:5px;background:#ecf0f2;border-radius:999px;margin:12px 0 28px;overflow:hidden}.progress span{display:block;height:100%;background:var(--cyan)}.score{font-size:25px;font-weight:900}.row{border-bottom:1px solid var(--line);padding:16px 0}.row:last-child{border:0}.row p{margin:0}.row small{font-size:14px;color:var(--muted)}.status{padding:4px 10px;border-radius:999px;background:#f0f3f5;font-size:13px;margin-right:10px;display:inline-block}.status.ok{background:var(--success);color:#4F6300}#counts{font-size:15px}#nextTitle{font-size:20px}footer{margin-top:40px;padding:28px 0;border-top:1px solid var(--line);color:var(--muted);font-size:14px}.screen{padding-bottom:8px}.screen:focus{outline:none}[hidden]{display:none!important}:focus-visible{outline:3px solid #106e85;outline-offset:4px}details{margin-top:18px;font-size:14px}summary{cursor:pointer}ul{padding-left:1.4em}li{margin:8px 0}@media(max-width:480px){.wrap{padding:0 20px}.card{padding:22px}.hero{padding-top:30px}.actions .primary{width:100%}h2{font-size:22px}}
+.question-card{padding:24px 0 32px;border-top:1px solid var(--line)}.question-text{font-size:19px;font-weight:700;line-height:1.8}.question-card .answers{margin-top:18px}.question-card .label{margin-bottom:12px;letter-spacing:.12em}.question-card .textbutton{font-size:15px}.result-title{font-size:28px;font-weight:900}#intro .hero{padding:32px 0 20px}#results{border-top:1px solid var(--line)}
+#intro h1{font-size:24px;font-weight:700;line-height:1.6}.episode-number{white-space:nowrap;color:var(--muted);margin-right:.5em}.footer-brand{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}.footer-brand p{margin:0 0 8px}
+.karte-heading{font-size:26px;font-weight:700}.karte-list{padding-left:1.2em;margin:0}.sample-options{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}.sample-options button{font-size:15px;padding:8px 14px}.sample-options button[aria-pressed=true]{background:var(--soft);border-color:#10758a}.sample-note{border-left:3px solid var(--cyan);padding-left:14px}.preview-links{display:flex;flex-wrap:wrap;gap:20px;padding-top:24px;border-top:1px solid var(--line);margin-top:24px}
+ .recommendation .recommendation-basis{font-size:15px;line-height:1.8;border-left:3px solid #8acbd9;padding:3px 0 3px 12px;margin:18px 0 22px;color:#405965}.recommendation-basis strong{display:block;font-size:14px;margin-bottom:3px}
+</style>
+<style>
+/* site-header 10/6 */
+html{scroll-padding-top:60px}
+.site-header{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line);padding:0}
+.site-header-in{max-width:720px;margin:auto;padding:0 24px;height:52px;display:flex;align-items:center;gap:20px}
+.site-brand{font-weight:900;font-size:15px;line-height:1;white-space:nowrap;color:var(--ink);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.site-tabs{display:flex;align-self:stretch;gap:6px;margin-right:auto}
+.site-tabs a{display:flex;align-items:center;padding:0 10px;font-size:14px;line-height:1;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap}
+.site-tabs a[aria-current=page]{color:var(--ink);font-weight:700;border-bottom-color:var(--cyan)}
+.site-auth{flex:none;font-size:13px;line-height:1;font-weight:700;text-decoration:none;border-radius:999px;padding:8px 14px;border:1px solid #91cbd7;color:#164a59;background:#fff;white-space:nowrap}
+.site-auth[data-state=in]{border-color:var(--line);background:#f3f5f6;color:var(--muted);font-weight:400;font-size:12px;padding:6px 10px}
+@media(max-width:480px){.site-header-in{padding:0 12px;gap:8px}.site-brand{font-size:12px}.site-tabs{gap:0}.site-tabs a{padding:0 5px}.site-auth{padding:7px 10px}.site-auth[data-state=in]{padding:6px 8px}}
+@media(max-width:350px){.site-brand{display:none}}
+</style>
+<style>
+/* account 10/6：帯1つ＋カード1枚。色・帯・カードは他ページと同じ値 */
+.band{padding:36px 0}.band-cyan{background:#e4f6fb}.band-cyan .card{background:#fff;border-color:var(--line)}.band .wrap>.card:first-child{margin-top:0}.band .wrap>.card:last-child{margin-bottom:0}
+.label{font-size:13px;letter-spacing:.12em;color:#126981;font-weight:700;margin:0 0 12px}
+.account h1{font-size:30px;font-weight:900;line-height:1.4;margin:0 0 12px}
+.account label{display:block;font-size:14px;font-weight:700;margin:14px 0 6px}.account input{width:100%;padding:12px;border:1px solid #c6d3d8;border-radius:10px;font:inherit;min-height:48px}
+.account .primary,.account .secondary{width:100%;margin:12px 0 0;min-height:56px}.account details{margin-top:16px}.account .textbutton{margin-top:12px}
+a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.fact{margin:0 0 8px}
+footer p{margin:0 0 8px}
+</style>
+<style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}.card{padding:18px}.account h1{font-size:22px;line-height:1.45}.account input{min-height:44px}}</style>
+</head>
+<body>
+<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="ep10-preview.html">3問チェック</a><a href="karte.html">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
+<script src="/site-header.js"></script>
+<main>
+<section class="band band-cyan"><div class="wrap">
+<div class="card account">
+<p class="label">アカウント</p>
+<p id="status" class="small muted" role="status" aria-live="polite"></p>
+<div id="accountLoggedOut" hidden>
+  <h1>ログイン</h1>
+  <p>記録を別の端末でも見られるようになります。</p>
+  <button id="accountLine" class="primary" type="button">LINEでログイン</button>
+  <p class="small muted divider">または、メールで</p>
+  <label for="accountEmail">メールアドレス</label>
+  <input id="accountEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+  <button id="accountEmailSend" class="secondary" type="button">ログインのメールを受け取る</button>
+  <p class="small muted">届いたリンクを10分以内に開いてください。</p>
+</div>
+<div id="accountLoggedIn" hidden>
+  <h1>ログイン中</h1>
+  <p id="accountMethod" class="fact" hidden></p>
+  <button id="accountLinkLine" class="secondary" type="button" hidden>LINEも使えるようにする</button>
+  <details id="accountLinkEmailBox" hidden><summary>メールも使えるようにする</summary>
+    <label for="accountLinkEmail">メールアドレス</label>
+    <input id="accountLinkEmail" type="email" inputmode="email" autocomplete="email">
+    <button id="accountLinkEmailSend" class="secondary" type="button">連携のメールを受け取る</button>
+  </details>
+  <button id="accountLogout" class="textbutton" type="button">このブラウザからログアウト</button>
+</div>
+<p id="accountMessage" class="small" role="status" aria-live="polite"></p>
+</div>
+</div></section>
+</main>
+<footer><div class="wrap"><p>静かに、淡々と。</p><a href="plans-preview.html">学習サポートの一覧</a></div></footer>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const NEXT_KEY='mimiobo-next',NEXT_PAGES=['karte','ep10'];
+const names={email:'メール',line:'LINE'};
+const msg=code=>window.MimioboMessages?.text(code)||'接続できませんでした。時間をおいてもう一度お試しください。';
+function loadClient(src){
+  return new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(Error('service_unavailable'));document.head.append(script);});
+}
+// ?next=karte|ep10 : where to go once the login is done. Only these two names are accepted.
+function queryNext(){const v=new URLSearchParams(location.search).get('next');return NEXT_PAGES.includes(v)?v:'';}
+function rememberNext(){
+  const page=queryNext();
+  try{if(page)localStorage.setItem(NEXT_KEY,JSON.stringify({page,expires:Date.now()+600000}));else localStorage.removeItem(NEXT_KEY);}catch{}
+}
+// session = the GET /api/session body, or null when logged out.
+function paint(session){
+  $('status').textContent='';
+  $('accountLoggedOut').hidden=!!session;$('accountLoggedIn').hidden=!session;
+  window.MimioboHeader?.set?.(!!session);
+  if(!session)return;
+  const providers=Array.isArray(session.providers)?session.providers:[];
+  const list=providers.filter(p=>Object.hasOwn(names,p)).map(p=>names[p]);
+  $('accountMethod').textContent=list.length?'ログインの方法：'+list.join('＋'):'';$('accountMethod').hidden=!list.length;
+  $('accountLinkLine').hidden=providers.includes('line');
+  $('accountLinkEmailBox').hidden=providers.includes('email');
+}
+function emailFlow(button,input,{link=false}={}){
+  return async()=>{
+    const value=input?input.value:'';
+    if(!value||input?.validity?.valid===false){$('accountMessage').textContent='メールアドレスを確認してください。';return;}
+    try{
+      button.disabled=true;
+      if(!link)rememberNext();
+      await MimioboAuth.email(value,{link});
+      $('accountMessage').textContent=link?'連携のメールを送りました。10分以内にこのブラウザで開いてください。':'メールを送りました。届いたリンクを10分以内に開いてください。';
+    }catch(e){$('accountMessage').textContent=msg(e.message);}
+    finally{button.disabled=false;}
+  };
+}
+function wire(){
+  $('accountEmailSend').onclick=emailFlow($('accountEmailSend'),$('accountEmail'));
+  $('accountLinkEmailSend').onclick=emailFlow($('accountLinkEmailSend'),$('accountLinkEmail'),{link:true});
+  // LINE login goes through the LIFF page (ep10-preview.html), which finishes the login and then moves on to ?next.
+  $('accountLine').onclick=()=>{rememberNext();location.href=MimioboAuth.lineLoginUrl(queryNext());};
+  $('accountLinkLine').onclick=async()=>{try{location.href=await MimioboAuth.linkLine();}catch(e){$('accountMessage').textContent=msg(e.message);}};
+  $('accountLogout').onclick=async()=>{try{await MimioboAuth.logout();}catch{}location.reload();};
+}
+async function initialize(){
+  try{await loadClient('/ui-messages.js');}catch{}
+  try{
+    await loadClient('/auth-client.js');wire();
+    const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
+    if(response.ok){paint(await response.json());return;}
+    if(response.status===401||response.status===403){paint(null);return;}
+    throw Error('service_unavailable');
+  }catch(e){$('status').textContent=msg(e.message);}
+}
+initialize();
+</script>
+</body></html>

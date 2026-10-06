@@ -59,7 +59,21 @@
 .preview-links.band{display:block;margin-top:0;padding:36px 0;border-top:1px solid var(--line)}.preview-links .wrap{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
 @media(max-width:480px){.band{padding:28px 0}#signinPrompt{padding-top:0}#intro h1{font-size:30px}.karte-hero h1,.karte-heading{font-size:23px}.question-card{padding:20px}.preview-links.band{padding:28px 0}}
 </style>
-<style>a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}#entitled .fact{margin:16px 0}</style>
+<style>a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}#entitled .fact{margin:16px 0}#untilRow{margin:0 0 16px}footer p{margin:0 0 8px}</style>
+<style>
+/* site-header 10/6 */
+html{scroll-padding-top:60px}
+.site-header{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line);padding:0}
+.site-header-in{max-width:720px;margin:auto;padding:0 24px;height:52px;display:flex;align-items:center;gap:20px}
+.site-brand{font-weight:900;font-size:15px;line-height:1;white-space:nowrap;color:var(--ink);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.site-tabs{display:flex;align-self:stretch;gap:6px;margin-right:auto}
+.site-tabs a{display:flex;align-items:center;padding:0 10px;font-size:14px;line-height:1;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap}
+.site-tabs a[aria-current=page]{color:var(--ink);font-weight:700;border-bottom-color:var(--cyan)}
+.site-auth{flex:none;font-size:13px;line-height:1;font-weight:700;text-decoration:none;border-radius:999px;padding:8px 14px;border:1px solid #91cbd7;color:#164a59;background:#fff;white-space:nowrap}
+.site-auth[data-state=in]{border-color:var(--line);background:#f3f5f6;color:var(--muted);font-weight:400;font-size:12px;padding:6px 10px}
+@media(max-width:480px){.site-header-in{padding:0 12px;gap:8px}.site-brand{font-size:12px}.site-tabs{gap:0}.site-tabs a{padding:0 5px}.site-auth{padding:7px 10px}.site-auth[data-state=in]{padding:6px 8px}}
+@media(max-width:350px){.site-brand{display:none}}
+</style>
 <style>
 /* 学習カルテ本文（plans-preview.html の reports.weak と同じ部品。棒は淡々スタイルの水色） */
 .subject-results{padding:0 0 24px}
@@ -88,15 +102,15 @@
 <style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}.card,#entitled{padding:18px}h1,#entitled h1{font-size:22px;line-height:1.45;margin-bottom:10px}.label{font-size:12px}.fact,#untilRow{font-size:15px}.rp-stats{gap:8px;margin:14px 0}.rp-stat{padding:10px 6px}.rp-stat b{font-size:17px}.rp-stat span{font-size:11px}.subject-results h2{font-size:17px}.subject-row{padding:10px 0}.subject-row>span{font-size:15px}.subject-row>b{font-size:15px}.rp-weak-main b{font-size:15px}.rp-weak-tag{font-size:11px;margin-left:6px}.rp-weak-count,.rp-weak-link{font-size:13px}.karte-note,.report-muted{font-size:12px}header p{font-size:14px}}</style>
 </head>
 <body>
-<header><div class="wrap"><p>耳で覚える宅建 <span class="muted">｜学習カルテ</span></p></div></header>
+<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="ep10-preview.html">3問チェック</a><a href="karte.html" aria-current="page">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
+<script src="/site-header.js"></script>
 <main>
 <section class="band band-cyan"><div class="wrap">
-<p class="label">学習カルテ</p>
 <p id="status" class="small muted" role="status" aria-live="polite"></p>
 <div id="needLogin" class="card" hidden>
-<h1>記録を見るにはログインが必要です</h1>
-<p>メールかLINEでログインすると、ここに記録が集まります。</p>
-<div class="actions"><a class="primary" href="ep10-preview.html#account">ログインする</a></div>
+<h1>学習カルテ</h1>
+<p>ログインすると、答えた記録がここに集まります。</p>
+<div class="actions"><a class="primary" href="account.html?next=karte">ログイン</a></div>
 </div>
 <div id="noEntitlement" class="card" hidden>
 <h1>学習カルテは準備中です</h1>
@@ -106,13 +120,14 @@
 <p id="buyMessage" class="small" role="status" aria-live="polite"></p>
 </div>
 <div id="entitled" class="card" hidden>
-<h1>学習カルテ <span class="badge">テスト中</span></h1>
-<p id="untilRow" class="fact" hidden>有効期限：<span id="until"></span></p>
+<h1>学習カルテ</h1>
+<p id="untilRow" class="small muted" hidden>有効期限：<span id="until"></span></p>
 <p id="karteStatus" class="small muted" role="status" aria-live="polite"></p>
 <div id="karteBody"></div>
 </div>
 </div></section>
 </main>
+<footer><div class="wrap"><p>静かに、淡々と。</p><a href="plans-preview.html">学習サポートの一覧</a></div></footer>
 <script src="/quiz-catalog.js"></script>
 <script src="/karte-core.js"></script>
 <script>
@@ -136,6 +151,7 @@ async function fetchSession(){
 const karteRight=data=>(Array.isArray(data.entitlements)?data.entitlements:[]).find(e=>e&&e.plan===PLAN);
 function render(data){
   $('status').textContent='';
+  window.MimioboHeader?.set?.(!data.loggedOut);
   if(data.loggedOut){show('needLogin');return;}
   userId=data.userId;
   const right=karteRight(data);

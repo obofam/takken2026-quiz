@@ -88,16 +88,16 @@ test('test checkout failure re-enables the button with a safe message; a stale s
   }
 });
 test('page structure: approved copy, links and shared CSS',()=>{
-  const must=['<p class="label">学習カルテ</p>','耳で覚える宅建 <span class="muted">｜学習カルテ</span>','記録を見るにはログインが必要です','メールかLINEでログインすると、ここに記録が集まります。','href="ep10-preview.html#account">ログインする<','学習カルテは準備中です','記録をためて弱点を見る画面です。今はテスト中で、仕組みの確認だけをしています。','href="plans-preview.html#ume">学習カルテの案内を見る<','学習カルテを試す（テスト決済）','テスト用のカードでしか決済できません。実際の請求はありません。','<span class="badge">テスト中</span>','有効期限：','記録を読み込んでいます…','分野別の正答率','復習する論点','正答率の低い順。放送に戻れます。','今の記録では、復習する論点はありません。','記録は回答した時点のものです。同じ問題への再挑戦も数えます。','まだ記録がありません。','3問チェックを始める','を聴く','問題を解き直す'];
+  const must=['<h1>学習カルテ</h1>','ログインすると、答えた記録がここに集まります。','href="account.html?next=karte">ログイン<','学習カルテは準備中です','記録をためて弱点を見る画面です。今はテスト中で、仕組みの確認だけをしています。','href="plans-preview.html#ume">学習カルテの案内を見る<','学習カルテを試す（テスト決済）','テスト用のカードでしか決済できません。実際の請求はありません。','有効期限：','記録を読み込んでいます…','分野別の正答率','復習する論点','正答率の低い順。放送に戻れます。','今の記録では、復習する論点はありません。','記録は回答した時点のものです。同じ問題への再挑戦も数えます。','まだ記録がありません。','3問チェックを始める','を聴く','問題を解き直す'];
   for(const text of must)assert.ok(html.includes(text),text);
   assert.equal((html.match(/<style>/g)||[]).length,(html.match(/<\/style>/g)||[]).length);
   const ep10=read('ep10-preview.html'),styles=s=>(s.match(/<style>[\s\S]*?<\/style>/g)||[]);
   // Shared CSS: every ep10 style block except the ep10-only button rule is reused verbatim.
-  for(const block of styles(ep10).filter(b=>!b.includes('body.signin-visible #connectLine')&&!b.includes('mobile-scale')))assert.ok(html.includes(block));
+  for(const block of styles(ep10).filter(b=>!b.includes('body.signin-visible #connectLine')&&!b.includes('mobile-scale')&&!b.includes('ep10-only')))assert.ok(html.includes(block));
   assert.doesNotThrow(()=>new Function(html.match(/<script>\s*([\s\S]*?)<\/script>/)[1]));
   assert.doesNotMatch(html,/server=1/);
   // The placeholder body from Sprint 2 is gone; no arrow glyphs; scripts load the shared catalog and core.
-  for(const gone of ['Sprint 3','権利の確認だけ','3問チェックに戻る'])assert.ok(!html.includes(gone),gone);
+  for(const gone of ['Sprint 3','権利の確認だけ','3問チェックに戻る','記録を見るにはログインが必要です','ep10-preview.html#account','badge">テスト中'])assert.ok(!html.includes(gone),gone);
   assert.doesNotMatch(html,/[→↗↘←]/);
   assert.ok(html.includes('<script src="/quiz-catalog.js"></script>')&&html.includes('<script src="/karte-core.js"></script>'));
   // Same parts and colours as the plans-preview sample; the lime success colour is not used for the bars.

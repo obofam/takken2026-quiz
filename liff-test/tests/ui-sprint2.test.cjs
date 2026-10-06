@@ -49,9 +49,9 @@ test('logged out: ?server=1 is not needed, answers stay on this device, nothing 
   for(const url of [plain,plain+'?server=1']){
     const h=harness(url);loggedOut(h);h.preview();await h.run('initialize()');
     assert.equal(h.run('canAnswer'),true);assert.equal(h.run('answerSync'),null);
-    assert.equal(h.node('storageScope').textContent,'記録：この端末に保存');
-    assert.equal(h.node('signinPrompt').hidden,false,'sign-in card stays for logged-out visitors');
-    assert.equal(h.node('account').hidden,false);
+    assert.equal(h.node('storageScope').textContent,'記録：この端末');
+    assert.equal(h.node('loginHint').hidden,false,'the one-line login hint shows for logged-out visitors (the sign-in card and the account block are hidden in the markup, see redesign.test.cjs)');
+
     h.run('answer(0,true);answer(1,null)');
     const saved=JSON.parse(h.context.localStorage.getItem(GUEST_KEY));
     assert.equal(saved.attempts.length,1);assert.deepEqual(saved.attempts[0].answers.map(a=>a&&a.value),[true,null,null]);
@@ -81,7 +81,7 @@ test('login merges guest attempts into the account cache, queues every answer on
   assert.deepEqual(queued,[[A1.id,0,true],[A1.id,1,false],[A2.id,2,null]]);
   assert.equal(h.context.localStorage.getItem(GUEST_KEY),null);
   assert.deepEqual(JSON.parse(h.context.localStorage.getItem(cacheKey)).attempts.map(a=>a.id),[EXISTING.id,A1.id,A2.id]);
-  assert.equal(h.node('storageScope').textContent,'記録：アカウントに保存');
+  assert.equal(h.node('storageScope').textContent,'記録：ログイン中');
   assert.equal(h.refreshes.length,1);assert.equal(h.run('progressStore.data.attempts.length'),3);
 });
 test('guest merge does not duplicate an attempt already cached, and a queue failure keeps the guest copy for the next load',async()=>{

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
-<title>定着3問チェック｜第10回</title>
+<title>3問チェック｜第10回</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -60,31 +60,57 @@
 @media(max-width:480px){.band{padding:28px 0}#signinPrompt{padding-top:0}#intro h1{font-size:30px}.karte-hero h1,.karte-heading{font-size:23px}.question-card{padding:20px}.preview-links.band{padding:28px 0}}
 </style>
 <style>body.signin-visible #connectLine{display:none}</style>
+<style>
+/* site-header 10/6 */
+html{scroll-padding-top:60px}
+.site-header{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line);padding:0}
+.site-header-in{max-width:720px;margin:auto;padding:0 24px;height:52px;display:flex;align-items:center;gap:20px}
+.site-brand{font-weight:900;font-size:15px;line-height:1;white-space:nowrap;color:var(--ink);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.site-tabs{display:flex;align-self:stretch;gap:6px;margin-right:auto}
+.site-tabs a{display:flex;align-items:center;padding:0 10px;font-size:14px;line-height:1;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap}
+.site-tabs a[aria-current=page]{color:var(--ink);font-weight:700;border-bottom-color:var(--cyan)}
+.site-auth{flex:none;font-size:13px;line-height:1;font-weight:700;text-decoration:none;border-radius:999px;padding:8px 14px;border:1px solid #91cbd7;color:#164a59;background:#fff;white-space:nowrap}
+.site-auth[data-state=in]{border-color:var(--line);background:#f3f5f6;color:var(--muted);font-weight:400;font-size:12px;padding:6px 10px}
+@media(max-width:480px){.site-header-in{padding:0 12px;gap:8px}.site-brand{font-size:12px}.site-tabs{gap:0}.site-tabs a{padding:0 5px}.site-auth{padding:7px 10px}.site-auth[data-state=in]{padding:6px 8px}}
+@media(max-width:350px){.site-brand{display:none}}
+</style>
+<style>
+/* ep10-only 10/6 redesign */
+.dev-only{display:none!important}
+a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.chip-row{display:flex;align-items:center;flex-wrap:wrap;gap:4px 16px;margin:0 0 16px}.chip-row .chip{margin:0}
+.login-hint{font-size:14px;color:var(--muted);margin:16px 0 0}.login-hint a{margin-left:.5em;font-weight:700}
+.save-alert{margin:0 0 20px;padding:10px 14px;border:1px solid #c6d3d8;background:#f7f8fa;border-radius:10px;font-size:14px;color:var(--ink)}
+.footer-brand .footer-link{display:block;margin-bottom:8px}
+</style>
 <style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}#intro h1{font-size:24px;line-height:1.45}.karte-hero h1,.karte-heading{font-size:21px}h2{font-size:19px}.question-card{padding:16px}.question-text{font-size:17px;line-height:1.7}.answer{min-height:60px;font-size:22px}.explanation{padding:14px}.explanation p,.answer-explanation{font-size:15px}#score{font-size:26px}.account h2{font-size:18px}.account input{min-height:44px}.preview{font-size:13px}}</style>
 </head>
 <body>
-<div class="preview"><div class="wrap"><p id="storageScope">本人用試作 · 保存の準備中</p><div class="preview-actions"><button id="retrySave" class="pillbutton" hidden>保存を再試行</button><button id="connectLine" class="pillbutton" hidden>LINEで本人確認</button></div><p id="saveStatus" role="status" aria-live="polite"></p></div></div>
-<header><div class="wrap"><p>耳で覚える宅建 <span class="muted">｜学習便</span></p></div></header>
+<header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="ep10-preview.html" aria-current="page">3問チェック</a><a href="karte.html">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
+<script src="/site-header.js"></script>
+<div class="preview dev-only" aria-hidden="true"><div class="wrap"><p id="storageScope"></p><div class="preview-actions"><button id="retrySave" class="pillbutton" hidden>保存を再試行</button><button id="connectLine" class="pillbutton" hidden>LINEで本人確認</button></div><p id="saveStatus" role="status" aria-live="polite"></p></div></div>
 <main>
 <section id="intro" class="screen band band-cyan" tabindex="-1"><div class="wrap">
-<div class="hero"><p class="label">第10回 · 営業保証金と保証協会</p><h1>定着3問チェック</h1><p>聴いた内容を3問で確かめます。○か×で答えると、すぐに解説が出ます。</p><p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で聴く（約17分）</a></p><p id="progressChip" class="chip">回答 0 / 3</p></div>
+<div class="hero"><p class="label">第10回 · 営業保証金と保証協会</p><h1>3問チェック</h1><p>○か×で答えると、すぐに解説が出ます。</p><p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で聴く（約17分）</a></p><div class="chip-row"><p id="progressChip" class="chip">回答 0 / 3</p><button id="restartInline" class="textbutton" type="button" hidden>最初から解き直す</button></div></div>
+<p id="loginHint" class="login-hint" hidden>ログインすると、答えた記録が学習カルテに集まります。<a href="account.html?next=ep10">ログイン</a></p>
 </div></section>
+<section id="linkPendingBand" class="band band-cyan" hidden><div class="wrap"><div class="card"><div id="accountLinkPending" hidden><p class="small">LINEと連携する準備ができました。</p><button id="accountLinkPendingGo" class="primary" type="button">LINEで本人確認して連携を完了する</button><p class="small muted">LINEのログイン画面が開きます。</p></div></div></div></section>
 <section id="signinPrompt" class="band band-cyan" hidden><div class="wrap"><div class="card">
 <p class="label">記録を見るには</p>
 <p>LINEで本人確認すると、保存した記録が見られます。</p>
 <div class="actions"><button id="signinPromptLine" class="primary" type="button">LINEで本人確認</button></div>
 <p class="small muted">メールでログインする場合は、下の「記録を残す」から。</p>
 </div></div></section>
-<section id="quiz" class="band band-white" aria-label="確認問題"><div class="wrap" id="quizList"></div></section>
+<section id="quiz" class="band band-white" aria-label="確認問題"><div class="wrap"><p id="saveAlert" class="save-alert" role="alert" hidden></p><div id="quizList"></div></div></section>
 <section id="results" class="screen band band-cyan" tabindex="-1" hidden><div class="wrap">
 <div class="hero"><p class="label">第10回の結果</p><h2 id="score" class="result-title"></h2><p id="counts" class="muted small"></p></div>
 <div id="resultRows" class="card"></div>
 <article class="card soft"><h2 id="nextTitle"></h2><p id="nextBody"></p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で復習する（約17分）</a></article>
 <p id="resultsStorageNote" class="small muted"></p>
-<div class="actions"><button id="showKarte" class="primary">結果と復習を見る</button></div>
+<div class="actions"><a id="toKarte" class="primary" href="karte.html">学習カルテで記録を見る</a><button id="restart" class="secondary" type="button">もう一度解く</button><button id="showKarte" class="primary" type="button" hidden>結果と復習を見る</button></div>
 <p class="muted small">この3問の振り返りです。分野全体の習得度ではありません。</p>
 </div></section>
-<section id="karte" class="screen band band-white" tabindex="-1" hidden><div class="wrap">
+<section id="karte" class="screen band band-white dev-only" tabindex="-1" hidden><div class="wrap">
 <div class="karte-hero"><h1 class="karte-heading">今回の結果と復習</h1><p id="karteCoverage"></p><div class="karte-facts"><div class="karte-fact"><b id="karteFactScore"></b><span>今回の正解</span></div><div class="karte-fact"><b id="karteFactReview"></b><span>復習ポイント</span></div></div></div>
 <article class="card recommendation"><h2 class="eyebrow">次にやること</h2><h3 id="karteNextTitle" class="recommendation-topic"></h3><p id="karteNextReason"></p><p class="recommendation-basis"><strong>根拠：</strong><span id="karteBasis"></span></p><button id="karteNextAction" class="primary"></button></article>
 <section class="review-section"><h2>復習ポイント</h2><ul id="karteReview" class="review-items"></ul></section>
@@ -95,10 +121,10 @@
 </details>
 <p id="karteStorageNote" class="small muted"></p>
 <p class="small"><a href="plans-preview.html#ume">記録をためて弱点を見るなら、学習カルテを見る</a></p>
-<div class="actions"><button id="backResults" class="secondary">結果に戻る</button><button id="restart" class="textbutton">最初からもう一度試す</button></div>
+<div class="actions"><button id="backResults" class="secondary">結果に戻る</button></div>
 </div></section>
-<section id="account" class="band band-gray" hidden><div class="wrap"><div class="card account">
-<h2>記録を残す <span class="badge">テスト中</span></h2>
+<section id="account" class="band band-gray dev-only" hidden><div class="wrap"><div class="card account">
+<h2>記録を残す</h2>
 <p id="accountStatus" class="small muted">ログインすると別の端末でも同じ記録を見られます。</p>
 
 <div id="accountLoggedOut">
@@ -112,7 +138,7 @@
 
 <div id="accountLoggedIn" hidden>
   <p id="syncStatus" class="small"></p>
-  <button id="accountLinkLine" class="secondary" type="button">LINEと連携</button><div id="accountLinkPending" hidden><p class="small">LINEと連携する準備ができました。</p><button id="accountLinkPendingGo" class="primary" type="button">LINEで本人確認して連携を完了する</button><p class="small muted">LINEのログイン画面が開きます。</p></div>
+  <button id="accountLinkLine" class="secondary" type="button">LINEと連携</button>
   <p id="accountLinkNote" class="small muted">この記録にLINEを結びます。LINEで本人確認の画面が開きます。</p>
   <details><summary>メールを連携する</summary>
     <label for="accountLinkEmail">メールアドレス</label>
@@ -123,9 +149,9 @@
 </div>
 <p id="accountMessage" class="small" role="status" aria-live="polite"></p>
 </div></div></section>
-<nav class="preview-links band band-white" aria-label="試作用の表示"><div class="wrap"><button id="openKarte" class="textbutton">結果と復習</button><a href="plans-preview.html">学習サポートの一覧を見る</a></div></nav>
+<nav class="preview-links band band-white dev-only" aria-label="試作用の表示" hidden><div class="wrap"><button id="openKarte" class="textbutton">結果と復習</button><a href="plans-preview.html">学習サポートの一覧を見る</a></div></nav>
 </main>
-<footer><div class="wrap"><details><summary>教材の確認範囲</summary><p>2026年9月15日時点の法令を照合した内容確認用の見本です。2027年向けの適用確認は別途行います。</p><p><a href="https://laws.e-gov.go.jp/law/327AC1000000176" target="_blank" rel="noopener noreferrer">宅地建物取引業法64条の9</a><br><a href="https://laws.e-gov.go.jp/law/339CO0000000383" target="_blank" rel="noopener noreferrer">施行令2条の4・7条</a></p></details><div class="footer-brand"><p>静かに、淡々と。</p><a href="https://www.mimiobo.com/" target="_blank" rel="noopener noreferrer">耳で覚える宅建｜公式サイト</a></div></div></footer>
+<footer><div class="wrap"><details><summary>教材の確認範囲</summary><p>2026年9月15日時点の法令を照合した内容確認用の見本です。2027年向けの適用確認は別途行います。</p><p><a href="https://laws.e-gov.go.jp/law/327AC1000000176" target="_blank" rel="noopener noreferrer">宅地建物取引業法64条の9</a><br><a href="https://laws.e-gov.go.jp/law/339CO0000000383" target="_blank" rel="noopener noreferrer">施行令2条の4・7条</a></p></details><div class="footer-brand"><p>静かに、淡々と。</p><a class="footer-link" href="plans-preview.html">学習サポートの一覧</a><a href="https://www.mimiobo.com/" target="_blank" rel="noopener noreferrer">耳で覚える宅建｜公式サイト</a></div></div></footer>
 <script>
 'use strict';
 const questions=[
@@ -187,20 +213,37 @@ const $=id=>document.getElementById(id);let answers=[],progressStore=null,canAns
 // Always server mode: `?server=1` from older links is ignored. Logged-out visitors answer into a device-only guest store.
 const GUEST_KEY='mimiobo-guest-v1-ep10-v1';
 let answerSync=null,lineReady=false,enqueueProblem=false;
-function showAuthError(code){$('saveStatus').textContent=window.MimioboMessages?.text(code)||'本人確認できませんでした。';}
-function syncState(state){document.documentElement.dataset.syncState=state;window.dispatchEvent(new CustomEvent('mimiobo:sync',{detail:{state}}));if(state==='pending'&&!saveProblem)$('saveStatus').textContent=window.MimioboMessages?.text('pending')||'自動保存しました。';if(state==='unauthorized'){canAnswer=false;paintQuestions();}}
+function setAlert(text){const el=$('saveAlert');if(!el)return;el.textContent=text||'';el.hidden=!text;}
+function showAuthError(code){const text=window.MimioboMessages?.text(code)||'本人確認できませんでした。';$('saveStatus').textContent=text;setAlert(text);}
+// Where to go after a login finishes. Only these names are accepted (never a URL); a stored value expires after 10 minutes.
+const NEXT_KEY='mimiobo-next',NEXT_PAGES=['karte','ep10'];
+function queryNext(){const v=new URLSearchParams(location.search).get('next');return NEXT_PAGES.includes(v)?v:'';}
+function nextPage(){
+  const q=queryNext();if(q)return q;
+  try{const v=JSON.parse(localStorage.getItem(NEXT_KEY));if(v&&NEXT_PAGES.includes(v.page)&&v.expires>Date.now())return v.page;}catch{}
+  return '';
+}
+function goNext(){const page=nextPage();try{localStorage.removeItem(NEXT_KEY);}catch{}if(page==='karte')location.replace('karte.html');}
+function syncState(state){
+  document.documentElement.dataset.syncState=state;window.dispatchEvent(new CustomEvent('mimiobo:sync',{detail:{state}}));
+  if(state==='pending'&&!saveProblem){const text=window.MimioboMessages?.text('pending')||'自動保存しました。';$('saveStatus').textContent=text;if(enqueueProblem)setAlert(text);}
+  else if(['unauthorized','unavailable','failed'].includes(state))setAlert(window.MimioboMessages?.text(state)||'');
+  else if((state==='synced'||state==='syncing')&&!saveProblem&&!enqueueProblem)setAlert('');
+  if(state==='unauthorized'){canAnswer=false;paintQuestions();}
+}
 function providerLabel(providers){
   const names={email:'メール',line:'LINE'};const list=Array.isArray(providers)?providers.filter(p=>names[p]).map(p=>names[p]):[];
   return list.length?`ログイン中（${list.join('＋')}）。`:'ログイン中。';
 }
-function updateSigninPrompt(show){const el=$('signinPrompt');if(el)el.hidden=!show;document.body?.classList?.toggle('signin-visible',!!el&&!el.hidden);}
+function updateSigninPrompt(show){const el=$('loginHint');if(el)el.hidden=!show;document.body?.classList?.toggle('signin-visible',!!show);}
 function setAccountState(loggedIn,providers){
   const in_=$('accountLoggedIn'),out_=$('accountLoggedOut'),status=$('accountStatus'),linkBtn=$('accountLinkLine'),linkNote=$('accountLinkNote');
   if(in_)in_.hidden=!loggedIn;
   if(out_)out_.hidden=loggedIn;
   if(status)status.textContent=loggedIn?providerLabel(providers):'ログインすると別の端末でも同じ記録を見られます。';
   if(linkBtn&&Array.isArray(providers)){const hasLine=providers.includes('line');linkBtn.hidden=hasLine;if(linkNote)linkNote.hidden=hasLine;}
-  $('storageScope').textContent=loggedIn?'記録：アカウントに保存':'記録：この端末に保存';
+  $('storageScope').textContent=loggedIn?'記録：ログイン中':'記録：この端末';
+  window.MimioboHeader?.set?.(!!loggedIn);
   if(loggedIn)updateSigninPrompt(false);
 }
 async function refreshProviders(){
@@ -220,9 +263,9 @@ function paintQuestions(){
   });
 }
 function saveProgress(){
-  if(!progressStore){$('saveStatus').textContent='この画面の回答は未保存です。';return false;}
-  try{progressStore.save();saveProblem=false;$('retrySave').hidden=!enqueueProblem;$('saveStatus').textContent='自動保存しました。';return true;}
-  catch(e){saveProblem=true;canAnswer=false;paintQuestions();const conflict=e.message.includes('別の画面');$('retrySave').hidden=conflict;$('saveStatus').textContent=conflict?'別の画面で記録が更新されました。この画面の回答は未保存です。':'保存できませんでした。この画面の回答は未保存です。';return false;}
+  if(!progressStore){const text='この画面の回答は未保存です。';$('saveStatus').textContent=text;setAlert(text);return false;}
+  try{progressStore.save();saveProblem=false;$('retrySave').hidden=!enqueueProblem;$('saveStatus').textContent='自動保存しました。';if(!enqueueProblem)setAlert('');return true;}
+  catch(e){saveProblem=true;canAnswer=false;paintQuestions();const conflict=e.message.includes('別の画面');$('retrySave').hidden=conflict;const text=conflict?'別の画面で記録が更新されました。この画面の回答は未保存です。':'保存できませんでした。この画面の回答は未保存です。';$('saveStatus').textContent=text;setAlert(text);return false;}
 }
 function sendAnswer(attempt,index){
   try{answerSync.enqueue(attempt,index);return true;}
@@ -309,13 +352,14 @@ function renderAttemptHistory(){
 }
 $('restart').onclick=()=>{
   if(enqueueProblem){syncState('pending');window.scrollTo({top:0,behavior:'instant'});return;}
-  if(saveProblem){$('saveStatus').textContent='未保存の回答があります。保存の問題を解決してから再挑戦してください。';window.scrollTo({top:0,behavior:'instant'});return;}
+  if(saveProblem){const text='未保存の回答があります。保存の問題を解決してから再挑戦してください。';$('saveStatus').textContent=text;setAlert(text);window.scrollTo({top:0,behavior:'instant'});return;}
   if(progressStore){try{progressStore.begin();answers=progressStore.current.answers;saveProgress();}catch{showAuthError('local_failed');return;}}
   else answers=[];
   paintQuestions();for(const id of ['intro','quiz'])$(id).hidden=false;for(const id of ['karte','results'])$(id).hidden=true;window.scrollTo({top:0,behavior:'instant'});$('intro').focus({preventScroll:true});
 };
+$('restartInline').onclick=()=>{$('restart').onclick();$('restartInline').hidden=!answers.some(Boolean);};
 function paintStorageNotes(){
-  const text=answerSync?.active?'記録はログイン中のアカウントに保存しています。別の端末でも見られます。':'記録はこの端末にだけ残ります。ブラウザーのデータを消すと記録も消えます。';
+  const text=answerSync?.active?'':'この端末にだけ残ります。ログインすると学習カルテに集まります。';
   if($('resultsStorageNote'))$('resultsStorageNote').textContent=text;
   if($('karteStorageNote'))$('karteStorageNote').textContent=text;
 }
@@ -324,8 +368,9 @@ function openProgress(key){
     progressStore=ProgressStore.open(localStorage,key);
     answers=progressStore.current?.answers||[];
     $('saveStatus').textContent=answers.some(Boolean)?'前回の回答を復元しました。':'回答すると自動保存します。';
-  }catch(e){progressStore=null;saveProblem=true;$('saveStatus').textContent='保存済みの記録を読み込めません。既存の記録は変更せず、今回は保存なしで試せます。';}
+  }catch(e){progressStore=null;saveProblem=true;const text='保存済みの記録を読み込めません。既存の記録は変更せず、今回は保存なしで試せます。';$('saveStatus').textContent=text;setAlert(text);}
   canAnswer=!enqueueProblem;paintQuestions();results();paintStorageNotes();
+  if($('restartInline'))$('restartInline').hidden=!(progressStore&&answers.some(Boolean));
 }
 function loadClient(src){
   return new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(Error('SYNC_UNAVAILABLE'));document.head.append(script);});
@@ -334,7 +379,8 @@ function openGuest({keepStatus=false}={}){
   const status=$('saveStatus').textContent;
   openProgress(GUEST_KEY);
   if(keepStatus&&!saveProblem)$('saveStatus').textContent=status;
-  $('storageScope').textContent='記録：この端末に保存';
+  if(keepStatus)updateSigninPrompt(true);
+  $('storageScope').textContent='記録：この端末';
 }
 // Logged in: move this device's guest attempts into the account cache and send them through the normal queue.
 // The guest key is removed only after every row is durably queued; a failure leaves it for the next load.
@@ -395,7 +441,7 @@ if($('accountLogout'))$('accountLogout').onclick=async()=>{try{await MimioboAuth
 async function verifyLine(){
   $('saveStatus').textContent='LINEで本人確認しています…';
   const data=await MimioboAuth.line(liff.getIDToken());
-  await openServerProgress(data);refreshProviders();
+  await openServerProgress(data);refreshProviders();goNext();
 }
 async function initializeLine(){
   if(lineReady)return;
@@ -407,7 +453,7 @@ async function initialize(){
   paintQuestions();
   try{await loadClient('/ui-messages.js');}catch{}
   const cancelled=new URLSearchParams(location.search).get('checkout')==='cancel';
-  if(cancelled&&$('accountMessage'))$('accountMessage').textContent='決済を中止しました。';
+  if(cancelled){if($('accountMessage'))$('accountMessage').textContent='決済を中止しました。';setAlert('決済を中止しました。');}
   try{
     await Promise.all([loadClient('/sync.js'),loadClient('/auth-client.js')]);
     MimioboAuth.captureLink({clean:false});
@@ -417,7 +463,6 @@ async function initialize(){
     if(cancelled){const query=new URLSearchParams(location.search);query.delete('checkout');history.replaceState(null,'',location.pathname+(query.size?'?'+query:'')+location.hash);}
     const authResult=new URLSearchParams(location.search).get('auth');
     if(authResult&&authResult!=='ok'){showAuthError('auth:'+authResult);openGuest({keepStatus:true});return;}
-    if($('account')){$('account').hidden=false;if(location.hash==='#account')$('account').scrollIntoView?.();}
     const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
     if(response.ok&&!MimioboAuth.hasPendingLink()){await openServerProgress(await response.json());return;}
     if(!response.ok&&response.status!==401&&response.status!==403)throw Error('SESSION_UNAVAILABLE');
@@ -426,9 +471,14 @@ async function initialize(){
   // Not logged in: answers stay on this device until the visitor logs in.
   openGuest();
   try{
-    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){const redirectUri=location.origin+location.pathname;liff.login({redirectUri:MimioboAuth.lineRedirectUri(redirectUri)});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
+    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){const next=queryNext(),redirectUri=location.origin+location.pathname+(next?'?next='+next:'');liff.login({redirectUri:MimioboAuth.lineRedirectUri(redirectUri)});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
     if(liff.isLoggedIn())await verifyLine();
-    else{$('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;updateSigninPrompt(true);if(MimioboAuth.hasPendingLink()&&$('accountLinkPending')){$('accountLinkPending').hidden=false;if($('accountLinkLine'))$('accountLinkLine').hidden=true;if($('accountStatus'))$('accountStatus').textContent='LINE連携の途中です。';$('accountLinkPendingGo').onclick=()=>$('connectLine').onclick();}}
+    else{
+      $('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;updateSigninPrompt(true);
+      if(MimioboAuth.hasPendingLink()&&$('accountLinkPending')){$('accountLinkPending').hidden=false;if($('linkPendingBand'))$('linkPendingBand').hidden=false;if($('accountLinkLine'))$('accountLinkLine').hidden=true;if($('accountStatus'))$('accountStatus').textContent='LINE連携の途中です。';$('accountLinkPendingGo').onclick=()=>$('connectLine').onclick();}
+      // Sent here by account.html: go straight to the LINE login screen.
+      else if(new URLSearchParams(location.search).get('login')==='line')$('connectLine').onclick();
+    }
   }catch(e){showAuthError(e.message);if(typeof $('connectLine').onclick==='function'){$('connectLine').hidden=false;updateSigninPrompt(true);}}
 }
 $('retrySave').onclick=()=>{const saved=saveProgress();let queued=true;if(saved&&answerSync&&progressStore.current)progressStore.current.answers.forEach((a,i)=>{if(a&&!sendAnswer(progressStore.current,i))queued=false;});if(saved&&queued){enqueueProblem=false;canAnswer=answerSync?.active!==false;$('retrySave').hidden=true;paintQuestions();}if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}};

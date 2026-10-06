@@ -1,5 +1,28 @@
 # LIFF本人テスト・Sprint 1／2／3
 
+## 画面構成（10/6 見直し）
+
+Kei の赤入れ「全体的にわかりづらい。全体の構成が把握しづらい」への対応。指示書は `REDESIGN_指示書_2026-10-06.md`。API・DB・Stripe・`plans-preview.html` は変更なし。
+
+```
+共通ヘッダー：耳で覚える宅建 ｜ [3問チェック] [学習カルテ] ……右端に [ログイン] or [ログイン中]
+  ├ ep10-preview.html  3問チェック（解く → 結果）
+  ├ karte.html         学習カルテ（記録・弱点）
+  └ account.html       ログイン（LINE／メール・連携・ログアウト）
+フッター：静かに、淡々と。／学習サポートの一覧（plans-preview.html）／（3問チェックのみ）教材の確認範囲
+```
+
+- **共通ヘッダー**：3ページに同じ HTML・CSS（`site-header` ブロック）。現在地のタブは `aria-current="page"`（水色の下線＋太字）。右端は `site-header.js` が `GET /api/session` で決める（ok＝「ログイン中」、それ以外＝「ログイン」。`account.html` では出さない）。各ページが状態を知っているときは `MimioboHeader.set(true|false)` で上書き（LINE ログイン完了の直後など）。スマホは1段（ブランド12px・タブ14px）、350px 以下ではブランド名を隠す。
+- **ep10-preview.html**：上部のテスト帯（`.preview`）は `dev-only` クラスで非表示（id は維持）。保存失敗・同期の不具合・ログイン失敗・決済中止だけ、問題の上の1行 `#saveAlert` に出す。通常時の「保存しました」は出さない。大きいログイン案内（`#signinPrompt`）・アカウント欄（`#account`）・結果と復習の画面（`#karte`・`#showKarte`・`#openKarte`）・`preview-links` は非表示（id 維持）。未ログインのときだけヒーロー下に1行「ログインすると、答えた記録が学習カルテに集まります。ログイン」（`account.html?next=ep10`）。前回の回答が復元されたときはチップの横に「最初から解き直す」（`#restartInline` → 既存の `#restart`）。結果の下は主「学習カルテで記録を見る」（`karte.html`）＋副「もう一度解く」（`#restart`。以前の「最初からもう一度試す」の位置から移動）。LINE 連携の戻り（`verifyLine`）は ep10 に残し、連携の途中で LINE 未ログインのときの「LINEで本人確認して連携を完了する」は見える帯 `#linkPendingBand` に移した（アカウント欄が非表示のため）。
+- **account.html（新規）**：未ログイン＝LINE でログイン／メールで受け取る。ログイン中＝「ログインの方法：メール＋LINE」・LINE 未連携なら「LINEも使えるようにする」・メール未連携なら「メールも使えるようにする」・ログアウト。ログイン処理は ep10 の既存 JS と同じ `MimioboAuth` を使う（共通ファイルへの切り出しはしていない。`accountEmailFlow` 相当を account.html に持つ）。
+- **karte.html**：未ログイン＝「学習カルテ／ログインすると、答えた記録がここに集まります。／ログイン（`account.html?next=karte`）」。権利なしは従来の文言（テスト決済の注記を含む）。権利ありは「テスト中」バッジを外し、有効期限を h1 の下の小さい灰色1行に。
+- **`?next=karte|ep10`（ログイン後の戻り先）**：許可する名前は `karte` と `ep10` だけ（URL は受け取らない）。
+  - メール：`account.html` が送信時に `localStorage['mimiobo-next']`（10分有効）に控え、`auth-callback.js` が成功時だけ `karte.html` へ移動して控えを消す（失敗時は従来どおり ep10 のエラー表示）。リンクを別のブラウザで開いた場合は控えが無いので、従来どおり ep10 に戻る。
+  - LINE：`account.html` → `liff.line.me/…/ep10-preview.html?login=line&next=karte`（LIFF 経由で ep10 に戻る既存の道）。ep10 は `login=line` で自動的に LINE ログインへ進み（`redirectUri` に `?next=` を引き継ぐ）、ログイン完了後（`verifyLine` の最後）に `next=karte` なら `karte.html` へ。`next=ep10` や指定なしは ep10 に留まる。LINE アプリ内ブラウザに切り替わっても URL に載っているので失われない。
+- 画面から「Sprint」「テスト中」「保存中」「アカウントに保存」を除去（`ui-messages.js` の `syncing` は「送っています…」、内部の記録欄ラベルは「記録：この端末／ログイン中」）。例外は `karte.html` の権利なし画面（テスト決済の説明）。`privacy.html` の見出し「保存について（テスト中）」は今回の範囲外で未変更。
+- `scripts/dev.cjs` の公開ファイルに `account.html`・`site-header.js` を追加。`vercel.json` は変更なし。
+- テスト：`npm test` 185件（156件＋新規 `tests/redesign.test.cjs` 29件）。既存の更新は `karte-page.test.cjs`（構造テストの文言・共有CSS検査から ep10 専用ブロックを除外）と `ui-sprint2.test.cjs`（`#signinPrompt`／`#account` の表示確認 → `#loginHint`、記録ラベル）。
+
 ## Sprint 3（2026-10-06）：学習カルテを本人の回答記録から表示
 
 実装済み（テスト環境のみ。デプロイ・migration は不要＝既存の `answers` と `entitlements` を読むだけ）。
