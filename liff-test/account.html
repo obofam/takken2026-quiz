@@ -134,7 +134,7 @@ function wire(){
   // LINE login goes through the LIFF page (ep10-preview.html), which finishes the login and then moves on to ?next.
   $('accountLine').onclick=()=>{rememberNext();location.href=MimioboAuth.lineLoginUrl(queryNext());};
   $('accountLinkLine').onclick=async()=>{try{location.href=await MimioboAuth.linkLine();}catch(e){$('accountMessage').textContent=msg(e.message);}};
-  $('accountLogout').onclick=async()=>{try{await MimioboAuth.logout();}catch{}location.reload();};
+  $('accountLogout').onclick=async()=>{try{localStorage.removeItem('mimiobo-karte-last-user');for(let i=localStorage.length;i-->0;){const k=localStorage.key(i);if(k&&k.startsWith('mimiobo-karte-cache-v1:'))localStorage.removeItem(k);}}catch{}try{await MimioboAuth.logout();}catch{}location.reload();};
 }
 async function initialize(){
   try{await loadClient('/ui-messages.js');}catch{}

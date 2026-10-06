@@ -11,9 +11,11 @@ const userId='12345678-1234-4123-8123-123456789abc';
 const login={userId,storageKey:'mimiobo-test-v1-'+'a'.repeat(64),providers:['email']};
 const withUme={...login,entitlements:[{plan:'ume',valid_until:'2027-10-17T14:59:59.000Z'}]};
 function harness(search=''){
-  const nodes=new Map(),requests=[],sleeps=[];let karteReply={rows:[]};
+  const nodes=new Map(),requests=[],sleeps=[],handlers={},values=new Map();let karteReply={rows:[]};
+  const localStorage={getItem:k=>values.has(k)?values.get(k):null,setItem:(k,v)=>values.set(k,String(v)),removeItem:k=>values.delete(k),key:i=>[...values.keys()][i]??null,get length(){return values.size;}};
   const node=id=>{if(!nodes.has(id))nodes.set(id,{hidden:['needLogin','noEntitlement','entitled','untilRow'].includes(id),disabled:false,textContent:'',innerHTML:'',onclick:null});return nodes.get(id);};
-  const context=vm.createContext({URLSearchParams,AbortSignal,Intl,Date,Number,Object,Promise,JSON,Error,console,location:{search,href:'https://mimiobo-liff-test.vercel.app/karte.html'+search}});
+  const context=vm.createContext({URLSearchParams,AbortSignal,Intl,Date,Number,Object,Promise,JSON,Error,console,location:{search,href:'https://mimiobo-liff-test.vercel.app/karte.html'+search},localStorage});
+  context.addEventListener=(type,fn)=>{handlers[type]=fn;};
   context.window=context;
   context.setTimeout=(fn,ms)=>{sleeps.push(ms);fn();};
   context.document={getElementById:node,createElement:()=>({}),head:{append(script){script.onload();}}};
@@ -21,7 +23,7 @@ function harness(search=''){
   for(const file of ['quiz-catalog.js','karte-core.js'])vm.runInContext(read(file),context);
   const script=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
   const reply=(r,fallback)=>typeof r==='number'?{ok:false,status:r,json:async()=>({error:'x'})}:{ok:true,status:200,json:async()=>r??fallback};
-  return {context,node,requests,sleeps,start:()=>vm.runInContext(script.replace(/initialize\(\);\s*$/,'')+';initialize()',context),
+  return {context,node,requests,sleeps,values,handlers,start:()=>vm.runInContext(script.replace(/initialize\(\);\s*$/,'')+';initialize()',context),
     sessionCalls:()=>requests.filter(r=>r.url==='/api/session'),karteCalls:()=>requests.filter(r=>r.url==='/api/karte'),
     karte(r){karteReply=r;},
     sessions(list){let i=0;context.fetch=async(url,options={})=>{requests.push({url,options});if(url==='/api/karte')return typeof karteReply==='function'?karteReply():reply(karteReply);return reply(list[Math.min(i++,list.length-1)]);};}};
@@ -169,4 +171,111 @@ test('/api/karte failure shows the shared service_unavailable message and draws 
 });
 test('no records are requested without an entitlement or a login',async()=>{
   for(const session of [login,401]){const h=harness();h.sessions([session]);await h.start();assert.equal(h.karteCalls().length,0);}
+});
+
+
+// ---- 端末の前回分で即表示し、裏で最新に差し替える ----
+const CP='mimiobo-karte-cache-v1:',LAST='mimiobo-karte-last-user';
+const day=24*60*60*1000;
+const cacheRows=[{quiz_id:'ep10',question_id:'ep10-add',value:null,answered_at:'2026-09-01T00:00:00.000Z',attempt_id:'c1'}];
+function seed(h,over={},id=userId){
+  h.values.set(CP+id,JSON.stringify({savedAt:Date.now()-day,validUntil:'2027-10-17T14:59:59.000Z',rows:cacheRows,...over}));
+  h.values.set(LAST,id);
+}
+const cached=h=>h.node('karteBody').innerHTML.includes('<b>1問</b><span>回答</span>');
+test('with a cache: the karte is drawn and the status shown before the server answers',async()=>{
+  const h=harness();seed(h);let atSession,atKarte;
+  h.sessions([withUme]);const inner=h.context.fetch;
+  h.context.fetch=async(url,o)=>{
+    const snap={vis:visible(h),body:cached(h),status:h.node('karteStatus').textContent,until:h.node('until').textContent};
+    if(url==='/api/session')atSession=snap;else atKarte=snap;
+    return inner(url,o);
+  };
+  h.karte({rows:answerRows});await h.start();
+  assert.deepEqual(atSession.vis,['entitled']);assert.equal(atSession.body,true);assert.equal(atSession.status,'前回の記録を表示しています。');assert.equal(atSession.until,'2027年10月17日');
+  // The reload does not blank the cached screen first.
+  assert.equal(atKarte.body,true);assert.equal(atKarte.status,'前回の記録を表示しています。');
+});
+test('after the server answers: replaced by the latest rows and the status is emptied',async()=>{
+  const h=harness();seed(h);h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
+  const body=h.node('karteBody').innerHTML;
+  assert.ok(body.includes('<b>4問</b><span>回答</span>'));assert.equal(cached(h),false);
+  assert.equal(h.node('karteStatus').textContent,'');assert.deepEqual(visible(h),['entitled']);
+  assert.equal(h.karteCalls().length,1);
+});
+test('a failed refresh keeps the previous records on screen',async()=>{
+  const h=harness();seed(h);h.sessions([withUme]);h.karte(503);await h.start();
+  assert.equal(cached(h),true);assert.deepEqual(visible(h),['entitled']);
+});
+test('the server decides: logged out, no entitlement, or another user drops the cached screen and the cache',async()=>{
+  const other={...withUme,userId:'99999999-1234-4123-8123-123456789abc'};
+  for(const [session,shown] of [[401,'needLogin'],[403,'needLogin'],[login,'noEntitlement'],[{...login,entitlements:[]},'noEntitlement'],[other,'entitled']]){
+    const h=harness();seed(h);h.sessions([session]);h.karte({rows:answerRows});
+    await h.start();
+    assert.deepEqual(visible(h),[shown],JSON.stringify(session));
+    assert.equal(cached(h),false);assert.equal(h.values.has(CP+userId),false);
+    if(shown==='entitled'){assert.ok(h.node('karteBody').innerHTML.includes('<b>4問</b>'));assert.equal(h.values.has(CP+other.userId),true);assert.equal(h.values.get(LAST),other.userId);}
+    else{assert.equal(h.values.has(LAST),false);assert.equal(h.karteCalls().length,0);assert.equal(h.node('karteBody').innerHTML,'');assert.equal(h.node('karteStatus').textContent,'');}
+  }
+});
+test('/api/karte 401/403 after a cached paint clears the cache and the screen',async()=>{
+  for(const [status,shown] of [[403,'noEntitlement'],[401,'needLogin']]){
+    const h=harness();seed(h);h.sessions([withUme]);h.karte(status);await h.start();
+    assert.deepEqual(visible(h),[shown]);assert.equal(h.node('karteBody').innerHTML,'');assert.equal(h.values.has(CP+userId),false);assert.equal(h.values.has(LAST),false);
+  }
+});
+test('an expired entitlement or a cache older than 14 days is not used',async()=>{
+  const cases=[{validUntil:'2026-01-01T00:00:00.000Z'},{savedAt:Date.now()-15*day},{savedAt:'x'},{rows:'x'}];
+  for(const over of cases){
+    const h=harness();seed(h,over);let first;
+    h.sessions([withUme]);const inner=h.context.fetch;
+    h.context.fetch=async(url,o)=>{first??={vis:visible(h),body:cached(h)};return inner(url,o);};
+    h.karte({rows:answerRows});await h.start();
+    assert.deepEqual(first,{vis:[],body:false},JSON.stringify(over));
+    assert.ok(h.node('karteBody').innerHTML.includes('<b>4問</b>'));
+  }
+  const fresh=harness();seed(fresh,{savedAt:Date.now()-13*day,validUntil:null});let seen;
+  fresh.sessions([withUme]);const inner=fresh.context.fetch;fresh.context.fetch=async(u,o)=>{seen??=cached(fresh);return inner(u,o);};
+  fresh.karte({rows:answerRows});await fresh.start();assert.equal(seen,true);
+});
+test('a cache of another user is not drawn unless it is the last logged-in user',async()=>{
+  const h=harness();seed(h,{},'99999999-1234-4123-8123-123456789abc');h.values.set(LAST,userId);let first;
+  h.sessions([withUme]);const inner=h.context.fetch;h.context.fetch=async(u,o)=>{first??=cached(h);return inner(u,o);};
+  h.karte({rows:answerRows});await h.start();assert.equal(first,false);
+});
+test('a successful draw saves the rows, the dates and the last user',async()=>{
+  const h=harness();h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
+  const saved=JSON.parse(h.values.get(CP+userId));
+  assert.deepEqual(saved.rows,answerRows);assert.equal(saved.validUntil,'2027-10-17T14:59:59.000Z');assert.ok(Math.abs(saved.savedAt-Date.now())<60000);
+  assert.equal(h.values.get(LAST),userId);
+  // Nothing is saved when the draw fails, or when there is no entitlement.
+  for(const [session,karteReply] of [[withUme,503],[login,{rows:answerRows}],[401,{rows:answerRows}]]){
+    const g=harness();g.sessions([session]);g.karte(karteReply);await g.start();assert.equal(g.values.size,0);
+  }
+});
+test('a storage failure is ignored',async()=>{
+  const h=harness();h.context.localStorage.setItem=()=>{throw Error('quota');};
+  h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
+  assert.deepEqual(visible(h),['entitled']);assert.ok(h.node('karteBody').innerHTML.includes('<b>4問</b>'));assert.equal(h.node('karteStatus').textContent,'');
+});
+test('logout removes every karte cache and the last user, and drops the screen',async()=>{
+  const h=harness();seed(h);seed(h,{},'99999999-1234-4123-8123-123456789abc');h.values.set('other-key','keep');
+  h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
+  h.handlers['mimiobo:logout']();
+  assert.deepEqual([...h.values.keys()],['other-key']);assert.equal(h.node('karteBody').innerHTML,'');assert.deepEqual(visible(h),['needLogin']);
+});
+test('?checkout=ok and a cache: the re-read flow is unchanged',async()=>{
+  const h=harness('?checkout=ok&session_id=cs_test_x');seed(h);h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
+  assert.deepEqual(visible(h),['entitled']);assert.equal(h.sessionCalls().length,1);assert.equal(h.node('karteStatus').textContent,'');
+});
+test('account.html and ep10-preview.html logout buttons also clear the karte caches',()=>{
+  for(const name of ['account.html','ep10-preview.html']){
+    const src=read(name),line=src.split('\n').find(l=>l.includes("$('accountLogout').onclick"));
+    assert.ok(line&&line.includes("mimiobo-karte-last-user")&&line.includes("mimiobo-karte-cache-v1:")&&line.indexOf('removeItem(k)')<line.indexOf('MimioboAuth.logout'),name);
+    const values=new Map([['mimiobo-karte-cache-v1:a','1'],['mimiobo-karte-cache-v1:b','2'],['mimiobo-karte-last-user','a'],['keep','3']]);
+    const localStorage={removeItem:k=>values.delete(k),key:i=>[...values.keys()][i]??null,get length(){return values.size;}};
+    const clear=line.match(/\{(try\{localStorage[\s\S]*?catch\{\})/)[1];
+    vm.runInNewContext(clear,{localStorage});
+    assert.deepEqual([...values.keys()],['keep'],name);
+  }
 });

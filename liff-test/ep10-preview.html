@@ -452,7 +452,7 @@ if($('accountLinkEmailSend'))$('accountLinkEmailSend').onclick=accountEmailFlow(
 if($('accountLine'))$('accountLine').onclick=()=>$('connectLine')?.onclick?.();
 if($('signinPromptLine'))$('signinPromptLine').onclick=()=>$('connectLine')?.onclick?.();
 if($('accountLinkLine'))$('accountLinkLine').onclick=async()=>{try{location.href=await MimioboAuth.linkLine();}catch(e){if($('accountMessage'))$('accountMessage').textContent=window.MimioboMessages?.text(e.message)||e.message;}};
-if($('accountLogout'))$('accountLogout').onclick=async()=>{try{await MimioboAuth.logout();}catch{}location.reload();};
+if($('accountLogout'))$('accountLogout').onclick=async()=>{try{localStorage.removeItem('mimiobo-karte-last-user');for(let i=localStorage.length;i-->0;){const k=localStorage.key(i);if(k&&k.startsWith('mimiobo-karte-cache-v1:'))localStorage.removeItem(k);}}catch{}try{await MimioboAuth.logout();}catch{}location.reload();};
 async function verifyLine(){
   $('saveStatus').textContent='LINEで本人確認しています…';
   const data=await MimioboAuth.line(liff.getIDToken());

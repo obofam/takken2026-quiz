@@ -150,7 +150,50 @@ html{scroll-padding-top:60px}
 'use strict';
 const $=id=>document.getElementById(id);
 const PLAN='ume',POLL_MS=3000,POLL_MAX=5;
-let userId='';
+let userId='',validUntil=null,cachedUser='',cachedShown=false;
+// 端末に前回の記録を残し、開いた瞬間に出す。最終判定は常にサーバー（/api/session と /api/karte）。
+const CACHE_PREFIX='mimiobo-karte-cache-v1:',LAST_KEY='mimiobo-karte-last-user',CACHE_MAX_MS=14*24*60*60*1000;
+function saveCache(rows){
+  try{
+    localStorage.setItem(CACHE_PREFIX+userId,JSON.stringify({savedAt:Date.now(),validUntil,rows}));
+    localStorage.setItem(LAST_KEY,userId);
+  }catch{}
+}
+function clearUserCache(id){try{if(id)localStorage.removeItem(CACHE_PREFIX+id);localStorage.removeItem(LAST_KEY);}catch{}}
+function clearAllCache(){
+  try{
+    localStorage.removeItem(LAST_KEY);
+    for(let i=localStorage.length;i-->0;){const k=localStorage.key(i);if(k&&k.startsWith(CACHE_PREFIX))localStorage.removeItem(k);}
+  }catch{}
+}
+function readCache(){
+  try{
+    const id=localStorage.getItem(LAST_KEY);if(!id)return null;
+    const c=JSON.parse(localStorage.getItem(CACHE_PREFIX+id)||'null');
+    if(!c||!Array.isArray(c.rows)||typeof c.savedAt!=='number')return null;
+    const now=Date.now();
+    if(c.savedAt>now+60000||now-c.savedAt>CACHE_MAX_MS)return null;
+    if(c.validUntil!=null&&!(new Date(c.validUntil).getTime()>now))return null;
+    return {id,validUntil:c.validUntil??null,rows:c.rows};
+  }catch{return null;}
+}
+function showUntil(value){
+  $('untilRow').hidden=!value;
+  if(value)$('until').textContent=formatDate(value);
+}
+function paintCache(){
+  const c=readCache();if(!c)return;
+  try{
+    const html=renderKarte(window.MimioboKarteCore.summarize(c.rows,window.MimioboCatalog));
+    cachedUser=c.id;cachedShown=true;showUntil(c.validUntil);show('entitled');
+    $('karteBody').innerHTML=html;$('karteStatus').textContent='前回の記録を表示しています。';
+  }catch{cachedUser='';cachedShown=false;}
+}
+// サーバーが未ログイン・権利なし・別ユーザーと答えたら、端末の前回分は捨てる。
+function discardCache(){
+  clearUserCache(cachedUser);cachedUser='';cachedShown=false;
+  $('karteBody').innerHTML='';$('karteStatus').textContent='';show('');
+}
 const msg=code=>window.MimioboMessages?.text(code)||'接続できませんでした。時間をおいてもう一度お試しください。';
 function show(id){for(const x of ['needLogin','noEntitlement','entitled'])$(x).hidden=x!==id;}
 function formatDate(value){
@@ -172,8 +215,8 @@ function render(data){
   userId=data.userId;
   const right=karteRight(data);
   if(!right){show('noEntitlement');return;}
-  $('untilRow').hidden=!right.valid_until;
-  if(right.valid_until)$('until').textContent=formatDate(right.valid_until);
+  validUntil=right.valid_until||null;
+  showUntil(right.valid_until);
   show('entitled');
   return loadKarte();
 }
@@ -198,21 +241,26 @@ function renderKarte(s){
     +'<p class="karte-note">記録は回答した時点のものです。同じ問題への再挑戦も数えます。</p>';
 }
 async function loadKarte(){
-  $('karteBody').innerHTML='';$('karteStatus').textContent='記録を読み込んでいます…';
+  // 前回分を出している間は、消さずに最新で差し替える。
+  if(!cachedShown){$('karteBody').innerHTML='';$('karteStatus').textContent='記録を読み込んでいます…';}
   try{
     const result=await fetchKarte();
-    if(result.loggedOut||result.notEntitled){$('karteStatus').textContent='';show(result.loggedOut?'needLogin':'noEntitlement');return;}
+    if(result.loggedOut||result.notEntitled){clearUserCache(userId);cachedShown=false;$('karteBody').innerHTML='';$('karteStatus').textContent='';show(result.loggedOut?'needLogin':'noEntitlement');return;}
     $('karteBody').innerHTML=renderKarte(window.MimioboKarteCore.summarize(result.rows,window.MimioboCatalog));
-    $('karteStatus').textContent='';
-  }catch{$('karteStatus').textContent=msg('service_unavailable');}
+    $('karteStatus').textContent='';cachedShown=false;
+    saveCache(result.rows);
+  }catch{if(!cachedShown)$('karteStatus').textContent=msg('service_unavailable');}
 }
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function initialize(){
+  // 端末に前回分があれば、サーバーの返事を待たずに先に描く。
+  paintCache();
   // Ask the server first; the message catalogue loads alongside instead of before it.
   const sessionRequest=fetchSession();sessionRequest.catch(()=>{});
   try{await new Promise(resolve=>{const script=document.createElement('script');script.src='/ui-messages.js';script.onload=resolve;script.onerror=resolve;document.head.append(script);});}catch{}
   try{
     let data=await sessionRequest;
+    if(cachedShown&&(data.loggedOut||!karteRight(data)||data.userId!==cachedUser))discardCache();
     // Just back from Checkout: the webhook may not have arrived yet. Re-read a few times, then stop.
     if(new URLSearchParams(location.search).get('checkout')==='ok'&&!data.loggedOut&&!karteRight(data)){
       $('status').textContent='決済の反映を待っています…';
@@ -222,6 +270,7 @@ async function initialize(){
     await render(data);
   }catch(e){$('status').textContent=msg(e.message);}
 }
+window.addEventListener?.('mimiobo:logout',()=>{clearAllCache();cachedUser='';cachedShown=false;$('karteBody').innerHTML='';$('karteStatus').textContent='';show('needLogin');});
 $('buy').onclick=async()=>{
   $('buy').disabled=true;$('buyMessage').textContent='';
   try{
