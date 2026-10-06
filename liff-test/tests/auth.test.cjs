@@ -37,6 +37,8 @@ test('allowed LINE login issues a signed secure session that restores through GE
    data=user;
   }else if(u.pathname==='/rest/v1/allowlist'){
    assert.equal(u.searchParams.get('provider'),'eq.line');assert.equal(u.searchParams.get('subject'),'eq.'+subject);data=[{provider:'line'}];
+  }else if(u.pathname==='/rest/v1/entitlements'){
+   assert.equal(u.searchParams.get('user_id'),'eq.'+user);data=[{plan:'ume',valid_until:'2999-01-01T00:00:00+00:00'}];
   }else{
    assert.equal(u.pathname,'/rest/v1/identities');assert.equal(u.searchParams.get('user_id'),'eq.'+user);
    if(u.searchParams.get('select')==='provider'){
@@ -56,6 +58,6 @@ test('allowed LINE login issues a signed secure session that restores through GE
  assert.equal(payload.userId,user);assert.equal(payload.provider,'line');assert.equal(payload.subject,subject);
  assert.ok(payload.exp>=start+604800&&payload.exp<=Math.floor(Date.now()/1000)+604800);
  const restored=response();await handler({method:'GET',headers:{cookie}},restored);
- assert.equal(restored.code,200);assert.deepEqual(restored.data,{...res.data,providers:['line']});
- assert.deepEqual(seen,['/oauth2/v2.1/verify','/rest/v1/rpc/resolve_identity','/rest/v1/allowlist','/rest/v1/identities','/rest/v1/identities']);
+ assert.equal(restored.code,200);assert.deepEqual(restored.data,{...res.data,providers:['line'],entitlements:[{plan:'ume',valid_until:'2999-01-01T00:00:00+00:00'}]});
+ assert.deepEqual(seen,['/oauth2/v2.1/verify','/rest/v1/rpc/resolve_identity','/rest/v1/allowlist','/rest/v1/identities','/rest/v1/identities','/rest/v1/entitlements']);
 });

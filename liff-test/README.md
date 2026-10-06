@@ -1,6 +1,46 @@
-# LIFF本人テスト・Sprint 1
+# LIFF本人テスト・Sprint 1／2
 
-## 2026-09-17 の状態
+## Sprint 2（2026-10-06）：Stripeテスト決済 → entitlements → karte.html
+
+実装済み（Stripeは**テストモードのみ**。`sk_test_` 以外のキーは `payment_not_configured` で拒否。デプロイ・migration適用・実決済は未実施）。
+
+- `POST /api/checkout`：ログイン必須（Cookie＋`X-Mimiobo-User`）。Stripe Checkout（hosted・`mode: payment`）を作り、URLだけ返す。`client_reference_id` と `metadata={userId, plan:'ume'}`、価格は `STRIPE_PRICE_KARTE`。`success_url=<origin>/karte.html?checkout=ok&session_id={CHECKOUT_SESSION_ID}`、`cancel_url=<origin>/ep10-preview.html?checkout=cancel`。
+- `POST /api/stripe-webhook`：生ボディで署名検証（`STRIPE_WEBHOOK_SECRET`、`config.api.bodyParser=false`）。`checkout.session.completed` かつ `payment_status==='paid'` のときだけ RPC `grant_entitlement` を呼ぶ。冪等キーは `entitlements.source='stripe:'+session.id`（unique）。利用者不在・metadata欠落は200で返し、固定文言＋Stripeのsession idだけをログに残す（再送ループ防止）。DB障害・設定不備は503（Stripeが再送）。署名不正は400。
+- `valid_until`：環境変数 `ENTITLEMENT_VALID_UNTIL`（日時文字列）。未設定なら `2027-10-17T23:59:59+09:00`。不正値は503で書き込まない。
+- `GET /api/session` に `entitlements: [{plan, valid_until}]`（期限内のみ）を追加。`/api/entitlements` は作っていない。
+- `karte.html`（新規）：`GET /api/session` の結果だけで表示を決める（401/403＝ログイン案内、`ume`なし＝案内＋テスト決済、`ume`あり＝本文）。`?checkout=ok` で戻り、`ume` が無ければ3秒間隔で最大5回再取得。
+- `ep10-preview.html`：`?server=1` 廃止（付いていても無視）。未ログイン＝端末保存（固定キー `mimiobo-guest-v1-ep10-v1`、`answerSync` なし、「記録：この端末に保存」）。ログイン成立時（`openServerProgress`）にゲスト記録をアカウントのキャッシュへ移し、各回答を `answerSync.enqueue` で送ってからゲストキーを削除。キュー登録に失敗したらゲストキーを残し次回読込で再試行。重複は attempt id／キュー行で防ぎ、サーバー側に同じ回答があれば `sync.js` の規則（サーバー正）。`?checkout=cancel` で「決済を中止しました。」。
+- migration `supabase/migrations/202610060001_sprint2.sql`：`entitlements.source` unique、`stripe_events`（RLS・service_roleのみ）、RPC `grant_entitlement`（利用者不在は `unknown_user`、同一sourceは `duplicate`）。**Sprint 1 の後に1回だけ適用**。
+- Stripeクライアントは `lib/stripe.js` の `setClient()` で差し替え可能（テストはStripeを呼ばない）。署名検証は `stripe.webhooks.generateTestHeaderString` のヘッダーで検証。
+- テスト：`npm test` 128件（Sprint 1 の90件＋Sprint 2 の38件。既存3件は session 応答に `entitlements` を含める形へ更新）。
+- `scripts/db-users.mjs` に entitlements の件数とplan（`ume~2027-10-17`）を表示。
+
+### Sprint 2 の環境変数名（値は書かない。`.env.local` と Vercel に設定）
+
+| 名前 | 用途 |
+|---|---|
+| `STRIPE_SECRET_KEY` | テストの秘密キー（`sk_test_…`）。`/api/checkout` で使用 |
+| `STRIPE_WEBHOOK_SECRET` | Webhook署名シークレット（`whsec_…`）。ローカルは `stripe listen` が表示する値、Vercelは登録したエンドポイントの値 |
+| `STRIPE_PRICE_KARTE` | 学習カルテ（テスト）の Price ID（`price_…`） |
+| `ENTITLEMENT_VALID_UNTIL` | 任意。権利の有効期限。未設定は `2027-10-17T23:59:59+09:00` |
+
+既存の `SUPABASE_URL` `SUPABASE_SECRET_KEY` `SESSION_SECRET` `LINE_CHANNEL_ID` も引き続き必要。
+
+### Sprint 2 の手動確認手順（ローカル）
+
+前提：Supabase に Sprint 2 の migration を適用済み、`.env.local` に上記4つを設定済み、Stripe CLI にログイン済み。
+
+1. 依存を入れて起動：`npm ci` → `npm run dev`（`http://127.0.0.1:3000/ep10-preview.html`。`?server=1` は不要）。
+2. 別のターミナルで Webhook を転送：`stripe listen --forward-to localhost:3000/api/stripe-webhook`。表示される `whsec_…` を `.env.local` の `STRIPE_WEBHOOK_SECRET` に入れて `npm run dev` を再起動（Windowsで `localhost` が届かないときは `127.0.0.1:3000` に変える）。
+3. 未ログインのまま3問に答える。「記録：この端末に保存」と表示され、ネットワークに `/api/answers` のPOSTが出ないこと。
+4. 許可メールでログイン（メール→リンクを開く）。戻った画面で3問の記録が残り、`node scripts/db-users.mjs` の `answers=` が増えること（ゲスト回答の統合）。
+5. `http://127.0.0.1:3000/karte.html` を開く。「学習カルテは準備中です」（案内のみ）。未ログインのブラウザでは「記録を見るにはログインが必要です」。
+6. 「学習カルテを試す（テスト決済）」を押す → Stripe Checkout でテストカード `4242 4242 4242 4242`（有効期限は未来の日付、CVC・郵便番号は任意の値）で決済。
+7. `karte.html?checkout=ok` に戻り、数秒以内に「学習カルテ」＋「テスト中」＋有効期限が出ること。`stripe listen` のログに `checkout.session.completed` → 200。
+8. `node scripts/db-users.mjs` に `entitlements=1 [ume~2027-10-17]` が出ること。同じイベントを再送（`stripe events resend <evt_…>`）しても1行のままであること。
+9. Checkout 画面で戻る（キャンセル）と `ep10-preview.html?checkout=cancel` に戻り、「決済を中止しました。」が出ること。
+
+## 2026-09-17 の状態（Sprint 1）
 
 共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。9/17レビューA-1〜A-14を修正。A-13はLINEログインをまたぐ連携チケットの保持、A-14は `GET /api/session` の連携済みprovider一覧に対応。今回の作業ではデプロイ・実メール送信を行っていない。
 
@@ -13,7 +53,7 @@
 - LINE連携の実機再確認が残る。以前の試行で作られた別利用者のLINE identityが残っているため、連携すると `409 identity_conflict` になる。自動統合・削除はしない。KeiかClaudeが既存のテストidentityの扱いを確認してから再試験する。
 - 既定メールは本人テスト用。レビューE節のKei判断により、受講生へ見せる前に独自SMTP・差出人「耳で覚える宅建」・日本語文面が必須（Sprint 2冒頭）。
 
-同期とログイン枠は検証用の `/ep10-preview.html?server=1` で有効。通常URL／localhostの従来端末内試作は維持。
+同期とログイン枠は Sprint 2 から `/ep10-preview.html` で常に有効（`?server=1` は無視。未ログインは端末保存）。
 
 ## 作業チェック
 
@@ -113,6 +153,6 @@ SQL・Auth設定は適用済み。A-13・A-14配信後、LINE連携から再確�
 
 ## 後続Sprint・保存期限
 
-Stripeとentitlementsの書き込み、実データの有料カルテ、通知・配信は未実装。記録は「年内をめどに閲覧、消す前に案内」という設計メモのみで、閲覧期限・削除処理は今回追加しない。期限の具体値・削除案内の方法は今後決める。
+Stripeテスト決済とentitlementsの書き込みは Sprint 2 で実装済み（冒頭参照）。実データの有料カルテ（`answers` からの集計表示）、学習ナビ・伴走の購入、通知・配信は未実装。記録は「年内をめどに閲覧、消す前に案内」という設計メモのみで、閲覧期限・削除処理は今回追加しない。期限の具体値・削除案内の方法は今後決める。
 
 参考： [Supabaseのメール認証](https://supabase.com/docs/guides/auth/auth-email-passwordless)、[メールテンプレート](https://supabase.com/docs/guides/auth/auth-email-templates)、[secret key](https://supabase.com/docs/guides/getting-started/api-keys)、[LIFF追加パラメータ](https://developers.line.biz/ja/tips/2026/07/16/liff-url-additional-info/)。

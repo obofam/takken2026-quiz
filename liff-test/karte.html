@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>学習カルテ｜耳で覚える宅建</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#141b21;--muted:#59636c;--cyan:#17c5e8;--soft:#e9f9fc;--line:#e4e9ec;--success:#f4fbd2}*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:17px/1.9 'Noto Sans JP',system-ui,'Yu Gothic',sans-serif}button,a{touch-action:manipulation}button{font:inherit;cursor:pointer}button:disabled{cursor:default}a{color:#08637c;text-underline-offset:4px}.wrap{max-width:720px;margin:auto;padding:0 24px}header{padding:24px 0;border-bottom:1px solid var(--line)}header p{margin:0;font-weight:700;font-size:15px}.preview{font-size:14px;color:var(--muted);background:#f7f8fa;padding:10px 0}.preview .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 16px}.preview p{margin:0}#storageScope{font-weight:700;color:var(--ink)}.preview-actions{display:flex;gap:8px;flex-wrap:wrap}.pillbutton{border-radius:999px;border:1px solid #91cbd7;background:#fff;color:#164a59;font-size:14px;min-height:40px;padding:6px 16px;font-weight:700}.chip{display:inline-block;background:#fff;border:1px solid #91cbd7;color:#164a59;border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700}.badge{display:inline-block;background:#fff;border:1px solid #91cbd7;color:#164a59;font-size:11px;letter-spacing:.06em;border-radius:999px;padding:2px 10px;font-weight:700;vertical-align:middle;margin-left:6px}.divider{text-align:center}.hero{padding:40px 0 24px}.label{font-size:12px;letter-spacing:.15em;color:#126981;font-weight:700;margin:0 0 12px}h1{font-size:clamp(28px,5.5vw,38px);line-height:1.55;font-weight:900;margin:0 0 20px}h2{font-size:24px;line-height:1.65;margin:0 0 16px}h3{font-size:19px;margin:0 0 8px}p{margin:0 0 16px}.muted{color:var(--muted)}.card{border:1px solid var(--line);border-radius:16px;padding:28px;margin:20px 0;box-shadow:0 2px 8px rgba(20,27,33,.04)}.soft{background:var(--soft);border-color:transparent}.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:24px 0 12px}.primary,.secondary{border-radius:999px;padding:13px 24px;font-weight:700;min-height:52px;border:1px solid transparent}.primary{background:var(--cyan);color:#12313b}.secondary{background:#fff;border-color:#91cbd7;color:#164a59}.textbutton{background:none;border:0;padding:10px 0;color:#405965;text-decoration:underline;text-underline-offset:4px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0 8px}.answer{background:#fff;border:2px solid #c6dce2;border-radius:16px;font-weight:700;min-height:72px;font-size:26px}.answer[aria-pressed=true]{border-color:#10758a;background:var(--soft)}.answers:has(button:disabled) button:not([aria-pressed=true]){opacity:.55}.explanation{border-top:1px solid var(--line);padding-top:24px;margin-top:24px}.verdict{font-size:18px;font-weight:700;padding:8px 14px;display:inline-block;border-radius:999px;background:#f1f4f5}.verdict.correct{background:var(--success);color:#4F6300}.answer-explanation{font-size:16px}.small{font-size:14px}.progress{height:5px;background:#ecf0f2;border-radius:999px;margin:12px 0 28px;overflow:hidden}.progress span{display:block;height:100%;background:var(--cyan)}.score{font-size:25px;font-weight:900}.row{border-bottom:1px solid var(--line);padding:16px 0}.row:last-child{border:0}.row p{margin:0}.row small{font-size:14px;color:var(--muted)}.status{padding:4px 10px;border-radius:999px;background:#f0f3f5;font-size:13px;margin-right:10px;display:inline-block}.status.ok{background:var(--success);color:#4F6300}#counts{font-size:15px}#nextTitle{font-size:20px}footer{margin-top:40px;padding:28px 0;border-top:1px solid var(--line);color:var(--muted);font-size:14px}.screen{padding-bottom:8px}.screen:focus{outline:none}[hidden]{display:none!important}:focus-visible{outline:3px solid #106e85;outline-offset:4px}details{margin-top:18px;font-size:14px}summary{cursor:pointer}ul{padding-left:1.4em}li{margin:8px 0}@media(max-width:480px){.wrap{padding:0 20px}.card{padding:22px}.hero{padding-top:30px}.actions .primary{width:100%}h2{font-size:22px}}
+.question-card{padding:24px 0 32px;border-top:1px solid var(--line)}.question-text{font-size:19px;font-weight:700;line-height:1.8}.question-card .answers{margin-top:18px}.question-card .label{margin-bottom:12px;letter-spacing:.12em}.question-card .textbutton{font-size:15px}.result-title{font-size:28px;font-weight:900}#intro .hero{padding:32px 0 20px}#results{border-top:1px solid var(--line)}
+#intro h1{font-size:24px;font-weight:700;line-height:1.6}.episode-number{white-space:nowrap;color:var(--muted);margin-right:.5em}.footer-brand{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}.footer-brand p{margin:0 0 8px}
+.karte-heading{font-size:26px;font-weight:700}.karte-list{padding-left:1.2em;margin:0}.sample-options{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}.sample-options button{font-size:15px;padding:8px 14px}.sample-options button[aria-pressed=true]{background:var(--soft);border-color:#10758a}.sample-note{border-left:3px solid var(--cyan);padding-left:14px}.preview-links{display:flex;flex-wrap:wrap;gap:20px;padding-top:24px;border-top:1px solid var(--line);margin-top:24px}
+ .recommendation .recommendation-basis{font-size:15px;line-height:1.8;border-left:3px solid #8acbd9;padding:3px 0 3px 12px;margin:18px 0 22px;color:#405965}.recommendation-basis strong{display:block;font-size:14px;margin-bottom:3px}
+</style>
+<style>
+.karte-hero{padding:28px 0 4px}.karte-hero h1{margin-bottom:6px}.karte-hero p{margin:0;color:var(--muted);font-size:15px}.recommendation{margin-top:20px;padding:28px;background:var(--soft);border:0;box-shadow:none}.recommendation .eyebrow{font-size:17px;color:#126981;font-weight:700;margin-bottom:16px}.recommendation h2{font-size:26px;line-height:1.65;margin-bottom:12px}.recommendation p{margin-bottom:18px}.recommendation .primary{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;gap:12px}.recommendation .duration{font-size:14px;font-weight:400}.review-section{margin:36px 0 24px}.review-section h2{font-size:21px;margin-bottom:4px}.review-section .section-help{font-size:15px;color:var(--muted);margin-bottom:16px}.review-items{padding:0;list-style:none;margin:0}.review-items li{border-bottom:1px solid var(--line);padding:18px 0;margin:0}.review-items strong{display:block;font-size:18px;margin-bottom:5px}.review-items span{display:block;color:var(--muted);font-size:17px;line-height:1.85}.record-details{border-top:1px solid var(--line);padding:18px 0;font-size:17px}.record-details summary{font-size:16px;color:#405965}.record-details h3{margin-top:20px}.record-details .small{margin-top:16px}.sample-toolbar{background:#f7f8fa;border-radius:12px;padding:12px 16px;margin-top:20px}.sample-toolbar p{font-size:13px;margin:0;color:var(--muted)}.sample-toolbar .sample-options{margin:10px 0 0;gap:6px}.sample-toolbar button{font-size:14px;padding:6px 11px;min-height:40px}.sample-footer{margin:28px 0 8px}.sample-footer details{margin-bottom:16px}.sample-footer p{font-size:14px;color:var(--muted)}@media(max-width:480px){.recommendation{padding:22px}.recommendation h2{font-size:23px}.recommendation .primary{width:100%}.sample-toolbar{padding:12px}.sample-toolbar .sample-options{display:grid;grid-template-columns:repeat(3,1fr)}.sample-toolbar button{padding:6px;font-size:13px}.review-section{margin-top:30px}}
+</style>
+<style>
+/* LPに合わせたカルテ：白地・罫線・短い見出しで階層を作る */
+#karte,#sampleKarte{max-width:660px;margin:auto}.karte-hero{text-align:center;padding:38px 0 26px;border-bottom:1px solid var(--line)}.karte-hero h1{font-weight:900;font-size:26px;margin-bottom:8px}.karte-hero p{font-size:14px}.karte-hero .view-label{font-size:12px;letter-spacing:.16em;margin-bottom:12px;color:var(--muted)}.recommendation{background:white;border:0;border-radius:0;box-shadow:none;padding:32px 0;margin:0;text-align:center;border-bottom:1px solid var(--line)}.recommendation .eyebrow{font-size:15px;margin:0 0 16px;color:var(--muted)}.recommendation h2{font-size:25px;font-weight:900;max-width:500px;margin:0 auto 16px}.recommendation #sampleReason{display:none}.recommendation #karteNextReason{font-size:17px;max-width:470px;margin:0 auto 18px}.recommendation .recommendation-basis{border:0;background:#fafaf9;border-radius:12px;padding:13px 16px;margin:18px auto 24px;max-width:480px;font-size:15px}.recommendation-basis strong{display:inline;font-size:inherit;margin:0;font-weight:700}.recommendation .primary{min-width:220px}.recommendation .textbutton{font-size:15px;padding-bottom:0}.review-section{margin:0;padding:32px 0}.review-section h2{text-align:center;font-weight:900;font-size:22px;margin-bottom:20px}.review-section .section-help{display:none}.review-items li{padding:18px 0}.review-items li:first-child{padding-top:0}.review-items li:last-child{border:0;padding-bottom:0}.review-items strong{font-size:17px}.review-items span{font-size:17px}.record-details{margin:0;font-size:16px}.sample-toolbar{margin:24px 0;background:#fafaf9}.sample-toolbar summary{font-size:14px;color:var(--muted)}.sample-footer{margin-top:16px}.sample-footer details{margin:0}.sample-footer #closeSample{margin-top:12px}.preview-links{gap:12px;font-size:14px}.sample-toolbar .sample-options{display:flex;flex-wrap:wrap}.sample-toolbar .sample-options button{font-size:14px;padding:7px 12px}.sample-toolbar #samplePlan{font-size:13px}.karte-facts{display:flex;justify-content:center;gap:0;margin:18px 0 0}.karte-fact{flex:1;max-width:190px;border-left:1px solid var(--line);padding:0 14px}.karte-fact:first-child{border:0}.karte-fact b{display:block;font-size:23px;font-weight:700;line-height:1.5}.karte-fact span{display:block;font-size:13px;color:var(--muted);margin-top:3px}@media(max-width:480px){.karte-hero{padding:28px 0 24px}.karte-hero h1{font-size:24px}.recommendation{padding:28px 0}.recommendation h2{font-size:23px}.recommendation .primary{width:auto;min-width:230px}.review-section{padding:28px 0}.review-section h2{font-size:21px}}
+</style>
+<style>
+.recommendation .eyebrow,.review-section>h2{font-size:17px;line-height:1.6;font-weight:700;color:var(--muted);margin:0 auto 20px;text-align:center;letter-spacing:.01em}.recommendation .eyebrow::before,.review-section>h2::before{content:"";display:block;width:32px;height:4px;background:var(--cyan);border-radius:999px;margin:0 auto 14px}.recommendation .recommendation-topic{font-size:26px;font-weight:900;line-height:1.65;margin:0 auto 16px;max-width:500px}.karte-hero{background:var(--soft);border-radius:14px 14px 0 0;margin-top:24px}.recommendation-basis{color:var(--muted)}@media(max-width:480px){.recommendation .eyebrow,.review-section>h2{font-size:17px}.recommendation .recommendation-topic{font-size:23px}.karte-hero{margin-top:20px}}
+</style>
+<style>
+.review-comparison{margin:14px 0 0;border-top:1px solid var(--line)}.review-comparison div{display:grid;grid-template-columns:90px 1fr;gap:16px;border-bottom:1px solid var(--line);padding:12px 0}.review-comparison dt{font-weight:700;color:#126981}.review-comparison dd{margin:0;font-size:17px}.review-comparison div:last-child{border-bottom:0}
+</style>
+<style>
+.upgrade-preview{margin:28px 0;border:1px solid #b8e4ec;border-radius:16px;overflow:hidden;background:#fff}.upgrade-intro{padding:24px;background:#e4f6fb}.upgrade-intro .upgrade-label{font-size:13px;color:#126981;font-weight:700;margin:0 0 10px;letter-spacing:.06em}.upgrade-intro h2{font-size:23px;font-weight:900;line-height:1.6;margin:0 0 10px}.upgrade-intro p{font-size:17px;margin:0}.upgrade-example{padding:24px}.upgrade-example .example-notice{font-size:14px;color:var(--muted);margin:0 0 20px}.upgrade-example h3{font-size:22px;line-height:1.65;font-weight:900;margin:0 0 12px}.upgrade-evidence{font-size:15px;color:#405965;background:#fafaf9;padding:12px 14px;border-radius:10px;margin:0 0 24px}.upgrade-time{border:0;padding:0;margin:0 0 22px;min-width:0}.upgrade-time legend{font-size:16px;font-weight:700;margin-bottom:10px}.upgrade-time button{padding:7px 18px;min-height:44px;border-radius:999px;background:white;border:1px solid #91cbd7;margin-right:8px;font-size:16px}.upgrade-time button[aria-pressed=true]{background:var(--soft);border:2px solid #10758a;font-weight:700}.upgrade-time .time-note{font-size:13px;color:var(--muted);margin:8px 0 0}.upgrade-steps{list-style:none;padding:0;margin:0}.upgrade-steps li{display:flex;gap:14px;padding:16px 0;border-top:1px solid var(--line);margin:0}.upgrade-step-num{width:30px;height:30px;border-radius:50%;background:var(--soft);color:#126981;display:flex;align-items:center;justify-content:center;flex:none;font-size:15px;font-weight:700}.upgrade-step-body{flex:1;min-width:0}.upgrade-step-top{display:flex;gap:12px;justify-content:space-between;align-items:baseline}.upgrade-step-top strong{font-size:18px}.upgrade-step-top small{font-size:14px;color:var(--muted);white-space:nowrap}.upgrade-step-body p{font-size:16px;color:var(--muted);margin:5px 0 0}.upgrade-next{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}.upgrade-next h4{font-size:16px;margin:0 0 6px;color:#126981}.upgrade-next p{font-size:17px;margin:0}.upgrade-bottom{padding:16px 24px;border-top:1px solid var(--line);background:#fafaf9}.upgrade-bottom p{font-size:14px;color:var(--muted);margin:0}.upgrade-bottom details{margin-top:12px}.upgrade-bottom summary{font-size:15px}@media(max-width:480px){.upgrade-intro,.upgrade-example{padding:20px}.upgrade-intro h2,.upgrade-example h3{font-size:21px}.upgrade-bottom{padding:16px 20px}}
+</style>
+<style>
+.exam-plan{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--line)}.exam-plan h3{font-size:23px}.exam-plan .plan-caption{font-size:16px;color:var(--muted);margin:0 0 18px}.exam-plan .plan-periods{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 20px}.plan-periods button{font:inherit;font-size:15px;padding:7px 13px;border-radius:999px;border:1px solid #91cbd7;background:#fff;min-height:44px}.plan-periods button[aria-pressed=true]{background:var(--soft);border:2px solid #10758a;font-weight:700}.exam-plan .period-label{font-size:14px;color:var(--muted);margin:0}.exam-timeline{list-style:none;padding:0 0 0 9px;margin:0}.exam-timeline li{position:relative;border-left:2px solid var(--line);padding:0 0 24px 23px;margin:0}.exam-timeline li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border:2px solid #8acbd9;border-radius:50%;background:#fff}.exam-timeline li[aria-current=step]::before{background:var(--cyan);border-color:var(--cyan)}.exam-timeline li:last-child{padding-bottom:0;border-left-color:transparent}.exam-timeline .phase-time{font-size:14px;color:#126981;margin:0 0 3px;font-weight:700}.exam-timeline h4{font-size:18px;margin:0 0 6px;line-height:1.6}.exam-timeline .phase-body{font-size:16px;color:var(--muted);margin:0;line-height:1.8}.exam-plan .plan-basis{font-size:14px;color:var(--muted);margin:22px 0 0}.exam-plan details{font-size:15px}.exam-plan details p{font-size:16px;margin-top:12px}.current-plan-link{font-size:14px;color:#126981;margin:0 0 8px;font-weight:700}.upgrade-example .today-heading{margin-top:0}@media(max-width:480px){.exam-plan h3{font-size:21px}}
+</style>
+<style>
+.monthly-report{margin-top:30px;padding-top:28px;border-top:1px solid var(--line)}.monthly-report>p{font-size:17px}.monthly-report>details{border:1px solid var(--line);border-radius:12px;padding:16px;font-size:17px}.monthly-report summary{font-size:16px;font-weight:700;color:#126981}.monthly-report .report-notice{font-size:14px;color:var(--muted);margin:18px 0 14px}.monthly-report h4{font-size:18px;margin:22px 0 10px}.monthly-report .report-copy{font-size:17px;line-height:1.85;margin:0}.report-grid{overflow-x:auto}.report-grid table{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;margin:0}.report-grid caption{font-weight:700;text-align:left;font-size:17px;margin:0 0 12px}.report-grid th{font-size:13px;line-height:1.6;text-align:center;color:var(--muted);padding:4px 0}.report-grid th[scope=row]{font-size:14px;color:var(--ink);text-align:left}.report-grid td{text-align:center;font-size:15px;font-weight:700;height:43px;border-radius:5px;font-variant-numeric:tabular-nums}.report-grid .heat-low{background:#f0f5f6;color:#334d55}.report-grid .heat-mid{background:#cbeef5;color:#174e5b}.report-grid .heat-high{background:#12809a;color:#fff}.report-grid .heat-na{background:#f4f5f6;color:#59636c;font-size:13px}.report-grid .mock-cell{box-shadow:inset 0 0 0 1px #7c969f}.heat-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:12px;font-size:13px;color:var(--muted)}.heat-legend span{display:flex;gap:5px;align-items:center}.heat-legend i{display:inline-block;width:13px;height:13px;border-radius:3px}.monthly-report .report-note{font-size:13px;color:var(--muted);margin:12px 0 0}.report-next{border-left:3px solid var(--cyan);padding-left:14px;margin-top:22px}.report-next h4{margin:0 0 8px}@media(max-width:480px){.monthly-report>details{padding:12px}.report-grid table{border-spacing:3px}.report-grid td{font-size:14px}.report-grid th[scope=row]{font-size:13px}}
+.account{margin-top:28px}.account h2{font-size:20px;margin-bottom:8px}.account label{display:block;font-size:14px;font-weight:700;margin:14px 0 6px}.account input{width:100%;padding:12px;border:1px solid #c6d3d8;border-radius:10px;font:inherit;min-height:48px}.account .primary,.account .secondary{width:100%;margin:12px 0 0}.account details{margin-top:16px}.account .textbutton{margin-top:12px}#syncStatus{margin:0 0 12px}
+</style>
+<style>
+/* メリハリ改修（2026-10-06）：帯で画面を区切り、見出しと本文の差を強くする */
+.band{padding:36px 0}.band-cyan{background:#e4f6fb}.band-white{background:#fff}.band-gray{background:#f7f8fa;border-top:1px solid var(--line)}
+#signinPrompt{padding-top:0}#results{border-top:0}
+.band-cyan .card{background:#fff;border-color:var(--line)}.band-cyan .card.soft{background:#f2fbfd;border-color:#b8e4ec}.band-gray .card{background:#fff}
+.band .wrap>.card:first-child{margin-top:0}.band .wrap>.card:last-child{margin-bottom:0}
+.band .hero,#intro .hero{padding:8px 0}
+#intro .hero p{max-width:34em}
+.preview{background:#fff;border-bottom:1px solid var(--line)}#storageScope{font-weight:700}
+.label{font-size:13px;letter-spacing:.12em;color:#126981;font-weight:700;margin:0 0 12px}
+#intro h1{font-size:36px;font-weight:900;line-height:1.4;color:#141B21;margin:0 0 20px}
+#results .result-title,#score{font-size:34px;font-weight:900;line-height:1.4}
+#karte,#sampleKarte{max-width:none;margin:0}#karte .wrap{max-width:708px}#karte .karte-hero{margin-top:0}
+.karte-hero h1,.karte-heading{font-size:26px;font-weight:900}
+.question-card{padding:24px;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 2px 8px rgba(20,27,33,.04);margin:0 0 20px}.question-card:last-child{margin-bottom:0}
+.q-head{display:flex;align-items:center;gap:12px;margin:0 0 12px}.q-num{display:inline-block;background:#17C5E8;color:#12313b;font-weight:900;font-size:14px;line-height:1.7;padding:2px 12px;border-radius:999px}.q-topic{font-size:13px;color:#126981;font-weight:700;letter-spacing:.08em}
+.question-text{font-size:20px;font-weight:700;line-height:1.75;margin:0}
+.answer{background:#fff;border:2px solid #c6dce2;min-height:76px;font-size:28px;font-weight:900}.answer[aria-pressed=true]{background:#e4f6fb;border-color:#10758a}
+.explanation{background:#f7f8fa;border:0;border-radius:12px;padding:18px;margin-top:24px}.explanation .verdict{background:#fff;border:1px solid var(--line)}.explanation .verdict.correct{background:#F4FBD2;border-color:#D6F034;color:#4F6300}.explanation .answer-explanation{font-size:16px}.explanation .law{font-size:14px;color:var(--muted);margin:0}
+.row{padding:18px 0}
+.account h2{font-size:20px;font-weight:900}.account .primary{width:100%;min-height:56px}.band .card.account{margin:0}
+.preview-links.band{display:block;margin-top:0;padding:36px 0;border-top:1px solid var(--line)}.preview-links .wrap{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+@media(max-width:480px){.band{padding:28px 0}#signinPrompt{padding-top:0}#intro h1{font-size:30px}.karte-hero h1,.karte-heading{font-size:23px}.question-card{padding:20px}.preview-links.band{padding:28px 0}}
+</style>
+<style>a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}#entitled .fact{margin:16px 0}</style>
+</head>
+<body>
+<header><div class="wrap"><p>耳で覚える宅建 <span class="muted">｜学習カルテ</span></p></div></header>
+<main>
+<section class="band band-cyan"><div class="wrap">
+<p class="label">学習カルテ</p>
+<p id="status" class="small muted" role="status" aria-live="polite"></p>
+<div id="needLogin" class="card" hidden>
+<h1>記録を見るにはログインが必要です</h1>
+<p>メールかLINEでログインすると、ここに記録が集まります。</p>
+<div class="actions"><a class="primary" href="ep10-preview.html#account">ログインする</a></div>
+</div>
+<div id="noEntitlement" class="card" hidden>
+<h1>学習カルテは準備中です</h1>
+<p>記録をためて弱点を見る画面です。今はテスト中で、仕組みの確認だけをしています。</p>
+<div class="actions"><button id="buy" class="primary" type="button">学習カルテを試す（テスト決済）</button><a class="secondary" href="plans-preview.html#ume">学習カルテの案内を見る</a></div>
+<p class="small muted">テスト用のカードでしか決済できません。実際の請求はありません。</p>
+<p id="buyMessage" class="small" role="status" aria-live="polite"></p>
+</div>
+<div id="entitled" class="card" hidden>
+<h1>学習カルテ <span class="badge">テスト中</span></h1>
+<p>この画面は Sprint 3 で記録から作ります。今は権利の確認だけです。</p>
+<p id="untilRow" class="fact" hidden>有効期限：<span id="until"></span></p>
+<p><a class="textbutton" href="ep10-preview.html">3問チェックに戻る</a></p>
+</div>
+</div></section>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const PLAN='ume',POLL_MS=3000,POLL_MAX=5;
+let userId='';
+const msg=code=>window.MimioboMessages?.text(code)||'接続できませんでした。時間をおいてもう一度お試しください。';
+function show(id){for(const x of ['needLogin','noEntitlement','entitled'])$(x).hidden=x!==id;}
+function formatDate(value){
+  const parts=Object.fromEntries(new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',year:'numeric',month:'numeric',day:'numeric'}).formatToParts(new Date(value)).map(p=>[p.type,p.value]));
+  return parts.year+'年'+Number(parts.month)+'月'+Number(parts.day)+'日';
+}
+// The server decides: this page only displays what GET /api/session says. 401/403 = not logged in.
+async function fetchSession(){
+  const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
+  if(response.status===401||response.status===403)return {loggedOut:true};
+  if(!response.ok)throw Error('service_unavailable');
+  return response.json();
+}
+const karteRight=data=>(Array.isArray(data.entitlements)?data.entitlements:[]).find(e=>e&&e.plan===PLAN);
+function render(data){
+  $('status').textContent='';
+  if(data.loggedOut){show('needLogin');return;}
+  userId=data.userId;
+  const right=karteRight(data);
+  if(!right){show('noEntitlement');return;}
+  $('untilRow').hidden=!right.valid_until;
+  if(right.valid_until)$('until').textContent=formatDate(right.valid_until);
+  show('entitled');
+}
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function initialize(){
+  try{await new Promise(resolve=>{const script=document.createElement('script');script.src='/ui-messages.js';script.onload=resolve;script.onerror=resolve;document.head.append(script);});}catch{}
+  try{
+    let data=await fetchSession();
+    // Just back from Checkout: the webhook may not have arrived yet. Re-read a few times, then stop.
+    if(new URLSearchParams(location.search).get('checkout')==='ok'&&!data.loggedOut&&!karteRight(data)){
+      $('status').textContent='決済の反映を待っています…';
+      for(let i=0;i<POLL_MAX&&!karteRight(data);i++){await sleep(POLL_MS);data=await fetchSession();if(data.loggedOut)break;}
+      if(!data.loggedOut&&!karteRight(data)){$('status').textContent='反映に少し時間がかかっています。しばらくしてからこのページを開き直してください。';return;}
+    }
+    render(data);
+  }catch(e){$('status').textContent=msg(e.message);}
+}
+$('buy').onclick=async()=>{
+  $('buy').disabled=true;$('buyMessage').textContent='';
+  try{
+    const response=await fetch('/api/checkout',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-Mimiobo-User':userId},body:'{}',signal:AbortSignal.timeout(15000)});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||typeof result.url!=='string')throw Error(response.status===401?'SESSION_INVALID':'service_unavailable');
+    location.href=result.url;
+  }catch(e){$('buyMessage').textContent=msg(e.message);$('buy').disabled=false;}
+};
+initialize();
+</script>
+</body>
+</html>

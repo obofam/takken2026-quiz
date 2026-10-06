@@ -39,10 +39,10 @@ function setCookie(req,res,name,value,seconds){
   const line=`${name}=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${seconds}${origin(req).startsWith('https:')?'; Secure':''}`;
   const previous=res.getHeader?.('Set-Cookie');res.setHeader('Set-Cookie',[...(Array.isArray(previous)?previous:previous?[previous]:[]),line]);
 }
-async function supabase(path,{method='GET',body,accessToken}={}){
+async function supabase(path,{method='GET',body,accessToken,headers:extra}={}){
   const url=process.env.SUPABASE_URL,key=process.env.SUPABASE_SECRET_KEY;
   if(!url||!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(url)||!key?.startsWith('sb_secret_'))fail(503,'database_not_configured');
-  const response=await fetch(url.replace(/\/$/,'')+path,{method,headers:{apikey:key,...(accessToken?{Authorization:'Bearer '+accessToken}:{}),...(body!==undefined?{'Content-Type':'application/json'}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(10000)});
+  const response=await fetch(url.replace(/\/$/,'')+path,{method,headers:{apikey:key,...extra,...(accessToken?{Authorization:'Bearer '+accessToken}:{}),...(body!==undefined?{'Content-Type':'application/json'}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(10000)});
   const data=await response.json().catch(()=>null);
   if(!response.ok){
     const message=data?.message||'';
@@ -68,11 +68,18 @@ async function session(req){
   return s;
 }
 function sessionData(userId){return {userId,storageKey:'mimiobo-test-v1-'+hash(userId)};}
+// Live entitlements only (not expired). The server decides; the browser never infers access.
+async function entitlements(userId,now=Date.now()){
+  const q=new URLSearchParams({select:'plan,valid_until',user_id:'eq.'+userId,or:'(valid_until.is.null,valid_until.gt.'+new Date(now).toISOString()+')',order:'valid_until.asc.nullsfirst'});
+  const rows=await supabase('/rest/v1/entitlements?'+q);
+  if(!Array.isArray(rows))fail(503,'database_unavailable');
+  return rows.filter(r=>['ume','take','matsu'].includes(r?.plan)&&(r.valid_until===null||Date.parse(r.valid_until)>now)).map(r=>({plan:r.plan,valid_until:r.valid_until}));
+}
 async function linkedSessionData(userId){
   const q=new URLSearchParams({select:'provider',user_id:'eq.'+userId});
   const identities=await supabase('/rest/v1/identities?'+q);
   if(!Array.isArray(identities))fail(503,'database_unavailable');
-  return {...sessionData(userId),providers:['email','line'].filter(provider=>identities.some(identity=>identity?.provider===provider))};
+  return {...sessionData(userId),providers:['email','line'].filter(provider=>identities.some(identity=>identity?.provider===provider)),entitlements:await entitlements(userId)};
 }
 async function login(req,res,provider,subject,linkToken){
   if(linkToken!==undefined&&(typeof linkToken!=='string'||!/^[0-9a-f]{64}$/.test(linkToken)))fail(400,'invalid_link');
@@ -91,4 +98,4 @@ function endpoint(methods,run){return async(req,res)=>{res.setHeader('Cache-Cont
   }
   return res.status(e instanceof HttpError?e.status:503).json({error:e instanceof HttpError?e.message:'service_unavailable'});
 }};}
-module.exports={UUID,COOKIE,HttpError,fail,hash,sign,verify,cookies,origin,mutation,setCookie,supabase,allowed,session,sessionData,linkedSessionData,login,ticket,email,endpoint};
+module.exports={UUID,COOKIE,HttpError,fail,hash,sign,verify,cookies,origin,mutation,setCookie,supabase,allowed,session,sessionData,entitlements,linkedSessionData,login,ticket,email,endpoint};

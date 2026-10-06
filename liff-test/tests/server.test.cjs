@@ -64,7 +64,7 @@ test('unexpected endpoint errors log only a fixed safe classification',async()=>
 });
 test('session rechecks allowlist and exact identity to support revocation',async()=>{
   for(const [allowed,identity,status] of [[false,true,403],[true,false,401],[true,true,200]]){
-    mock(u=>{if(u.pathname.endsWith('/allowlist'))return allowed?[{}]:[];assert.equal(u.searchParams.get('user_id'),'eq.'+user);if(u.searchParams.get('select')==='provider')return [{provider:'email'}];assert.equal(u.searchParams.get('subject'),'eq.'+address);return identity?[{user_id:user}]:[];});
+    mock(u=>{if(u.pathname.endsWith('/allowlist'))return allowed?[{}]:[];assert.equal(u.searchParams.get('user_id'),'eq.'+user);if(u.pathname==='/rest/v1/entitlements')return [];if(u.searchParams.get('select')==='provider')return [{provider:'email'}];assert.equal(u.searchParams.get('subject'),'eq.'+address);return identity?[{user_id:user}]:[];});
     const res=response();await sessionApi(request({},'GET'),res);assert.equal(res.code,status);
     if(status===200){assert.equal(res.data.userId,user);assert.equal(res.data.storageKey,'mimiobo-test-v1-'+s.hash(user));}
   }
@@ -82,7 +82,9 @@ test('GET session returns only linked providers for its authenticated user, inde
     let providerReads=0;
     mock(u=>{
       if(u.pathname==='/rest/v1/allowlist')return [{provider:loginProvider}];
-      assert.equal(u.pathname,'/rest/v1/identities');assert.equal(u.searchParams.get('user_id'),'eq.'+user);
+      assert.equal(u.searchParams.get('user_id'),'eq.'+user);
+      if(u.pathname==='/rest/v1/entitlements')return [];
+      assert.equal(u.pathname,'/rest/v1/identities');
       if(u.searchParams.get('select')==='user_id'){
         assert.equal(u.searchParams.get('provider'),'eq.'+loginProvider);assert.equal(u.searchParams.get('subject'),'eq.'+subject);
         return [{user_id:user}];
@@ -96,7 +98,7 @@ test('GET session returns only linked providers for its authenticated user, inde
     req.headers.cookie=s.COOKIE+'='+s.sign({purpose:'session',userId:user,provider:loginProvider,subject,exp:Date.now()/1000+600});
     const res=response();await sessionApi(req,res);
     assert.equal(res.code,200);assert.equal(providerReads,1);
-    assert.deepEqual(res.data,{...s.sessionData(user),providers:expected});
+    assert.deepEqual(res.data,{...s.sessionData(user),providers:expected,entitlements:[]});
     assert.equal(res.headers['Cache-Control'],'no-store');
     assert.doesNotMatch(JSON.stringify(res.data),/subject|must-not-leak|other@example.com/);
   }

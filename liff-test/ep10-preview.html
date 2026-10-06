@@ -183,7 +183,8 @@ function summarizeKarte(attempts,questions){
 }
 // KARTE_SUMMARY_END
 const $=id=>document.getElementById(id);let answers=[],progressStore=null,canAnswer=false,saveProblem=false;
-let serverMode=new URLSearchParams(location.search).get('server')==='1';
+// Always server mode: `?server=1` from older links is ignored. Logged-out visitors answer into a device-only guest store.
+const GUEST_KEY='mimiobo-guest-v1-ep10-v1';
 let answerSync=null,lineReady=false,enqueueProblem=false;
 function showAuthError(code){$('saveStatus').textContent=window.MimioboMessages?.text(code)||'本人確認できませんでした。';}
 function syncState(state){document.documentElement.dataset.syncState=state;window.dispatchEvent(new CustomEvent('mimiobo:sync',{detail:{state}}));if(state==='pending'&&!saveProblem)$('saveStatus').textContent=window.MimioboMessages?.text('pending')||'自動保存しました。';if(state==='unauthorized'){canAnswer=false;paintQuestions();}}
@@ -191,14 +192,14 @@ function providerLabel(providers){
   const names={email:'メール',line:'LINE'};const list=Array.isArray(providers)?providers.filter(p=>names[p]).map(p=>names[p]):[];
   return list.length?`ログイン中（${list.join('＋')}）。`:'ログイン中。';
 }
-function updateSigninPrompt(show){const el=$('signinPrompt');if(el)el.hidden=!(serverMode&&show);document.body?.classList?.toggle('signin-visible',!!el&&!el.hidden);}
+function updateSigninPrompt(show){const el=$('signinPrompt');if(el)el.hidden=!show;document.body?.classList?.toggle('signin-visible',!!el&&!el.hidden);}
 function setAccountState(loggedIn,providers){
   const in_=$('accountLoggedIn'),out_=$('accountLoggedOut'),status=$('accountStatus'),linkBtn=$('accountLinkLine'),linkNote=$('accountLinkNote');
   if(in_)in_.hidden=!loggedIn;
   if(out_)out_.hidden=loggedIn;
   if(status)status.textContent=loggedIn?providerLabel(providers):'ログインすると別の端末でも同じ記録を見られます。';
   if(linkBtn&&Array.isArray(providers)){const hasLine=providers.includes('line');linkBtn.hidden=hasLine;if(linkNote)linkNote.hidden=hasLine;}
-  if(serverMode)$('storageScope').textContent=loggedIn?'記録：アカウントに保存':'記録：未保存（ログインで保存）';
+  $('storageScope').textContent=loggedIn?'記録：アカウントに保存':'記録：この端末に保存';
   if(loggedIn)updateSigninPrompt(false);
 }
 async function refreshProviders(){
@@ -328,6 +329,27 @@ function openProgress(key){
 function loadClient(src){
   return new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(Error('SYNC_UNAVAILABLE'));document.head.append(script);});
 }
+function openGuest({keepStatus=false}={}){
+  const status=$('saveStatus').textContent;
+  openProgress(GUEST_KEY);
+  if(keepStatus&&!saveProblem)$('saveStatus').textContent=status;
+  $('storageScope').textContent='記録：この端末に保存';
+}
+// Logged in: move this device's guest attempts into the account cache and send them through the normal queue.
+// The guest key is removed only after every row is durably queued; a failure leaves it for the next load.
+function mergeGuestProgress(){
+  try{
+    const raw=localStorage.getItem(GUEST_KEY);if(raw===null)return;
+    const guest=ProgressStore.validate(JSON.parse(raw));
+    if(guest.attempts.length){
+      const cache=answerSync.read(),known=new Set(cache.attempts.map(a=>a.id));
+      const merged={version:cache.version,attempts:[...cache.attempts,...guest.attempts.filter(a=>!known.has(a.id))].sort((a,b)=>Date.parse(a.startedAt)-Date.parse(b.startedAt)||a.id.localeCompare(b.id))};
+      localStorage.setItem(answerSync.key,JSON.stringify(ProgressStore.validate(merged)));
+      for(const attempt of guest.attempts)attempt.answers.forEach((a,i)=>{if(a)answerSync.enqueue(attempt,i);});
+    }
+    localStorage.removeItem(GUEST_KEY);
+  }catch{/* keep the guest copy; retried on the next load */}
+}
 async function openServerProgress(session){
   if(typeof session.userId!=='string'||!/^mimiobo-test-v1-[0-9a-f]{64}$/.test(session.storageKey))throw Error('SESSION_INVALID');
   setAccountState(true,session.providers);
@@ -337,6 +359,7 @@ async function openServerProgress(session){
     onData:()=>{if(saveProblem||enqueueProblem)return;openProgress(session.storageKey+'-ep10-v1');if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}},
     onState:syncState
   });
+  mergeGuestProgress();
   openProgress(answerSync.key);$('connectLine').hidden=true;
   await answerSync.refresh({sessionVerified:true});
   paintStorageNotes();
@@ -370,15 +393,8 @@ if($('accountLinkLine'))$('accountLinkLine').onclick=async()=>{try{location.href
 if($('accountLogout'))$('accountLogout').onclick=async()=>{try{await MimioboAuth.logout();}catch{}location.reload();};
 async function verifyLine(){
   $('saveStatus').textContent='LINEで本人確認しています…';
-  let data;
-  if(serverMode&&window.MimioboAuth)data=await MimioboAuth.line(liff.getIDToken());
-  else{const response=await fetch('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idToken:liff.getIDToken()}),signal:AbortSignal.timeout(15000)});
-  data=await response.json();
-  if(!response.ok)throw Error(data.error||'本人確認できませんでした。');}
-  if(serverMode){await openServerProgress(data);refreshProviders();return;}
-  if(typeof data.storageKey!=='string'||!/^mimiobo-test-v1-[0-9a-f]{64}$/.test(data.storageKey))throw Error('保存先を確認できませんでした。');
-  $('storageScope').textContent='運営者本人のテスト · このブラウザーに保存／別端末同期なし';
-  $('connectLine').hidden=true;openProgress(data.storageKey+'-ep10-v1');
+  const data=await MimioboAuth.line(liff.getIDToken());
+  await openServerProgress(data);refreshProviders();
 }
 async function initializeLine(){
   if(lineReady)return;
@@ -389,35 +405,29 @@ async function initializeLine(){
 async function initialize(){
   paintQuestions();
   try{await loadClient('/ui-messages.js');}catch{}
-  const hasLiffState=new URLSearchParams(location.search).has('liff.state');
-  if(serverMode||hasLiffState){
-    try{
-      await Promise.all([loadClient('/sync.js'),loadClient('/auth-client.js')]);
-      MimioboAuth.captureLink({clean:false});
-      // LIFF unwraps state in init, possibly without a new page execution.
-      await initializeLine();
-      serverMode=serverMode||new URLSearchParams(location.search).get('server')==='1';
-      MimioboAuth.captureLink();
-      const authResult=new URLSearchParams(location.search).get('auth');
-      if(authResult&&authResult!=='ok'){showAuthError('auth:'+authResult);return;}
-      if(serverMode){
-        if($('account'))$('account').hidden=false;
-        const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
-        if(response.ok&&!MimioboAuth.hasPendingLink()){await openServerProgress(await response.json());return;}
-        if(!response.ok&&response.status!==401&&response.status!==403)throw Error('SESSION_UNAVAILABLE');
-        setAccountState(response.ok);
-      }
-    }catch(e){document.documentElement.dataset.syncState='unavailable';showAuthError(e.message);return;}
-  }
-  const local=['127.0.0.1','localhost',''].includes(location.hostname);
-  if(local&&!serverMode){$('storageScope').textContent='ローカル試作 · LINE連携なし／このブラウザーに自動保存';openProgress('mimiobo-local-preview-ep10-v1');return;}
-  if(serverMode)$('storageScope').textContent='記録：未保存（ログインで保存）';
-  else $('storageScope').textContent='運営者テスト · LINEで本人確認後、このブラウザーに保存';
+  const cancelled=new URLSearchParams(location.search).get('checkout')==='cancel';
+  if(cancelled&&$('accountMessage'))$('accountMessage').textContent='決済を中止しました。';
   try{
+    await Promise.all([loadClient('/sync.js'),loadClient('/auth-client.js')]);
+    MimioboAuth.captureLink({clean:false});
+    // LIFF unwraps state in init, possibly without a new page execution.
     await initializeLine();
-    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){const redirectUri=location.origin+location.pathname+(serverMode?'?server=1':'');liff.login({redirectUri:serverMode?MimioboAuth.lineRedirectUri(redirectUri):redirectUri});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
+    MimioboAuth.captureLink();
+    if(cancelled){const query=new URLSearchParams(location.search);query.delete('checkout');history.replaceState(null,'',location.pathname+(query.size?'?'+query:'')+location.hash);}
+    const authResult=new URLSearchParams(location.search).get('auth');
+    if(authResult&&authResult!=='ok'){showAuthError('auth:'+authResult);openGuest({keepStatus:true});return;}
+    if($('account')){$('account').hidden=false;if(location.hash==='#account')$('account').scrollIntoView?.();}
+    const response=await fetch('/api/session',{credentials:'same-origin',signal:AbortSignal.timeout(15000)});
+    if(response.ok&&!MimioboAuth.hasPendingLink()){await openServerProgress(await response.json());return;}
+    if(!response.ok&&response.status!==401&&response.status!==403)throw Error('SESSION_UNAVAILABLE');
+    setAccountState(response.ok);
+  }catch(e){document.documentElement.dataset.syncState='unavailable';showAuthError(e.message);openGuest({keepStatus:true});return;}
+  // Not logged in: answers stay on this device until the visitor logs in.
+  openGuest();
+  try{
+    $('connectLine').onclick=async()=>{try{$('connectLine').disabled=true;if(!liff.isLoggedIn()){const redirectUri=location.origin+location.pathname;liff.login({redirectUri:MimioboAuth.lineRedirectUri(redirectUri)});return;}await verifyLine();}catch(e){showAuthError(e.message);$('connectLine').disabled=false;}};
     if(liff.isLoggedIn())await verifyLine();
-    else{$('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;updateSigninPrompt(true);if(serverMode&&MimioboAuth.hasPendingLink()&&$('accountLinkPending')){$('accountLinkPending').hidden=false;if($('accountLinkLine'))$('accountLinkLine').hidden=true;if($('accountStatus'))$('accountStatus').textContent='LINE連携の途中です。';$('accountLinkPendingGo').onclick=()=>$('connectLine').onclick();}}
+    else{$('saveStatus').textContent='初回はLINEの許可画面が開くことがあります。';$('connectLine').hidden=false;updateSigninPrompt(true);if(MimioboAuth.hasPendingLink()&&$('accountLinkPending')){$('accountLinkPending').hidden=false;if($('accountLinkLine'))$('accountLinkLine').hidden=true;if($('accountStatus'))$('accountStatus').textContent='LINE連携の途中です。';$('accountLinkPendingGo').onclick=()=>$('connectLine').onclick();}}
   }catch(e){showAuthError(e.message);if(typeof $('connectLine').onclick==='function'){$('connectLine').hidden=false;updateSigninPrompt(true);}}
 }
 $('retrySave').onclick=()=>{const saved=saveProgress();let queued=true;if(saved&&answerSync&&progressStore.current)progressStore.current.answers.forEach((a,i)=>{if(a&&!sendAnswer(progressStore.current,i))queued=false;});if(saved&&queued){enqueueProblem=false;canAnswer=answerSync?.active!==false;$('retrySave').hidden=true;paintQuestions();}if(!$('karte').hidden){renderAttemptHistory();renderKarteSummary();}};
