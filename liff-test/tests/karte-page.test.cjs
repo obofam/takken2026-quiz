@@ -90,7 +90,7 @@ test('test checkout failure re-enables the button with a safe message; a stale s
   }
 });
 test('page structure: approved copy, links and shared CSS',()=>{
-  const must=['<h1>学習カルテ</h1>','ログインすると、答えた記録がここに集まります。','href="account.html?next=karte">ログイン<','学習カルテは準備中です','記録をためて弱点を見る画面です。今はテスト中で、仕組みの確認だけをしています。','href="plans-preview.html#ume">学習カルテの案内を見る<','学習カルテを試す（テスト決済）','テスト用のカードでしか決済できません。実際の請求はありません。','有効期限：','記録を読み込んでいます…','分野別の正答率','復習する論点','正答率の低い順。放送に戻れます。','今の記録では、復習する論点はありません。','記録は回答した時点のものです。同じ問題への再挑戦も数えます。','まだ記録がありません。','3問チェックを始める','を聴く','問題を解き直す'];
+  const must=['<h1>学習カルテ</h1>','ログインすると、答えた記録がここに集まります。','href="account.html?next=karte">ログイン<','学習カルテは準備中です','記録をためて弱点を見る画面です。今はテスト中で、仕組みの確認だけをしています。','href="plans-preview.html#ume">学習カルテの案内を見る<','学習カルテを試す（テスト決済）','テスト用のカードでしか決済できません。実際の請求はありません。','有効期限：','記録を読み込んでいます…','分野別の正答率','復習する論点','正答率の低い順です。','今の記録では、復習する論点はありません。','記録は回答した時点のものです。同じ問題への再挑戦も数えます。','まだ記録がありません。','3問チェックを始める','放送を聴く','解き直す'];
   for(const text of must)assert.ok(html.includes(text),text);
   assert.equal((html.match(/<style>/g)||[]).length,(html.match(/<\/style>/g)||[]).length);
   const ep10=read('ep10-preview.html'),styles=s=>(s.match(/<style>[\s\S]*?<\/style>/g)||[]);
@@ -103,8 +103,16 @@ test('page structure: approved copy, links and shared CSS',()=>{
   assert.doesNotMatch(html,/[→↗↘←]/);
   assert.ok(html.includes('<script src="/quiz-catalog.js"></script>')&&html.includes('<script src="/karte-core.js"></script>'));
   // Same parts and colours as the plans-preview sample; the lime success colour is not used for the bars.
-  for(const cls of ['.rp-stats','.rp-stat','.subject-results','.subject-row','.subject-bar','.rp-weak-item','.rp-weak-main','.rp-weak-tag','.rp-weak-count','.rp-weak-link'])assert.ok(html.includes(cls+'{')||html.includes(cls+' '),cls);
+  for(const cls of ['.karte-summary','.karte-card','.subject-row','.subject-bar','.rp-weak-item','.rp-weak-name','.rp-weak-meta','.rp-weak-links','.rp-weak-link'])assert.ok(html.includes(cls+'{')||html.includes(cls+' '),cls);
+  assert.match(html,/\.rp-weak-item\{display:flex;flex-direction:column/);
   assert.match(html,/\.subject-bar i\{[^}]*background:var\(--cyan\)/);
+  assert.match(html,/\.subject-bar\{[^}]*height:8px/);
+  // The two cards: white, 16px corners, 1px border, thin shadow, 18px padding; h2 is 20px/900 with a 4px cyan rounded bar.
+  assert.match(html,/\.karte-card\{background:#fff;border:1px solid var\(--line\);border-radius:16px;box-shadow:[^;]+;padding:18px/);
+  assert.match(html,/\.karte-card h2\{[^}]*font-size:20px;font-weight:900/);
+  assert.match(html,/\.karte-card h2::before\{[^}]*width:4px;border-radius:999px;background:#17C5E8/);
+  assert.match(html,/\.rp-weak-link\{[^}]*min-height:36px[^}]*font-size:13px/);
+  assert.match(html,/\.karte-note\{font-size:12px/);
 });
 
 
@@ -124,27 +132,28 @@ test('entitled: stats, subject rates and the review list are drawn from the serv
   const body=h.node('karteBody').innerHTML;
   assert.equal(h.node('karteStatus').textContent,'');
   // 4 answers, 1 broadcast, 1 topic to review (ep10-add: still unsure); join was wrong first, right later.
-  assert.ok(body.includes('<b>1回</b><span>放送</span>'));assert.ok(body.includes('<b>4問</b><span>回答</span>'));assert.ok(body.includes('<b>1つ</b><span>復習する論点</span>'));
+  assert.ok(body.includes('<p id="karteSummary" class="karte-summary">放送 <b>1</b>回 ・ 回答 <b>4</b>問 ・ 復習 <b>1</b>つ</p>'));
   assert.ok(body.includes('分野別の正答率'));assert.ok(body.includes('<span>宅建業法</span><b>2 / 4問</b>'));assert.ok(body.includes('style="width:50%"'));
   assert.ok(!body.includes('<span>権利関係</span>'));
-  assert.ok(body.includes('復習する論点</h2>'));assert.ok(body.includes('正答率の低い順。放送に戻れます。'));
-  assert.ok(body.includes('<b>事務所増設時の納付期限</b><span class="rp-weak-tag">宅建業法・第10回</span>'));assert.ok(body.includes('0 / 1問'));
+  assert.ok(body.includes('<h2>復習する論点</h2><p class="karte-card-help">正答率の低い順です。</p>'));assert.ok(!body.includes('放送に戻れます'));
+  assert.ok(body.includes('<b class="rp-weak-name">事務所増設時の納付期限</b><p class="rp-weak-meta">宅建業法・第10回 ｜ 1問中0問正解</p>'));
   assert.ok(!body.includes('営業保証金の金額</b>'));
-  assert.ok(body.includes('href="'+stand+'" target="_blank" rel="noopener noreferrer">放送 #10 を聴く</a>'));assert.ok(body.includes('href="ep10-preview.html">問題を解き直す</a>'));
+  assert.ok(body.includes('href="'+stand+'" target="_blank" rel="noopener noreferrer">放送を聴く</a>'));assert.ok(body.includes('href="ep10-preview.html">解き直す</a>'));
+  assert.ok(!body.includes('問題を解き直す')&&!body.includes('放送 #'));
   assert.ok(body.includes('記録は回答した時点のものです。同じ問題への再挑戦も数えます。'));
   assert.doesNotMatch(body,/[→↗]/);
 });
-test('entitled with nothing to review: says so, still shows the tiles and the note',async()=>{
+test('entitled with nothing to review: says so, still shows the summary line, both cards and the note',async()=>{
   const h=harness();h.sessions([withUme]);h.karte({rows:[answerRows[0]]});await h.start();
   const body=h.node('karteBody').innerHTML;
-  assert.ok(body.includes('<b>0つ</b><span>復習する論点</span>'));assert.ok(body.includes('今の記録では、復習する論点はありません。'));
+  assert.ok(body.includes('復習 <b>0</b>つ'));assert.ok(body.includes('今の記録では、復習する論点はありません。'));assert.ok(body.includes('<h2>分野別の正答率</h2>'));
   assert.ok(!body.includes('rp-weak-item'));assert.ok(body.includes('記録は回答した時点のものです。'));
 });
-test('entitled with no records: empty message and the start button, no tiles',async()=>{
+test('entitled with no records: empty message and the start button, no summary or cards',async()=>{
   const h=harness();h.sessions([withUme]);h.karte({rows:[]});await h.start();
   const body=h.node('karteBody').innerHTML;
   assert.ok(body.includes('まだ記録がありません。'));assert.ok(body.includes('href="ep10-preview.html">3問チェックを始める</a>'));
-  for(const gone of ['rp-stats','分野別の正答率','復習する論点','記録は回答した時点のものです。'])assert.ok(!body.includes(gone),gone);
+  for(const gone of ['karte-summary','karte-card','分野別の正答率','復習する論点','記録は回答した時点のものです。'])assert.ok(!body.includes(gone),gone);
   assert.deepEqual(visible(h),['entitled']);
 });
 test('rows outside the catalog are not drawn',async()=>{
@@ -182,7 +191,7 @@ function seed(h,over={},id=userId){
   h.values.set(CP+id,JSON.stringify({savedAt:Date.now()-day,validUntil:'2027-10-17T14:59:59.000Z',rows:cacheRows,...over}));
   h.values.set(LAST,id);
 }
-const cached=h=>h.node('karteBody').innerHTML.includes('<b>1問</b><span>回答</span>');
+const cached=h=>h.node('karteBody').innerHTML.includes('回答 <b>1</b>問');
 test('with a cache: the karte is drawn and the status shown before the server answers',async()=>{
   const h=harness();seed(h);let atSession,atKarte;
   h.sessions([withUme]);const inner=h.context.fetch;
@@ -199,7 +208,7 @@ test('with a cache: the karte is drawn and the status shown before the server an
 test('after the server answers: replaced by the latest rows and the status is emptied',async()=>{
   const h=harness();seed(h);h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
   const body=h.node('karteBody').innerHTML;
-  assert.ok(body.includes('<b>4問</b><span>回答</span>'));assert.equal(cached(h),false);
+  assert.ok(body.includes('回答 <b>4</b>問'));assert.equal(cached(h),false);
   assert.equal(h.node('karteStatus').textContent,'');assert.deepEqual(visible(h),['entitled']);
   assert.equal(h.karteCalls().length,1);
 });
@@ -214,7 +223,7 @@ test('the server decides: logged out, no entitlement, or another user drops the 
     await h.start();
     assert.deepEqual(visible(h),[shown],JSON.stringify(session));
     assert.equal(cached(h),false);assert.equal(h.values.has(CP+userId),false);
-    if(shown==='entitled'){assert.ok(h.node('karteBody').innerHTML.includes('<b>4問</b>'));assert.equal(h.values.has(CP+other.userId),true);assert.equal(h.values.get(LAST),other.userId);}
+    if(shown==='entitled'){assert.ok(h.node('karteBody').innerHTML.includes('回答 <b>4</b>問'));assert.equal(h.values.has(CP+other.userId),true);assert.equal(h.values.get(LAST),other.userId);}
     else{assert.equal(h.values.has(LAST),false);assert.equal(h.karteCalls().length,0);assert.equal(h.node('karteBody').innerHTML,'');assert.equal(h.node('karteStatus').textContent,'');}
   }
 });
@@ -232,7 +241,7 @@ test('an expired entitlement or a cache older than 14 days is not used',async()=
     h.context.fetch=async(url,o)=>{first??={vis:visible(h),body:cached(h)};return inner(url,o);};
     h.karte({rows:answerRows});await h.start();
     assert.deepEqual(first,{vis:[],body:false},JSON.stringify(over));
-    assert.ok(h.node('karteBody').innerHTML.includes('<b>4問</b>'));
+    assert.ok(h.node('karteBody').innerHTML.includes('回答 <b>4</b>問'));
   }
   const fresh=harness();seed(fresh,{savedAt:Date.now()-13*day,validUntil:null});let seen;
   fresh.sessions([withUme]);const inner=fresh.context.fetch;fresh.context.fetch=async(u,o)=>{seen??=cached(fresh);return inner(u,o);};
@@ -256,7 +265,7 @@ test('a successful draw saves the rows, the dates and the last user',async()=>{
 test('a storage failure is ignored',async()=>{
   const h=harness();h.context.localStorage.setItem=()=>{throw Error('quota');};
   h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
-  assert.deepEqual(visible(h),['entitled']);assert.ok(h.node('karteBody').innerHTML.includes('<b>4問</b>'));assert.equal(h.node('karteStatus').textContent,'');
+  assert.deepEqual(visible(h),['entitled']);assert.ok(h.node('karteBody').innerHTML.includes('回答 <b>4</b>問'));assert.equal(h.node('karteStatus').textContent,'');
 });
 test('logout removes every karte cache and the last user, and drops the screen',async()=>{
   const h=harness();seed(h);seed(h,{},'99999999-1234-4123-8123-123456789abc');h.values.set('other-key','keep');
@@ -278,4 +287,45 @@ test('account.html and ep10-preview.html logout buttons also clear the karte cac
     vm.runInNewContext(clear,{localStorage});
     assert.deepEqual([...values.keys()],['keep'],name);
   }
+});
+
+
+// ---- 10/6 カードの組み直し：主役は「復習する論点」「分野別の正答率」 ----
+test('karte body: the summary is one small line, and no stat tiles are drawn',async()=>{
+  const h=harness();h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
+  const body=h.node('karteBody').innerHTML;
+  assert.ok(!body.includes('rp-stat'));assert.ok(!body.includes('<span>放送</span>'));
+  assert.equal((body.match(/id="karteSummary"/g)||[]).length,1);
+  // the summary comes first, before both cards; only the numbers are bold
+  assert.ok(body.startsWith('<p id="karteSummary"'));
+  const line=body.match(/<p id="karteSummary"[^>]*>([\s\S]*?)<\/p>/)[1];
+  assert.equal(line.replace(/<\/?b>/g,''),'放送 1回 ・ 回答 4問 ・ 復習 1つ');assert.equal((line.match(/<b>/g)||[]).length,3);
+  assert.match(html,/\.karte-summary\{font-size:14px[^}]*color:var\(--muted\)/);
+});
+test('karte body: two cards, h2 in the order 復習する論点 then 分野別の正答率',async()=>{
+  const h=harness();h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
+  const body=h.node('karteBody').innerHTML;
+  const cards=[...body.matchAll(/<section class="karte-card">([\s\S]*?)<\/section>/g)].map(m=>m[1]);
+  assert.equal(cards.length,2);
+  assert.deepEqual(cards.map(c=>c.match(/^<h2>([^<]+)<\/h2>/)[1]),['復習する論点','分野別の正答率']);
+  assert.deepEqual([...body.matchAll(/<h2>([^<]+)<\/h2>/g)].map(m=>m[1]),['復習する論点','分野別の正答率']);
+  assert.ok(cards[1].includes('subject-bar')&&!cards[1].includes('rp-weak-item'));
+  // the note stays last, outside the cards
+  assert.ok(body.trimEnd().endsWith('<p class="karte-note">記録は回答した時点のものです。同じ問題への再挑戦も数えます。</p>'));
+  // the entitled area itself is not a second box around the cards
+  assert.match(html,/#entitled\.card\{background:transparent;border:0;box-shadow:none;padding:0/);
+});
+test('karte body: each review topic is three stacked rows (name, description, two pill buttons)',async()=>{
+  const h=harness();h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
+  const body=h.node('karteBody').innerHTML;
+  const items=[...body.matchAll(/<div class="rp-weak-item">([\s\S]*?)<\/div><\/div>/g)].map(m=>m[1]);
+  assert.equal(items.length,1);
+  const [, name, meta, links]=items[0].match(/^<b class="rp-weak-name">([^<]+)<\/b><p class="rp-weak-meta">([^<]+)<\/p><div class="rp-weak-links">([\s\S]*)$/);
+  assert.equal(name,'事務所増設時の納付期限');assert.equal(meta,'宅建業法・第10回 ｜ 1問中0問正解');
+  const anchors=[...links.matchAll(/<a class="rp-weak-link"([^>]*)>([^<]+)<\/a>/g)];
+  assert.deepEqual(anchors.map(a=>a[2]),['放送を聴く','解き直す']);
+  assert.ok(anchors[0][1].includes('href="'+stand+'"')&&anchors[0][1].includes('target="_blank"')&&anchors[0][1].includes('rel="noopener noreferrer"'));
+  assert.ok(anchors[1][1].includes('href="ep10-preview.html"')&&!anchors[1][1].includes('target='));
+  assert.match(html,/\.rp-weak-item\{display:flex;flex-direction:column/);
+  assert.doesNotMatch(body,/[→↗↘←]/);
 });

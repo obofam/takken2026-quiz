@@ -90,29 +90,29 @@ html{scroll-padding-top:60px}
 .plan-dot-icon{width:18px;height:18px;vertical-align:-4px;margin-right:6px}
 </style>
 <style>
-/* 学習カルテ本文（plans-preview.html の reports.weak と同じ部品。棒は淡々スタイルの水色） */
-.subject-results{padding:0 0 24px}
-.subject-results h2{font-size:21px;margin:0 0 12px}
-.subject-row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:14px 0}
-.subject-row>span{font-size:17px}
-.subject-row>b{font-size:18px;font-variant-numeric:tabular-nums}
-.subject-bar{grid-column:1/-1;height:7px;background:#edf1f3;border-radius:99px;overflow:hidden}
+/* 学習カルテ本文：主役は「復習する論点」「分野別の正答率」の2枚のカード。棒は淡々スタイルの水色 */
+#entitled.card{background:transparent;border:0;box-shadow:none;padding:0;margin:0}
+.karte-summary{font-size:14px;line-height:1.6;color:var(--muted);margin:0 0 18px}
+.karte-summary b{font-weight:700}
+.karte-card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 8px rgba(20,27,33,.04);padding:18px;margin:0 0 16px}
+.karte-card h2{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900;line-height:1.5;margin:0}
+.karte-card h2::before{content:"";flex:none;align-self:stretch;width:4px;border-radius:999px;background:#17C5E8}
+.karte-card-help{font-size:14px;line-height:1.6;color:var(--muted);margin:6px 0 0}
+.karte-card-empty{margin:14px 0 0}
+.rp-weak-item{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px 0;border-bottom:1px solid var(--line)}
+.rp-weak-item:first-of-type{padding-top:12px}
+.rp-weak-item:last-child{border-bottom:0;padding-bottom:0}
+.rp-weak-name{font-size:17px;font-weight:700;line-height:1.6;color:#141B21}
+.rp-weak-meta{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
+.rp-weak-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.rp-weak-link{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:4px 16px;border:1px solid #17C5E8;border-radius:999px;background:#fff;color:#126981;font-size:13px;font-weight:700;line-height:1.4;text-decoration:none;white-space:nowrap}
+.subject-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px 0 0}
+.subject-row:first-of-type{padding-top:14px}
+.karte-card .subject-row>span{font-size:16px;line-height:1.6}
+.karte-card .subject-row>b{font-size:16px;font-weight:700;line-height:1.6;text-align:right;font-variant-numeric:tabular-nums}
+.subject-bar{grid-column:1/-1;height:8px;background:#edf1f3;border-radius:99px;overflow:hidden}
 .subject-bar i{display:block;height:100%;background:var(--cyan);border-radius:99px}
-.report-muted{font-size:13px;color:#687980}
-.rp-stats{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}
-.rp-stat{flex:1 1 130px;background:#f3f7f8;border-radius:10px;padding:14px 10px;text-align:center}
-.rp-stat b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
-.rp-stat span{display:block;font-size:12px;color:#637d86;margin-top:4px}
-.rp-weak-item{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 0;border-bottom:1px solid #dce5e8}
-.rp-weak-item:last-child{border-bottom:0}
-.rp-weak-main{flex:1 1 200px}
-.rp-weak-main b{font-size:17px}
-.rp-weak-tag{display:inline-block;font-size:12px;color:#637d86;background:#eef2f3;border-radius:999px;padding:2px 10px;margin-left:8px}
-.rp-weak-count{font-size:14px;color:#637d86;white-space:nowrap}
-.rp-weak-links{display:flex;flex-wrap:wrap;gap:6px 16px}
-.rp-weak-link{font-size:14px;color:#126981;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
-.karte-note{font-size:13px;color:var(--muted);margin:8px 0 0}
-@media(max-width:600px){.subject-row>span{font-size:16px}.rp-stat{flex:1 1 30%}.rp-weak-main{flex:1 1 100%}}
+.karte-note{font-size:12px;line-height:1.7;color:var(--muted);margin:0}
 </style>
 <style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}.card,#entitled{padding:18px}h1,#entitled h1{font-size:22px;line-height:1.45;margin-bottom:10px}.label{font-size:12px}.fact,#untilRow{font-size:15px}.rp-stats{gap:8px;margin:14px 0}.rp-stat{padding:10px 6px}.rp-stat b{font-size:17px}.rp-stat span{font-size:11px}.subject-results h2{font-size:17px}.subject-row{padding:10px 0}.subject-row>span{font-size:15px}.subject-row>b{font-size:15px}.rp-weak-main b{font-size:15px}.rp-weak-tag{font-size:11px;margin-left:6px}.rp-weak-count,.rp-weak-link{font-size:13px}.karte-note,.report-muted{font-size:12px}header p{font-size:14px}}</style>
 </head>
@@ -232,12 +232,11 @@ async function fetchKarte(){
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function renderKarte(s){
   if(!s.stats.answers)return '<p>まだ記録がありません。</p><div class="actions"><a class="primary" href="ep10-preview.html">3問チェックを始める</a></div>';
-  const tile=(n,unit,label)=>'<div class="rp-stat"><b>'+n+unit+'</b><span>'+label+'</span></div>';
   const rows=s.subjects.map(x=>'<div class="subject-row"><span>'+esc(x.name)+'</span><b>'+x.correct+' / '+x.total+'問</b><div class="subject-bar"><i style="width:'+Math.round(x.correct/x.total*1000)/10+'%"></i></div></div>').join('');
-  const weak=s.review.map(t=>'<div class="rp-weak-item"><div class="rp-weak-main"><b>'+esc(t.topic)+'</b><span class="rp-weak-tag">'+esc(t.subject)+'・第'+t.episode+'回</span></div><span class="rp-weak-count">'+t.correct+' / '+t.total+'問</span><span class="rp-weak-links">'+(t.audioUrl?'<a class="rp-weak-link" href="'+esc(t.audioUrl)+'" target="_blank" rel="noopener noreferrer">放送 #'+t.episode+' を聴く</a>':'')+'<a class="rp-weak-link" href="'+esc(t.page)+'">問題を解き直す</a></span></div>').join('');
-  return '<div class="rp-stats">'+tile(s.stats.episodes,'回','放送')+tile(s.stats.answers,'問','回答')+tile(s.stats.review,'つ','復習する論点')+'</div>'
-    +'<section class="subject-results"><h2>分野別の正答率</h2>'+rows+'</section>'
-    +'<section class="subject-results"><h2>復習する論点</h2><p class="report-muted">正答率の低い順。放送に戻れます。</p>'+(weak||'<p>今の記録では、復習する論点はありません。</p>')+'</section>'
+  const weak=s.review.map(t=>'<div class="rp-weak-item"><b class="rp-weak-name">'+esc(t.topic)+'</b><p class="rp-weak-meta">'+esc(t.subject)+'・第'+t.episode+'回 ｜ '+t.total+'問中'+t.correct+'問正解</p><div class="rp-weak-links">'+(t.audioUrl?'<a class="rp-weak-link" href="'+esc(t.audioUrl)+'" target="_blank" rel="noopener noreferrer">放送を聴く</a>':'')+'<a class="rp-weak-link" href="'+esc(t.page)+'">解き直す</a></div></div>').join('');
+  return '<p id="karteSummary" class="karte-summary">放送 <b>'+s.stats.episodes+'</b>回 ・ 回答 <b>'+s.stats.answers+'</b>問 ・ 復習 <b>'+s.stats.review+'</b>つ</p>'
+    +'<section class="karte-card"><h2>復習する論点</h2><p class="karte-card-help">正答率の低い順です。</p>'+(weak||'<p class="karte-card-empty">今の記録では、復習する論点はありません。</p>')+'</section>'
+    +'<section class="karte-card"><h2>分野別の正答率</h2>'+rows+'</section>'
     +'<p class="karte-note">記録は回答した時点のものです。同じ問題への再挑戦も数えます。</p>';
 }
 async function loadKarte(){
