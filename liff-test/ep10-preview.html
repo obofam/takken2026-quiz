@@ -100,6 +100,23 @@ a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:cen
 .footer-brand .footer-link{display:block;margin-bottom:8px}
 </style>
 <style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}#intro h1{font-size:24px;line-height:1.45}.karte-hero h1,.karte-heading{font-size:21px}h2{font-size:19px}.question-card{padding:16px}.question-text{font-size:17px;line-height:1.7}.answer{min-height:60px;font-size:22px}.explanation{padding:14px}.explanation p,.answer-explanation{font-size:15px}#score{font-size:26px}.account h2{font-size:18px}.account input{min-height:44px}.preview{font-size:13px}}</style>
+<style>
+/* ep10-only answer-result 10/6 */
+.answer:disabled{color:inherit}
+.answer[aria-pressed=true]{color:#141B21;background:#e4f6fb;border:2px solid #10758a;opacity:1}
+.answers:has(button:disabled) button:not([aria-pressed=true]){opacity:.45}
+.textbutton[aria-pressed=true]:disabled{color:#141B21;font-weight:700}
+.explanation{background:#fff;border:1px solid #e4e9ec;border-left:4px solid #17C5E8;border-radius:12px;padding:16px;margin-top:24px}
+.explanation.correct{border-left-color:#D6F034}
+.explanation .verdict{display:inline-flex;align-items:baseline;gap:8px;margin:0 0 14px;padding:6px 16px;border:0;border-radius:999px;background:#EEF2F3;color:#141B21;font-size:18px;font-weight:900;line-height:1.5}
+.explanation .verdict.correct{background:#F4FBD2;color:#4F6300}
+.explanation .verdict .mark{font-size:22px;font-weight:900;line-height:1}
+.explanation .verdict .mark:empty{display:none}
+.explanation .ex-label{margin:0 0 4px;font-size:12px;font-weight:700;color:#126981;letter-spacing:.1em;line-height:1.6}
+.explanation .answer-explanation{margin:0;font-size:16px;line-height:1.85}
+.explanation .law{margin:14px 0 0;padding-top:12px;border-top:1px dotted #c6d3d8;font-size:13px;line-height:1.7;color:var(--muted)}
+@media(max-width:480px){.explanation{padding:14px}.explanation .answer-explanation{font-size:15px}}
+</style>
 </head>
 <body>
 <header class="site-header"><div class="site-header-in"><span class="site-brand">耳で覚える宅建</span><nav class="site-tabs" aria-label="メイン"><a href="ep10-preview.html" aria-current="page"><img class="tab-icon" src="img/icons/plan-free.svg" alt="" width="18" height="18">3問チェック</a><a href="karte.html"><img class="tab-icon" src="img/icons/plan-karte.svg" alt="" width="18" height="18">学習カルテ</a></nav><a id="siteAuth" class="site-auth" href="account.html" data-state="out" hidden>ログイン</a></div></header>
@@ -269,7 +286,7 @@ function paintQuestions(){
   $('quizList').replaceChildren();
   questions.forEach((q,i)=>{
     const card=document.createElement('article');card.className='question-card';card.id=q.id;
-    card.innerHTML=`<div class="q-head"><span class="q-num">Q${i+1}</span><span class="q-topic">${q.topic}</span></div><h2 class="question-text"></h2><div class="answers"><button class="answer" aria-label="Q${i+1} ○と答える" aria-pressed="false">○</button><button class="answer" aria-label="Q${i+1} ×と答える" aria-pressed="false">×</button></div><button class="textbutton" aria-label="Q${i+1} まだ分からない" aria-pressed="false">まだ分からない</button><div class="explanation" aria-live="polite" hidden><p class="verdict"></p><p class="answer-explanation"></p><p class="small muted law"></p></div>`;
+    card.innerHTML=`<div class="q-head"><span class="q-num">Q${i+1}</span><span class="q-topic">${q.topic}</span></div><h2 class="question-text"></h2><div class="answers"><button class="answer" aria-label="Q${i+1} ○と答える" aria-pressed="false">○</button><button class="answer" aria-label="Q${i+1} ×と答える" aria-pressed="false">×</button></div><button class="textbutton" aria-label="Q${i+1} まだ分からない" aria-pressed="false">まだ分からない</button><div class="explanation" aria-live="polite" hidden><p class="verdict"><span class="mark" aria-hidden="true"></span><span class="vtext"></span></p><p class="ex-label">解説</p><p class="answer-explanation"></p><p class="small muted law"></p></div>`;
     card.querySelector('h2').textContent=q.text;
     card.querySelectorAll('button').forEach((button,n)=>button.onclick=()=>answer(i,[true,false,null][n]));
     card.querySelectorAll('button').forEach(button=>button.disabled=!canAnswer);
@@ -298,10 +315,13 @@ function answer(i,value){
 function paintAnswer(i){
   const value=answers[i].value,q=questions[i],card=$(q.id),correct=value===q.answer;
   card.querySelectorAll('button').forEach((button,n)=>{button.disabled=true;button.setAttribute('aria-pressed',String([true,false,null][n]===value));});
-  const verdict=card.querySelector('.verdict');verdict.className='verdict'+(correct?' correct':'');verdict.textContent=correct?'正解です':`正解は${q.answer?'○':'×'}です`;
+  const box=card.querySelector('.explanation'),verdict=card.querySelector('.verdict');
+  box.className='explanation'+(correct?' correct':'');verdict.className='verdict'+(correct?' correct':'');
+  card.querySelector('.mark').textContent=correct?'○':value===null?'':'×';
+  card.querySelector('.vtext').textContent=correct?'正解です':`正解は${q.answer?'○':'×'}です`;
   card.querySelector('.answer-explanation').textContent=q.explanation;
   card.querySelector('.law').textContent=q.law;
-  card.querySelector('.explanation').hidden=false;
+  box.hidden=false;
 }
 function counts(){return{done:answers.filter(Boolean).length,right:questions.filter((q,i)=>answers[i]&&answers[i].value===q.answer).length,unknown:answers.filter(a=>a&&a.value===null).length};}
 function rows(target){$(target).replaceChildren();questions.forEach((q,i)=>{const row=document.createElement('div');row.className='row';const line=document.createElement('p'),tag=document.createElement('span');const a=answers[i],correct=a&&a.value===q.answer;tag.className='status'+(correct?' ok':'');tag.textContent=!a?'未回答':a.value===null?'まだ分からない':correct?'正解':'見直す';line.append(tag,document.createTextNode(q.topic));row.append(line);$(target).append(row);});}
