@@ -124,7 +124,6 @@ a.primary,a.secondary{display:inline-flex;align-items:center;justify-content:cen
 <article class="card soft"><h2 id="nextTitle"></h2><p id="nextBody"></p><a class="audioLink" target="_blank" rel="noopener noreferrer">音声で復習する（約17分）</a></article>
 <p id="resultsStorageNote" class="small muted"></p>
 <div class="actions"><a id="toKarte" class="primary" href="karte.html"><img class="btn-icon" src="img/icons/plan-karte.svg" alt="" width="20" height="20">学習カルテで記録を見る</a><button id="restart" class="secondary" type="button">もう一度解く</button><button id="showKarte" class="primary" type="button" hidden>結果と復習を見る</button></div>
-<p class="muted small">この3問の振り返りです。分野全体の習得度ではありません。</p>
 </div></section>
 <section id="karte" class="screen band band-white dev-only" tabindex="-1" hidden><div class="wrap">
 <div class="karte-hero"><h1 class="karte-heading">今回の結果と復習</h1><p id="karteCoverage"></p><div class="karte-facts"><div class="karte-fact"><b id="karteFactScore"></b><span>今回の正解</span></div><div class="karte-fact"><b id="karteFactReview"></b><span>復習ポイント</span></div></div></div>
@@ -305,12 +304,12 @@ function paintAnswer(i){
   card.querySelector('.explanation').hidden=false;
 }
 function counts(){return{done:answers.filter(Boolean).length,right:questions.filter((q,i)=>answers[i]&&answers[i].value===q.answer).length,unknown:answers.filter(a=>a&&a.value===null).length};}
-function rows(target){$(target).replaceChildren();questions.forEach((q,i)=>{const row=document.createElement('div');row.className='row';const line=document.createElement('p'),tag=document.createElement('span');const a=answers[i],correct=a&&a.value===q.answer;tag.className='status'+(correct?' ok':'');tag.textContent=!a?'未回答':a.value===null?'まだ分からない':correct?'正解':'見直す候補';line.append(tag,document.createTextNode(q.topic));row.append(line);if(a){const info=document.createElement('small');info.textContent=`あなたの回答：${a.value===null?'まだ分からない':a.value?'○':'×'} ／ 正解：${q.answer?'○':'×'}`;row.append(info);}$(target).append(row);});}
+function rows(target){$(target).replaceChildren();questions.forEach((q,i)=>{const row=document.createElement('div');row.className='row';const line=document.createElement('p'),tag=document.createElement('span');const a=answers[i],correct=a&&a.value===q.answer;tag.className='status'+(correct?' ok':'');tag.textContent=!a?'未回答':a.value===null?'まだ分からない':correct?'正解':'見直す';line.append(tag,document.createTextNode(q.topic));row.append(line);$(target).append(row);});}
 function results(){
   const c=counts();$('results').hidden=c.done===0;
   $('progressChip').textContent=`回答 ${c.done} / 3`;
   $('score').textContent=`${questions.length}問中${c.right}問正解`;
-  $('counts').textContent=`まだ分からない：${c.unknown}問 ／ 未回答：${questions.length-c.done}問`;
+  $('counts').textContent=c.done<questions.length?`残り${questions.length-c.done}問`:'';
   rows('resultRows');
   const missed=i=>answers[i]&&answers[i].value!==questions[i].answer;
   const recommendation=$('nextTitle').parentElement;
