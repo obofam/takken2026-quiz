@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Spotify埋め込みテスト</title>
+<style>
+  body { margin: 0; padding: 16px; font-family: system-ui, sans-serif; color: #1f2933; background: #fff; line-height: 1.6; }
+  h1 { font-size: 18px; margin: 0 0 12px; }
+  #player { margin: 0 0 16px; }
+  .row { display: flex; justify-content: space-between; border-bottom: 1px solid #e5e7eb; padding: 6px 0; font-size: 15px; }
+  .row b { font-variant-numeric: tabular-nums; }
+  #done { margin: 16px 0; padding: 10px 12px; border-radius: 8px; background: #f1f5f9; font-weight: bold; }
+  #done.ok { background: #ecfccb; }
+  #env { margin-top: 16px; font-size: 12px; color: #6b7280; word-break: break-all; }
+  #log { font-size: 12px; color: #6b7280; white-space: pre-wrap; max-height: 160px; overflow: auto; }
+</style>
+</head>
+<body>
+<h1>Spotify埋め込みテスト</h1>
+<div id="player"></div>
+
+<div class="row"><span>APIの読み込み</span><b id="api">待機中</b></div>
+<div class="row"><span>状態</span><b id="state">—</b></div>
+<div class="row"><span>再生位置</span><b id="pos">—</b></div>
+<div class="row"><span>実際に聴いた時間</span><b id="heard">0秒</b></div>
+<div id="done">80%まで聴くと、ここが「記録しました」に変わります</div>
+
+<div id="log"></div>
+<div id="env"></div>
+
+<script>
+  // 確認したいこと：LINEのブラウザで、ログインなしで最後まで再生でき、再生位置を受け取れるか
+  var EPISODE = new URLSearchParams(location.search).get('ep') || '5Sxg5jwUACbNnM9F5JLDif';
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = function (ms) { var s = Math.floor(ms / 1000); return Math.floor(s / 60) + '分' + String(s % 60).padStart(2, '0') + '秒'; };
+  var log = function (t) { $('log').textContent = new Date().toLocaleTimeString() + ' ' + t + '\n' + $('log').textContent; };
+  $('env').textContent = navigator.userAgent;
+
+  var heardMs = 0, last = null, recorded = false;
+
+  window.onSpotifyIframeApiReady = function (IFrameAPI) {
+    $('api').textContent = 'OK';
+    IFrameAPI.createController($('player'), { uri: 'spotify:episode:' + EPISODE, width: '100%', height: 232 }, function (c) {
+      c.addListener('ready', function () { log('ready'); });
+      c.addListener('playback_update', function (e) {
+        var d = e.data;
+        $('state').textContent = d.isPaused ? '一時停止' : (d.isBuffering ? '読み込み中' : '再生中');
+        $('pos').textContent = fmt(d.position) + ' / ' + fmt(d.duration);
+        // 飛ばした分は数えず、続けて進んだ分（5秒以内の前進）だけ足す
+        if (!d.isPaused && last !== null) {
+          var step = d.position - last;
+          if (step > 0 && step < 5000) heardMs += step;
+        }
+        last = d.position;
+        $('heard').textContent = fmt(heardMs);
+        if (!recorded && d.duration > 0 && heardMs >= d.duration * 0.8) {
+          recorded = true;
+          $('done').textContent = '記録しました（80%）';
+          $('done').className = 'ok';
+          log('80% reached');
+        }
+      });
+    });
+  };
+  setTimeout(function () { if ($('api').textContent === '待機中') $('api').textContent = '読み込めない'; }, 8000);
+</script>
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+</body>
+</html>
