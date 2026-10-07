@@ -30,10 +30,10 @@ test('no records: the first episode of the ledger, as 次の回',()=>{
   assert.deepEqual(ids(items),['ep1','ep2','ep3']);
   assert.ok(items.every(x=>x.kind==='next'));
 });
-test('review: latest wrong comes first with 前回 n/m問 and the question topic; next continues after the highest solved episode',()=>{
+test('review: latest wrong comes first with これまで n/m問 and the question topic; next continues after the highest solved episode',()=>{
   const rows=[...solve(1,'2026-09-20T00:00:00Z'),{quiz_id:'ep2',question_id:'ep2-q1',value:false,answered_at:'2026-09-21T00:00:00Z'},...solve(2,'2026-09-21T00:00:01Z').slice(1)];
   const items=navi.pick(rows,catalogOf(6),NOW);
-  assert.equal(items[0].kind,'review');assert.equal(items[0].quizId,'ep2');assert.equal(items[0].reason,'前回 0/1問');assert.equal(items[0].topic,'論点2-1');
+  assert.equal(items[0].kind,'review');assert.equal(items[0].quizId,'ep2');assert.equal(items[0].reason,'これまで 0/1問');assert.equal(items[0].topic,'論点2-1');
   assert.equal(items[1].kind,'next');assert.equal(items[1].quizId,'ep3');
 });
 test('次の回 wraps around to the start when nothing is left after the highest solved episode',()=>{

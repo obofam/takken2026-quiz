@@ -32,7 +32,7 @@
     const reviews=karteCore.summarize(past,cat).review;
     const takeReview=()=>{
       const t=reviews.find(x=>!used.has(x.quizId));
-      return t?make('review',t.quizId,'前回 '+t.correct+'/'+t.total+'問',t.topic):null;
+      return t?make('review',t.quizId,'これまで '+t.correct+'/'+t.total+'問',t.topic):null;
     };
     // 次の回：今週より前に解いた回のうち番号が最大の回の次から台帳順（最後まで無ければ先頭から）。
     let from=0,top=-Infinity;
