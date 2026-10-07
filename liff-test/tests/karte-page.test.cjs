@@ -36,7 +36,7 @@ test('logged out (401 or 403): only the login guide is shown',async()=>{
   }
 });
 test('logged in without a learning-karte entitlement: guide and test checkout, no body',async()=>{
-  for(const body of [login,{...login,entitlements:[]},{...login,entitlements:[{plan:'take',valid_until:null}]},{...login,entitlements:'ume'}]){
+  for(const body of [login,{...login,entitlements:[]},{...login,entitlements:'ume'}]){
     const h=harness();h.sessions([body]);await h.start();
     assert.deepEqual(visible(h),['noEntitlement']);
   }
@@ -293,7 +293,8 @@ test('account.html and ep10-preview.html logout buttons also clear the karte cac
 // ---- 10/6 カードの組み直し：主役は「復習する論点」「分野別の正答率」 ----
 test('karte body: the summary is one small line, and no stat tiles are drawn',async()=>{
   const h=harness();h.sessions([withUme]);h.karte({rows:answerRows});await h.start();
-  const body=h.node('karteBody').innerHTML;
+  // ume only: the one-line navi guide sits above the summary (Sprint 5); the summary still comes first after it.
+  const body=h.node('karteBody').innerHTML.replace(/^<p class="navi-teaser">[\s\S]*?<\/p>/,'');
   assert.ok(!body.includes('rp-stat'));assert.ok(!body.includes('<span>放送</span>'));
   assert.equal((body.match(/id="karteSummary"/g)||[]).length,1);
   // the summary comes first, before both cards; only the numbers are bold

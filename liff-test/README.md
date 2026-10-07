@@ -67,6 +67,7 @@ Kei の赤入れ「全体的にわかりづらい。全体の構成が把握し�
 - Stripeクライアントは `lib/stripe.js` の `setClient()` で差し替え可能（テストはStripeを呼ばない）。署名検証は `stripe.webhooks.generateTestHeaderString` のヘッダーで検証。
 - テスト：`npm test` 128件（Sprint 1 の90件＋Sprint 2 の38件。既存3件は session 応答に `entitlements` を含める形へ更新）。
 - `scripts/db-users.mjs` に entitlements の件数とplan（`ume~2027-10-17`）を表示。
+- `scripts/db-grant.mjs <利用者id先頭8文字> <ume|take|matsu> [--revoke]` でテスト用に権利を足す／消す（Sprint 5。学習ナビ「今週の3つ」の確認用）。
 
 ### Sprint 2 の環境変数名（値は書かない。`.env.local` と Vercel に設定）
 

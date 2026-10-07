@@ -114,6 +114,25 @@ html{scroll-padding-top:60px}
 .subject-bar i{display:block;height:100%;background:var(--cyan);border-radius:99px}
 .karte-note{font-size:12px;line-height:1.7;color:var(--muted);margin:0}
 </style>
+<style>
+/* 学習ナビ「今週の3つ」：karte-card と同じ系統。余白多め・装飾少なめ */
+.navi-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.navi-head h2{margin:0}
+.navi-head .plan-dot{font-size:13px}
+.navi-help{font-size:14px;line-height:1.6;color:var(--muted);margin:6px 0 0}
+.navi-item{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 12px;padding:16px 0;border-bottom:1px solid var(--line)}
+.navi-item:last-of-type{border-bottom:0;padding-bottom:0}
+.navi-item.is-done{opacity:.5}
+.navi-kind{font-size:12px;font-weight:700;letter-spacing:.06em;color:#126981;margin:0}
+.navi-title{font-size:17px;font-weight:700;line-height:1.6;margin:0}
+.navi-reason{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
+.navi-side{grid-column:2;grid-row:1/4;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.navi-done{font-size:13px;font-weight:700;color:var(--muted)}
+.navi-audio{font-size:13px}
+.navi-all-done{font-size:14px;line-height:1.6;color:var(--muted);margin:14px 0 0}
+.navi-teaser{font-size:14px;line-height:1.6;margin:0 0 18px}
+@media(max-width:480px){.navi-title{font-size:15px}.navi-item{grid-template-columns:1fr}.navi-side{grid-column:1;grid-row:auto;flex-direction:row;align-items:center;justify-content:flex-start;margin-top:6px}}
+</style>
 <style>/* mobile-scale 10/6 */html{-webkit-text-size-adjust:100%;text-size-adjust:100%}@media(max-width:480px){body{font-size:15px;line-height:1.75}.wrap{padding:0 16px}.band{padding:22px 0}.card,#entitled{padding:18px}h1,#entitled h1{font-size:22px;line-height:1.45;margin-bottom:10px}.label{font-size:12px}.fact,#untilRow{font-size:15px}.rp-stats{gap:8px;margin:14px 0}.rp-stat{padding:10px 6px}.rp-stat b{font-size:17px}.rp-stat span{font-size:11px}.subject-results h2{font-size:17px}.subject-row{padding:10px 0}.subject-row>span{font-size:15px}.subject-row>b{font-size:15px}.rp-weak-main b{font-size:15px}.rp-weak-tag{font-size:11px;margin-left:6px}.rp-weak-count,.rp-weak-link{font-size:13px}.karte-note,.report-muted{font-size:12px}header p{font-size:14px}}</style>
 </head>
 <body>
@@ -146,16 +165,17 @@ html{scroll-padding-top:60px}
 <footer><div class="wrap"><p>静かに、淡々と。</p><a href="plans-preview.html">学習サポートの一覧</a></div></footer>
 <script src="/quiz-catalog.js"></script>
 <script src="/karte-core.js"></script>
+<script src="/navi-core.js"></script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
-const PLAN='ume',POLL_MS=3000,POLL_MAX=5;
-let userId='',validUntil=null,cachedUser='',cachedShown=false;
+const PLANS=['ume','take','matsu'],POLL_MS=3000,POLL_MAX=5;
+let userId='',validUntil=null,cachedUser='',cachedShown=false,naviMode='';
 // 端末に前回の記録を残し、開いた瞬間に出す。最終判定は常にサーバー（/api/session と /api/karte）。
 const CACHE_PREFIX='mimiobo-karte-cache-v1:',LAST_KEY='mimiobo-karte-last-user',CACHE_MAX_MS=14*24*60*60*1000;
 function saveCache(rows){
   try{
-    localStorage.setItem(CACHE_PREFIX+userId,JSON.stringify({savedAt:Date.now(),validUntil,rows}));
+    localStorage.setItem(CACHE_PREFIX+userId,JSON.stringify({savedAt:Date.now(),validUntil,navi:naviMode,rows}));
     localStorage.setItem(LAST_KEY,userId);
   }catch{}
 }
@@ -174,7 +194,7 @@ function readCache(){
     const now=Date.now();
     if(c.savedAt>now+60000||now-c.savedAt>CACHE_MAX_MS)return null;
     if(c.validUntil!=null&&!(new Date(c.validUntil).getTime()>now))return null;
-    return {id,validUntil:c.validUntil??null,rows:c.rows};
+    return {id,validUntil:c.validUntil??null,navi:c.navi==='card'||c.navi==='teaser'?c.navi:'',rows:c.rows};
   }catch{return null;}
 }
 function showUntil(value){
@@ -184,7 +204,8 @@ function showUntil(value){
 function paintCache(){
   const c=readCache();if(!c)return;
   try{
-    const html=renderKarte(window.MimioboKarteCore.summarize(c.rows,window.MimioboCatalog));
+    naviMode=c.navi;
+    const html=renderNavi(c.rows)+renderKarte(window.MimioboKarteCore.summarize(c.rows,window.MimioboCatalog));
     cachedUser=c.id;cachedShown=true;showUntil(c.validUntil);show('entitled');
     $('karteBody').innerHTML=html;$('karteStatus').textContent='前回の記録を表示しています。';
   }catch{cachedUser='';cachedShown=false;}
@@ -207,7 +228,9 @@ async function fetchSession(){
   if(!response.ok)throw Error('service_unavailable');
   return response.json();
 }
-const karteRight=data=>(Array.isArray(data.entitlements)?data.entitlements:[]).find(e=>e&&e.plan===PLAN);
+const karteRight=data=>(Array.isArray(data.entitlements)?data.entitlements:[]).find(e=>e&&PLANS.includes(e.plan));
+// 学習ナビ（今週の3つ）は take か matsu の人だけ。ume だけの人には1行の案内。
+const naviOf=data=>(Array.isArray(data.entitlements)?data.entitlements:[]).some(e=>e&&(e.plan==='take'||e.plan==='matsu'))?'card':'teaser';
 function render(data){
   $('status').textContent='';
   window.MimioboHeader?.set?.(!data.loggedOut);
@@ -216,6 +239,7 @@ function render(data){
   const right=karteRight(data);
   if(!right){show('noEntitlement');return;}
   validUntil=right.valid_until||null;
+  naviMode=naviOf(data);
   showUntil(right.valid_until);
   show('entitled');
   return loadKarte();
@@ -230,6 +254,16 @@ async function fetchKarte(){
   return {rows:Array.isArray(data?.rows)?data.rows:[]};
 }
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const NAVI_KIND={review:'復習',next:'次の回',recheck:'確かめ直し'};
+function renderNavi(rows){
+  if(naviMode==='teaser')return '<p class="navi-teaser"><a href="plans-preview.html#take">学習ナビ｜今週やることを決める</a></p>';
+  if(naviMode!=='card')return '';
+  const items=window.MimioboNaviCore.pick(rows,window.MimioboCatalog,Date.now());
+  const list=items.map(x=>'<div class="navi-item'+(x.done?' is-done':'')+'"><p class="navi-kind">'+NAVI_KIND[x.kind]+'</p><p class="navi-title">第'+x.episode+'回 '+esc(x.title)+'</p><p class="navi-reason">'+esc(x.reason)+'</p>'
+    +'<div class="navi-side">'+(x.done?'<span class="navi-done">済</span>':'')+'<a class="rp-weak-link" href="'+esc(x.page)+'">3問を解く</a>'+(x.audioUrl?'<a class="navi-audio" href="'+esc(x.audioUrl)+'" target="_blank" rel="noopener noreferrer">音声</a>':'')+'</div></div>').join('');
+  return '<section class="karte-card navi-card"><div class="navi-head"><span class="plan-dot dot-take"><img class="plan-dot-icon" src="img/icons/plan-navi.svg" alt="" width="18" height="18">学習ナビ</span><h2>今週の3つ</h2></div><p class="navi-help">毎週月曜に、記録から決まります。</p>'+list
+    +(items.length&&items.every(x=>x.done)?'<p class="navi-all-done">今週の3つは済みました。</p>':'')+'</section>';
+}
 function renderKarte(s){
   if(!s.stats.answers)return '<p>まだ記録がありません。</p><div class="actions"><a class="primary" href="ep10-preview.html">3問チェックを始める</a></div>';
   const rows=s.subjects.map(x=>'<div class="subject-row"><span>'+esc(x.name)+'</span><b>'+x.correct+' / '+x.total+'問</b><div class="subject-bar"><i style="width:'+Math.round(x.correct/x.total*1000)/10+'%"></i></div></div>').join('');
@@ -245,7 +279,7 @@ async function loadKarte(){
   try{
     const result=await fetchKarte();
     if(result.loggedOut||result.notEntitled){clearUserCache(userId);cachedShown=false;$('karteBody').innerHTML='';$('karteStatus').textContent='';show(result.loggedOut?'needLogin':'noEntitlement');return;}
-    $('karteBody').innerHTML=renderKarte(window.MimioboKarteCore.summarize(result.rows,window.MimioboCatalog));
+    $('karteBody').innerHTML=renderNavi(result.rows)+renderKarte(window.MimioboKarteCore.summarize(result.rows,window.MimioboCatalog));
     $('karteStatus').textContent='';cachedShown=false;
     saveCache(result.rows);
   }catch{if(!cachedShown)$('karteStatus').textContent=msg('service_unavailable');}
