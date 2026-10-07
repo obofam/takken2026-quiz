@@ -20,6 +20,7 @@
 <body>
 <h1>Spotify埋め込みテスト</h1>
 <div id="player"></div>
+<p><button id="play" type="button" style="font-size:15px;padding:8px 16px">ページ側から再生／停止</button></p>
 
 <div class="row"><span>APIの読み込み</span><b id="api">待機中</b></div>
 <div class="row"><span>状態</span><b id="state">—</b></div>
@@ -43,6 +44,7 @@
   window.onSpotifyIframeApiReady = function (IFrameAPI) {
     $('api').textContent = 'OK';
     IFrameAPI.createController($('player'), { uri: 'spotify:episode:' + EPISODE, width: '100%', height: 232 }, function (c) {
+      $('play').onclick = function () { c.togglePlay(); log('togglePlay'); };
       c.addListener('ready', function () { log('ready'); });
       c.addListener('playback_update', function (e) {
         var d = e.data;
