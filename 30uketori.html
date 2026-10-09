@@ -582,6 +582,7 @@
       .tag { width: fit-content; }
     }
   </style>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
 </head>
 <body>
   <div class="gate" id="gate">
@@ -1559,5 +1560,20 @@
     window.addEventListener("load", openHashDetails);
     window.addEventListener("hashchange", openHashDetails);
   </script>
+<script>
+// ラスト30日の限定音声：再生と最後まで聞いたかを Umami で数える（1回の表示につき1ファイル1回）
+(function(){
+  const seen = new Set();
+  function send(name, el){
+    const file = (el.getAttribute('src')||'').replace(/^audio\//,'');
+    const k = name + file;
+    if (seen.has(k) || !window.umami) return;
+    seen.add(k);
+    umami.track(name, {file: file});
+  }
+  document.addEventListener('play', e => { if (e.target.tagName === 'AUDIO') send('last30_audio_play', e.target); }, true);
+  document.addEventListener('ended', e => { if (e.target.tagName === 'AUDIO') send('last30_audio_end', e.target); }, true);
+})();
+</script>
 </body>
 </html>
