@@ -9,164 +9,148 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--ac:#17C5E8;--ac-soft:color-mix(in srgb,#17C5E8 12%,white);--ink:#141B21;--sub:#6B6B76;--bd:#ececec}
-html{-webkit-text-size-adjust:100%}
-body{font-family:"Noto Sans JP",system-ui,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink);background:#fff;font-size:17px;line-height:1.9;font-weight:400}
-.wrap{max-width:720px;margin:0 auto;padding:48px 20px 64px}
-.over{font-size:12px;letter-spacing:.15em;color:var(--ac);font-weight:700;text-align:center;text-transform:uppercase}
-h1{font-size:34px;font-weight:900;text-align:center;line-height:1.4;margin:6px 0 20px}
-.lead{background:var(--ac-soft);border-radius:14px;padding:18px 20px;margin-bottom:16px}
-.lead p+p{margin-top:8px}
-.lead b{font-weight:700}
-.howto{font-size:15px;color:var(--sub);line-height:1.8}
-section{margin-top:64px}
-h2{font-size:32px;font-weight:900;text-align:center;line-height:1.4;margin:6px 0 24px}
-h3{font-size:20px;font-weight:900;margin:40px 0 4px;padding-bottom:6px;border-bottom:2px solid var(--ac)}
-.ver{font-size:15px;color:var(--sub);margin:6px 0 14px;line-height:1.7}
-.tbl{overflow-x:auto;background:#fff;border:1px solid var(--bd);border-radius:14px;box-shadow:0 2px 8px rgba(20,27,33,.04)}
-table{width:100%;border-collapse:collapse;font-size:17px;line-height:1.75}
-th{font-size:13px;font-weight:700;color:var(--sub);text-align:left;padding:12px;border-bottom:1px solid var(--bd);white-space:nowrap;background:#fafafa}
-td{padding:14px 12px;border-bottom:1px solid var(--bd);vertical-align:top}
-tbody tr:last-child td{border-bottom:0}
-.c-t{width:24%;font-weight:700}
-.c-w{width:26%}
-.c-r{width:30%}
-.c-p{width:20%;font-size:14px;color:var(--sub)}
-s{color:#8a8a94;text-decoration:line-through;text-decoration-thickness:1.5px}
-.c-r b{font-weight:900}
-.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.05em;color:var(--ink);background:var(--ac-soft);border:1px solid var(--ac);border-radius:999px;padding:0 10px;line-height:1.8;margin-bottom:6px}
-.tt{display:block}
-.note{display:block;font-size:14px;color:var(--sub);font-weight:400;margin-top:6px;line-height:1.7}
-.after{font-size:15px;color:var(--sub);margin-top:12px;line-height:1.8}
-.box{border:1px solid var(--bd);border-radius:14px;box-shadow:0 2px 8px rgba(20,27,33,.04);padding:8px 20px}
-.box dl>div{padding:14px 0;border-bottom:1px solid var(--bd)}
-.box dl>div:last-child{border-bottom:0}
-.box dt{font-weight:700}
-.box dd{margin-top:2px}
-.foot{margin-top:64px;text-align:center;font-size:14px;color:var(--sub)}
-@media (max-width:599px){
-  .wrap{padding:36px 16px 56px}
-  h1{font-size:30px}
-  h2{font-size:28px}
-  .tbl{overflow:visible;background:none;border:0;box-shadow:none;border-radius:0}
-  table,thead,tbody,tr,td{display:block;width:100%}
+body{margin:0;background:#fff;color:#141B21;font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;font-size:16px;line-height:1.8}
+.wrap{max-width:720px;margin:0 auto;padding:32px 16px 48px}
+h1{font-size:22px;font-weight:700;margin:0 0 16px}
+h2{font-size:18px;font-weight:700;margin:40px 0 8px;padding-bottom:4px;border-bottom:1px solid #ccc}
+p{margin:0 0 12px}
+a{color:#141B21;text-decoration:underline}
+.ver{color:#555;font-size:14px;margin:0 0 8px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:8px 0 16px}
+th,td{border:1px solid #ccc;padding:6px 8px;vertical-align:top;text-align:left}
+th{background:#f4f4f4;font-weight:700;font-size:14px}
+.c-t{width:24%}.c-w{width:24%}.c-r{width:32%}.c-p{width:20%;font-size:13px;color:#555}
+s{color:#777}
+.dt{display:block;color:#777;font-size:12px}
+.tt{font-weight:700}
+.box{border:1px solid #333;padding:12px 16px;margin:16px 0 8px}
+.boxt{font-weight:700;margin:0 0 8px}
+.box dl{margin:0}.box dt{font-weight:700;margin-top:8px}.box dd{margin:0 0 4px}
+.foot{margin-top:40px;font-size:13px;color:#555}
+.upd{margin-left:12px}
+@media (max-width:600px){
+  table,thead,tbody,tr,th,td{display:block}
   thead{display:none}
-  tr{background:#fff;border:1px solid var(--bd);border-radius:14px;box-shadow:0 2px 8px rgba(20,27,33,.04);padding:6px 16px;margin-bottom:12px}
-  td{width:auto!important;border-bottom:1px solid var(--bd);padding:10px 0}
-  tbody tr td:last-child{border-bottom:0}
-  td::before{content:attr(data-label);display:block;font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--sub);margin-bottom:2px}
+  tr{border-top:1px solid #ccc;padding:8px 0}
+  td{border:0;padding:2px 0;width:auto}
+  td::before{content:attr(data-label);display:inline;color:#555;font-size:12px;margin-right:6px}
   .c-t::before{display:none}
-  .c-t{font-size:18px;font-weight:900;padding-top:12px}
-  .c-p{font-size:15px}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-<div class="over">Errata</div>
-<h1>教材の修正履歴</h1>
-<div class="lead">
-<p><b>まず「試験で大事な7つのポイント」をご確認ください。</b>その他の訂正は、お使いの教材別にここで確認できます。点検で見つかった訂正は、すべて載せています。</p>
-<p>試験の前に、教材をすべて点検し直しました。確認の基準は、2026年4月1日に施行されている法令です。</p>
-<p>言い回しの修正は改訂版へ反映します。購入済みの方は、改訂版を無料で受け取れます。</p>
+<h1>修正履歴</h1>
+<p>教材を点検し直して見つかった訂正について、正しい内容と対応状況をまとめています。確認の基準は、2026年4月1日に施行されている法令です。答えや数字に関わる訂正を載せています。言い回しだけの修正は改訂版に反映しています。</p>
+<p>まず、<a href="pdf/teisei_2026-10-15.pdf">訂正PDF</a>（1枚）をご確認ください。「試験前に確認していただきたい訂正」をまとめた1枚です。</p>
+<div class="box">
+<p class="boxt">修正済み教材の受け取り方</p><dl>
+<div><dt>noteで購入したPDF</dt><dd>記事に添付しているファイルを修正済みの版に差し替えてあります。もう一度ダウンロードしてください（追加の費用はありません）。</dd></div>
+<div><dt>ラスト30日プログラムの最終チェック・ロードマップ</dt><dd>受け取りページのPDFを差し替えてありますので、ダウンロードして保存している方は再度ダウンロードしてください。</dd></div>
+<div><dt>ラスト30日プログラムの限定音声</dt><dd>誤りのあった段落の音声を差し替えてあります。受け取りページから聴き直せます。</dd></div>
+</dl>
 </div>
-<p class="howto">いくつかの教材にまたがる訂正は、最初に挙げた教材の欄に1回だけ載せ、「場所」の列に該当する教材をすべて書いています。「本番前に確認」は、出題されやすい7か所です。</p>
 </header>
 
-<section id="u20261015">
-<div class="over">2026-10-15 — Update</div>
-<h2>2026-10-15 の訂正</h2>
-<h3>宅建業法PDF</h3>
-<p class="ver">旧版 v7／訂正版 v8</p>
+<section id="gyoho">
+<h2>宅建業法PDF</h2>
+<p class="ver">修正済みの最新版は v8 です。ページ番号は v7 のものです。</p>
 <div class="tbl"><table><thead><tr><th>論点</th><th>教材の記載</th><th>正しくは</th><th>場所</th></tr></thead><tbody>
-<tr class="pri"><td class="c-t" data-label="論点"><span class="tag">本番前に確認</span><span class="tt">保証協会：分担金を納める期限</span></td><td class="c-w" data-label="教材の記載"><s>社員になった日から2週間以内に納付</s></td><td class="c-r" data-label="正しくは"><b>加入しようとする日までに納付</b></td><td class="c-p" data-label="場所">業法PDF p.6・17・25／最終チェック①／限定音声01・06・09</td></tr>
-<tr class="pri"><td class="c-t" data-label="論点"><span class="tag">本番前に確認</span><span class="tt">監督処分：指示・業務停止ができる人</span></td><td class="c-w" data-label="教材の記載"><s>免許権者だけ</s></td><td class="c-r" data-label="正しくは"><b>免許権者に加えて、業務を行った都道府県の知事もできる</b></td><td class="c-p" data-label="場所">業法PDF p.14／限定音声09</td></tr>
-<tr class="pri"><td class="c-t" data-label="論点"><span class="tag">本番前に確認</span><span class="tt">住宅瑕疵担保履行法：基準日</span></td><td class="c-w" data-label="教材の記載"><s>3月31日と9月30日の年2回</s></td><td class="c-r" data-label="正しくは"><b>毎年3月31日の年1回</b></td><td class="c-p" data-label="場所">業法PDF p.14・34</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">帳簿の保存</span></td><td class="c-w" data-label="教材の記載"><s>取引終了後5年（新築住宅10年）</s></td><td class="c-r" data-label="正しくは"><b>各事業年度の末に閉鎖し、閉鎖後5年保存（自ら売主となる新築住宅は10年）</b></td><td class="c-p" data-label="場所">業法PDF p.5・18</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">免許の更新</span></td><td class="c-w" data-label="教材の記載"><s>更新申請しなくても処分までは従前免許有効</s></td><td class="c-r" data-label="正しくは"><b>期限内に更新申請をしたのに処分が出ないときだけ、従前の免許が続く。申請しなければ満了で失効</b></td><td class="c-p" data-label="場所">業法PDF p.4・20</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">案内所の届出</span></td><td class="c-w" data-label="教材の記載"><s>一団の分譲の案内所を設置する場合に届出</s></td><td class="c-r" data-label="正しくは"><b>契約の締結や申込みの受付をする案内所が対象。10日前までに免許権者と所在地の知事へ</b></td><td class="c-p" data-label="場所">業法PDF p.35</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">空家等の報酬特例</span></td><td class="c-w" data-label="教材の記載"><s>売主から媒介・代理を依頼された業者は現地調査費を報酬に上乗せ可能（税込33万円以内）</s></td><td class="c-r" data-label="正しくは"><b>売主側だけでなく、売買の依頼者それぞれから税込33万円まで（800万円以下の物件、事前の説明と合意が条件）</b></td><td class="c-p" data-label="場所">業法PDF p.13・17</td></tr>
-</tbody></table></div>
-<h3>権利関係PDF</h3>
-<p class="ver">旧版 v6／訂正版 v7</p>
-<div class="tbl"><table><thead><tr><th>論点</th><th>教材の記載</th><th>正しくは</th><th>場所</th></tr></thead><tbody>
-<tr class="pri"><td class="c-t" data-label="論点"><span class="tag">本番前に確認</span><span class="tt">区分所有法（2026年改正）：共用部分の著しい変更の決議</span></td><td class="c-w" data-label="教材の記載"><s>規約で下げられるのは人数だけ。Q44は×</s></td><td class="c-r" data-label="正しくは"><b>出席者の人数・議決権とも、規約で4分の3より低くできる（2分の1超まで）。Q44は○</b></td><td class="c-p" data-label="場所">権利PDF p.13・34</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">根抵当権 Q19</span></td><td class="c-w" data-label="教材の記載"><s>設定日から5年以内で定めなければならない（○）。定めなければ3年で自動確定</s></td><td class="c-r" data-label="正しくは"><b>答えは×。確定期日を定めるかは自由。定めるなら「定めた日から5年以内」。定めなくても3年で確定はしない</b></td><td class="c-p" data-label="場所">権利PDF p.26</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">抵当権の元本</span></td><td class="c-w" data-label="教材の記載"><s>元本と期限切れ利息は優先弁済対象外</s></td><td class="c-r" data-label="正しくは"><b>元本は全額が担保される。「最後の2年分」の制限は利息などの話</b></td><td class="c-p" data-label="場所">権利PDF p.25</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">自己契約・双方代理</span></td><td class="c-w" data-label="教材の記載"><s>事後許諾は無効</s></td><td class="c-r" data-label="正しくは"><b>事前の許諾がなくても、本人があとから追認できる</b></td><td class="c-p" data-label="場所">権利PDF p.5・23</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">無権代理の催告</span></td><td class="c-w" data-label="教材の記載"><s>確答を3ヶ月内</s></td><td class="c-r" data-label="正しくは"><b>期間は3か月ではなく「相当の期間」</b></td><td class="c-p" data-label="場所">権利PDF p.22</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">表見代理</span></td><td class="c-w" data-label="教材の記載"><s>本人に帰責性＋相手方が善意</s></td><td class="c-r" data-label="正しくは"><b>相手方は善意だけでなく無過失（または正当な理由）が必要</b></td><td class="c-p" data-label="場所">権利PDF p.5</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">保証意思宣明公正証書</span></td><td class="c-w" data-label="教材の記載"><s>契約の1ヶ月前まで</s></td><td class="c-r" data-label="正しくは"><b>契約の「前1か月以内」に作成（1か月前までに、ではない）</b></td><td class="c-p" data-label="場所">権利PDF p.9</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">根保証の元本確定期日（5年・3年）</span></td><td class="c-w" data-label="教材の記載"><s>個人根保証の数字：元本確定期日上限 5年／定めなし 3年で自動確定</s></td><td class="c-r" data-label="正しくは"><b>個人「貸金等」根保証だけの話。住宅の賃貸借の保証には当てはまらない</b></td><td class="c-p" data-label="場所">権利PDF p.9</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">半血の兄弟姉妹 Q36</span></td><td class="c-w" data-label="教材の記載"><s>全血1/3ずつ、半血1/6</s></td><td class="c-r" data-label="正しくは"><b>全血2人＋半血1人なら 2/5・2/5・1/5。全血と半血は2対1</b></td><td class="c-p" data-label="場所">権利PDF p.31</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">定期借家の中途解約</span></td><td class="c-w" data-label="教材の記載"><s>借主からの中途解約は200㎡未満の居住用建物に限り認められる</s></td><td class="c-r" data-label="正しくは"><b>200㎡未満の居住用に加えて「やむを得ない事情」が必要</b></td><td class="c-p" data-label="場所">権利PDF p.30／限定音声04</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">定期借家の事前説明</span></td><td class="c-w" data-label="教材の記載"><s>別紙書面で事前説明が必須</s></td><td class="c-r" data-label="正しくは"><b>書面が原則。借主の承諾など要件を満たせば電磁的方法でもできる</b></td><td class="c-p" data-label="場所">権利PDF p.10・11</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">建替え後の賃貸借の終了</span></td><td class="c-w" data-label="教材の記載"><s>補償金提供後6ヶ月経過で終了</s></td><td class="c-r" data-label="正しくは"><b>終了請求の日から6か月で終了。補償金を受け取るまでは明渡しを拒める</b></td><td class="c-p" data-label="場所">権利PDF p.19・36／最終チェック／限定音声10</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">規約の変更・大規模滅失の復旧</span></td><td class="c-w" data-label="教材の記載"><s>規約変更・大規模滅失復旧 3/4（頭数・議決権）</s></td><td class="c-r" data-label="正しくは"><b>定足数を満たした集会で、出席者の各3/4（復旧は各2/3）</b></td><td class="c-p" data-label="場所">権利PDF p.13・15</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">団地の一括建替え</span></td><td class="c-w" data-label="教材の記載"><s>一括建替え：全体4/5を3/4に緩和</s></td><td class="c-r" data-label="正しくは"><b>原則は全体の各4/5。全棟が所定の事由に当たるときだけ各3/4</b></td><td class="c-p" data-label="場所">権利PDF p.15・19</td></tr>
-</tbody></table></div>
-<h3>法令上の制限・税PDF</h3>
-<p class="ver">旧版 v1.1／訂正版 v1.2</p>
-<div class="tbl"><table><thead><tr><th>論点</th><th>教材の記載</th><th>正しくは</th><th>場所</th></tr></thead><tbody>
-<tr class="pri"><td class="c-t" data-label="論点"><span class="tag">本番前に確認</span><span class="tt">国土利用計画法：準都市計画区域の事後届出</span></td><td class="c-w" data-label="教材の記載"><s>5,000㎡以上</s></td><td class="c-r" data-label="正しくは"><b>10,000㎡以上</b></td><td class="c-p" data-label="場所">法令税PDF p.79／直前対策 p.11・18・21</td></tr>
-<tr class="pri"><td class="c-t" data-label="論点"><span class="tag">本番前に確認</span><span class="tt">用途制限：第一種中高層住居専用地域の店舗</span></td><td class="c-w" data-label="教材の記載"><s>店舗は建てられない</s></td><td class="c-r" data-label="正しくは"><b>床面積500㎡以下・2階以下の店舗は建てられる</b></td><td class="c-p" data-label="場所">法令税PDF p.13・15</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">第一種住居地域の事務所</span></td><td class="c-w" data-label="教材の記載"><s>事務所は「○」のみ（面積の注記なし）</s></td><td class="c-r" data-label="正しくは"><b>3,000㎡以下</b></td><td class="c-p" data-label="場所">法令税PDF p.13</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">第二種住居・準住居の店舗</span></td><td class="c-w" data-label="教材の記載"><s>二住・準住　制限なし（一部遊技施設等は制限）</s></td><td class="c-r" data-label="正しくは"><b>10,000㎡超は不可</b></td><td class="c-p" data-label="場所">法令税PDF p.13・15</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">隣地斜線</span></td><td class="c-w" data-label="教材の記載"><s>一住・二住・準住を含む「その他」を立上31m</s></td><td class="c-r" data-label="正しくは"><b>第一種・第二種住居、準住居も20m（31mになるのは特定行政庁が指定した区域）</b></td><td class="c-p" data-label="場所">法令税PDF p.19</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">田園住居地域の農地</span></td><td class="c-w" data-label="教材の記載"><s>農地の形質変更等で300㎡以上は市町村長許可（建築基準法側）</s></td><td class="c-r" data-label="正しくは"><b>形質変更や建築は原則すべて市町村長の許可が必要（300㎡未満の一定の行為は許可される）</b></td><td class="c-p" data-label="場所">法令税PDF p.27</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">農地転用 4ha超</span></td><td class="c-w" data-label="教材の記載"><s>農振区域外で農地転用都市計画を定める際の農林水産大臣協議基準</s></td><td class="c-r" data-label="正しくは"><b>通常の転用許可でも、知事は農林水産大臣と協議する</b></td><td class="c-p" data-label="場所">法令税PDF p.27</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">盛土規制法 土石の堆積</span></td><td class="c-w" data-label="教材の記載"><s>高さ2m超 又は面積500㎡超</s></td><td class="c-r" data-label="正しくは"><b>高さ2m超かつ300㎡超、または500㎡超で許可</b></td><td class="c-p" data-label="場所">法令税PDF p.32</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">固定資産税 併用住宅の敷地</span></td><td class="c-w" data-label="教材の記載"><s>家屋床面積の1/4以上が居住用なら全体が住宅用地とみなされる</s></td><td class="c-r" data-label="正しくは"><b>居住部分が1/4以上1/2未満なら敷地の1/2、1/2以上なら全部が住宅用地（5階以上の耐火建築物は別の区分）</b></td><td class="c-p" data-label="場所">法令税PDF p.40</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">登録免許税の住宅軽減</span></td><td class="c-w" data-label="教材の記載"><s>併用住宅　床面積の1/2以上が居住用</s></td><td class="c-r" data-label="正しくは"><b>併用住宅は「専ら住宅」が条件（運用では居住用が90%超）</b></td><td class="c-p" data-label="場所">法令税PDF p.47</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">相続の登録免許税</span></td><td class="c-w" data-label="教材の記載"><s>相続の所有権移転は0.4%、軽減特例なし</s></td><td class="c-r" data-label="正しくは"><b>本則0.4%。一定の相続土地登記には免税措置がある</b></td><td class="c-p" data-label="場所">法令税PDF p.48・49</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">住宅ローン控除</span></td><td class="c-w" data-label="教材の記載"><s>入居年とその前後2年</s></td><td class="c-r" data-label="正しくは"><b>入居の年と、その前2年・後3年に譲渡の特例を使うと受けられない</b></td><td class="c-p" data-label="場所">法令税PDF p.53・91</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">買換え特例の居住期間</span></td><td class="c-w" data-label="教材の記載"><s>10年超所有＋10年超居住</s></td><td class="c-r" data-label="正しくは"><b>10年「以上」（所有は10年超）</b></td><td class="c-p" data-label="場所">法令税PDF p.51</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">印紙税 売上代金以外の受取書</span></td><td class="c-w" data-label="教材の記載"><s>17号の2：その他受取書／営業外受取書等／一律200円</s></td><td class="c-r" data-label="正しくは"><b>5万円未満と営業に関しないものは非課税</b></td><td class="c-p" data-label="場所">法令税PDF p.44</td></tr>
-</tbody></table></div>
-<h3>直前対策PDF</h3>
-<p class="ver">旧版 v4／訂正版 v5</p>
-<div class="tbl"><table><thead><tr><th>論点</th><th>教材の記載</th><th>正しくは</th><th>場所</th></tr></thead><tbody>
-<tr><td class="c-t" data-label="論点"><span class="tt">代理の報酬</span></td><td class="c-w" data-label="教材の記載"><s>代理での報酬は、媒介の報酬の2倍以内</s></td><td class="c-r" data-label="正しくは"><b>媒介の2倍までになるのは売買・交換。貸借は合計1か月分まで</b></td><td class="c-p" data-label="場所">限定音声03／直前対策</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">期間1年未満の賃貸借</span></td><td class="c-w" data-label="教材の記載"><s>借家で1年未満の期間を定めた場合は、期間の定めがない賃貸借とみなされる</s></td><td class="c-r" data-label="正しくは"><b>「期間の定めがない」扱いになるのは普通借家。定期借家は1年未満でも有効</b></td><td class="c-p" data-label="場所">限定音声07・10／直前対策</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">区分所有法 集会の定足数</span></td><td class="c-w" data-label="教材の記載"><s>定足数は出席者の過半数</s></td><td class="c-r" data-label="正しくは"><b>出席者の過半数ではなく、全区分所有者の人数・議決権の各過半数が出席</b></td><td class="c-p" data-label="場所">限定音声08／直前対策</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">3,000万円控除</span></td><td class="c-w" data-label="教材の記載"><s>3000万円は誰でも使える特別控除</s></td><td class="c-r" data-label="正しくは"><b>使えるのは自分が住んでいた家屋とその敷地。誰でもではない</b></td><td class="c-p" data-label="場所">限定音声02／直前対策</td></tr>
-</tbody></table></div>
-<h3>ラスト30日プログラム</h3>
-<p class="ver">最終チェック・ロードマップ：旧版 v1／訂正版 v1.1。限定音声01〜11：台本を訂正し、音声は改訂版で差し替える予定です。</p>
-<div class="tbl"><table><thead><tr><th>論点</th><th>教材の記載</th><th>正しくは</th><th>場所</th></tr></thead><tbody>
-<tr class="pri"><td class="c-t" data-label="論点"><span class="tag">本番前に確認</span><span class="tt">免許の欠格事由：破産と復権</span></td><td class="c-w" data-label="教材の記載"><s>復権してから5年</s></td><td class="c-r" data-label="正しくは"><b>復権を得れば、すぐに免許を受けられる</b></td><td class="c-p" data-label="場所">限定音声01・09</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">完成物件の保全措置</span></td><td class="c-w" data-label="教材の記載"><s>手付金等の保全：未完成／完成　5%または1,000万円超／10%</s></td><td class="c-r" data-label="正しくは"><b>代金の10%以下かつ1,000万円以下なら不要（1,000万円超なら10%以下でも必要）</b></td><td class="c-p" data-label="場所">最終チェック④</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">瑕疵の除去・バリアフリー化などの工事</span></td><td class="c-w" data-label="教材の記載"><s>この4分の3という数字自体は、改正後も変わりません</s></td><td class="c-r" data-label="正しくは"><b>2026年改正で新設の各2/3決議</b></td><td class="c-p" data-label="場所">限定音声08</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">不動産取得税の床面積</span></td><td class="c-w" data-label="教材の記載"><s>床面積ライン：取得税(認定長期優良) 40㎡</s></td><td class="c-r" data-label="正しくは"><b>一般の住宅も40㎡以上240㎡以下（10月8日の正誤表のとおり）</b></td><td class="c-p" data-label="場所">最終チェック⑥／ロードマップ p.5</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">印紙税 建物の賃貸借契約書</span></td><td class="c-w" data-label="教材の記載"><s>記載金額のない契約書の印紙税 200円</s></td><td class="c-r" data-label="正しくは"><b>非課税。金額の記載がなくても200円ではない</b></td><td class="c-p" data-label="場所">最終チェック④</td></tr>
+<tr class="pri"><td class="c-t" data-label="論点"><span class="tt">保証協会：分担金を納める期限</span></td><td class="c-w" data-label="教材の記載"><s>社員になった日から2週間以内に納付</s></td><td class="c-r" data-label="正しくは"><b>加入しようとする日までに納付</b></td><td class="c-p" data-label="場所">業法PDF p.6・17・25／最終チェック①／限定音声01・06・09<span class="dt">訂正版 v8</span></td></tr>
+<tr class="pri"><td class="c-t" data-label="論点"><span class="tt">監督処分：指示・業務停止ができる人</span></td><td class="c-w" data-label="教材の記載"><s>免許権者だけ</s></td><td class="c-r" data-label="正しくは"><b>免許権者に加えて、業務を行った都道府県の知事もできる</b></td><td class="c-p" data-label="場所">業法PDF p.14／限定音声09<span class="dt">訂正版 v8</span></td></tr>
+<tr class="pri"><td class="c-t" data-label="論点"><span class="tt">住宅瑕疵担保履行法：基準日</span></td><td class="c-w" data-label="教材の記載"><s>3月31日と9月30日の年2回</s></td><td class="c-r" data-label="正しくは"><b>毎年3月31日の年1回</b></td><td class="c-p" data-label="場所">業法PDF p.14・34<span class="dt">訂正版 v8</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">帳簿の保存</span></td><td class="c-w" data-label="教材の記載"><s>取引終了後5年（新築住宅10年）</s></td><td class="c-r" data-label="正しくは"><b>各事業年度の末に閉鎖し、閉鎖後5年保存（自ら売主となる新築住宅は10年）</b></td><td class="c-p" data-label="場所">業法PDF p.5・18<span class="dt">訂正版 v8</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">免許の更新</span></td><td class="c-w" data-label="教材の記載"><s>更新申請しなくても処分までは従前免許有効</s></td><td class="c-r" data-label="正しくは"><b>期限内に更新申請をしたのに処分が出ないときだけ、従前の免許が続く。申請しなければ満了で失効</b></td><td class="c-p" data-label="場所">業法PDF p.4・20<span class="dt">訂正版 v8</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">案内所の届出</span></td><td class="c-w" data-label="教材の記載"><s>一団の分譲の案内所を設置する場合に届出</s></td><td class="c-r" data-label="正しくは"><b>契約の締結や申込みの受付をする案内所が対象。10日前までに免許権者と所在地の知事へ</b></td><td class="c-p" data-label="場所">業法PDF p.35<span class="dt">訂正版 v8</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">空家等の報酬特例</span></td><td class="c-w" data-label="教材の記載"><s>売主から媒介・代理を依頼された業者は現地調査費を報酬に上乗せ可能（税込33万円以内）</s></td><td class="c-r" data-label="正しくは"><b>売主側だけでなく、売買の依頼者それぞれから税込33万円まで（800万円以下の物件、事前の説明と合意が条件）</b></td><td class="c-p" data-label="場所">業法PDF p.13・17<span class="dt">訂正版 v8</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">罰則の用語：懲役・禁錮</span></td><td class="c-w" data-label="教材の記載"><s>6ヶ月以下の懲役または100万円以下の罰金／禁錮以上の刑</s></td><td class="c-r" data-label="正しくは"><b>2025年6月から「拘禁刑」。誇大広告などは6月以下の拘禁刑もしくは100万円以下の罰金、またはその併科（81条）。欠格事由は「拘禁刑以上の刑」</b></td><td class="c-p" data-label="場所">業法PDF p.4・31・32<span class="dt">訂正版 v8</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">報酬の速算式（Q20）</span></td><td class="c-w" data-label="教材の記載"><s>400万円超の部分につき、価額×3%＋6万円</s></td><td class="c-r" data-label="正しくは"><b>売買価額が400万円を超えるとき、上限は売買価額全体×3%＋6万円（税抜）。「400万円超の部分」に掛けるのではない</b></td><td class="c-p" data-label="場所">業法PDF p.13・26／限定音声02・09<span class="dt">訂正版 v8</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">履行法：買主が宅建業者のとき</span></td><td class="c-w" data-label="教材の記載"><s>履行法の10年間責任は、買主が宅建業者なら不適用</s></td><td class="c-r" data-label="正しくは"><b>適用除外になるのは、履行法の資力確保措置（保証金の供託・保険）。品確法の10年の瑕疵担保責任とは別の話</b></td><td class="c-p" data-label="場所">業法PDF p.14・15<span class="dt">訂正版 v8</span></td></tr>
 </tbody></table></div>
 </section>
 
-<section id="u20261008">
-<div class="over">2026-10-08 — Update</div>
-<h2>2026-10-08 の訂正</h2>
-<p class="ver">2026年4月の税制改正の反映が漏れていた箇所です。法令上の制限・税PDF v1.1、直前対策PDF v4 に反映済みです。ページ番号は旧版（法令税 v1／直前対策 v3）のものです。</p>
+<section id="kenri">
+<h2>権利関係PDF</h2>
+<p class="ver">修正済みの最新版は v7 です。ページ番号は v6 のものです。</p>
 <div class="tbl"><table><thead><tr><th>論点</th><th>教材の記載</th><th>正しくは</th><th>場所</th></tr></thead><tbody>
-<tr><td class="c-t" data-label="論点"><span class="tt">不動産取得税の免税点</span></td><td class="c-w" data-label="教材の記載"><s>土地10万円・家屋の建築23万円・その他の家屋12万円</s></td><td class="c-r" data-label="正しくは"><b>土地16万円・家屋の建築66万円・その他の家屋34万円</b></td><td class="c-p" data-label="場所">法令税PDF v1 p.37・39</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">不動産取得税　住宅の特例の床面積</span></td><td class="c-w" data-label="教材の記載"><s>50㎡以上240㎡以下（貸家は40㎡以上）／直前対策：50〜240㎡（認定長期優良・賃貸は40㎡以上）</s></td><td class="c-r" data-label="正しくは"><b>40㎡以上240㎡以下</b></td><td class="c-p" data-label="場所">法令税PDF v1 p.37・38・39・51・81 ほか／直前対策PDF v3 p.14</td></tr>
-<tr><td class="c-t" data-label="論点"><span class="tt">固定資産税　新築住宅の減額の床面積</span></td><td class="c-w" data-label="教材の記載"><s>50㎡以上280㎡以下／直前対策：50〜280㎡（賃貸40㎡以上）</s></td><td class="c-r" data-label="正しくは"><b>40㎡以上240㎡以下</b><span class="note">2026年4月1日以後の新築が対象です。それより前の新築は50㎡以上280㎡以下のままです。</span></td><td class="c-p" data-label="場所">法令税PDF v1 p.42・43・44・51・81・82・91 ほか／直前対策PDF v3 p.31</td></tr>
+<tr class="pri"><td class="c-t" data-label="論点"><span class="tt">区分所有法（2026年改正）：共用部分の著しい変更の決議</span></td><td class="c-w" data-label="教材の記載"><s>規約で下げられるのは人数だけ。Q44は×</s></td><td class="c-r" data-label="正しくは"><b>出席者の人数・議決権とも、規約で4分の3より低くできる（2分の1超まで）。Q44は○</b></td><td class="c-p" data-label="場所">権利PDF p.13・34<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">根抵当権 Q19</span></td><td class="c-w" data-label="教材の記載"><s>設定日から5年以内で定めなければならない（○）。定めなければ3年で自動確定</s></td><td class="c-r" data-label="正しくは"><b>答えは×。確定期日を定めるかは自由。定めるなら「定めた日から5年以内」。定めなくても3年で確定はしない</b></td><td class="c-p" data-label="場所">権利PDF p.26<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">抵当権の元本</span></td><td class="c-w" data-label="教材の記載"><s>元本と期限切れ利息は優先弁済対象外</s></td><td class="c-r" data-label="正しくは"><b>元本は全額が担保される。「最後の2年分」の制限は利息などの話</b></td><td class="c-p" data-label="場所">権利PDF p.25<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">自己契約・双方代理</span></td><td class="c-w" data-label="教材の記載"><s>事後許諾は無効</s></td><td class="c-r" data-label="正しくは"><b>事前の許諾がなくても、本人があとから追認できる</b></td><td class="c-p" data-label="場所">権利PDF p.5・23<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">無権代理の催告</span></td><td class="c-w" data-label="教材の記載"><s>確答を3ヶ月内</s></td><td class="c-r" data-label="正しくは"><b>期間は3か月ではなく「相当の期間」</b></td><td class="c-p" data-label="場所">権利PDF p.22<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">表見代理</span></td><td class="c-w" data-label="教材の記載"><s>本人に帰責性＋相手方が善意</s></td><td class="c-r" data-label="正しくは"><b>相手方は善意だけでなく無過失（または正当な理由）が必要</b></td><td class="c-p" data-label="場所">権利PDF p.5<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">保証意思宣明公正証書</span></td><td class="c-w" data-label="教材の記載"><s>契約の1ヶ月前まで</s></td><td class="c-r" data-label="正しくは"><b>契約の「前1か月以内」に作成（1か月前までに、ではない）</b></td><td class="c-p" data-label="場所">権利PDF p.9<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">事業用の保証と公正証書（Q22解説）</span></td><td class="c-w" data-label="教材の記載"><s>事業用保証は公正証書必須</s></td><td class="c-r" data-label="正しくは"><b>必要になるのは、事業のための貸金等債務を個人が保証するとき。契約前1か月以内に、保証意思宣明公正証書を作る。法人が保証するときや、経営者などが保証するときは除かれる（Q22の○は変わらない）</b></td><td class="c-p" data-label="場所">権利PDF p.27<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">根保証の元本確定期日（5年・3年）</span></td><td class="c-w" data-label="教材の記載"><s>個人根保証の数字：元本確定期日上限 5年／定めなし 3年で自動確定</s></td><td class="c-r" data-label="正しくは"><b>個人「貸金等」根保証だけの話。住宅の賃貸借の保証には当てはまらない</b></td><td class="c-p" data-label="場所">権利PDF p.9<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">半血の兄弟姉妹 Q36</span></td><td class="c-w" data-label="教材の記載"><s>全血1/3ずつ、半血1/6</s></td><td class="c-r" data-label="正しくは"><b>全血2人＋半血1人なら 2/5・2/5・1/5。全血と半血は2対1</b></td><td class="c-p" data-label="場所">権利PDF p.31<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">定期借家の中途解約</span></td><td class="c-w" data-label="教材の記載"><s>借主からの中途解約は200㎡未満の居住用建物に限り認められる</s></td><td class="c-r" data-label="正しくは"><b>200㎡未満の居住用に加えて「やむを得ない事情」が必要</b></td><td class="c-p" data-label="場所">権利PDF p.30／限定音声04<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">定期借家の事前説明</span></td><td class="c-w" data-label="教材の記載"><s>別紙書面で事前説明が必須</s></td><td class="c-r" data-label="正しくは"><b>書面が原則。借主の承諾など要件を満たせば電磁的方法でもできる</b></td><td class="c-p" data-label="場所">権利PDF p.10・11<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">建替え後の賃貸借の終了</span></td><td class="c-w" data-label="教材の記載"><s>補償金提供後6ヶ月経過で終了</s></td><td class="c-r" data-label="正しくは"><b>終了請求の日から6か月で終了。補償金を受け取るまでは明渡しを拒める</b></td><td class="c-p" data-label="場所">権利PDF p.19・36／最終チェック／限定音声10<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">規約の変更・大規模滅失の復旧</span></td><td class="c-w" data-label="教材の記載"><s>規約変更・大規模滅失復旧 3/4（頭数・議決権）</s></td><td class="c-r" data-label="正しくは"><b>定足数を満たした集会で、出席者の各3/4（復旧は各2/3）</b></td><td class="c-p" data-label="場所">権利PDF p.13・15<span class="dt">訂正版 v7</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">団地の一括建替え</span></td><td class="c-w" data-label="教材の記載"><s>一括建替え：全体4/5を3/4に緩和</s></td><td class="c-r" data-label="正しくは"><b>原則は全体の各4/5。全棟が所定の事由に当たるときだけ各3/4</b></td><td class="c-p" data-label="場所">権利PDF p.15・19<span class="dt">訂正版 v7</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="houreizei">
+<h2>法令上の制限・税PDF</h2>
+<p class="ver">修正済みの最新版は v1.2 です。ページ番号は v1.1 のものです（10月8日の訂正は v1 のページ）。</p>
+<div class="tbl"><table><thead><tr><th>論点</th><th>教材の記載</th><th>正しくは</th><th>場所</th></tr></thead><tbody>
+<tr class="pri"><td class="c-t" data-label="論点"><span class="tt">国土利用計画法：準都市計画区域の事後届出</span></td><td class="c-w" data-label="教材の記載"><s>5,000㎡以上</s></td><td class="c-r" data-label="正しくは"><b>10,000㎡以上</b></td><td class="c-p" data-label="場所">法令税PDF p.79／直前対策 p.11・18・21<span class="dt">訂正版 v1.2</span></td></tr>
+<tr class="pri"><td class="c-t" data-label="論点"><span class="tt">用途制限：第一種中高層住居専用地域の店舗</span></td><td class="c-w" data-label="教材の記載"><s>店舗は建てられない</s></td><td class="c-r" data-label="正しくは"><b>日用品販売店など一定の店舗は、用途部分500㎡以下で3階以上に設けなければ建てられる</b></td><td class="c-p" data-label="場所">法令税PDF p.13・15<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">第一種住居地域の事務所</span></td><td class="c-w" data-label="教材の記載"><s>事務所は「○」のみ（面積の注記なし）</s></td><td class="c-r" data-label="正しくは"><b>3,000㎡以下</b></td><td class="c-p" data-label="場所">法令税PDF p.13<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">第二種住居・準住居の店舗</span></td><td class="c-w" data-label="教材の記載"><s>二住・準住　制限なし（一部遊技施設等は制限）</s></td><td class="c-r" data-label="正しくは"><b>10,000㎡超は不可</b></td><td class="c-p" data-label="場所">法令税PDF p.13・15<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">隣地斜線</span></td><td class="c-w" data-label="教材の記載"><s>一住・二住・準住を含む「その他」を立上31m</s></td><td class="c-r" data-label="正しくは"><b>第一種・第二種住居、準住居も20m（31mになるのは特定行政庁が指定した区域）</b></td><td class="c-p" data-label="場所">法令税PDF p.19<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">田園住居地域の農地</span></td><td class="c-w" data-label="教材の記載"><s>農地の形質変更等で300㎡以上は市町村長許可（建築基準法側）</s></td><td class="c-r" data-label="正しくは"><b>形質変更や建築は原則すべて市町村長の許可が必要（300㎡未満の一定の行為は許可される）</b></td><td class="c-p" data-label="場所">法令税PDF p.27<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">農地転用 4ha超</span></td><td class="c-w" data-label="教材の記載"><s>農振区域外で農地転用都市計画を定める際の農林水産大臣協議基準</s></td><td class="c-r" data-label="正しくは"><b>通常の転用許可でも、知事は農林水産大臣と協議する</b></td><td class="c-p" data-label="場所">法令税PDF p.27<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">盛土規制法 土石の堆積</span></td><td class="c-w" data-label="教材の記載"><s>高さ2m超 又は面積500㎡超</s></td><td class="c-r" data-label="正しくは"><b>高さ2m超かつ300㎡超、または500㎡超で許可</b></td><td class="c-p" data-label="場所">法令税PDF p.32<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">不動産取得税：贈与の税率</span></td><td class="c-w" data-label="教材の記載"><s>贈与は課税（税率3%）</s></td><td class="c-r" data-label="正しくは"><b>3%になるのは土地と住宅。店舗・事務所などの建物は本則の4%</b></td><td class="c-p" data-label="場所">法令税PDF p.37・39<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">固定資産税 併用住宅の敷地</span></td><td class="c-w" data-label="教材の記載"><s>家屋床面積の1/4以上が居住用なら全体が住宅用地とみなされる</s></td><td class="c-r" data-label="正しくは"><b>居住部分が1/4以上1/2未満なら敷地の1/2、1/2以上なら全部が住宅用地（5階以上の耐火建築物は別の区分）</b></td><td class="c-p" data-label="場所">法令税PDF p.40<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">登録免許税の住宅軽減</span></td><td class="c-w" data-label="教材の記載"><s>併用住宅　床面積の1/2以上が居住用</s></td><td class="c-r" data-label="正しくは"><b>併用住宅は「専ら住宅」が条件（運用では居住用が90%超）</b></td><td class="c-p" data-label="場所">法令税PDF p.47<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">相続の登録免許税</span></td><td class="c-w" data-label="教材の記載"><s>相続の所有権移転は0.4%、軽減特例なし</s></td><td class="c-r" data-label="正しくは"><b>本則0.4%。一定の相続土地登記には免税措置がある</b></td><td class="c-p" data-label="場所">法令税PDF p.48・49<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">住宅ローン控除</span></td><td class="c-w" data-label="教材の記載"><s>入居年とその前後2年</s></td><td class="c-r" data-label="正しくは"><b>入居の年と、その前2年・後3年に譲渡の特例を使うと受けられない</b></td><td class="c-p" data-label="場所">法令税PDF p.53・91<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">買換え特例の居住期間</span></td><td class="c-w" data-label="教材の記載"><s>10年超所有＋10年超居住</s></td><td class="c-r" data-label="正しくは"><b>10年「以上」（所有は10年超）</b></td><td class="c-p" data-label="場所">法令税PDF p.51<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">印紙税 売上代金以外の受取書</span></td><td class="c-w" data-label="教材の記載"><s>17号の2：その他受取書／営業外受取書等／一律200円</s></td><td class="c-r" data-label="正しくは"><b>5万円未満と営業に関しないものは非課税</b></td><td class="c-p" data-label="場所">法令税PDF p.44<span class="dt">訂正版 v1.2</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">不動産取得税の免税点</span></td><td class="c-w" data-label="教材の記載"><s>土地10万円・家屋の建築23万円・その他の家屋12万円</s></td><td class="c-r" data-label="正しくは"><b>土地16万円・家屋の建築66万円・その他の家屋34万円</b></td><td class="c-p" data-label="場所">法令税PDF v1 p.37・39<span class="dt">訂正版 v1.1</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">不動産取得税　住宅の特例の床面積</span></td><td class="c-w" data-label="教材の記載"><s>50㎡以上240㎡以下（貸家は40㎡以上）</s></td><td class="c-r" data-label="正しくは"><b>40㎡以上240㎡以下</b></td><td class="c-p" data-label="場所">法令税PDF v1 p.37・38・39・51・81 ほか<span class="dt">訂正版 v1.1</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">固定資産税　新築住宅の減額の床面積</span></td><td class="c-w" data-label="教材の記載"><s>50㎡以上280㎡以下</s></td><td class="c-r" data-label="正しくは"><b>40㎡以上240㎡以下</b><span class="note">2026年4月1日以後の新築が対象です。それより前の新築は50㎡以上280㎡以下のままです。</span></td><td class="c-p" data-label="場所">法令税PDF v1 p.42・43・44・51・81・82・91 ほか<span class="dt">訂正版 v1.1</span></td></tr>
 </tbody></table></div>
 <p class="after">固定資産税の免税点（土地30万円・家屋20万円・償却資産150万円）は、今年の試験ではそのままです。</p>
 </section>
 
-<section id="receive">
-<div class="over">How to receive</div>
-<h2>修正済み教材の受け取り方</h2>
-<div class="box"><dl>
-<div><dt>noteで購入したPDF</dt><dd>記事に添付しているファイルを訂正版に差し替えます。購入済みの方は、追加費用なしで同じ記事から受け取れます。</dd></div>
-<div><dt>ラスト30日プログラムの最終チェック・ロードマップ</dt><dd>受け取りページのファイルを訂正版に差し替えます。</dd></div>
-<div><dt>ラスト30日プログラムの限定音声</dt><dd>台本は訂正済みです。音声は改訂版で再収録する予定です。</dd></div>
-</dl></div>
+<section id="chokuzen">
+<h2>直前対策PDF</h2>
+<p class="ver">修正済みの最新版は v5 です。ページ番号は v4 のものです（10月8日の訂正は v3 のページ）。</p>
+<div class="tbl"><table><thead><tr><th>論点</th><th>教材の記載</th><th>正しくは</th><th>場所</th></tr></thead><tbody>
+<tr><td class="c-t" data-label="論点"><span class="tt">手付の2割を超える部分（Q04）</span></td><td class="c-w" data-label="教材の記載"><s>「超える部分のみが無効となる」は×</s></td><td class="c-r" data-label="正しくは"><b>答えは○。39条1項は受領を禁じる規定で、無効の明文はないが、39条の趣旨から超える部分は無効と解されている（損害賠償額の予定・違約金は38条2項に明文）</b></td><td class="c-p" data-label="場所">直前対策 p.4・17・22<span class="dt">訂正版 v5</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">支払金・預り金の保全（Q06）</span></td><td class="c-w" data-label="教材の記載"><s>手付金等の保全措置の表に「50万円未満は保全対象外」。Q06「50万円未満であれば保全措置を要しない」は○</s></td><td class="c-r" data-label="正しくは"><b>支払金・預り金の保全は義務ではない。35条の重要事項説明で「保全措置を講ずるかどうか・その概要」を説明する事項で、50万円未満はこの説明の対象外。Q06は「50万円以上は保全措置が義務づけられている」という問いに差し替え、答えは×</b></td><td class="c-p" data-label="場所">直前対策 p.4・22<span class="dt">訂正版 v5</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">宅建業法の過料</span></td><td class="c-w" data-label="教材の記載"><s>過料の対象は業者でなく宅建士／過料は宅建士個人だけが対象</s></td><td class="c-r" data-label="正しくは"><b>業者に科される主な罰は罰金で、10万円の過料の中心は宅建士証の返納・提出・提示の違反。協会の名称使用違反なども過料の対象（Q13の○は変わらない）</b></td><td class="c-p" data-label="場所">直前対策 p.5・21・23<span class="dt">訂正版 v5</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">区分所有法の過料（Q32解説）</span></td><td class="c-w" data-label="教材の記載"><s>条文は71条から91条に移動。金額も引き上げ</s></td><td class="c-r" data-label="正しくは"><b>金額は改正前と同じ20万円以下。変わったのは条番号だけ（Q32の○は変わらない）</b></td><td class="c-p" data-label="場所">直前対策 p.26<span class="dt">訂正版 v5</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">Q43を差し替え</span></td><td class="c-w" data-label="教材の記載"><s>一般定期借地権は、存続期間を30年以上として設定することができる（×）</s></td><td class="c-r" data-label="正しくは"><b>Q37とほぼ同じ問題だったため、「事業用定期借地権は、居住の用に供する建物の所有を目的として設定することができる」に差し替え。答えは×（専ら事業用の建物が対象。10年以上50年未満、公正証書で設定）</b></td><td class="c-p" data-label="場所">直前対策 p.28<span class="dt">訂正版 v5</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">期間6か月の建物賃貸借（Q44）</span></td><td class="c-w" data-label="教材の記載"><s>建物の賃貸借で期間を6か月と定めた場合、期間の定めがない建物賃貸借とみなされる</s></td><td class="c-r" data-label="正しくは"><b>「普通建物賃貸借で」と明記。定期借家は1年未満でも有効（Q44の○は変わらない）</b></td><td class="c-p" data-label="場所">直前対策 p.10・18・28<span class="dt">訂正版 v5</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">変更の届出の対象（Q57）</span></td><td class="c-w" data-label="教材の記載"><s>免許証の記載事項である商号や役員に変更があった場合</s></td><td class="c-r" data-label="正しくは"><b>届出が必要なのは、宅建業者名簿の登載事項（商号・役員の氏名など）。免許証の記載事項ではない（Q57の○は変わらない）</b></td><td class="c-p" data-label="場所">直前対策 p.30<span class="dt">訂正版 v5</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">不動産取得税　住宅の特例の床面積</span></td><td class="c-w" data-label="教材の記載"><s>50〜240㎡（認定長期優良・賃貸は40㎡以上）</s></td><td class="c-r" data-label="正しくは"><b>40㎡以上240㎡以下</b></td><td class="c-p" data-label="場所">直前対策PDF v3 p.14<span class="dt">訂正版 v4</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">固定資産税　新築住宅の減額の床面積</span></td><td class="c-w" data-label="教材の記載"><s>50〜280㎡（賃貸40㎡以上）</s></td><td class="c-r" data-label="正しくは"><b>40㎡以上240㎡以下</b><span class="note">2026年4月1日以後の新築が対象です。それより前の新築は50㎡以上280㎡以下のままです。</span></td><td class="c-p" data-label="場所">直前対策PDF v3 p.31<span class="dt">訂正版 v4</span></td></tr>
+</tbody></table></div>
 </section>
 
-<p class="foot">耳で覚える宅建 2026</p>
+<section id="last30">
+<h2>ラスト30日プログラム</h2>
+<p class="ver">最終チェック・ロードマップの修正済みの最新版は v1.1 です。ページ番号は v1 のものです。限定音声01〜11は、台本を訂正し、誤りのあった段落の音声を差し替えてあります。</p>
+<div class="tbl"><table><thead><tr><th>論点</th><th>教材の記載</th><th>正しくは</th><th>場所</th></tr></thead><tbody>
+<tr class="pri"><td class="c-t" data-label="論点"><span class="tt">免許の欠格事由：破産と復権</span></td><td class="c-w" data-label="教材の記載"><s>欠格事由に該当してから復権まで5年</s></td><td class="c-r" data-label="正しくは"><b>復権を得れば、すぐに免許を受けられる</b></td><td class="c-p" data-label="場所">限定音声01・09<span class="dt">音声差し替え済み</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">完成物件の保全措置</span></td><td class="c-w" data-label="教材の記載"><s>手付金等の保全：未完成／完成　5%または1,000万円超／10%</s></td><td class="c-r" data-label="正しくは"><b>代金の10%以下かつ1,000万円以下なら不要（1,000万円超なら10%以下でも必要）</b></td><td class="c-p" data-label="場所">最終チェック④<span class="dt">訂正版 v1.1</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">瑕疵の除去・バリアフリー化などの工事</span></td><td class="c-w" data-label="教材の記載"><s>この4分の3という数字自体は、改正後も変わりません</s></td><td class="c-r" data-label="正しくは"><b>2026年改正で新設の各2/3決議</b></td><td class="c-p" data-label="場所">限定音声08<span class="dt">音声差し替え済み</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">不動産取得税の床面積</span></td><td class="c-w" data-label="教材の記載"><s>床面積ライン：取得税(認定長期優良) 40㎡</s></td><td class="c-r" data-label="正しくは"><b>一般の住宅も40㎡以上240㎡以下（10月8日の正誤表のとおり）</b></td><td class="c-p" data-label="場所">最終チェック⑥／ロードマップ p.5<span class="dt">訂正版 v1.1</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">印紙税 建物の賃貸借契約書</span></td><td class="c-w" data-label="教材の記載"><s>記載金額のない契約書の印紙税 200円</s></td><td class="c-r" data-label="正しくは"><b>非課税。金額の記載がなくても200円ではない</b></td><td class="c-p" data-label="場所">最終チェック④<span class="dt">訂正版 v1.1</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">代理の報酬</span></td><td class="c-w" data-label="教材の記載"><s>代理での報酬は、媒介の報酬の2倍以内</s></td><td class="c-r" data-label="正しくは"><b>媒介の2倍までになるのは売買・交換。貸借の代理は、原則、借賃1か月分（税込1.1か月分）</b></td><td class="c-p" data-label="場所">限定音声03／最終チェック⑤<span class="dt">訂正版 v1.1／音声差し替え済み</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">期間1年未満の賃貸借</span></td><td class="c-w" data-label="教材の記載"><s>借家で1年未満の期間を定めた場合は、期間の定めがない賃貸借とみなされる</s></td><td class="c-r" data-label="正しくは"><b>「期間の定めがない」扱いになるのは普通借家。定期借家は1年未満でも有効</b></td><td class="c-p" data-label="場所">限定音声07・10／最終チェック②<span class="dt">訂正版 v1.1／音声差し替え済み</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">区分所有法 集会の定足数</span></td><td class="c-w" data-label="教材の記載"><s>定足数は出席者の過半数</s></td><td class="c-r" data-label="正しくは"><b>重大変更・規約変更などの決議で、出席者の過半数ではなく、全区分所有者の人数・議決権の各過半数が出席</b></td><td class="c-p" data-label="場所">限定音声08／最終チェック⑤<span class="dt">訂正版 v1.1／音声差し替え済み</span></td></tr>
+<tr><td class="c-t" data-label="論点"><span class="tt">3,000万円控除</span></td><td class="c-w" data-label="教材の記載"><s>3000万円は誰でも使える特別控除</s></td><td class="c-r" data-label="正しくは"><b>使えるのは自分が住んでいた家屋とその敷地。誰でもではない</b></td><td class="c-p" data-label="場所">限定音声02・06・11<span class="dt">音声差し替え済み</span></td></tr>
+</tbody></table></div>
+</section>
+
+<p class="foot">耳で覚える宅建 2026<span class="upd">更新：2026年10月15日</span></p>
 </div>
 </body>
 </html>
