@@ -37,8 +37,16 @@
   .eyebrow{font-size:12px;font-weight:700;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin:0 0 12px}
   .eyebrow-center{text-align:center}
 
-  h1{font-size:36px;font-weight:900;line-height:1.5;margin:0 0 20px}
-  h2{font-size:32px;font-weight:900;line-height:1.4;text-align:center;margin:0 0 24px}
+  h1{font-size:28px;font-weight:900;line-height:1.5;margin:0 0 16px}
+  h2{font-size:24px;font-weight:900;line-height:1.5;text-align:center;margin:0 0 20px}
+  @media (max-width:480px){h1{font-size:24px}h2{font-size:21px}}
+
+  html{scroll-behavior:smooth}
+  section[id]{scroll-margin-top:12px}
+  .jump{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0;padding:0;list-style:none}
+  .jump a{display:inline-block;font-size:14px;font-weight:700;color:var(--accent);text-decoration:none;
+    background:#fff;border:1px solid var(--accent);border-radius:999px;padding:6px 14px;line-height:1.5}
+  .jump a:hover{background:var(--accent-soft)}
 
   p{margin:0 0 20px}
   p:last-child{margin-bottom:0}
@@ -111,6 +119,12 @@
       <p class="eyebrow">ANSWER KEY</p>
       <h1>宅建 解答速報リンク集</h1>
       <p class="lead">試験おつかれさまでした。落ち着いたら、自己採点をどうぞ。</p>
+      <ul class="jump">
+        <li><a href="#sokuhou" data-umami-event="kaitou_jump" data-umami-event-to="sokuhou">各社の解答速報</a></li>
+        <li><a href="#furikaeri" data-umami-event="kaitou_jump" data-umami-event-to="furikaeri">自己採点のふりかえり</a></li>
+        <li><a href="#survey" data-umami-event="kaitou_jump" data-umami-event-to="survey">アンケート</a></li>
+        <li><a href="#official" data-umami-event="kaitou_jump" data-umami-event-to="official">公式の正解</a></li>
+      </ul>
       <div class="infobox">
         各社の<b>解答速報ページ</b>にリンクしています。速報は試験終了後、順次公開されます。<br>
         各社の正解は、確定までは「予想」です。正式な正解番号は、いちばん下の公式（試験実施団体）でご確認ください。
@@ -119,7 +133,7 @@
   </section>
 
   <!-- ===== 速報組（上） ===== -->
-  <section class="band-soft">
+  <section class="band-soft" id="sokuhou">
     <div class="wrap">
       <p class="eyebrow eyebrow-center">01 — ANSWER KEY</p>
       <h2>各社の解答速報へ</h2>
@@ -153,7 +167,7 @@
   </section>
 
   <!-- ===== 自己採点のふりかえり（間違えた番号→分野別グラフ） ===== -->
-  <section class="band-white">
+  <section class="band-white" id="furikaeri">
     <div class="wrap shindan">
       <p class="eyebrow eyebrow-center">02 — CHECK</p>
       <h2><span style="display:inline-block;white-space:nowrap">自己採点の</span><span style="display:inline-block;white-space:nowrap">ふりかえり</span></h2>
@@ -167,7 +181,7 @@
   </section>
 
   <!-- ===== 自己採点後アンケート ===== -->
-  <section class="band-soft">
+  <section class="band-soft" id="survey">
     <div class="wrap">
       <p class="eyebrow eyebrow-center">03 — SURVEY</p>
       <h2>自己採点が終わったら</h2>
@@ -179,7 +193,7 @@
   </section>
 
   <!-- ===== 公式（下） ===== -->
-  <section class="band-white">
+  <section class="band-white" id="official">
     <div class="wrap">
       <p class="eyebrow eyebrow-center">04 — OFFICIAL</p>
       <h2>正式な正解はこちら</h2>
