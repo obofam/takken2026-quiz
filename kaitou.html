@@ -43,9 +43,13 @@
 
   html{scroll-behavior:smooth}
   section[id]{scroll-margin-top:12px}
-  .jump{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0;padding:0;list-style:none}
-  .jump a{display:inline-block;font-size:14px;font-weight:700;color:var(--accent);text-decoration:none;
-    background:#fff;border:1px solid var(--accent);border-radius:999px;padding:6px 14px;line-height:1.5}
+  .jump-lab{font-size:13px;font-weight:700;color:var(--muted);margin:24px 0 8px}
+  .jump{margin:0;padding:0;list-style:none;background:#fff;border:1px solid var(--border);border-radius:14px;
+    box-shadow:0 2px 8px rgba(20,27,33,.04);overflow:hidden}
+  .jump li+li{border-top:1px solid var(--border)}
+  .jump a{display:flex;align-items:center;gap:12px;padding:14px 18px;text-decoration:none;color:var(--text);font-size:16px;font-weight:700;line-height:1.5}
+  .jump a .no{color:var(--accent);font-size:13px;letter-spacing:.05em;flex:none}
+  .jump a .go{margin-left:auto;color:var(--accent);font-size:14px;flex:none}
   .jump a:hover{background:var(--accent-soft)}
 
   p{margin:0 0 20px}
@@ -119,11 +123,12 @@
       <p class="eyebrow">ANSWER KEY</p>
       <h1>宅建 解答速報リンク集</h1>
       <p class="lead">試験おつかれさまでした。落ち着いたら、自己採点をどうぞ。</p>
+      <p class="jump-lab">このページの中身（押すとその場所へ移動）</p>
       <ul class="jump">
-        <li><a href="#sokuhou" data-umami-event="kaitou_jump" data-umami-event-to="sokuhou">各社の解答速報</a></li>
-        <li><a href="#furikaeri" data-umami-event="kaitou_jump" data-umami-event-to="furikaeri">自己採点のふりかえり</a></li>
-        <li><a href="#survey" data-umami-event="kaitou_jump" data-umami-event-to="survey">アンケート</a></li>
-        <li><a href="#official" data-umami-event="kaitou_jump" data-umami-event-to="official">公式の正解</a></li>
+        <li><a href="#sokuhou" data-umami-event="kaitou_jump" data-umami-event-to="sokuhou"><span class="no">01</span>各社の解答速報<span class="go">↓</span></a></li>
+        <li><a href="#furikaeri" data-umami-event="kaitou_jump" data-umami-event-to="furikaeri"><span class="no">02</span>自己採点のふりかえり<span class="go">↓</span></a></li>
+        <li><a href="#survey" data-umami-event="kaitou_jump" data-umami-event-to="survey"><span class="no">03</span>アンケート<span class="go">↓</span></a></li>
+        <li><a href="#official" data-umami-event="kaitou_jump" data-umami-event-to="official"><span class="no">04</span>公式の正解<span class="go">↓</span></a></li>
       </ul>
       <div class="infobox">
         各社の<b>解答速報ページ</b>にリンクしています。速報は試験終了後、順次公開されます。<br>
