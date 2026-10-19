@@ -9,3 +9,5 @@ node_modules/
 
 # pdf/ はデプロイ対象（audio/ のみ除外）
 # audio/ もデプロイ対象（限定音声が404だったため除外解除）
+
+__pycache__/
