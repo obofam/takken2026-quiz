@@ -7,7 +7,7 @@
 | 利用者 | 本番URL | リンクの在りか | 更新コマンド |
 |---|---|---|---|
 | 〇×問題集の購入者 | https://takken2026-quiz.vercel.app/ | 販売ページ4本＋**有料PDF誌面に印字済み（変更不可）** | `vercel --prod` |
-| トラッカー利用者 | https://obofam.github.io/takken2026-quiz/tracker.html | LINEリッチメニュー | `git push` |
+| トラッカー利用者 | https://takken.mimiobo.com/tracker.html（2026-10-21〜正。github.io は年内残す） | LINEリッチメニュー | `vercel --prod` |
 | おみくじ利用者（8月限定） | https://takken2026-quiz.vercel.app/omikuji.html | LINEリッチメニュー（8月・「使い方」枠と差し替え） | `vercel --prod` |
 | 週替わり1問利用者 | https://takken2026-quiz.vercel.app/weekly.html | LINEリッチメニューB枠「今週の過去問」（2026-08から） | `vercel --prod` |
 | 教材一覧LP利用者 | https://takken2026-quiz.vercel.app/kyozai.html | **LINEリッチメニューD枠（差し替え済み・稼働中）** | `vercel --prod` |
@@ -15,7 +15,7 @@
 
 **weekly.htmlの問題更新＝ファイル内 QUESTIONS 配列の先頭に1問追加（先頭が今週の1問、2件目以降は自動でアーカイブ表示）→ `vercel --prod`**
 
-**一本化はしない（確定）**：トラッカーの学習履歴はlocalStorage＝ドメイン単位で保存されるため、URLを替えると既存ユーザーの進捗が消える。ユーザーに移行コストを押し付けない。
+**2026-10-21 にトラッカーを takken.mimiobo.com へ移転（年度引き継ぎなし）**。旧：トラッカーの学習履歴はlocalStorage＝ドメイン単位で保存されるため、URLを替えると既存ユーザーの進捗が消える。ユーザーに移行コストを押し付けない。
 
 **おみくじだけvercel側に置く理由（2026-07-16 Kei決定）**：おみくじはlocalStorageを持たない＝どこに置いても失うものがないので、上の制約が効かない。決め手は2つ。①おみくじの主CTAは `vercel.app/#sample` 直リンクで、同一オリジンにしないと「おみくじ→無料5問(`sample_start`)」がUmamiで分断されうる（訪問者ハッシュにhostnameが入るため）。②index.htmlとomikuji.htmlは同じ変更で同時に直ることが多く（例：2026-07-16の15問→5問化）、リリースボタンが分かれていると**おみくじだけ古い文言のまま残る**。同一ホストなら `vercel --prod` 一発でズレない。
 
@@ -23,14 +23,14 @@
 | ファイル | 役割 | URL |
 |---|---|---|
 | `index.html` | **クイズ本体**（〇×問題集。Vercelの仕様でこの名前のまま＝サイトのトップページ） | https://takken2026-quiz.vercel.app/ |
-| `tracker.html` | **進捗トラッカー**（学習進捗の見える化）※配るのはgithub.io側 | https://obofam.github.io/takken2026-quiz/tracker.html |
+| `tracker.html` | **進捗トラッカー**（学習進捗の見える化）※2026-10-21から配るのは takken.mimiobo.com 側（github.io は年内残す） | https://takken.mimiobo.com/tracker.html |
 | `omikuji.html` | **宅建おみくじ**（8月限定・習慣化用。主CTA＝無料5問） | https://takken2026-quiz.vercel.app/omikuji.html |
 - `SITE_GUIDE.md` … 設計思想・パスワード一覧・デザイン仕様（詳細はこちら）
 - `README.md` … このファイル
 
 ## デプロイ手順（ツールごとにリリースボタンが違う・2026-06-13 Kei決定）
 
-**トラッカー（tracker.html）を更新したとき** → git push が本番反映：
+**トラッカー（tracker.html）を更新したとき** → 2026-10-21 から `vercel --prod` が本番反映（github.io への git push は 2027pass 等の互換のため年内のみ）：
 ```
 cd C:\Claude\宅建\7_クイズと進捗トラッカー
 git add -A
@@ -45,7 +45,7 @@ vercel --prod
 ```
 ＋履歴記録のため上のgit 3行もやる（バックアップが本番から遅れないように）。
 
-**動作確認は必ず利用者が見るほうのURLで**：トラッカー=github.io／問題集=vercel.app。逆を見ると「直ってない！」と誤認する（2026-06-13に発生）。
+**動作確認は必ず利用者が見るほうのURLで**：トラッカー=takken.mimiobo.com（2026-10-21〜。旧 github.io は年内残すだけ）／問題集=vercel.app。逆を見ると「直ってない！」と誤認する（2026-06-13に発生）。
 デプロイ後、履歴記録用にgitコミット（⚠PowerShellは `&&` 非対応なので1行ずつ実行）：
 ```
 git add -A

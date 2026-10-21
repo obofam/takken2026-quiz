@@ -31,7 +31,7 @@ WD = "月火水木金土日"
 
 HOME_HOSTS = ["www.mimiobo.com", "mimiobo.vercel.app"]
 QUIZ_HOST = "takken2026-quiz.vercel.app"
-TRACKER_HOST = "obofam.github.io"
+TRACKER_HOSTS = ["obofam.github.io", "takken.mimiobo.com"]
 
 
 def get(url, headers=None):
@@ -63,7 +63,7 @@ def main():
     def row(a, b):
         total = visitors(a, b)
         hp = sum(visitors(a, b, {"hostname": x}) for x in HOME_HOSTS)
-        tr = visitors(a, b, {"hostname": TRACKER_HOST})
+        tr = sum(visitors(a, b, {"hostname": x}) for x in TRACKER_HOSTS)
         qz = visitors(a, b, {"hostname": QUIZ_HOST})
         return total, hp, tr, qz
 

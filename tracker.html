@@ -62,6 +62,10 @@
     overflow-x:hidden;
     padding-bottom:env(safe-area-inset-bottom);
   }
+  /* ---------- 移転の帯（github.io のときだけ表示） ---------- */
+  .move-bar{background:var(--cyan-soft);color:var(--text);text-align:center;padding:10px 14px;font-size:13px;line-height:1.6;border-bottom:1px solid var(--line)}
+  .move-bar a{color:var(--cyan-dark);font-weight:700;margin-left:6px}
+  .move-bar small{display:block;color:var(--muted);font-size:11px}
   /* ---------- Hero ---------- */
   .hero{
     position:relative;
@@ -426,6 +430,9 @@
 </style>
 </head>
 <body>
+
+<div class="move-bar" id="moveBar" hidden>進捗トラッカーは新しい住所に移りました。<a href="https://takken.mimiobo.com/tracker.html">新しいトラッカーを開く</a><small>2026年度の記録は、このページに年内残ります。</small></div>
+<script>if(location.hostname==='obofam.github.io'){document.getElementById('moveBar').hidden=false;}</script>
 
 <!-- HERO -->
 <header class="hero">

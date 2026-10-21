@@ -24,7 +24,7 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 
 QUIZ_HOST = "takken2026-quiz.vercel.app"
 # 進捗トラッカーは旧URL(obofam.github.io)とvercel版が二重に生きている（導線監査の穴07）
-TRACKER_HOSTS = ["obofam.github.io", QUIZ_HOST]
+TRACKER_HOSTS = ["obofam.github.io", "takken.mimiobo.com", QUIZ_HOST]
 # 2026-08-27 独自ドメイン移行。旧 mimiobo.vercel.app も生きている（308でwwwへ）ため両方を合算する
 HOME_HOSTS = ["www.mimiobo.com", "mimiobo.vercel.app"]
 
@@ -294,10 +294,9 @@ NOTICE_ITEMS = [
     "<b>7ページ比較はホスト＋パスで絞って集計している。</b>"
     "以前は <code>/</code> をホスト横断で合算していたため、"
     "「一問一答問題集」にメインHPのトップが混ざって実数の数倍に見えていた（2026-08-31の週報で発覚・修正済み）。",
-    "<b>進捗トラッカーは <code>obofam.github.io</code> が正。</b>"
-    "学習記録の蓄積がこのURLに紐づいているため、意図的にGitHub Pages側を本番にしている"
-    "（vercel版への一本化は来期）。ここでは念のため両ホストを合算しているが、"
-    "実質は obofam.github.io 側がほぼ全数。",
+    "<b>進捗トラッカーは 2026-10-21 以降 <code>takken.mimiobo.com</code> が正（github.io は年内残す）。</b>"
+    "移行前の学習記録は obofam.github.io に紐づいたまま残るため、ここでは両ホストを合算している。"
+    "10/21以降は takken.mimiobo.com 側が増え、obofam.github.io 側は減っていくのが想定どおり。",
     "<b>メインHPは <code>www.mimiobo.com</code>（本番）と旧 <code>mimiobo.vercel.app</code>（308でwwwへ転送）の合算。</b>"
     "2026-08-26週から計測に合流したので、それ以前との比較では丸ごと上積みになる。",
     "<b>リファラの <code>facebook.com</code> / <code>m.facebook.com</code> は本物の流入ではない。</b>"
