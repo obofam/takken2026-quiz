@@ -44,50 +44,42 @@
     { catch:"", title:"", desc:"", voice:"（仮）", url:"" },
   ];
 
-  // ── 2. 配点が大きい「宅建業法」のはずせない回 ──
-  const GYOHO = [
-    { catch:"暴行の罰金で免許は消える", title:"欠格事由の「5年の壁」",
-      desc:"どの罪で、いつまで免許を受けられないか。数字の多い分野を流れで。",
-      url:SP+"0D1ZoOedid23YWNe6XviN5" },
-    { catch:"3%+6万円だけでは解けない", title:"報酬計算の落とし穴",
-      desc:"覚えれば確実に取れる、得点源の計算問題です。",
-      url:SP+"6UBzgN5AIbg3WfAotnHSFp" },
-    { catch:"1000万円 vs 60万円の差", title:"営業保証金と保証協会、どっちが得か",
-      desc:"仕組みで理解すれば、丸暗記が減ります。",
-      url:SP+"2JV4xkfOgdC2uQuIUl1BlV" },
-  ];
-
-  // ── 3. 独学者がつまずく「権利関係」の重要回 ──
-  const KENRI = [
-    { catch:"頼んでないのに契約された", title:"代理・無権代理・表見代理の境界線",
-      desc:"独学でこぼれやすい定番。権利関係の得点源です。",
-      url:SP+"4D69X1laN3FK4XE0qud66O" },
-    { catch:"騙されたのに契約が有効？", title:"意思表示（詐欺・強迫・錯誤）",
-      desc:"毎年の出題テーマ。最初に押さえておきたい基礎です。",
-      url:SP+"4DGfYFuHJN0k5aVuK69FA9" },
-    { catch:"放っておくと権利が消える", title:"取得時効と消滅時効",
-      desc:"混同しやすい2つの時効を、耳で一気に整理。",
-      url:SP+"1h38kUuDsU5On9CAYkt6Db" },
-  ];
-
-  // ── 4. 数字で取れる「法令上の制限」の回 ──
-  const HOREI = [
-    { catch:"開発許可が要る？要らない？", title:"面積要件の数字を一発暗記",
-      desc:"繰り返し聴かれている回。面積の数字を区域ごとに整理します。",
-      url:SP+"0j8rvNt4cPYY4X9Q55X8A9" },
-    { catch:"ここには家が建てられない", title:"13種の用途地域",
-      desc:"用途地域の全体像。建築基準法の回の前に通しておくと楽です。",
-      url:SP+"7xAisaAejwIWGSu6yBhqnN" },
+  // ── 2. 2026年のリスナーが選んだ回（試験後アンケート「印象に残った回」より・掲載OKの方のみ・要約）──
+  const PICKS = [
     { catch:"田んぼを駐車場にしたら違法？", title:"農地法 3条・4条・5条",
-      desc:"「なぜ許可が要るのか」から入る回。理由が分かると条文番号が残ります。",
+      voice:"「なるほど、だからそうなってるんだ」と目から鱗。本試験で正解できました。",
       url:SP+"3IgMJSUtHDeRTjSO71QdaJ" },
+    { catch:"木造3階建ては建てられる？", title:"建築基準法の単体規定と用途制限",
+      voice:"道路が4m必要なのは消防活動のため。「なぜこの数字か」が分かって役立ちました。",
+      url:SP+"3zp30bzToorEc4dHsuS88Q" },
+    { catch:"マンション住民の多数決", title:"区分所有法 管理組合と決議要件",
+      voice:"印象に残った回として挙げてもらいました。",
+      url:SP+"4o43p9FP11dZVu4OYfkOoW" },
+    { catch:"30年住んでも出ていけと言われる？", title:"借地権の存続期間と更新",
+      voice:"8種制限とあわせて挙げてもらいました。",
+      url:SP+"4IfVMPwsoigxTvAezV0sTR" },
+  ];
+
+  // ── 3. 分野ごとのはずせない回（タイトルだけ・さらっと）──
+  const FIELDS = [
+    { name:"宅建業法", eps:[
+      { title:"暴行の罰金で不動産免許は消える ── 欠格事由の「5年の壁」", url:SP+"0D1ZoOedid23YWNe6XviN5" },
+      { title:"3%+6万円だけ覚えても解けない ── 報酬計算の落とし穴", url:SP+"6UBzgN5AIbg3WfAotnHSFp" },
+      { title:"1000万円 vs 60万円の差 ── 営業保証金と保証協会", url:SP+"2JV4xkfOgdC2uQuIUl1BlV" } ]},
+    { name:"権利関係", eps:[
+      { title:"頼んでないのに契約された ── 代理と無権代理・表見代理", url:SP+"4D69X1laN3FK4XE0qud66O" },
+      { title:"騙されたのに契約が有効？ ── 意思表示（詐欺・強迫・錯誤）", url:SP+"4DGfYFuHJN0k5aVuK69FA9" },
+      { title:"放っておくと権利が消える ── 取得時効と消滅時効", url:SP+"1h38kUuDsU5On9CAYkt6Db" } ]},
+    { name:"法令上の制限", eps:[
+      { title:"開発許可が要る？要らない？ ── 面積要件の数字", url:SP+"0j8rvNt4cPYY4X9Q55X8A9" },
+      { title:"ここには家が建てられない ── 13種の用途地域", url:SP+"7xAisaAejwIWGSu6yBhqnN" },
+      { title:"なぜ狭い土地に大きな家が建たないのか ── 建ぺい率・容積率", url:SP+"7o1Bhf7kvtwYYRRq96eTJV" } ]},
   ];
 
   // ── リスナーの声（2026年10月 試験後アンケート・掲載OKの方のみ・要約）──
   const VOICES = [
     "会話形式で圧がなく、月曜の朝の電車が楽しみでした。",
     "子どもが小さく、机に向かえない時期。音楽のように繰り返し聴いて頭に入りました。",
-    "農地法の回で理由が腑に落ちて、本試験で正解できました。",
     "動画だと集中が続かず、音声だけの教材を探していました。すき間の時間に助かりました。",
   ];
 </script>
@@ -142,7 +134,7 @@
   .ep-desc{font-size:15px;color:var(--muted);margin:10px 0 0;line-height:1.8}
   .ep-voice{font-size:15px;color:var(--text);margin:14px 0 0;padding:12px 14px;
     background:#F4FBD2;border-radius:10px;line-height:1.8}
-  .ep-voice::before{content:"合格者の声　";font-weight:700;color:#4F6300;font-size:13px}
+  .ep-voice::before{content:"聴いた人の声　";font-weight:700;color:#4F6300;font-size:13px}
 
   .ep-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
   .ep-actions a{text-decoration:none;font-weight:700;border-radius:999px;padding:10px 20px;font-size:15px}
@@ -169,6 +161,10 @@
   footer .foot-links a{color:var(--accent);text-decoration:none;font-weight:700;font-size:14px}
   footer .foot-links a:hover{text-decoration:underline}
   .ep-voice-plain{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin:0 0 12px;font-size:16px;line-height:1.8}
+  .field{margin:0 0 22px}
+  .field-name{font-weight:700;color:var(--accent);font-size:14px;letter-spacing:.08em;margin:0 0 6px}
+  .field-ep{display:block;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;font-size:16px}
+  .field-ep::after{content:" ›";color:var(--muted)}
 </style>
 </head>
 <body>
@@ -185,6 +181,7 @@
       <div class="evergreen">
         ここで選んだのは、<b>法改正がない限り毎年通用する“骨組み”の回</b>です。年ごとに変わる税の数字・統計・改正点は、あえて入れていません。来年も再来年も、最初の一歩に使えます。
       </div>
+      <p class="lead" style="font-size:13px;margin-top:14px">※ここに並べているのは<b>2026年度の放送</b>です。数字や制度は2026年度の試験（令和8年4月1日時点の法令）に合わせて話しています。その後に法改正があった部分は、2027年版の回やお手元のテキストで確認してください。</p>
     </div>
   </section>
 
@@ -192,7 +189,7 @@
     <div class="wrap">
       <p class="eyebrow eyebrow-center">01 — TOP 3</p>
       <h2>よく聴かれている回 TOP3</h2>
-      <p class="sec-sub">よく聴かれている順に。最初の一本にどうぞ。</p>
+      <p class="sec-sub">よく聴かれている順に。最初の一本にどうぞ。<br><span style="font-size:13px">Spotifyの再生数（2026年10月21日時点）</span></p>
       <div id="top3"></div>
     </div>
   </section>
@@ -206,36 +203,26 @@
     </div>
   </section>
 
-  <section class="band-soft">
-    <div class="wrap">
-      <p class="eyebrow eyebrow-center">02 — GYOHO</p>
-      <h2>配点が大きい「宅建業法」のはずせない回</h2>
-      <p class="sec-sub">いちばん点になる科目。ここを固めると安定します。</p>
-      <div id="gyoho"></div>
-    </div>
-  </section>
-
   <section class="band-white">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">03 — KENRI</p>
-      <h2>独学者がつまずく「権利関係」の重要回</h2>
-      <p class="sec-sub">独学でこぼれやすいところ。耳で先に通しておくと、後がラクです。</p>
-      <div id="kenri"></div>
+      <p class="eyebrow eyebrow-center">02 — PICKS</p>
+      <h2>2026年のリスナーが選んだ回</h2>
+      <p class="sec-sub">試験後アンケートで「印象に残った」と挙げてもらった回です。</p>
+      <div id="picks"></div>
     </div>
   </section>
 
   <section class="band-soft">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">04 — HOREI</p>
-      <h2>数字で取れる「法令上の制限」の回</h2>
-      <p class="sec-sub">数字と理由をセットで。ここは覚えた分だけ点になります。</p>
-      <div id="horei"></div>
+      <p class="eyebrow eyebrow-center">03 — BY FIELD</p>
+      <h2>分野ごとのはずせない回</h2>
+      <div id="fields"></div>
     </div>
   </section>
 
   <section class="band-white">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">05 — LISTENERS</p>
+      <p class="eyebrow eyebrow-center">04 — LISTENERS</p>
       <h2>聴いてくれた人の声</h2>
       <div id="voices"></div>
       <p class="sec-sub" style="margin-top:16px;font-size:13px">2026年10月 試験後アンケートより。掲載OKの方のみ、要約して載せています。</p>
@@ -296,7 +283,7 @@
     const voice = e.voice ? `<p class="ep-voice">${e.voice}</p>` : "";
     d.innerHTML = `<p class="ep-catch">${e.catch}</p>
                    <p class="ep-title">${e.title}</p>
-                   <p class="ep-desc">${e.desc}</p>
+                   ${e.desc?`<p class="ep-desc">${e.desc}</p>`:""}
                    ${voice}
                    ${actions(e, section)}`;
     return d;
@@ -323,9 +310,10 @@
     realGoukaku.forEach(e => document.getElementById('goukaku').appendChild(card(e,'goukaku')));
   }
 
-  KENRI.forEach(e => document.getElementById('kenri').appendChild(card(e,'kenri')));
-  GYOHO.forEach(e => document.getElementById('gyoho').appendChild(card(e,'gyoho')));
-  HOREI.forEach(e => document.getElementById('horei').appendChild(card(e,'horei')));
+  PICKS.forEach(e => document.getElementById('picks').appendChild(card(e,'picks')));
+  FIELDS.forEach(f => { const d=document.createElement('div'); d.className='field';
+    d.innerHTML = `<p class="field-name">${f.name}</p>` + f.eps.map(e => `<a class="field-ep" href="${e.url}" target="_blank" rel="noopener" data-umami-event="shinkai_listen" data-umami-event-section="field" data-umami-event-title="${e.title}">${e.title}</a>`).join('');
+    document.getElementById('fields').appendChild(d); });
   VOICES.forEach(v => { const p=document.createElement('p'); p.className='ep-voice-plain'; p.textContent='「'+v+'」'; document.getElementById('voices').appendChild(p); });
   document.getElementById('trackerLink').href = TRACKER_URL;
 </script>
