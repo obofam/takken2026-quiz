@@ -20,61 +20,75 @@
      ・※いまは実在タイトルで「仮選定」。データ確定後に正式な回へ入れ替えてください。
      ============================================================ -->
 <script>
-  const HUB = "Stand.fm"; // 将来 "Spotify" に変更予定（urlを差し替える）
-  const SFM  = "https://stand.fm/episodes/";
-  const NOTE = "https://note.com/fond_bison5155/n/";
+  const HUB = "Spotify";
+  const SP  = "https://open.spotify.com/episode/";
   const TRACKER_URL = "https://takken.mimiobo.com/tracker.html";
+  // 選定：Spotifyの再生数（2026-10-21時点・公開以降）。IDは 0_全体戦略/振り返りデータ_2026年度/ポッドキャスト/Spotify_エピソードID_2026.tsv
 
-  // ── 1. リスナーが選んだ神回 TOP3（データ＝再生率/熱心率で選定）──
+  // ── 1. よく聴かれている回 TOP3（Spotify再生数の順）──
   const TOP3 = [
     { catch:"ここを間違えると4点失う", title:"35条書面と37条書面の決定的な違い",
       desc:"毎年問われる頻出。混同しがちな2つの書面を、一本で整理します。",
-      url:SFM+"69b204778578fadedda0f194", note:NOTE+"ne9697c36489a" },
+      url:SP+"5h164rCRibzoimEpVYhlfQ" },
     { catch:"なぜ業法だけで20点取れるのか", title:"宅建業法は「最強の防具」",
       desc:"番組の入口。まず全体像をつかむと、あとがぐっと楽になります。",
-      url:SFM+"69b1fdb3507312ea8122dbaf", note:NOTE+"n8f0d21ce9d22" },
-    { catch:"頼んでないのに契約された", title:"代理・無権代理・表見代理の境界線",
-      desc:"独学でこぼれやすい定番。権利関係の得点源です。",
-      url:SFM+"69dc7cb6a3cd112547af1093", note:NOTE+"n95621065d93a" },
+      url:SP+"5hoEjRtwI6MNdYBpBlfkY8" },
+    { catch:"プロが素人に負ける8つのルール", title:"自ら売主の8種制限",
+      desc:"出題の定番。8つを横に並べて理解しておきたいところ。",
+      url:SP+"21txjnhcMgsULjSlqJwkrV" },
   ];
 
-  // ── 1.5 合格者が選んだ、心に残った回（体験談アンケートから）──
-  //  voice = 合格者コメント（試験後アンケートの「印象に残った回」設問から拾う）
+  // ── 1.5 合格者が選んだ、心に残った回（11/25の合格発表後のアンケートから入れる）──
+  //  voice が「（仮）」の間はセクションごと非表示
   const GOUKAKU = [
-    { catch:"放っておくと権利が消える", title:"取得時効と消滅時効を完全整理",
-      desc:"混同しやすい2つの時効を、耳で一気に整理。",
-      voice:"（仮）何度やっても混ざっていたのが、この回で腑に落ちました。",
-      url:SFM+"69ddd886e60f6035692bb3d4", note:NOTE+"ne3ba3679ce35" },
-    { catch:"5年ごとに申請しないと免許が消える", title:"更新と大臣免許・知事免許",
-      desc:"細かい数字が多い分野を、流れで覚えられる回。",
-      voice:"（仮）通勤中に流していたら、自然と頭に入っていました。",
-      url:SFM+"69b7939dc129adda736f5f49", note:NOTE+"n4bff461d9613" },
+    { catch:"", title:"", desc:"", voice:"（仮）", url:"" },
   ];
 
-  // ── 2. 独学者がつまずく「権利関係」の重要回 ──
-  const KENRI = [
-    { catch:"騙されたのに契約が有効？", title:"意思表示（詐欺・強迫・錯誤）",
-      desc:"毎年の出題テーマ。最初に押さえておきたい基礎です。",
-      url:SFM+"69dc7c7af87676817ebf104d", note:NOTE+"n0cc154db5524" },
-    { catch:"登記しないと負ける", title:"不動産物権変動と「第三者」の正体",
-      desc:"超頻出。図ではなく耳で入れると、定着が速いところ。",
-      url:SFM+"69ddd8b7e60f6035692bb3dd", note:NOTE+"n8d0e42f0d1e1" },
-    { catch:"家は住んだまま担保になる", title:"抵当権の設定・順位・法定地上権",
-      desc:"苦手にする人が多い分、ここを通しておくと安心です。",
-      url:SFM+"69ddd8f0a46200ccc5f4ace0", note:NOTE+"n755e2c7f92d6" },
-  ];
-
-  // ── 3. 配点が大きい「宅建業法」のはずせない回 ──
+  // ── 2. 配点が大きい「宅建業法」のはずせない回 ──
   const GYOHO = [
+    { catch:"暴行の罰金で免許は消える", title:"欠格事由の「5年の壁」",
+      desc:"どの罪で、いつまで免許を受けられないか。数字の多い分野を流れで。",
+      url:SP+"0D1ZoOedid23YWNe6XviN5" },
     { catch:"3%+6万円だけでは解けない", title:"報酬計算の落とし穴",
       desc:"覚えれば確実に取れる、得点源の計算問題です。",
-      url:SFM+"69dc7c44f87676817ebf104a", note:NOTE+"nc3ba012bba47" },
-    { catch:"プロが素人に負ける8つのルール", title:"自ら売主の8種制限",
-      desc:"出題定番。横断で理解しておきたいところ。",
-      url:SFM+"69b79335c129adda736f5f3f", note:NOTE+"n9582ca21adb4" },
+      url:SP+"6UBzgN5AIbg3WfAotnHSFp" },
     { catch:"1000万円 vs 60万円の差", title:"営業保証金と保証協会、どっちが得か",
       desc:"仕組みで理解すれば、丸暗記が減ります。",
-      url:SFM+"69dc7ba498eff95c436a4549", note:NOTE+"na01f99a07f41" },
+      url:SP+"2JV4xkfOgdC2uQuIUl1BlV" },
+  ];
+
+  // ── 3. 独学者がつまずく「権利関係」の重要回 ──
+  const KENRI = [
+    { catch:"頼んでないのに契約された", title:"代理・無権代理・表見代理の境界線",
+      desc:"独学でこぼれやすい定番。権利関係の得点源です。",
+      url:SP+"4D69X1laN3FK4XE0qud66O" },
+    { catch:"騙されたのに契約が有効？", title:"意思表示（詐欺・強迫・錯誤）",
+      desc:"毎年の出題テーマ。最初に押さえておきたい基礎です。",
+      url:SP+"4DGfYFuHJN0k5aVuK69FA9" },
+    { catch:"放っておくと権利が消える", title:"取得時効と消滅時効",
+      desc:"混同しやすい2つの時効を、耳で一気に整理。",
+      url:SP+"1h38kUuDsU5On9CAYkt6Db" },
+  ];
+
+  // ── 4. 数字で取れる「法令上の制限」の回 ──
+  const HOREI = [
+    { catch:"開発許可が要る？要らない？", title:"面積要件の数字を一発暗記",
+      desc:"繰り返し聴かれている回。面積の数字を区域ごとに整理します。",
+      url:SP+"0j8rvNt4cPYY4X9Q55X8A9" },
+    { catch:"ここには家が建てられない", title:"13種の用途地域",
+      desc:"用途地域の全体像。建築基準法の回の前に通しておくと楽です。",
+      url:SP+"7xAisaAejwIWGSu6yBhqnN" },
+    { catch:"田んぼを駐車場にしたら違法？", title:"農地法 3条・4条・5条",
+      desc:"「なぜ許可が要るのか」から入る回。理由が分かると条文番号が残ります。",
+      url:SP+"3IgMJSUtHDeRTjSO71QdaJ" },
+  ];
+
+  // ── リスナーの声（2026年10月 試験後アンケート・掲載OKの方のみ・要約）──
+  const VOICES = [
+    "会話形式で圧がなく、月曜の朝の電車が楽しみでした。",
+    "子どもが小さく、机に向かえない時期。音楽のように繰り返し聴いて頭に入りました。",
+    "農地法の回で理由が腑に落ちて、本試験で正解できました。",
+    "動画だと集中が続かず、音声だけの教材を探していました。すき間の時間に助かりました。",
   ];
 </script>
 
@@ -154,6 +168,7 @@
   footer .foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin:20px 0 0;padding:0;list-style:none}
   footer .foot-links a{color:var(--accent);text-decoration:none;font-weight:700;font-size:14px}
   footer .foot-links a:hover{text-decoration:underline}
+  .ep-voice-plain{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin:0 0 12px;font-size:16px;line-height:1.8}
 </style>
 </head>
 <body>
@@ -170,8 +185,6 @@
       <div class="evergreen">
         ここで選んだのは、<b>法改正がない限り毎年通用する“骨組み”の回</b>です。年ごとに変わる税の数字・統計・改正点は、あえて入れていません。来年も再来年も、最初の一歩に使えます。
       </div>
-
-      <!-- ⚠ これは仮ページです。掲載する回・URLは、ファイル先頭の「エピソード表」を編集すると差し替わります（実在タイトルで仮選定中）。 -->
     </div>
   </section>
 
@@ -186,7 +199,7 @@
 
   <section class="band-white" id="voicesSection">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">02 — VOICES</p>
+      <p class="eyebrow eyebrow-center">VOICES</p>
       <h2>合格者が選んだ、心に残った回</h2>
       <p class="sec-sub">受かった人が「これが効いた」と挙げてくれた回です。</p>
       <div id="goukaku"></div>
@@ -195,7 +208,7 @@
 
   <section class="band-soft">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">03 — GYOHO</p>
+      <p class="eyebrow eyebrow-center">02 — GYOHO</p>
       <h2>配点が大きい「宅建業法」のはずせない回</h2>
       <p class="sec-sub">いちばん点になる科目。ここを固めると安定します。</p>
       <div id="gyoho"></div>
@@ -204,7 +217,7 @@
 
   <section class="band-white">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">04 — KENRI</p>
+      <p class="eyebrow eyebrow-center">03 — KENRI</p>
       <h2>独学者がつまずく「権利関係」の重要回</h2>
       <p class="sec-sub">独学でこぼれやすいところ。耳で先に通しておくと、後がラクです。</p>
       <div id="kenri"></div>
@@ -212,6 +225,24 @@
   </section>
 
   <section class="band-soft">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-center">04 — HOREI</p>
+      <h2>数字で取れる「法令上の制限」の回</h2>
+      <p class="sec-sub">数字と理由をセットで。ここは覚えた分だけ点になります。</p>
+      <div id="horei"></div>
+    </div>
+  </section>
+
+  <section class="band-white">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-center">05 — LISTENERS</p>
+      <h2>聴いてくれた人の声</h2>
+      <div id="voices"></div>
+      <p class="sec-sub" style="margin-top:16px;font-size:13px">2026年10月 試験後アンケートより。掲載OKの方のみ、要約して載せています。</p>
+    </div>
+  </section>
+
+  <section class="band-white">
     <div class="wrap">
       <div class="ctabox">
         <p>その年の全エピソードを記録しながら回したい方へ</p>
@@ -237,7 +268,7 @@
   <footer>
     <div class="wrap">
       <p>耳で覚える宅建　アーカイブ<br>
-      選定は配信データ（再生率・熱心度など）をもとにしています。</p>
+      選定はSpotifyの再生数（2026年10月21日時点）をもとにしています。</p>
       <ul class="foot-links">
         <li><a href="https://www.mimiobo.com/" target="_blank" rel="noopener">公式サイト</a></li>
         <li><a href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener">Spotify</a></li>
@@ -256,9 +287,7 @@
   function actions(e, section){
     return `<div class="ep-actions">
       <a class="btn-listen" href="${e.url}" target="_blank" rel="noopener"
-         data-umami-event="shinkai_listen" data-umami-event-section="${section}" data-umami-event-title="${e.title}">聴く</a>
-      <a class="btn-note" href="${e.note}" target="_blank" rel="noopener"
-         data-umami-event="shinkai_note" data-umami-event-section="${section}" data-umami-event-title="${e.title}">図解・要点</a>
+         data-umami-event="shinkai_listen" data-umami-event-section="${section}" data-umami-event-title="${e.title}">Spotifyで聴く</a>
     </div>`;
   }
   function card(e, section){
@@ -296,6 +325,8 @@
 
   KENRI.forEach(e => document.getElementById('kenri').appendChild(card(e,'kenri')));
   GYOHO.forEach(e => document.getElementById('gyoho').appendChild(card(e,'gyoho')));
+  HOREI.forEach(e => document.getElementById('horei').appendChild(card(e,'horei')));
+  VOICES.forEach(v => { const p=document.createElement('p'); p.className='ep-voice-plain'; p.textContent='「'+v+'」'; document.getElementById('voices').appendChild(p); });
   document.getElementById('trackerLink').href = TRACKER_URL;
 </script>
 </body>
