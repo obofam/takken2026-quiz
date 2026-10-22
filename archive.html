@@ -73,12 +73,6 @@
       { title:"なぜ狭い土地に大きな家が建たないのか ── 建ぺい率・容積率", url:SP+"7o1Bhf7kvtwYYRRq96eTJV" } ]},
   ];
 
-  // ── リスナーの声（2026年10月 試験後アンケート・掲載OKの方のみ・要約）──
-  const VOICES = [
-    "会話形式で圧がなく、月曜の朝の電車が楽しみでした。",
-    "子どもが小さく、机に向かえない時期。音楽のように繰り返し聴いて頭に入りました。",
-    "動画だと集中が続かず、音声だけの教材を探していました。すき間の時間に助かりました。",
-  ];
 </script>
 
 <style>
@@ -215,15 +209,6 @@
 
   <section class="band-white">
     <div class="wrap">
-      <p class="eyebrow eyebrow-center">04 — LISTENERS</p>
-      <h2>聴いてくれた人の声</h2>
-      <div id="voices"></div>
-      <p class="sec-sub" style="margin-top:16px;font-size:13px">2026年10月 試験後アンケートより。掲載OKの方のみ、要約して載せています。</p>
-    </div>
-  </section>
-
-  <section class="band-white">
-    <div class="wrap">
       <div class="ctabox">
         <p>その年の全エピソードを記録しながら回したい方へ</p>
         <a class="btn-ghost" id="trackerLink" href="#" target="_blank" rel="noopener" data-umami-event="to_tracker">2026年のアーカイブ（進捗トラッカー）へ</a>
@@ -307,7 +292,6 @@
   FIELDS.forEach(f => { const d=document.createElement('div'); d.className='field';
     d.innerHTML = `<p class="field-name">${f.name}</p>` + f.eps.map(e => `<a class="field-ep" href="${e.url}" target="_blank" rel="noopener" data-umami-event="shinkai_listen" data-umami-event-section="field" data-umami-event-title="${e.title}">${e.title}</a>`).join('');
     document.getElementById('fields').appendChild(d); });
-  VOICES.forEach(v => { const p=document.createElement('p'); p.className='ep-voice-plain'; p.textContent='「'+v+'」'; document.getElementById('voices').appendChild(p); });
   document.getElementById('trackerLink').href = TRACKER_URL;
 </script>
 </body>
