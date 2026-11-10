@@ -368,6 +368,27 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
 .epnav .ed{font-size:13px;color:#4F5963}
 .epnav span.en{background:transparent;border-style:dashed}
 @media print{.epnav{display:none}}
+/* 前の回から1問（最後の「今回の数字」ページ。review.js が中身を作る）。画面用だけ・印刷では出さない */
+.rvq{background:#fff;border:1.5px solid var(--sky);border-radius:14px;padding:12px 14px}
+.rvq h3{font-size:20px;font-weight:900;color:var(--ink);line-height:1.35}
+.rv-q{margin-top:8px;font-size:15px;line-height:1.8}
+.rv-btns{display:flex;gap:10px;margin-top:10px}
+.rv-pill{appearance:none;-webkit-appearance:none;flex:1 1 0;font:inherit;font-size:20px;font-weight:900;line-height:1.3;color:var(--ink);background:#fff;border:1.5px solid var(--sky);border-radius:999px;padding:6px 0;cursor:pointer}
+.rv-pill:not(:disabled):active{background:var(--soft)}
+.rv-pill:disabled{cursor:default;opacity:.55}
+.rv-pill.chosen{opacity:1;background:var(--soft)}
+.rv-pill:focus-visible,.rv-again:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+.rv-res{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:14px;line-height:1.7;background:var(--bg);border:1px solid var(--line)}
+.rv-res.ok{background:var(--lime-soft);border-color:var(--lime)}
+.rv-verdict{font-weight:900;color:var(--ink)}
+.rv-res.ok .rv-verdict{color:var(--lime-dark)}
+.rv-ans{font-weight:700}
+.rv-exp{margin-top:2px}
+.rv-again{appearance:none;-webkit-appearance:none;margin-top:8px;font:inherit;font-size:13px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--sky);border-radius:999px;padding:4px 12px;cursor:pointer}
+.rv-from{margin-top:8px;font-size:13px;line-height:1.4;color:#4F5963}
+.rvq-none{font-size:13px;line-height:1.5;color:#4F5963}
+@media print{.rvq,.rvq-none,#rvData{display:none !important}}
+.epnav .ed{white-space:nowrap;font-size:12px}
 </style>
 </head>
 <body>
@@ -461,6 +482,8 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
 <div class="top">耳で覚える宅建2027　第1回　2027年1月4日（月）</div>
 <div class="numh"><h2>今回の数字</h2></div>
 <div class="nl"><div class="nr"><button class="mk nv" type="button">1つ</button><span class="nk">知事免許になる事務所の県数</span></div><div class="nr"><button class="mk nv" type="button">2つ以上</button><span class="nk">大臣免許になる事務所の県数</span></div><div class="nr"><button class="mk nv" type="button">5年</button><span class="nk">免許の有効期間</span></div><div class="nr"><button class="mk nv" type="button">90日前〜30日前</button><span class="nk">更新の申請期間（満了日の）</span></div><div class="nr"><button class="mk nv" type="button">5年</button><span class="nk">免許を受けられない期間</span></div><div class="nr"><button class="mk nv" type="button">60日以内</button><span class="nk">聴聞の公示前に役員だった期間</span></div></div>
+<div class="rvq" id="rvq" data-fixed="1" data-note="見本のため、第1回の範囲から出しています"></div>
+<script type="application/json" id="rvData">[{"id": "ep1-sample", "ep": 1, "label": "", "theme": "", "text": "Aが、自ら所有する土地を区画割りして、不特定多数の者に反復継続して売却する場合、Aは宅建業の免許を受けなければならない。", "answer": true, "exp": "自ら売買を、不特定多数に反復継続して行うので「業として」に当たる。自ら貸借と違い、自ら売買は宅建業に含まれる。"}]</script>
 <div class="foot">条文は2026年4月1日施行版で照合</div>
 </section>
 <nav class="epnav" aria-label="前回・次回"><span class="en pv none"></span><span class="en nx"><span class="el">次回　第2回</span><span class="et">営業保証金と保証協会</span><span class="ed">2027年1月12日（火）予定</span></span></nav>
@@ -660,6 +683,72 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
 
   load();
   render(false);
+})();
+</script>
+<script>
+/* review.js — 赤シート版の最後のページ「前の回から1問」（画面用）。
+   build が #rvq の隣に前の回の○×（quizSets の全問）を JSON で埋め込む。開くたびにランダムで1問出す。
+   間違えた問題の印は localStorage（キー takken2027-review-wrong、値は "ep3-s1-q2" の配列）。次に引くときは3倍の重み。正解したら印を外す。
+   読み書きは try/catch。使えなくても動く。data-fixed があれば固定の1問（見本用・引き直しなし）。 */
+(function () {
+  'use strict';
+  var box = document.getElementById('rvq');
+  var src = document.getElementById('rvData');
+  if (!box || !src) { return; }
+  var pool;
+  try { pool = JSON.parse(src.textContent); } catch (e) { return; }
+  if (!pool || !pool.length) { return; }
+  var KEY = 'takken2027-review-wrong';
+  var fixed = box.hasAttribute('data-fixed');
+  var note = box.getAttribute('data-note') || '';
+  var last = null;
+
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function readWrong() {
+    try { var a = JSON.parse(window.localStorage.getItem(KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+  }
+  function writeWrong(a) {
+    try { window.localStorage.setItem(KEY, JSON.stringify(a)); } catch (e) { /* 保存が使えなくても動く */ }
+  }
+  function pick() {
+    var wrong = readWrong(), cand = pool.filter(function (q) { return pool.length < 2 || q.id !== last; });
+    var w = cand.map(function (q) { return wrong.indexOf(q.id) >= 0 ? 3 : 1; });
+    var sum = w.reduce(function (a, b) { return a + b; }, 0), r = Math.random() * sum, i;
+    for (i = 0; i < cand.length; i++) { r -= w[i]; if (r < 0) { return cand[i]; } }
+    return cand[cand.length - 1];
+  }
+
+  function show(q) {
+    last = q.id;
+    var from = note || ('第' + q.ep + '回（' + q.label + '「' + q.theme + '」）の問題です');
+    box.innerHTML =
+      '<h3>前の回から1問</h3>' +
+      '<p class="rv-q">' + esc(q.text) + '</p>' +
+      '<div class="rv-btns"><button type="button" class="rv-pill" data-v="1" aria-label="○（正しい）">○</button>' +
+      '<button type="button" class="rv-pill" data-v="0" aria-label="×（誤り）">×</button></div>' +
+      '<div class="rv-res" hidden aria-live="polite"></div>' +
+      '<p class="rv-from">' + esc(from) + '</p>';
+    var btns = box.querySelectorAll('.rv-pill'), res = box.querySelector('.rv-res');
+    Array.prototype.forEach.call(btns, function (b) {
+      b.addEventListener('click', function () {
+        var ok = ((b.getAttribute('data-v') === '1') === q.answer);
+        Array.prototype.forEach.call(btns, function (x) { x.disabled = true; });
+        b.classList.add('chosen');
+        var wrong = readWrong(), at = wrong.indexOf(q.id);
+        if (ok && at >= 0) { wrong.splice(at, 1); writeWrong(wrong); }
+        if (!ok && at < 0) { wrong.push(q.id); writeWrong(wrong); }
+        res.className = 'rv-res ' + (ok ? 'ok' : 'ng');
+        res.innerHTML = '<p class="rv-verdict">' + (ok ? '正解' : '不正解') + '</p>' +
+          '<p class="rv-ans">正しい答え　' + (q.answer ? '○' : '×') + '</p>' +
+          '<p class="rv-exp">' + esc(q.exp) + '</p>' +
+          (fixed ? '' : '<button type="button" class="rv-again">別の1問</button>');
+        res.hidden = false;
+        var again = res.querySelector('.rv-again');
+        if (again) { again.addEventListener('click', function () { show(pick()); }); }
+      });
+    });
+  }
+  show(fixed ? pool[0] : pick());
 })();
 </script>
 </body>
