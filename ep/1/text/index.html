@@ -235,6 +235,91 @@ body:has(.sec:target) .sec{margin:0}
 .nq .qa{font-size:12px;color:var(--sub);line-height:1.6;margin-top:10px;text-align:right}
 .foot{font-size:12px;color:var(--sub);line-height:1.3}
 
+/* masks.css — 赤シートで隠す仕掛け。無料の図解と、やさしいテキストの赤シート版（sheet.css が状態を上書き）で共有。
+   [[…]] は <button class="mk">。祖先に .sheet が付くと赤シート色（#8E3B3B）で隠れ、タップで .open になる。
+   .rv は「答えが見えている状態の見た目」（シートなし・開いた後）。zones / route / 結果ピルは .rv で本来の形に戻る。 */
+.mk{appearance:none;-webkit-appearance:none;display:inline-block;border:0;margin:0;padding:0 1px;font:inherit;font-weight:inherit;letter-spacing:inherit;
+  line-height:1.3;white-space:nowrap;vertical-align:baseline;text-align:inherit;
+  background:transparent;color:inherit;border-radius:4px;cursor:default;pointer-events:none;-webkit-tap-highlight-color:transparent}
+.big .mk,.fo2 .mk{line-height:1.15}
+.sheet .mk{pointer-events:auto;cursor:pointer;background:var(--sheet);color:transparent;user-select:none;-webkit-user-select:none}
+.sheet .mk.open{background:var(--soft);color:inherit;cursor:default;user-select:text;-webkit-user-select:text}
+.mk:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+
+/* zones */
+.zone{background:#fff;border:2px solid var(--sky)}
+.zone.ng:has(.zh.rv),.zone.ng:has(.zh:not(.mk)){background:var(--gray-bg);border-color:var(--gray-bg)}
+.zh.mk{display:inline-block;margin-left:2px;min-width:84px;text-align:center;padding:0 14px;font-size:15px;font-weight:900;line-height:1.6;border-radius:4px;background:var(--sheet);color:transparent}
+.zone.ok .zh.mk.rv{background:var(--ink);color:#fff;border-radius:999px}
+.zone.ng .zh.mk.rv{background:var(--gray-ink);color:#fff;border-radius:999px}
+.zh:not(.mk){display:inline-block;border-radius:999px;padding:0 14px;margin-left:2px;font-size:15px;font-weight:900;color:#fff;line-height:1.6}
+.zone.ok .zh:not(.mk){background:var(--ink)}
+.zone.ng .zh:not(.mk){background:var(--gray-ink)}
+
+/* timeline */
+.route .go,.route .no2{background:#fff;box-shadow:inset 0 0 0 2px var(--sky)}
+.route .go{border-radius:999px 0 0 999px;color:var(--ink)}
+.route .no2{border-radius:0 999px 999px 0;color:var(--gray-ink)}
+.route .go:has(.mk.rv),.route .go:not(:has(.mk)){background:var(--soft)}
+.route .no2:has(.mk.rv),.route .no2:not(:has(.mk)){background:repeating-linear-gradient(135deg,#F1F3F4 0 6px,#DDE0E3 6px 8px);box-shadow:none}
+.route .go .mk.rv,.route .no2 .mk.rv{background:transparent}
+.route .go .mk.rv{color:var(--ink)}
+.route .no2 .mk.rv{color:var(--gray-ink)}
+.tbl .r.mk{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:76px;border-radius:4px;font-size:14px;font-weight:900;line-height:1.7;padding:1px 12px;background:var(--sheet);color:transparent}
+.tbl .r.y.mk.rv{background:var(--ink);color:#fff;border-radius:999px}
+.tbl .r.n.mk.rv{background:var(--gray-ink);color:#fff;border-radius:999px}
+.tbl .r:not(.mk){display:flex;align-items:center;justify-content:center;flex:0 0 auto;min-width:76px;border-radius:999px;font-size:14px;font-weight:900;line-height:1.7;padding:1px 12px;color:#fff}
+.tbl .r.y:not(.mk){background:var(--ink)}
+.tbl .r.n:not(.mk){background:var(--gray-ink)}
+
+/* table のピル（必要／不要・できる／できない・いる／いらない） */
+.tbt .pl.mk{display:inline-block;min-width:64px;padding:0 14px;font-size:14px;font-weight:900;line-height:1.7;border-radius:4px;background:var(--sheet);color:transparent}
+.tbt .pl.y.mk.rv{background:var(--ink);color:#fff;border-radius:999px}
+.tbt .pl.n.mk.rv{background:var(--gray-ink);color:#fff;border-radius:999px}
+.tbt.n3 .pl.mk{padding:0 6px;min-width:0;font-size:13px}
+
+/* sheet.css — やさしいテキストの赤シート版（画面用）。base.css → sp.css → masks.css のあとに読む。
+   上に固定の帯（.sbar）と、1か所ごとの4状態を足す。
+     .s-hide（隠す）→ .s-hint（ヒント）→ .s-open（答え）→ .s-doubt（答え＋あやしい印△）
+   開いた状態は masks.css の .open と .rv をそのまま使う（今の「開いた状態」と同じ見た目）。
+   sp.css の「見せた状態」（.zone .zh など）に負けないよう、状態は html body.sheet … で強めに書く。 */
+[hidden]{display:none !important}
+
+/* 上に固定の帯 */
+.sbar{position:sticky;top:0;z-index:30;padding:8px 16px;display:flex;flex-direction:column;gap:6px;background:rgba(244,250,252,.97);border-bottom:1px solid var(--line)}
+.sb-row{display:flex;align-items:center;gap:12px;min-height:32px}
+.sb-left{font-size:14px;font-weight:700;color:var(--sheet);line-height:1.4}
+.sb-left b{font-size:18px;font-weight:900;margin:0 1px}
+.sb-on{display:flex;flex-direction:column;gap:6px}
+.sb-note{font-size:11px;line-height:1.5;color:var(--sub);white-space:nowrap}
+.sb-btns{display:flex;gap:8px}
+.sb-b{appearance:none;-webkit-appearance:none;flex:1 1 0;font:inherit;font-size:13px;font-weight:700;line-height:1.4;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:5px 8px;cursor:pointer;white-space:nowrap}
+.sb-b:disabled{opacity:.4;cursor:default}
+.sb-b:not(:disabled):active{background:#F5E1E1}
+.tgl{appearance:none;-webkit-appearance:none;flex:0 0 auto;display:flex;align-items:center;gap:5px;font:inherit;font-size:13px;font-weight:700;line-height:1.4;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:6px 8px 6px 10px;cursor:pointer;white-space:nowrap}
+.tgl .sw{position:relative;flex:none;width:30px;height:18px;border-radius:9px;background:#C9CED2}
+.tgl .sw::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .12s}
+.tgl[aria-checked="true"]{background:var(--sheet);color:#fff}
+.tgl[aria-checked="true"] .sw{background:rgba(255,255,255,.4)}
+.tgl[aria-checked="true"] .sw::after{left:14px}
+.tgl:focus-visible,.sb-b:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+body:has(.sec:target) .sbar{display:none}
+
+/* 1回目のタップ前：隠す（赤シート色の箱・文字は透明・幅は答えのまま）。前に△をつけた所は、下の縁に白い点線 */
+html body.sheet .mk.s-hide{background:var(--sheet);color:transparent}
+html body.sheet .mk.s-hide.s-flag{background-image:linear-gradient(90deg,rgba(255,255,255,.8) 50%,transparent 50%);background-size:6px 3px;background-repeat:repeat-x;background-position:0 100%}
+/* 1回目：ヒント（薄い赤の地に赤字） */
+html body.sheet .mk.s-hint{background:#F5E1E1;color:var(--sheet);cursor:pointer;user-select:none;-webkit-user-select:none}
+html body.sheet .mk.s-hint .hd{display:inline-block;font-size:.72em;width:.82em;text-align:center}
+/* 2回目：答え（.open .rv は masks.css の今の見た目）。答えを触るとあやしい印△の入り切り */
+html body.sheet .mk.s-open{cursor:pointer}
+/* 答え＋△：波線の下線と赤い縁どり。濃い地のピルでは下線を白にする */
+html body.sheet .mk.s-doubt{text-decoration:underline wavy var(--sheet);text-decoration-thickness:1.5px;text-underline-offset:3px;box-shadow:0 0 0 1.5px var(--sheet)}
+html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-doubt{text-decoration-color:#fff}
+
+/* 印刷では帯も仕掛けも出さず、文字のまま（sheet.js も印刷の前に赤シートを外す） */
+@media print{.sbar{display:none !important}}
+
 
 /* 見本ページ用（画面だけ）：幅をスマホに合わせ、上に見本の札、下に案内 */
 @media screen{html{background:#fff}body{width:auto;max-width:390px;background:#fff}.sec{width:auto}}
@@ -270,21 +355,30 @@ body:has(.sec:target) .sec{margin:0}
       <tr><th>図</th><td>大事な図だけ（4枚）</td><td class="pay">放送の図をすべて（6枚）</td></tr>
       <tr><th>まとめ</th><td>—</td><td class="pay">まぎらわしい所のまとめ・放送の寄り道</td></tr>
       <tr><th>数字</th><td>—</td><td class="pay">今回の数字を1ページに</td></tr>
+      <tr><th>赤シート</th><td>—</td><td class="pay">隠して思い出す練習（ヒントつき）</td></tr>
       <tr><th>使い方</th><td>聴いたあとの見返し</td><td class="pay">見ながら聴く・試験前の総ざらい</td></tr>
     </tbody>
   </table></div>
   <p class="smp-note">下に、第1回をまるごと載せています。</p>
 </div>
+<div class="sbar" id="sbar" data-ep="1">
+  <div class="sb-row"><button type="button" class="tgl" id="sheetTgl" role="switch" aria-checked="false"><span class="tl">赤シート</span><span class="sw" aria-hidden="true"></span></button><span class="sb-left" id="sbLeft" hidden>残り <b id="sbN">0</b> か所</span></div>
+  <div class="sb-on" id="sbOn" hidden>
+    <p class="sb-note">1回タップでヒント、2回で答え。答えをもう1回タップで△（あやしい）</p>
+    <div class="sb-btns"><button type="button" class="sb-b" id="sbAll">全部かけ直す</button><button type="button" class="sb-b" id="sbDoubt" disabled>△だけかけ直す</button></div>
+  </div>
+</div>
+
 <!-- ========== 前半 ========== -->
 <section class="sec s1" id="s1">
 <div class="top">耳で覚える宅建2027　第1回　2027年1月4日（月）</div>
 <div class="title"><div class="row"><span class="no">第1回</span><h1>100部屋貸しても、<br>免許はいらない</h1></div><div class="side">前半　宅建業と免許</div></div>
-<div class="core"><h2>今日のポイント</h2><p>「自分の物件を自分で貸す」以外の取引を、不特定多数にくり返し行うなら免許がいる。事務所が1つの県だけなら知事、2つ以上の県なら大臣。</p></div>
+<div class="core"><h2>今日のポイント</h2><p>「自分の物件を自分で貸す」以外の取引を、不特定多数にくり返し行うなら<span class="nb"><button class="mk" type="button">免許がいる</button>。</span>事務所が1つの県だけなら<span class="nb"><button class="mk" type="button">知事</button>、</span>2つ以上の県なら<span class="nb"><button class="mk" type="button">大臣</button>。</span></p></div>
 <div class="target">自ら売買・交換、または他人の売買・交換・貸借の代理・媒介</div>
 <div class="cards">
 <section class="card t-zones n1">
   <div class="hd"><span class="no">1</span><h2>免許がいるのは誰？<small>「業として」＝不特定多数に、くり返し行うこと</small></h2></div>
-  <div class="zones"><div class="zone ok"><span class="zh">免許がいる</span><div class="items" style="--cols:2"><div class="it"><img src="/ep/1/img/plots.webp" alt=""><div class="lb">地主さん</div><div class="sm">20区画を次々に売る</div></div><div class="it"><img src="/ep/1/img/broker.webp" alt=""><div class="lb">仲介する会社</div><div class="sm">他人の部屋の貸借でも</div></div></div></div><div class="zone ng"><span class="zh">いらない</span><div class="items" style="--cols:3"><div class="it"><img src="/ep/1/img/landlord.webp" alt=""><div class="lb">大家さん</div><div class="sm">自ら貸借</div></div><div class="it"><img src="/ep/1/img/onetime.webp" alt=""><div class="lb">会社員</div><div class="sm">自宅を<span class="nb">1回売る</span></div></div><div class="it"><img src="/ep/1/img/cityhall.webp" alt=""><div class="lb">国・地方公共団体</div><div class="sm">適用除外</div></div></div></div></div>
+  <div class="zones"><div class="zone ok"><button class="mk zh rv" type="button">免許がいる</button><div class="items" style="--cols:2"><div class="it"><img src="/ep/1/img/plots.webp" alt=""><div class="lb">地主さん</div><div class="sm">20区画を次々に売る</div></div><div class="it"><img src="/ep/1/img/broker.webp" alt=""><div class="lb">仲介する会社</div><div class="sm">他人の部屋の貸借でも</div></div></div></div><div class="zone ng"><button class="mk zh rv" type="button">いらない</button><div class="items" style="--cols:3"><div class="it"><img src="/ep/1/img/landlord.webp" alt=""><div class="lb">大家さん</div><div class="sm"><button class="mk" type="button">自ら貸借</button></div></div><div class="it"><img src="/ep/1/img/onetime.webp" alt=""><div class="lb">会社員</div><div class="sm">自宅を<span class="nb"><button class="mk" type="button">1回</button>売る</span></div></div><div class="it"><img src="/ep/1/img/cityhall.webp" alt=""><div class="lb">国・地方公共団体</div><div class="sm">適用除外</div></div></div></div></div>
 </section>
 
 <section class="card t-facts n2">
@@ -294,7 +388,7 @@ body:has(.sec:target) .sec{margin:0}
 
 <section class="card t-facts n3">
   <div class="hd"><span class="no">3</span><h2>免許の期間と更新<small>申請しておけば、処分が出るまで<br>古い免許が有効</small></h2></div>
-  <div class="fcs"><div class="fc"><img src="/ep/1/img/valid5.webp" alt=""><div class="tx"><div class="w">5年</div><div class="n">免許の有効期間</div></div></div><div class="fc"><img src="/ep/1/img/window.webp" alt=""><div class="tx"><div class="w" style="font-size:26px">90日前〜30日前</div><div class="n">満了日の、更新の申請期間</div></div></div><div class="fc"><img src="/ep/1/img/nextday.webp" alt=""><div class="tx"><div class="w">満了の翌日</div><div class="n">新しい有効期間の起点。<br>処分の日からではない</div></div></div></div>
+  <div class="fcs"><div class="fc"><img src="/ep/1/img/valid5.webp" alt=""><div class="tx"><div class="w"><button class="mk" type="button">5年</button></div><div class="n">免許の有効期間</div></div></div><div class="fc"><img src="/ep/1/img/window.webp" alt=""><div class="tx"><div class="w" style="font-size:26px"><button class="mk" type="button">90日前</button>〜<button class="mk" type="button">30日前</button></div><div class="n">満了日の、更新の申請期間</div></div></div><div class="fc"><img src="/ep/1/img/nextday.webp" alt=""><div class="tx"><div class="w">満了の<button class="mk" type="button">翌日</button></div><div class="n">新しい有効期間の起点。<br>処分の日からではない</div></div></div></div>
 </section>
 </div>
 <div class="band2"><h3>事務所に数えるもの</h3><div class="pills"><span class="pl o"><b>数える</b><i>本店・宅建業をしている支店。継続して業務ができ、契約を結ぶ権限のある人を置く場所も</i></span><span class="pl x"><b>数えない</b><i>宅建業をしていない支店</i></span></div></div>
@@ -306,12 +400,12 @@ body:has(.sec:target) .sec{margin:0}
 <section class="sec s2" id="s2">
 <div class="top">耳で覚える宅建2027　第1回　2027年1月4日（月）</div>
 <div class="title"><div class="row"><span class="no">第1回</span><h1>100部屋貸しても、<br>免許はいらない</h1></div><div class="side">後半　免許の基準</div></div>
-<div class="core"><h2>今日のポイント</h2><p>免許をもらえない人の名簿は「5年」で読む。ただし破産は復権すれば、執行猶予は期間が終われば、その日からすぐ免許を受けられる。</p></div>
+<div class="core"><h2>今日のポイント</h2><p>免許をもらえない人の名簿は<span class="nb">「<button class="mk" type="button">5年</button>」</span>で読む。ただし破産は<button class="mk" type="button">復権</button>すれば、執行猶予は<span class="nb"><button class="mk" type="button">期間が終われば</button>、</span>その日から<button class="mk" type="button">すぐ</button>免許を受けられる。</p></div>
 <div class="target">免許を出さない人の名簿＝欠格事由</div>
 <div class="cards">
 <section class="card t-facts n4">
   <div class="hd"><span class="no">4</span><h2>名簿は年数で読む<small>すぐ戻れる例外は2つ</small></h2></div>
-  <div class="fcs"><div class="fc"><img src="/ep/1/img/restore.webp" alt=""><div class="tx"><div class="w">すぐ</div><div class="n">破産は復権の日から、執行猶予は満了の日から</div></div></div><div class="fc"><img src="/ep/1/img/wait5.webp" alt=""><div class="tx"><div class="w">5年</div><div class="n">拘禁刑以上の刑と、特定の罪の罰金。執行を終えた日などから</div></div></div></div>
+  <div class="fcs"><div class="fc"><img src="/ep/1/img/restore.webp" alt=""><div class="tx"><div class="w"><button class="mk" type="button">すぐ</button></div><div class="n">破産は復権の日から、執行猶予は満了の日から</div></div></div><div class="fc"><img src="/ep/1/img/wait5.webp" alt=""><div class="tx"><div class="w"><button class="mk" type="button">5年</button></div><div class="n">拘禁刑以上の刑と、特定の罪の罰金。執行を終えた日などから</div></div></div></div>
 </section>
 
 <section class="card t-big n5">
@@ -324,8 +418,8 @@ body:has(.sec:target) .sec{margin:0}
 <section class="card t-big n6">
   <div class="hd"><span class="no">6</span><h2>本人だけでなく、まわりも見る<small>チームの出場停止と同じ</small></h2></div>
   <img class="ill" src="/ep/1/img/team.webp" alt="">
-  <div class="big" style="font-size:16px">1人でも欠格なら、会社ごと受けられない</div>
-  <div class="notes"><p>見るのは、役員（常勤・非常勤を問わない）と、政令で定める使用人</p><p>営業について成年者と同じ行為能力のない未成年者は、法定代理人もチェック</p></div>
+  <div class="big" style="font-size:16px"><button class="mk" type="button">1人でも</button>欠格なら、会社ごと受けられない</div>
+  <div class="notes"><p>見るのは、役員<span class="nb">（<button class="mk" type="button">常勤・非常勤を問わない</button>）</span>と、政令で定める使用人</p><p>営業について成年者と同じ行為能力のない未成年者は、法定代理人もチェック</p></div>
 </section>
 </div>
 <div class="band"><div class="cap">放送の寄り道から</div><h3>なぜ、駆け込み廃業まで取消しと同じ扱いなの？</h3><p class="t">悪質な業者が、取消しのあとは従業員になって待ち、期間が過ぎるとまた申請してきました。国会でその例が挙げられ、待つ期間は5年に、駆け込み廃業も同じ扱いになりました。</p></div>
@@ -371,6 +465,155 @@ body:has(.sec:target) .sec{margin:0}
   }
   window.addEventListener('load', fit);
   if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fit); }
+})();
+</script>
+<script>
+/* sheet.js — やさしいテキストの赤シート版（画面用）。
+   [[…]] のボタン（.mk）を 隠す → ヒント → 答え → △（あやしい）の順に進める。
+   △は localStorage（キー takken2027-sheet-ep<回>）に残す。読み書きは try/catch。使えなくても動く。
+   印刷の前には赤シートを外して文字のまま出す。 */
+(function () {
+  'use strict';
+
+  /* ヒント：数字は1けたごとに「○」（単位などはそのまま）。
+     数字がなければ、2字以下は全部○、3〜5字は頭の1字＋残り○、6字以上は頭の2字＋残り○。「・」「、」「〜」は見せたまま。 */
+  function hintOf(text) {
+    var chars = Array.from(String(text)), i, out = '';
+    if (/[0-9０-９]/.test(chars.join(''))) {
+      for (i = 0; i < chars.length; i++) { out += /[0-9０-９]/.test(chars[i]) ? '○' : chars[i]; }
+      return out;
+    }
+    var keep = function (ch) { return '・、〜'.indexOf(ch) >= 0 || /\s/.test(ch); };
+    var n = chars.filter(function (ch) { return !keep(ch); }).length;
+    var head = n <= 2 ? 0 : (n <= 5 ? 1 : 2), k = 0;
+    for (i = 0; i < chars.length; i++) {
+      if (keep(chars[i])) { out += chars[i]; } else { out += (k < head ? chars[i] : '○'); k += 1; }
+    }
+    return out;
+  }
+
+  /* 画面用：数字の○だけ細い箱に入れる（半角の数字と幅をそろえ、答えより広がらないように） */
+  function hintHtml(text) {
+    var h = Array.from(hintOf(text)), src = Array.from(String(text)), out = '', i;
+    var esc = function (c) { return c === '&' ? '&amp;' : c === '<' ? '&lt;' : c === '>' ? '&gt;' : c; };
+    for (i = 0; i < h.length; i++) {
+      out += (/[0-9]/.test(src[i] || '') && h[i] === '○') ? '<span class="hd">○</span>' : esc(h[i]);
+    }
+    return out;
+  }
+
+  if (typeof module !== 'undefined' && module.exports) { module.exports = { hintOf: hintOf, hintHtml: hintHtml }; }
+  if (typeof document === 'undefined') { return; }
+
+  var bar = document.getElementById('sbar');
+  var tgl = document.getElementById('sheetTgl');
+  var left = document.getElementById('sbLeft');
+  var nEl = document.getElementById('sbN');
+  var onBox = document.getElementById('sbOn');
+  var btnAll = document.getElementById('sbAll');
+  var btnDoubt = document.getElementById('sbDoubt');
+  if (!bar || !tgl) { return; }
+  var KEY = 'takken2027-sheet-ep' + (bar.getAttribute('data-ep') || '0');
+  var CLS = ['s-hide', 's-hint', 's-open', 's-doubt', 's-flag', 'open', 'rv'];
+
+  /* st: 0 隠す／1 ヒント／2 答え。doubt は答えにつける△（保存する） */
+  var items = [].slice.call(document.querySelectorAll('.sec .mk')).map(function (el) {
+    return { el: el, html: el.innerHTML, hint: hintHtml(el.textContent), st: 0, doubt: false };
+  });
+  var on = false;
+
+  function load() {
+    try {
+      var a = JSON.parse(window.localStorage.getItem(KEY) || '[]');
+      if (Array.isArray(a)) { a.forEach(function (i) { if (items[i]) { items[i].doubt = true; } }); }
+    } catch (e) { /* 保存が使えなくても動く */ }
+  }
+  function save() {
+    try {
+      var a = [];
+      items.forEach(function (it, i) { if (it.doubt) { a.push(i); } });
+      window.localStorage.setItem(KEY, JSON.stringify(a));
+    } catch (e) { /* 保存が使えなくても動く */ }
+  }
+
+  function paint(it, show) {
+    var el = it.el;
+    CLS.forEach(function (c) { el.classList.remove(c); });
+    if (!show) {
+      el.classList.add('rv');
+      el.innerHTML = it.html;
+      el.removeAttribute('aria-label'); el.removeAttribute('aria-pressed');
+      el.setAttribute('tabindex', '-1'); el.setAttribute('aria-disabled', 'true');
+      return;
+    }
+    el.removeAttribute('tabindex'); el.removeAttribute('aria-disabled');
+    if (it.st === 0) {
+      el.classList.add('s-hide');
+      if (it.doubt) { el.classList.add('s-flag'); }
+      el.innerHTML = it.html;
+      el.removeAttribute('aria-pressed');
+      el.setAttribute('aria-label', '隠れています。押すとヒント');
+    } else if (it.st === 1) {
+      el.classList.add('s-hint');
+      el.innerHTML = it.hint;
+      el.removeAttribute('aria-pressed');
+      el.setAttribute('aria-label', 'ヒント。押すと答え');
+    } else {
+      el.classList.add('open', 'rv', 's-open');
+      if (it.doubt) { el.classList.add('s-doubt'); }
+      el.innerHTML = it.html;
+      el.removeAttribute('aria-label');
+      el.setAttribute('aria-pressed', it.doubt ? 'true' : 'false'); /* 押している＝あやしい印あり */
+    }
+  }
+
+  function count() {
+    var rest = 0, d = 0;
+    items.forEach(function (it) { if (it.st < 2) { rest += 1; } if (it.doubt) { d += 1; } });
+    nEl.textContent = String(rest);
+    btnDoubt.disabled = (d === 0);
+  }
+  function render(show) {
+    document.body.classList.toggle('sheet', show);
+    items.forEach(function (it) { paint(it, show); });
+    count();
+  }
+  function setSheet(v) {
+    on = v;
+    tgl.setAttribute('aria-checked', v ? 'true' : 'false');
+    left.hidden = !v; onBox.hidden = !v;
+    items.forEach(function (it) { it.st = 0; });
+    render(v);
+  }
+
+  items.forEach(function (it) {
+    it.el.addEventListener('click', function () {
+      if (!on) { return; }
+      if (it.st < 2) { it.st += 1; } else { it.doubt = !it.doubt; save(); }
+      paint(it, true); count();
+    });
+  });
+  tgl.addEventListener('click', function () { setSheet(!on); });
+  btnAll.addEventListener('click', function () {
+    items.forEach(function (it) { it.st = 0; });
+    render(true);
+  });
+  btnDoubt.addEventListener('click', function () {
+    items.forEach(function (it) { if (it.doubt) { it.st = 0; } });
+    render(true);
+  });
+
+  /* 印刷：仕掛けを出さず文字のまま */
+  window.addEventListener('beforeprint', function () { if (on) { render(false); } });
+  window.addEventListener('afterprint', function () { if (on) { render(true); } });
+  if (window.matchMedia) {
+    var mq = window.matchMedia('print');
+    var f = function (e) { if (on) { render(!e.matches); } };
+    if (mq.addEventListener) { mq.addEventListener('change', f); } else if (mq.addListener) { mq.addListener(f); }
+  }
+
+  load();
+  render(false);
 })();
 </script>
 </body>
