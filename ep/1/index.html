@@ -304,6 +304,8 @@ body.member .kk-gate{display:none}
 .pmid{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .pt{font-size:14px;font-weight:700;line-height:1.5}
 .py{font-size:12px;line-height:1.4;color:#0A6477}
+.pico.list{background:var(--soft)}
+.pico.list::after{left:9px;top:10px;width:14px;height:2px;border:0;border-width:0;background:#0A6477;box-shadow:0 5px 0 #0A6477,0 10px 0 #0A6477}
 .pgo{flex:none;width:9px;height:9px;border-top:2px solid #0A6477;border-right:2px solid #0A6477;transform:rotate(45deg);margin-right:4px}
 
 /* LINEの誘い：白地＋水色の枠、ボタンだけ水色塗り（正解のライム・不正解のグレーとぶつけない） */
@@ -416,6 +418,11 @@ body.member .line-card{display:none}
   <section class="sec" id="honban">
     <h2 class="sec-h">過去問1選</h2>
     <div id="kkBox"></div>
+  </section>
+
+  <section class="sec" id="plan">
+    <div class="shead"><h2 class="sh">2027年の配信予定</h2><p class="ssub">1月4日から、毎週月曜に本編を1本（予定）</p></div>
+    <ul class="past"><li><a class="prow" href="https://www.mimiobo.com/roadmap" data-umami-event="ep-roadmap" data-umami-event-ep="1"><span class="pico list" aria-hidden="true"></span><span class="pmid"><span class="pt">学習ロードマップ</span><span class="py">全41回の日付とテーマを見る</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
   </section>
 
   <section class="sec" id="y2026">
