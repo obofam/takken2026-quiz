@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>やさしいテキスト 第1回（見本）｜耳で覚える宅建2027</title>
+<!-- Umami analytics (page: ep1 やさしいテキスト見本) -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* base.css — スマホ版・無料の図解・回のページで共有する部分（第9回の試作から抜き出し）
+   変数・タイトル帯・今日のポイント・対象ピル・カードの型（big / zones / gauge / timeline / compare / table / steps / facts）。
+   「隠す／見せる」の色や、ページごとの違いは sp.css / free.css / page.css 側。 */
+:root{
+  --sky:#17C5E8; --ink:#0A6477; --soft:#E3F8FC; --bg:#F4FAFC; --text:#141B21; --sub:#6B6B76; --line:#DCEEF3;
+  --gray-bg:#F1F3F4; --gray-ink:#6B6B76;
+  --sheet:#8E3B3B;
+  --lime:#D6F034; --lime-soft:#F4FBD2; --lime-dark:#4F6300;
+  --font:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+  --shadow:0 2px 8px rgba(20,27,33,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);word-break:auto-phrase;overflow-wrap:anywhere;color:var(--text);line-height:1.5}
+
+/* タイトル帯 */
+.title{background:var(--ink);color:#fff;border-radius:14px;padding:14px 16px 12px}
+.title .row{display:flex;align-items:center;gap:10px}
+.title .no{flex:0 0 auto;background:#fff;color:var(--ink);border-radius:999px;font-size:15px;font-weight:900;padding:1px 13px;line-height:1.5}
+.title h1{font-size:22px;font-weight:900;line-height:1.3;flex:1;min-width:0}
+.title .side{margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.35);font-size:18px;font-weight:700;line-height:1.3}
+
+/* 今日のポイント */
+.core{position:relative;overflow:hidden;background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:10px 14px 12px 20px}
+.core::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--sky)}
+.core h2{font-size:14px;font-weight:900;color:var(--ink);line-height:1.3;letter-spacing:.04em}
+.core p{font-size:17px;font-weight:700;margin-top:3px}
+
+/* 対象ピル */
+.target{align-self:flex-start;background:#fff;border:1.5px solid var(--sky);border-radius:16px;
+  padding:3px 14px;font-size:14px;font-weight:700;color:var(--ink);line-height:1.5}
+
+/* カード */
+.cards{display:flex;flex-direction:column;gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+  padding:12px 12px 14px;display:flex;flex-direction:column;position:relative}
+.hd{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.hd .no{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-size:15px;font-weight:900;display:grid;place-items:center}
+.hd h2{font-size:19px;font-weight:900;line-height:1.3}
+.hd small{display:block;font-size:14px;font-weight:400;color:var(--sub);line-height:1.4}
+
+img{object-view-box:inset(7% 0 7% 0)}
+.ill{width:100%;height:160px;object-fit:contain;display:block}
+.big{font-size:36px;font-weight:900;color:var(--ink);text-align:center;line-height:1.2;margin-top:4px}
+.notes{margin-top:6px;text-align:center;font-size:14px;line-height:1.6}
+.notes p+p{margin-top:2px}
+
+/* ===== zones（できる／できない） ===== */
+.zones{display:flex;flex-direction:column;gap:10px}
+.zone{border-radius:12px;padding:8px 6px 8px}
+.items{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:4px;margin-top:4px}
+.it{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.it img{width:100%;height:100px;object-fit:contain;display:block}
+.zone.ng .it img{mix-blend-mode:multiply}
+.it .lb{font-size:13px;font-weight:700;line-height:1.4;margin-top:2px;white-space:nowrap}
+.it .sm{font-size:12px;color:var(--sub);line-height:1.35;margin-top:2px;white-space:nowrap}
+
+/* ===== gauge（メーター） ===== */
+.t-gauge .gauge{position:relative}
+.t-gauge .gauge img{position:absolute;right:2px;top:0;width:56px;height:56px;object-fit:contain}
+.t-gauge .gauge svg{width:100%;height:auto;display:block}
+.t-gauge .gauge foreignObject{overflow:visible}
+.fo2{text-align:center;font-size:32px;font-weight:900;color:var(--ink);line-height:1.3;font-family:var(--font)}
+.fo20{font-size:14px;font-weight:700;color:var(--ink);line-height:1.3;font-family:var(--font)}
+.fo20.r{text-align:right}
+.fo20.l{text-align:left}
+.fo20.m{text-align:center}
+.t-gauge .notes{font-size:15px;font-weight:700}
+
+/* ===== timeline（相手方が履行に着手） ===== */
+.t-timeline .ill{height:150px}
+.route{position:relative;height:64px;margin-top:6px}
+.route .track{position:absolute;left:0;right:0;bottom:0;height:38px;display:flex;border-radius:999px;overflow:hidden}
+.route .go,.route .no2{flex:1;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900}
+.route .pole{position:absolute;left:50%;top:0;bottom:-4px;width:3px;margin-left:-1.5px;background:var(--ink);border-radius:2px}
+.route .flag{position:absolute;left:50%;top:0;margin-left:1.5px;background:var(--ink);color:#fff;font-size:14px;font-weight:700;line-height:1.6;
+  padding:1px 26px 1px 10px;clip-path:polygon(0 0,100% 0,calc(100% - 10px) 50%,100% 100%,0 100%);white-space:nowrap}
+.t-timeline .big{font-size:32px;margin-top:10px}
+.tbl{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.tbl .row{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.tbl .rr{display:flex;align-items:center;gap:6px;align-self:stretch}
+.tbl .a{display:flex;align-items:center;border-radius:999px;font-size:14px;line-height:1.7;padding:1px 12px;background:var(--soft);color:var(--ink);font-weight:700}
+.tbl .b{display:flex;align-items:center;border-radius:999px;font-size:14px;line-height:1.7;padding:1px 12px;flex:1;min-width:0;background:#fff;border:1px solid var(--line);white-space:nowrap}
+.t-timeline .notes{text-align:left;color:var(--sub)}
+
+/* ===== compare（比べ表：見出しの丸を横に並べ、行ごとに「項目名」→ 横に並ぶ値） ===== */
+.cmp{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));gap:6px;align-items:stretch;margin-top:6px}
+.cmp .ch{display:flex;align-items:center;justify-content:center;text-align:center;border-radius:999px;font-size:14px;font-weight:900;line-height:1.35;padding:4px 8px;color:#fff;background:var(--ink)}
+.cmp .ch.c1{background:var(--sky);color:var(--text)}
+.cmp .ch.c2{background:var(--gray-ink)}
+.cmp .ck{grid-column:1/-1;display:flex;align-items:center;gap:6px;margin-top:6px;font-size:14px;font-weight:700;color:var(--ink);line-height:1.3}
+.cmp .ck::before{content:"";flex:0 0 auto;width:5px;height:15px;border-radius:3px;background:var(--sky)}
+.cmp .cv{display:flex;align-items:center;justify-content:center;text-align:center;border-radius:12px;padding:7px 5px;font-size:13px;line-height:1.5;border:1.5px solid transparent}
+.cmp .cv.c0{background:var(--soft)}
+.cmp .cv.c1{background:#fff;border-color:var(--sky)}
+.cmp .cv.c2{background:var(--gray-bg)}
+.t-compare .ill{height:120px}
+
+/* ===== table（分かれ目の表：行ごとに区切り・必要／不要はピル） ===== */
+.tbt{display:grid;grid-template-columns:fit-content(104px) repeat(var(--n,2),minmax(0,1fr));column-gap:8px;margin-top:6px}
+.tbt .th{display:flex;align-items:center;justify-content:center;text-align:center;background:var(--soft);color:var(--ink);font-size:14px;font-weight:900;border-radius:999px;padding:3px 8px;line-height:1.4;margin-bottom:2px}
+.tbt .tr{display:contents}
+.tbt .tk,.tbt .tv{display:flex;align-items:center;padding:9px 2px;border-top:1.5px dashed var(--line)}
+.tbt .tr.f .tk,.tbt .tr.f .tv{border-top:0}
+.tbt .tk{font-size:14px;font-weight:700;line-height:1.4}
+.tbt .tv{justify-content:center;text-align:center;font-size:14px;line-height:1.45}
+.tbt .pl{display:inline-block;border-radius:999px;padding:0 14px;color:#fff;font-weight:900;font-size:14px;line-height:1.7;min-width:64px;text-align:center}
+.tbt .pl.y{background:var(--ink)}
+.tbt .pl.n{background:var(--gray-ink)}
+.tbt.n3{column-gap:4px;grid-template-columns:fit-content(92px) repeat(3,minmax(0,1fr))}
+.tbt.n3 .tk{font-size:12.5px}
+.tbt.n3 .pl{padding:0 4px;min-width:0;font-size:12.5px;white-space:nowrap}
+.tbt.n3 .tv{padding-left:0;padding-right:0}
+
+/* ===== steps（番号つきで縦に並べる） ===== */
+.stp{display:flex;flex-direction:column;margin-top:4px}
+.stp .st{display:grid;grid-template-columns:30px 76px minmax(0,1fr);gap:10px;align-items:center;padding:3px 0}
+.stp .st.ni{grid-template-columns:30px minmax(0,1fr)}
+.stp .rail{align-self:stretch;display:flex;flex-direction:column;align-items:center}
+.stp .rail i{flex:1;width:3px;background:var(--sky);border-radius:2px}
+.stp .st:first-child .rail i.u,.stp .st:last-child .rail i.d{background:transparent}
+.stp .rail .sn{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--soft);border:2px solid var(--sky);color:var(--ink);font-size:15px;font-weight:900;display:grid;place-items:center;margin:2px 0;line-height:1}
+.stp .si{width:76px;height:76px;object-fit:contain;display:block}
+.stp .tx{min-width:0}
+.stp .tx .t{font-size:19px;font-weight:900;line-height:1.3}
+.stp .tx .d{font-size:14px;line-height:1.5;margin-top:2px}
+
+/* ===== facts（数字・やめ方などを2〜4個並べる） ===== */
+.fcs{display:flex;flex-direction:column}
+.fc{display:flex;align-items:center;gap:10px;padding:4px 0}
+.fc+.fc{border-top:1.5px dashed var(--line);margin-top:4px;padding-top:8px}
+.fc img{flex:0 0 100px;width:100px;height:100px;object-fit:contain}
+.fc .tx{flex:1;min-width:0}
+.fc .sub{display:inline-block;background:var(--soft);color:var(--ink);font-size:14px;font-weight:700;border-radius:999px;padding:0 12px;line-height:1.7}
+.fc .w{font-size:34px;font-weight:900;color:var(--ink);line-height:1.2;margin-top:3px;white-space:nowrap}
+.fc .n{font-size:14px;line-height:1.5;margin-top:3px}
+.t-facts .tail{align-self:center;background:var(--soft);color:var(--ink);font-size:14px;font-weight:700;border-radius:999px;padding:0 16px;line-height:1.8;margin-top:8px}
+
+/* 隠す語と前後の句読点・かっこを一緒に折り返す（build.py の inline） */
+.nb{white-space:nowrap}
+
+/* スマホ幅ではスクロールバーを出さない（実機と同じ見え方。ビューアのスマホ枠でも同じになる） */
+@media (max-width:520px){html{scrollbar-width:none}html::-webkit-scrollbar{display:none}}
+
+/* sp.css — スマホ版（全部入り・有料のやさしいテキスト）。[[…]] は普通の文字として出す。 */
+html,body{background:#E9EEF0}
+body{-webkit-print-color-adjust:exact;print-color-adjust:exact;width:390px;margin:0 auto;overflow-x:hidden}
+
+.sec{width:390px;background:var(--bg);padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.sec:last-child{margin-bottom:0}
+/* 1セクション＝1ページ。ページの高さは sp.js が測って足す */
+@media print{
+  html,body{background:var(--bg)}
+  body{margin:0;width:auto}
+  .sec{margin:0;zoom:0.96911;page-break-after:always;break-after:page}
+  .sec:last-child{break-after:auto}
+}
+/* export 用：#s1 / #s2 を付けるとそのセクションだけを左上に出す */
+body:has(.sec:target){background:var(--bg);margin:0}
+body:has(.sec:target) .sec:not(:target){display:none}
+body:has(.sec:target) .sec{margin:0}
+
+.top{font-size:12px;color:var(--sub);line-height:1.3}
+.core p{line-height:1.55}
+
+/* zones：見せた状態 */
+.zone.ok{background:#fff;border:2px solid var(--sky)}
+.zone.ng{background:var(--gray-bg);border:2px solid var(--gray-bg)}
+.zh{display:inline-block;border-radius:999px;padding:0 14px;margin-left:2px;font-size:15px;font-weight:900;color:#fff;line-height:1.6}
+.zone.ok .zh{background:var(--ink)}
+.zone.ng .zh{background:var(--gray-ink)}
+
+/* timeline：見せた状態 */
+.route .go{background:var(--soft);color:var(--ink);box-shadow:inset 0 0 0 2px var(--sky);border-radius:999px 0 0 999px}
+.route .no2{background:repeating-linear-gradient(135deg,#F1F3F4 0 6px,#DDE0E3 6px 8px);color:var(--gray-ink)}
+.tbl .r{display:flex;align-items:center;border-radius:999px;line-height:1.7;padding:1px 12px;flex:0 0 auto;justify-content:center;color:#fff;font-weight:900;font-size:14px;min-width:76px}
+.tbl .r.y{background:var(--ink)}
+.tbl .r.n{background:var(--gray-ink)}
+.t-timeline .notes{margin-top:10px}
+
+/* 放送の寄り道から */
+.band{background:var(--soft);border:1.5px dashed var(--sky);border-radius:14px;padding:12px 14px 14px}
+.band .cap{font-size:14px;color:var(--ink);font-weight:700;line-height:1.3}
+.band h3{font-size:20px;font-weight:900;color:var(--ink);line-height:1.35;margin-top:4px}
+.band .t{font-size:15px;line-height:1.7;margin-top:6px}
+
+/* strip（セクション末の帯：無効／有効など） */
+.band2{background:var(--soft);border:1.5px dashed var(--sky);border-radius:14px;padding:12px 14px 14px}
+.band2 h3{font-size:18px;font-weight:900;color:var(--ink);line-height:1.4}
+.band2 .pills{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.band2 .pl{display:flex;align-items:stretch;background:#fff;border-radius:14px;font-size:14px;line-height:1.55;overflow:hidden}
+.band2 .pl b{flex:0 0 auto;display:flex;align-items:center;padding:3px 12px;font-weight:900;font-size:14px}
+.band2 .pl i{font-style:normal;padding:3px 12px;align-self:center}
+.band2 .pl.x{border:1.5px solid #D2D6D9;color:var(--gray-ink)}
+.band2 .pl.x b{background:var(--gray-ink);color:#fff}
+.band2 .pl.o{border:1.5px solid var(--sky)}
+.band2 .pl.o b{background:var(--ink);color:#fff}
+
+.next{font-size:14px;color:var(--sub);line-height:1.5;text-align:center}
+.btn{display:block;text-decoration:none;background:var(--sky);color:var(--text);border-radius:999px;padding:8px 16px;text-align:center;font-size:18px;font-weight:900;line-height:1.4}
+.btn span{display:block;font-size:14px;font-weight:700}
+.btn.b2{background:#fff;border:2px solid var(--sky);color:var(--ink)}
+
+/* 今回の数字（回の最後のページ）と、数字まとめ（make_numbers.py・第1回から全部。.ngp ごと） */
+.numh h2{font-size:26px;font-weight:900;color:var(--ink);line-height:1.3}
+.numh p{font-size:13px;color:var(--sub);line-height:1.5;margin-top:2px}
+.ngp h3{display:inline-block;background:var(--ink);color:#fff;border-radius:999px;padding:0 14px;font-size:15px;font-weight:900;line-height:1.7}
+.nl{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.nr{display:grid;grid-template-columns:118px 1fr auto;align-items:center;column-gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:7px 12px}
+.nr.now{border:2px solid var(--sky);padding:6px 11px}
+.nv{font-size:18px;font-weight:900;color:var(--ink);line-height:1.3}
+.nk{font-size:14px;line-height:1.45}
+.ne{font-size:12px;color:var(--sub);white-space:nowrap}
+.nums .nl .nr{grid-template-columns:118px 1fr}
+/* 前回の数字、覚えてる？（数字の所を空けて、答えは下に小さく） */
+.nq{background:var(--soft);border:1.5px dashed var(--sky);border-radius:14px;padding:12px 14px 12px}
+.nq h3{font-size:20px;font-weight:900;color:var(--ink);line-height:1.35}
+.nq .qs{font-size:13px;color:var(--sub);line-height:1.4;margin-top:2px}
+.ql{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.qr{display:grid;grid-template-columns:auto 1fr 88px;align-items:center;column-gap:8px;background:#fff;border-radius:12px;padding:8px 10px}
+.qm{font-size:16px;font-weight:900;color:var(--ink)}
+.qk{font-size:14px;line-height:1.45}
+.qb{height:30px;border:2px dashed var(--sky);border-radius:8px;background:var(--bg)}
+.nq .qa{font-size:12px;color:var(--sub);line-height:1.6;margin-top:10px;text-align:right}
+.foot{font-size:12px;color:var(--sub);line-height:1.3}
+
+
+/* 見本ページ用（画面だけ）：幅をスマホに合わせ、上に見本の札、下に案内 */
+@media screen{html{background:#fff}body{width:auto;max-width:390px;background:#fff}.sec{width:auto}}
+.smp-head{padding:20px 16px 8px;text-align:center}
+.smp-tag{display:inline-block;font-size:12px;font-weight:700;color:var(--ink);background:var(--soft);border-radius:999px;padding:2px 12px}
+.smp-h{font-size:21px;font-weight:900;line-height:1.4;margin-top:8px}
+.smp-lead{font-size:13px;color:var(--sub);line-height:1.75;margin-top:6px}
+.smp-foot{padding:6px 16px 36px;text-align:center}
+.smp-foot p{font-size:13px;color:var(--sub);line-height:1.75;margin-bottom:10px}
+.smp-line{display:block;text-decoration:none;background:var(--sky);color:var(--text);border-radius:999px;padding:10px 16px;font-size:15px;font-weight:900}
+.smp-links{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.smp-links a{font-size:13px;color:var(--ink);text-underline-offset:2px}
+@media print{.smp-head,.smp-foot{display:none}}
+</style>
+</head>
+<body>
+<div class="smp-head">
+  <span class="smp-tag">有料教材の見本</span>
+  <h1 class="smp-h">やさしいテキスト　第1回</h1>
+  <p class="smp-lead">放送の順に、図・今日のポイント・寄り道・今回の数字をまとめたテキストです。第1回を、まるごと見本にしています。</p>
+</div>
+<!-- ========== 前半 ========== -->
+<section class="sec s1" id="s1">
+<div class="top">耳で覚える宅建2027　第1回　2027年1月4日（月）</div>
+<div class="title"><div class="row"><span class="no">第1回</span><h1>100部屋貸しても、<br>免許はいらない</h1></div><div class="side">前半　宅建業と免許</div></div>
+<div class="core"><h2>今日のポイント</h2><p>「自分の物件を自分で貸す」以外の取引を、不特定多数にくり返し行うなら免許がいる。事務所が1つの県だけなら知事、2つ以上の県なら大臣。</p></div>
+<div class="target">自ら売買・交換、または他人の売買・交換・貸借の代理・媒介</div>
+<div class="cards">
+<section class="card t-zones n1">
+  <div class="hd"><span class="no">1</span><h2>免許がいるのは誰？<small>「業として」＝不特定多数に、くり返し行うこと</small></h2></div>
+  <div class="zones"><div class="zone ok"><span class="zh">免許がいる</span><div class="items" style="--cols:2"><div class="it"><img src="/ep/1/img/plots.webp" alt=""><div class="lb">地主さん</div><div class="sm">20区画を次々に売る</div></div><div class="it"><img src="/ep/1/img/broker.webp" alt=""><div class="lb">仲介する会社</div><div class="sm">他人の部屋の貸借でも</div></div></div></div><div class="zone ng"><span class="zh">いらない</span><div class="items" style="--cols:3"><div class="it"><img src="/ep/1/img/landlord.webp" alt=""><div class="lb">大家さん</div><div class="sm">自ら貸借</div></div><div class="it"><img src="/ep/1/img/onetime.webp" alt=""><div class="lb">会社員</div><div class="sm">自宅を<span class="nb">1回売る</span></div></div><div class="it"><img src="/ep/1/img/cityhall.webp" alt=""><div class="lb">国・地方公共団体</div><div class="sm">適用除外</div></div></div></div></div>
+</section>
+
+<section class="card t-facts n2">
+  <div class="hd"><span class="no">2</span><h2>免許はだれから？<small>決めるのは事務所の場所。物件の場所は関係ない</small></h2></div>
+  <div class="fcs"><div class="fc"><img src="/ep/1/img/onepref.webp" alt=""><div class="tx"><div class="w">知事</div><div class="n">事務所が1つの県だけ</div></div></div><div class="fc"><img src="/ep/1/img/twopref.webp" alt=""><div class="tx"><div class="w">大臣</div><div class="n">事務所が2つ以上の県</div></div></div></div>
+</section>
+
+<section class="card t-facts n3">
+  <div class="hd"><span class="no">3</span><h2>免許の期間と更新<small>申請しておけば、処分が出るまで<br>古い免許が有効</small></h2></div>
+  <div class="fcs"><div class="fc"><img src="/ep/1/img/valid5.webp" alt=""><div class="tx"><div class="w">5年</div><div class="n">免許の有効期間</div></div></div><div class="fc"><img src="/ep/1/img/window.webp" alt=""><div class="tx"><div class="w" style="font-size:26px">90日前〜30日前</div><div class="n">満了日の、更新の申請期間</div></div></div><div class="fc"><img src="/ep/1/img/nextday.webp" alt=""><div class="tx"><div class="w">満了の翌日</div><div class="n">新しい有効期間の起点。<br>処分の日からではない</div></div></div></div>
+</section>
+</div>
+<div class="band2"><h3>事務所に数えるもの</h3><div class="pills"><span class="pl o"><b>数える</b><i>本店・宅建業をしている支店。継続して業務ができ、契約を結ぶ権限のある人を置く場所も</i></span><span class="pl x"><b>数えない</b><i>宅建業をしていない支店</i></span></div></div>
+<a class="btn" href="https://takken.mimiobo.com/ep/1#q1">前半の3問を解く（○×）<span>takken.mimiobo.com/ep/1</span></a>
+<div class="foot">条文は2026年4月1日施行版で照合</div>
+</section>
+
+<!-- ========== 後半 ========== -->
+<section class="sec s2" id="s2">
+<div class="top">耳で覚える宅建2027　第1回　2027年1月4日（月）</div>
+<div class="title"><div class="row"><span class="no">第1回</span><h1>100部屋貸しても、<br>免許はいらない</h1></div><div class="side">後半　免許の基準</div></div>
+<div class="core"><h2>今日のポイント</h2><p>免許をもらえない人の名簿は「5年」で読む。ただし破産は復権すれば、執行猶予は期間が終われば、その日からすぐ免許を受けられる。</p></div>
+<div class="target">免許を出さない人の名簿＝欠格事由</div>
+<div class="cards">
+<section class="card t-facts n4">
+  <div class="hd"><span class="no">4</span><h2>名簿は年数で読む<small>すぐ戻れる例外は2つ</small></h2></div>
+  <div class="fcs"><div class="fc"><img src="/ep/1/img/restore.webp" alt=""><div class="tx"><div class="w">すぐ</div><div class="n">破産は復権の日から、執行猶予は満了の日から</div></div></div><div class="fc"><img src="/ep/1/img/wait5.webp" alt=""><div class="tx"><div class="w">5年</div><div class="n">拘禁刑以上の刑と、特定の罪の罰金。執行を終えた日などから</div></div></div></div>
+</section>
+
+<section class="card t-big n5">
+  <div class="hd"><span class="no">5</span><h2>取り消されたら5年<small>駆け込み廃業も、同じ扱い</small></h2></div>
+  <img class="ill" src="/ep/1/img/rush.webp" alt="">
+  <div class="big" style="font-size:20px">公示のあとの駆け込み廃業も5年</div>
+  <div class="notes"><p>取り消された人は、取消しの日から5年（法人は、聴聞の公示の日の前60日以内の役員も）</p><p>公示のあと、処分の前に出した廃業届は、原則、届出の日から5年。公示の前なら当たらない</p></div>
+</section>
+
+<section class="card t-big n6">
+  <div class="hd"><span class="no">6</span><h2>本人だけでなく、まわりも見る<small>チームの出場停止と同じ</small></h2></div>
+  <img class="ill" src="/ep/1/img/team.webp" alt="">
+  <div class="big" style="font-size:16px">1人でも欠格なら、会社ごと受けられない</div>
+  <div class="notes"><p>見るのは、役員（常勤・非常勤を問わない）と、政令で定める使用人</p><p>営業について成年者と同じ行為能力のない未成年者は、法定代理人もチェック</p></div>
+</section>
+</div>
+<div class="band"><div class="cap">放送の寄り道から</div><h3>なぜ、駆け込み廃業まで取消しと同じ扱いなの？</h3><p class="t">悪質な業者が、取消しのあとは従業員になって待ち、期間が過ぎるとまた申請してきました。国会でその例が挙げられ、待つ期間は5年に、駆け込み廃業も同じ扱いになりました。</p></div>
+<div class="band2"><h3>罰金で欠格になるのは、特定の罪だけ</h3><div class="pills"><span class="pl x"><b>欠格</b><i>宅建業法・暴力団対策法の違反、傷害・暴行・脅迫などの暴力系の罪、背任</i></span><span class="pl o"><b>ならない</b><i>道路交通法の違反などの罰金</i></span></div></div>
+<a class="btn" href="https://takken.mimiobo.com/ep/1#q2">後半の3問を解く（○×）<span>takken.mimiobo.com/ep/1</span></a>
+<a class="btn b2" href="https://takken.mimiobo.com/ep/1#honban">過去問1選を解く<span>令和5年 問29（改題）</span></a>
+<div class="next">次回　第2回　営業保証金と保証協会<br>2027年1月12日（火）予定</div>
+<div class="foot">条文は2026年4月1日施行版で照合</div>
+</section>
+
+<!-- ========== 今回の数字 ========== -->
+<section class="sec s3 nums" id="s3">
+<div class="top">耳で覚える宅建2027　第1回　2027年1月4日（月）</div>
+<div class="numh"><h2>今回の数字</h2></div>
+<div class="nl"><div class="nr"><span class="nv">1つ</span><span class="nk">知事免許になる事務所の県数</span></div><div class="nr"><span class="nv">2つ以上</span><span class="nk">大臣免許になる事務所の県数</span></div><div class="nr"><span class="nv">5年</span><span class="nk">免許の有効期間</span></div><div class="nr"><span class="nv">90日前〜30日前</span><span class="nk">更新の申請期間（満了日の）</span></div><div class="nr"><span class="nv">5年</span><span class="nk">免許を受けられない期間</span></div><div class="nr"><span class="nv">60日以内</span><span class="nk">聴聞の公示前に役員だった期間</span></div></div>
+<div class="foot">条文は2026年4月1日施行版で照合</div>
+</section>
+<div class="smp-foot">
+  <p>価格と届け方は、決まりしだいLINEでお知らせします。</p>
+  <a class="smp-line" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="text-line" data-umami-event-ep="1">LINEで受け取る</a>
+  <div class="smp-links"><a href="/ep/1" data-umami-event="text-back" data-umami-event-to="ep1">第1回の見本（図解・○×3問）に戻る</a><a href="https://www.mimiobo.com/roadmap" data-umami-event="text-back" data-umami-event-to="roadmap">学習ロードマップ</a></div>
+</div>
+<script>
+/* sp.js — 印刷用。各セクションの高さを測り、1セクション＝1ページ（幅100mm）になるよう @page を足す。
+   測った高さは <html data-heights="…"> にも入れる（export.py が読む）。
+   読み込み直後とフォントが揃ったあとの2回測る（あとから測ったほうが正しい）。 */
+(function () {
+  var Z = 0.96911; /* 390px → 約100mm */
+  function fit() {
+    var secs = [].slice.call(document.querySelectorAll('.sec'));
+    var hs = secs.map(function (s) { return Math.ceil(s.getBoundingClientRect().height); });
+    document.documentElement.setAttribute('data-heights', hs.join(','));
+    var css = '';
+    hs.forEach(function (h0, i) {
+      var h = h0 + 2; /* 印刷時の丸めの余裕 */
+      var mm = (h * Z * 25.4 / 96 + 0.4).toFixed(1);
+      css += '@page p' + (i + 1) + '{size:100.2mm ' + mm + 'mm;margin:0}';
+      css += '@media print{.s' + (i + 1) + '{page:p' + (i + 1) + ';height:' + h + 'px}}';
+    });
+    var st = document.getElementById('fitpage');
+    if (!st) { st = document.createElement('style'); st.id = 'fitpage'; document.head.appendChild(st); }
+    st.textContent = css;
+  }
+  window.addEventListener('load', fit);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fit); }
+})();
+</script>
+</body>
+</html>

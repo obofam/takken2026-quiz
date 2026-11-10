@@ -214,6 +214,8 @@ a.lbtn{text-decoration:none;cursor:pointer}
 body:not(.member) .mtgl .m0,body.member .mtgl .m1{font-weight:700;color:var(--ink)}
 .listen{display:block;background:var(--sky);color:var(--text);border-radius:999px;padding:10px 16px;text-align:center;font-size:18px;font-weight:900;line-height:1.4;text-decoration:none}
 .listen.off{opacity:.4;cursor:default;pointer-events:none}
+.oapps{font-size:12px;color:var(--sub);line-height:1.7;margin-top:2px;text-align:center}
+.oapps a{color:#0A6477;text-underline-offset:2px}
 .pnote{font-size:12px;color:var(--sub);line-height:1.6;margin-top:6px;text-align:center}
 
 /* 上に固定される3つのボタン */
@@ -306,6 +308,9 @@ body.member .kk-gate{display:none}
 .py{font-size:12px;line-height:1.4;color:#0A6477}
 .pico.list{background:var(--soft)}
 .pico.list::after{left:9px;top:10px;width:14px;height:2px;border:0;border-width:0;background:#0A6477;box-shadow:0 5px 0 #0A6477,0 10px 0 #0A6477}
+.pico.doc{background:var(--soft)}
+.pico.doc::after{left:10px;top:7px;width:12px;height:16px;border:2px solid #0A6477;border-radius:2px;background:#fff}
+.past.txt{margin-top:4px}
 .pgo{flex:none;width:9px;height:9px;border-top:2px solid #0A6477;border-right:2px solid #0A6477;transform:rotate(45deg);margin-right:4px}
 
 /* LINEの誘い：白地＋水色の枠、ボタンだけ水色塗り（正解のライム・不正解のグレーとぶつけない） */
@@ -358,6 +363,7 @@ body.member .line-card{display:none}
   </div>
   <a class="listen off" role="link" aria-disabled="true">この回を聴く（Spotify）</a>
   <p class="pnote">配信後にこの回のリンクが入ります</p>
+  <p class="oapps">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm">stand.fm</a></p>
 
   <nav class="jump" id="jump" aria-label="この回のページの節">
     <a class="jb" href="#zukai">図解</a><a class="jb" href="#maru">○×3問</a><a class="jb" href="#honban">過去問1選</a><button type="button" class="tgl" id="sheetTgl" role="switch" aria-checked="false"><span class="tl">赤シート</span><span class="sw" aria-hidden="true"></span></button>
@@ -406,6 +412,7 @@ body.member .line-card{display:none}
       <button type="button" class="sheetbtn" id="sheetBtn" aria-pressed="false">図解を赤シートで隠す</button>
       <p class="sheetnote">隠れた所をタップすると答えが出ます</p>
     </div>
+    <ul class="past txt"><li><a class="prow" href="/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1"><span class="pico doc" aria-hidden="true"></span><span class="pmid"><span class="pt">やさしいテキスト（有料）の見本</span><span class="py">第1回をまるごと見られます</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
   </section>
 
   <!-- 節2：○×3問 -->
