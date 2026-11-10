@@ -358,6 +358,14 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
 .smp-links{margin-top:16px;display:flex;flex-direction:column;gap:8px}
 .smp-links a{font-size:13px;color:var(--ink);text-underline-offset:2px}
 @media print{.smp-head,.smp-foot{display:none}}
+/* 印刷用PDFの案内（画面だけ） */
+.smp-a4{max-width:390px;margin:0 auto;padding:8px 16px 18px;text-align:center}
+.smp-a4 h2{font-size:17px;font-weight:900;color:var(--ink);line-height:1.4}
+.smp-a4 p{font-size:14px;color:var(--sub);line-height:1.7;margin-top:2px}
+.smp-a4 .pv{display:block;width:100%;max-width:360px;margin:12px auto 0;border:1px solid #ececec;border-radius:10px;overflow:hidden;background:#fff;line-height:0}
+.smp-a4 .pv img{display:block;width:100%;height:auto;object-view-box:none}
+.smp-a4 .btn{display:block;width:100%;max-width:360px;margin:12px auto 0;font-size:16px;padding:9px 16px}
+@media print{.smp-a4{display:none}}
 /* 赤シート版の下：前回・次回（TEXT_URL があれば押せる。なければ文字だけ） */
 .epnav{display:flex;gap:10px;padding:0 16px 16px;max-width:390px;margin:0 auto}
 .epnav .en{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--text);text-decoration:none}
@@ -404,6 +412,7 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
       <tr><th>復習</th><td>—</td><td class="pay">これまでの回から1問（開くたびに変わる）</td></tr>
       <tr><th>数字</th><td>—</td><td class="pay">今回の数字を1ページに</td></tr>
       <tr><th>赤シート</th><td>—</td><td class="pay">隠して思い出す練習（ヒントつき）</td></tr>
+      <tr><th>印刷</th><td>—</td><td class="pay">A4・2ページのPDFつき</td></tr>
       <tr><th>使い方</th><td>聴いたあとの見返し</td><td class="pay">見ながら聴く・試験前の総ざらい</td></tr>
     </tbody>
   </table></div>
@@ -488,6 +497,12 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
 <div class="foot">条文は2026年4月1日施行版で照合</div>
 </section>
 <nav class="epnav" aria-label="前回・次回"><span class="en pv none"></span><span class="en nx"><span class="el">次回　第2回</span><span class="et">営業保証金と保証協会</span><span class="ed">2027年1月12日（火）予定</span></span></nav>
+<section class="smp-a4" aria-labelledby="a4h">
+  <h2 id="a4h">印刷用（A4・2ページ）</h2>
+  <p>A4の紙2枚に印刷できるPDFです。</p>
+  <a class="pv" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1"><img src="/ep/1/text/a4-p1.webp" width="800" height="1133" loading="lazy" alt="やさしいテキスト 第1回 A4版の1ページ目"></a>
+  <a class="btn b2" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1">PDFを開く</a>
+</section>
 <div class="smp-foot">
   <p>価格と届け方は、決まりしだいLINEでお知らせします。</p>
   <a class="smp-line" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="text-line" data-umami-event-ep="1">LINEで受け取る</a>
