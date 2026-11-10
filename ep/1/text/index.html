@@ -368,7 +368,7 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
 .epnav .ed{font-size:13px;color:#4F5963}
 .epnav span.en{background:transparent;border-style:dashed}
 @media print{.epnav{display:none}}
-/* 前の回から1問（最後の「今回の数字」ページ。review.js が中身を作る）。画面用だけ・印刷では出さない */
+/* これまでの回から1問復習（最後の「今回の数字」ページ。review.js が中身を作る）。画面用だけ・印刷では出さない */
 .rvq{background:#fff;border:1.5px solid var(--sky);border-radius:14px;padding:12px 14px}
 .rvq h3{font-size:20px;font-weight:900;color:var(--ink);line-height:1.35}
 .rv-q{margin-top:8px;font-size:15px;line-height:1.8}
@@ -401,6 +401,7 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
     <tbody>
       <tr><th>図</th><td>大事な図だけ</td><td class="pay">放送の図をすべて</td></tr>
       <tr><th>まとめ</th><td>—</td><td class="pay">まぎらわしい所のまとめ・放送の寄り道</td></tr>
+      <tr><th>復習</th><td>—</td><td class="pay">これまでの回から1問（開くたびに変わる）</td></tr>
       <tr><th>数字</th><td>—</td><td class="pay">今回の数字を1ページに</td></tr>
       <tr><th>赤シート</th><td>—</td><td class="pay">隠して思い出す練習（ヒントつき）</td></tr>
       <tr><th>使い方</th><td>聴いたあとの見返し</td><td class="pay">見ながら聴く・試験前の総ざらい</td></tr>
@@ -686,7 +687,7 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
 })();
 </script>
 <script>
-/* review.js — 赤シート版の最後のページ「前の回から1問」（画面用）。
+/* review.js — 赤シート版の最後のページ「これまでの回から1問復習」（画面用）。
    build が #rvq の隣に前の回の○×（quizSets の全問）を JSON で埋め込む。開くたびにランダムで1問出す。
    間違えた問題の印は localStorage（キー takken2027-review-wrong、値は "ep3-s1-q2" の配列）。次に引くときは3倍の重み。正解したら印を外す。
    読み書きは try/catch。使えなくても動く。data-fixed があれば固定の1問（見本用・引き直しなし）。 */
@@ -722,7 +723,7 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
     last = q.id;
     var from = note || ('第' + q.ep + '回（' + q.label + '「' + q.theme + '」）の問題です');
     box.innerHTML =
-      '<h3>前の回から1問</h3>' +
+      '<h3>これまでの回から1問復習</h3>' +
       '<p class="rv-q">' + esc(q.text) + '</p>' +
       '<div class="rv-btns"><button type="button" class="rv-pill" data-v="1" aria-label="○（正しい）">○</button>' +
       '<button type="button" class="rv-pill" data-v="0" aria-label="×（誤り）">×</button></div>' +
