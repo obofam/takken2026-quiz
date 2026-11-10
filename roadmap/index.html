@@ -81,7 +81,9 @@
   .marks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .mk { font: inherit; font-size: .78rem; font-weight: 700; line-height: 1.6; padding: 0 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--cyan); color: var(--cyan-dark); white-space: nowrap; }
   button.mk { cursor: pointer; }
-  button.mk[aria-pressed="true"] { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
+  button.mk-l { min-width: 4.2em; }
+  button.mk-l[data-st="1"] { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
+  button.mk-l[data-st="2"] { background: var(--cyan-soft); border-color: var(--cyan-dark); color: var(--cyan-dark); }
   .mk-d { background: #E9F8C9; border-color: #8CCB2B; color: #3A6008; }
 
   /* 配信表：PCは表、スマホは1回ずつのブロック */
@@ -242,11 +244,13 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   }
   function wr(key, o){ try { localStorage.setItem(key, JSON.stringify(o)); } catch(_) {} }
   var K_L = 'takken2027-listened', K_D = 'takken2027-done';
+  var ST_LABEL = ['未聴', '聴了', '復習']; // 復習も聴いた扱いで数える
   var HONPEN = EPS.filter(function(e){ return e.kind==='本編' && e.n; });
   var PG = [20,14,8,8];
   function renderProgress(){
     var L = rd(K_L), D = rd(K_D), html = '', nl = 0, nd = 0;
-    HONPEN.forEach(function(e){ if (L[e.n]) nl++; if (D[e.n]) nd++; });
+    var nr = 0;
+    HONPEN.forEach(function(e){ if (L[e.n]) nl++; if (L[e.n]===2) nr++; if (D[e.n]) nd++; });
     PG.forEach(function(w,i){
       var tot = 0, got = 0;
       HONPEN.forEach(function(e){ if (e.part===i+1){ tot++; if (L[e.n]||D[e.n]) got++; } });
@@ -256,7 +260,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     document.getElementById('pgBar').innerHTML = html;
     var sum = document.getElementById('pgSum');
     if (nl===0 && nd===0){ sum.className='pg-sum none'; sum.textContent='聴いた・3問済で進みます'; }
-    else { sum.className='pg-sum'; sum.textContent='聴いた '+nl+'回／3問済 '+nd+'回（本編'+HONPEN.length+'回）'; }
+    else { sum.className='pg-sum'; sum.textContent='聴いた '+nl+'回'+(nr?'（うち復習 '+nr+'）':'')+'／3問済 '+nd+'回（本編'+HONPEN.length+'回）'; }
   }
   var KIND = {'本編':['本編',''], '短尺':['復習',' tag'], 'まとめ':['まとめ',' line'], '補強':['もう1論点',' line']};
   // 本編の図解・問題は回のページ（ep/N）の節へ。?src=roadmap で Umami に入口が残る（YouTube は ?src=yt）
@@ -306,8 +310,9 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
           + ' data-umami-event="roadmap-link" data-umami-event-type="'+a[0]+'" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+a[1]+'</a>';
       });
       var marks = '';
-      if (e.kind==='本編' && e.n && (num(e.d) <= t || e.sample)) {
-        marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" aria-pressed="'+(LS[e.n]?'true':'false')+'">聴いた</button>'
+      if (e.kind==='本編' && e.n) {
+        var st = LS[e.n]===2 ? 2 : (LS[e.n] ? 1 : 0);
+        marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-label="聴いたかどうかを切り替え">'+ST_LABEL[st]+'</button>'
           + (DN[e.n] ? '<span class="mk mk-d">3問済</span>' : '');
       }
       html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+'">'
@@ -344,9 +349,11 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   document.getElementById('sched').addEventListener('click', function(ev){
     var b = ev.target.closest('button.mk-l'); if (!b) return;
     var o = rd(K_L), n = b.getAttribute('data-n');
-    if (o[n]) { delete o[n]; } else { o[n] = true; }
+    var cur0 = o[n]===2 ? 2 : (o[n] ? 1 : 0), nx = (cur0 + 1) % 3; // 未聴→聴了→復習→未聴（2026のトラッカーと同じ）
+    if (nx) { o[n] = nx; } else { delete o[n]; }
     wr(K_L, o);
-    b.setAttribute('aria-pressed', o[n] ? 'true' : 'false');
+    b.setAttribute('data-st', nx); b.textContent = ST_LABEL[nx];
+    if (window.umami) { try { umami.track('roadmap_progress', { to: ST_LABEL[nx] }); } catch(_) {} }
     renderProgress();
   });
   render();
