@@ -78,6 +78,7 @@
   .pg-sum { font-size: .85rem; font-weight: 700; margin: 10px 4px 0; line-height: 1.6; }
   .pg-sum.none { font-weight: 500; color: var(--muted); }
   .pg-note { font-size: .75rem; color: var(--muted); margin: 2px 4px 0; line-height: 1.6; }
+  .exam-map [hidden] { display: none !important; }
   .marks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .mk { font: inherit; font-size: .78rem; font-weight: 700; line-height: 1.6; padding: 0 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--cyan); color: var(--cyan-dark); white-space: nowrap; }
   button.mk { cursor: pointer; }
@@ -253,6 +254,9 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   var PG = [20,14,8,8];
   function renderProgress(){
     var L = rd(K_L), D = rd(K_D), html = '', nl = 0, nd = 0;
+    // 配信前（2027-01-04より前）は、記録が1件もない端末では進み具合の帯と注記を隠す
+    var showPg = t >= 20270104 || Object.keys(L).length>0 || Object.keys(D).length>0;
+    [].forEach.call(document.querySelectorAll('.pg-h, #pgBar, #pgSum, .pg-note'), function(el){ el.hidden = !showPg; });
     var nr = 0;
     HONPEN.forEach(function(e){ if (L[e.n]) nl++; if (L[e.n]===2) nr++; if (D[e.n]) nd++; });
     PG.forEach(function(w,i){
