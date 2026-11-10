@@ -348,6 +348,16 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
 .smp-links{margin-top:16px;display:flex;flex-direction:column;gap:8px}
 .smp-links a{font-size:13px;color:var(--ink);text-underline-offset:2px}
 @media print{.smp-head,.smp-foot{display:none}}
+/* 赤シート版の下：前回・次回（TEXT_URL があれば押せる。なければ文字だけ） */
+.epnav{display:flex;gap:10px;padding:0 16px 16px;max-width:390px;margin:0 auto}
+.epnav .en{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--text);text-decoration:none}
+.epnav .en.nx{text-align:right}
+.epnav .en.none{visibility:hidden}
+.epnav .el{font-size:12px;font-weight:700;color:var(--ink)}
+.epnav .et{font-size:14px;font-weight:700;line-height:1.45}
+.epnav .ed{font-size:12px;color:var(--sub)}
+.epnav span.en{background:transparent;border-style:dashed}
+@media print{.epnav{display:none}}
 </style>
 </head>
 <body>
@@ -443,6 +453,7 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
 <div class="nl"><div class="nr"><button class="mk nv" type="button">1つ</button><span class="nk">知事免許になる事務所の県数</span></div><div class="nr"><button class="mk nv" type="button">2つ以上</button><span class="nk">大臣免許になる事務所の県数</span></div><div class="nr"><button class="mk nv" type="button">5年</button><span class="nk">免許の有効期間</span></div><div class="nr"><button class="mk nv" type="button">90日前〜30日前</button><span class="nk">更新の申請期間（満了日の）</span></div><div class="nr"><button class="mk nv" type="button">5年</button><span class="nk">免許を受けられない期間</span></div><div class="nr"><button class="mk nv" type="button">60日以内</button><span class="nk">聴聞の公示前に役員だった期間</span></div></div>
 <div class="foot">条文は2026年4月1日施行版で照合</div>
 </section>
+<nav class="epnav" aria-label="前回・次回"><span class="en pv none"></span><span class="en nx"><span class="el">次回　第2回</span><span class="et">営業保証金と保証協会</span><span class="ed">2027年1月12日（火）予定</span></span></nav>
 <div class="smp-foot">
   <p>価格と届け方は、決まりしだいLINEでお知らせします。</p>
   <a class="smp-line" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="text-line" data-umami-event-ep="1">LINEで受け取る</a>
