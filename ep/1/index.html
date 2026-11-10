@@ -353,6 +353,8 @@ body.member .line-card{display:none}
 .it .sm{white-space:normal}
 .top,.foot{line-height:1.4}
 .pnote{margin-top:0}
+.kk-smp{font-size:13px;color:#4F5963;line-height:1.7;margin-top:8px}
+body.member .line-card{display:block}
 </style>
 </head>
 <body>
@@ -426,6 +428,7 @@ body.member .line-card{display:none}
   <section class="sec" id="honban">
     <h2 class="sec-h">過去問1選</h2>
     <div id="kkBox"></div>
+    <p class="kk-smp">本番では、過去問1選はLINEに登録すると解けます（無料）。見本では開けています。</p>
   </section>
 
   <section class="sec" id="plan">
@@ -645,7 +648,7 @@ body.member .line-card{display:none}
   }
   kkEl.querySelector('.gate-btn').addEventListener('click', function () { setMember(true); });
   window.addEventListener('hashchange', function () { if (location.hash === '#member') { setMember(true); } });
-  setMember(location.hash === '#member');
+  setMember(true); /* 見本：過去問1選は開けておく（本番はLINE登録で開く） */
 
   /* やさしいテキストのリンク（#q1・#q2）から来たとき：3問の組はあとから作るので、作ったあとでその組まで送る */
   if (/^#q\d+$/.test(location.hash)) {
