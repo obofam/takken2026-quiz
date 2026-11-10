@@ -95,7 +95,7 @@
   .sched tbody tr:first-child > * { border-top: 0; }
   .sched tr.ep.now { background: var(--cyan-soft); }
   .sched tr.ep.now .badge { background: var(--card); }
-  .sched tr.ep.past { opacity: .55; }
+  .sched tr.ep.past > td:not(.c-rec) { opacity: .55; }
   .sched tr.ep.ms { background: var(--surface); }
   .c-date { white-space: nowrap; font-weight: 700; font-size: .98rem; }
   .c-date .wd { font-size: .82rem; font-weight: 500; color: var(--muted); margin-left: 1px; }
@@ -104,14 +104,15 @@
   .c-part { font-size: .88rem; color: var(--muted); white-space: nowrap; }
   .c-theme { font-size: 1rem; font-weight: 700; line-height: 1.6; overflow-wrap: anywhere; }
   .ep.sub .c-theme { font-weight: 500; }
-  .c-title { font-size: .95rem; line-height: 1.65; overflow-wrap: anywhere; }
+  .c-title { font-size: .92rem; line-height: 1.6; overflow-wrap: anywhere; color: #46535E; }
   .badge { display: inline-block; font-size: .8rem; font-weight: 700; line-height: 1.6; color: var(--cyan-dark); background: var(--cyan-soft); border-radius: 999px; padding: 1px 9px; }
   .badge.tag { color: var(--muted); background: var(--gray-pill); }
   .badge.line { background: transparent; border: 1px solid var(--cyan); padding: 0 8px; }
   .now-badge { display: inline-block; font-size: .78rem; font-weight: 700; line-height: 1.6; color: #fff; background: var(--cyan-dark); border-radius: 999px; padding: 1px 8px; margin-left: 4px; }
   .tbd { font-size: .88rem; color: var(--muted); }
-  .acts { display: flex; flex-wrap: wrap; gap: 2px 16px; margin-top: 4px; }
-  .acts a { font-size: .9rem; font-weight: 700; line-height: 1.6; text-decoration: none; color: var(--cyan-dark); border-bottom: 1px solid var(--cyan); white-space: nowrap; }
+  .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 16px; margin-top: 5px; }
+  .acts .ok { display: inline-block; margin-left: 5px; font-size: .72rem; line-height: 1.5; padding: 0 6px; border-radius: 999px; background: #E9F8C9; color: #3A6008; vertical-align: 1px; }
+  .acts a { font-size: .86rem; font-weight: 700; line-height: 1.6; text-decoration: none; color: var(--cyan-dark); border-bottom: 1px solid var(--cyan); white-space: nowrap; }
   /* LINE登録：表の下に1か所だけ。強く押さない */
   .line-cta { background: var(--card); border: 1px solid var(--cyan); border-radius: 12px; box-shadow: var(--shadow); padding: 20px 18px; text-align: center; margin: 0 0 34px; }
   .line-cta .over { font-size: .75rem; font-weight: 700; letter-spacing: .15em; color: var(--cyan-dark); }
@@ -129,7 +130,7 @@
   @media (max-width: 767px) {
     .sched table, .sched tbody, .sched tr.month, .sched tr.month th { display: block; }
     .sched thead { display: none; }
-    .sched tr.ep { display: grid; grid-template-columns: 4.3em auto 1fr; grid-template-areas: "date kind part" "date theme theme" "date title title"; column-gap: 10px; row-gap: 2px; padding: 12px 14px; border-top: 1px solid var(--line); }
+    .sched tr.ep { display: grid; grid-template-columns: 4.3em auto 1fr auto; grid-template-areas: "date kind part rec" "date theme theme theme" "date title title title"; column-gap: 10px; row-gap: 2px; padding: 12px 14px; border-top: 1px solid var(--line); }
     .sched tbody tr:first-child { border-top: 0; }
     .sched tr.ep > td { display: block; padding: 0; border: 0; }
     .c-date { grid-area: date; white-space: normal; }
@@ -138,6 +139,7 @@
     .c-part { grid-area: part; align-self: center; }
     .c-theme { grid-area: theme; margin-top: 2px; }
     .c-title { grid-area: title; }
+    .c-rec { grid-area: rec; align-self: center; }
   }
 
   /* PC：幅を広げ、絞り込みを上に固定 */
@@ -151,6 +153,8 @@
     .sched th.c-kind { width: 108px; }
     .sched th.c-part { width: 116px; }
     .sched th.c-theme { width: 30%; }
+    .sched th.c-rec { width: 84px; }
+    .sched td.c-rec { text-align: right; }
   }
 </style>
 </head>
@@ -283,8 +287,8 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   if (m0 && PARTS[+m0[1]-1]) cur = +m0[1];
 
   function render(){
-    var cols = 5;
-    var html = '<thead><tr><th class="c-date">日付</th><th class="c-kind">種別</th><th class="c-part">分野</th><th class="c-theme">テーマ</th><th class="c-title">タイトル</th></tr></thead><tbody>';
+    var cols = 6;
+    var html = '<thead><tr><th class="c-date">日付</th><th class="c-kind">種別</th><th class="c-part">分野</th><th class="c-theme">テーマ</th><th class="c-title">タイトル</th><th class="c-rec">記録</th></tr></thead><tbody>';
     var month = 0, LS = rd(K_L), DN = rd(K_D);
     sorted.forEach(function(e){
       if (cur && !e.ms && e.part!==cur) return;
@@ -293,7 +297,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
       if (e.ms){
         html += '<tr class="ep ms"><td class="c-date">'+(e.dl||md(e))+(e.wd?'<span class="wd">('+esc(e.wd)+')</span>':'')+'</td>'
           + '<td class="c-kind"><span class="badge tag">'+esc(e.kind)+'</span></td><td class="c-part"></td>'
-          + '<td class="c-theme">'+esc(e.theme)+'</td><td class="c-title">'+esc(e.title)+'</td></tr>';
+          + '<td class="c-theme">'+esc(e.theme)+'</td><td class="c-title">'+esc(e.title)+'</td><td class="c-rec"></td></tr>';
         return;
       }
       var k = KIND[e.kind] || [e.kind,' line'];
@@ -303,24 +307,24 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
       var titleHtml = s.title ? esc(s.title) : (e.sub && e.sub!=='タイトル未定' ? '<span class="tbd">'+esc(e.sub)+'</span>' : '');
       var acts = '';
       var early = e.sample && num(e.d) > t; // 見本として配信前から出す回
-      if (early) acts += '<span class="smp">見本</span>';
       if (num(e.d) <= t || e.sample) LINKS.forEach(function(a){
         if (!e[a[0]]) return;
         acts += '<a href="'+esc(e[a[0]])+'"'+(a[2]?' target="_blank" rel="noopener"':'')
-          + ' data-umami-event="roadmap-link" data-umami-event-type="'+a[0]+'" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+a[1]+'</a>';
+          + ' data-umami-event="roadmap-link" data-umami-event-type="'+a[0]+'" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+a[1]+((a[0]==='mondai' && DN[e.n])?'<span class="ok">済</span>':'')+'</a>';
       });
       var marks = '';
       if (e.kind==='本編' && e.n) {
         var st = LS[e.n]===2 ? 2 : (LS[e.n] ? 1 : 0);
         marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-label="聴いたかどうかを切り替え">'+ST_LABEL[st]+'</button>'
-          + (DN[e.n] ? '<span class="mk mk-d">3問済</span>' : '');
+          ;
       }
       html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+'">'
         + '<td class="c-date">'+md(e)+'<span class="wd">('+esc(e.wd)+')</span>'+(e.note?'<span class="hol">'+esc(e.note)+'</span>':'')+'</td>'
         + '<td class="c-kind"><span class="badge'+k[1]+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
         + '<td class="c-part">'+esc(partName(e.part))+'</td>'
         + '<td class="c-theme">'+esc(s.theme)+'</td>'
-        + '<td class="c-title">'+titleHtml+(acts?'<div class="acts">'+acts+'</div>':'')+(marks?'<div class="marks">'+marks+'</div>':'')+'</td>'
+        + '<td class="c-title">'+titleHtml+(acts?'<div class="acts">'+acts+'</div>':'')+'</td>'
+        + '<td class="c-rec">'+marks+'</td>'
         + '</tr>';
     });
     document.getElementById('sched').innerHTML = html + '</tbody>';
