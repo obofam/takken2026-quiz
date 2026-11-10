@@ -233,6 +233,13 @@ body:not(.member) .mtgl .m0,body.member .mtgl .m1{font-weight:700;color:var(--in
 .half{display:flex;flex-direction:column;gap:12px}
 .half-h{background:var(--ink);color:#fff;border-radius:14px;padding:11px 16px;font-size:18px;font-weight:900;line-height:1.3}
 .core p{line-height:1.7}
+/* やさしいテキストにある図の札（無料の図解で飛んだ番号の位置）。図のカードより目立たせない */
+.gcard{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px dashed #C9D6DB;border-radius:14px;padding:9px 12px;color:var(--sub);text-decoration:none}
+.gcard .gno{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid #B9C4C9;color:var(--sub);font-size:12px;font-weight:700;line-height:1;display:grid;place-items:center}
+.gcard .gm{display:flex;flex-direction:column;min-width:0}
+.gcard .gt{font-size:14px;font-weight:700;line-height:1.4;color:var(--sub)}
+.gcard .gn{font-size:11px;line-height:1.4;color:var(--sub)}
+a.gcard:hover .gn{text-decoration:underline;text-underline-offset:2px}
 
 /* ===== ○×3問・過去問1選（確認ページと同じ） ===== */
 .over{font-size:12px;line-height:1.5;letter-spacing:.15em;color:var(--sky);text-transform:uppercase;font-weight:700}
@@ -257,6 +264,8 @@ body:not(.member) .mtgl .m0,body.member .mtgl .m1{font-weight:700;color:var(--in
 .qres.ok .verdict{color:var(--lime-dark)}
 .qres.ng{background:#f4f4f6;border:1px solid #e4e4e8;color:var(--text)}
 .qres.ng .verdict{color:var(--sub)}
+.qres .zk{margin-top:6px;font-size:12px;line-height:1.5}
+.qres .zk a{color:var(--ink);text-underline-offset:2px}
 .score{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:4px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff}
 .score-text{margin:0;font-weight:700;font-size:17px;color:var(--ink)}
 
@@ -371,6 +380,8 @@ body.member .line-card{display:none}
   <div class="zones"><div class="zone ok"><span class="zh">免許がいる</span><div class="items" style="--cols:2"><div class="it"><img src="/ep/1/img/plots.webp" alt=""><div class="lb">地主さん</div><div class="sm">20区画を次々に売る</div></div><div class="it"><img src="/ep/1/img/broker.webp" alt=""><div class="lb">仲介する会社</div><div class="sm">他人の部屋の貸借でも</div></div></div></div><div class="zone ng"><span class="zh">いらない</span><div class="items" style="--cols:3"><div class="it"><img src="/ep/1/img/landlord.webp" alt=""><div class="lb">大家さん</div><div class="sm">自ら貸借</div></div><div class="it"><img src="/ep/1/img/onetime.webp" alt=""><div class="lb">会社員</div><div class="sm">自宅を<span class="nb">1回売る</span></div></div><div class="it"><img src="/ep/1/img/cityhall.webp" alt=""><div class="lb">国・地方公共団体</div><div class="sm">適用除外</div></div></div></div></div>
 </section>
 
+<a class="gcard" href="/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1"><span class="gno">2</span><span class="gm"><span class="gt">免許はだれから？</span><span class="gn">この図はやさしいテキストに</span></span></a>
+
 <section class="card t-facts n3">
   <div class="hd"><span class="no">3</span><h2>免許の期間と更新<small>申請しておけば、処分が出るまで<br>古い免許が有効</small></h2></div>
   <div class="fcs"><div class="fc"><img src="/ep/1/img/valid5.webp" alt=""><div class="tx"><div class="w">5年</div><div class="n">免許の有効期間</div></div></div><div class="fc"><img src="/ep/1/img/window.webp" alt=""><div class="tx"><div class="w" style="font-size:26px">90日前〜30日前</div><div class="n">満了日の、更新の申請期間</div></div></div><div class="fc"><img src="/ep/1/img/nextday.webp" alt=""><div class="tx"><div class="w">満了の翌日</div><div class="n">新しい有効期間の起点。<br>処分の日からではない</div></div></div></div>
@@ -387,6 +398,8 @@ body.member .line-card{display:none}
   <div class="hd"><span class="no">4</span><h2>名簿は年数で読む<small>すぐ戻れる例外は2つ</small></h2></div>
   <div class="fcs"><div class="fc"><img src="/ep/1/img/restore.webp" alt=""><div class="tx"><div class="w">すぐ</div><div class="n">破産は復権の日から、執行猶予は満了の日から</div></div></div><div class="fc"><img src="/ep/1/img/wait5.webp" alt=""><div class="tx"><div class="w">5年</div><div class="n">拘禁刑以上の刑と、特定の罪の罰金。執行を終えた日などから</div></div></div></div>
 </section>
+
+<a class="gcard" href="/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1"><span class="gno">5</span><span class="gm"><span class="gt">取り消されたら5年</span><span class="gn">この図はやさしいテキストに</span></span></a>
 
 <section class="card t-big n6">
   <div class="hd"><span class="no">6</span><h2>本人だけでなく、まわりも見る<small>チームの出場停止と同じ</small></h2></div>
@@ -444,16 +457,21 @@ body.member .line-card{display:none}
   };
 
   /* ---------- 解き終えたその場に出すLINEの誘い ---------- */
-  function makeInv() {
+  /* 組の途中（前半）を解き終えたら次の組へ。過去問1選への誘いは最後の組（後半）のあとだけ */
+  function makeInv(next) {
     var d = document.createElement('div');
     d.className = 'line-inv';
     d.hidden = true;
-    d.innerHTML = '<a class="lbtn" href="#honban">続けて過去問1選を解く</a><p class="lnote">LINEに登録すると解けます（無料）</p>';
+    if (next) {
+      d.innerHTML = '<a class="lbtn" href="#' + next.id + '">' + esc(next.name) + 'の3問へ</a>';
+    } else {
+      d.innerHTML = '<a class="lbtn" href="#honban">続けて過去問1選を解く</a><p class="lnote">LINEに登録すると解けます（無料）</p>';
+    }
     return d;
   }
 
   /* ---------- 節2：○×3問（確認ページと同じ） ---------- */
-  function buildSet(set) {
+  function buildSet(set, idx) {
     var box = document.createElement('div');
     box.className = 'qset';
     box.innerHTML = '<div class="over">Quiz</div><h3 class="qset-label">' + esc(set.label) + '</h3>';
@@ -463,7 +481,8 @@ body.member .line-card{display:none}
     score.hidden = true;
     score.innerHTML = '<p class="score-text"></p><button type="button" class="pill ghost">もう一度</button>';
     var scoreText = score.querySelector('.score-text');
-    var inv = makeInv();
+    var next = (idx + 1 < QUIZ.length) ? {id: 'q' + (idx + 2), name: String(QUIZ[idx + 1].label).split('　')[0]} : null;
+    var inv = makeInv(next);
     set.questions.forEach(function (q, i) {
       var card = document.createElement('div');
       card.className = 'qcard';
@@ -485,7 +504,8 @@ body.member .line-card{display:none}
           res.innerHTML =
             '<p class="verdict">' + (ok ? '正解' : '不正解') + '</p>' +
             '<p class="answer">正しい答え　' + (q.a ? '○' : '×') + '</p>' +
-            '<p class="exp">' + esc(q.exp) + '</p>';
+            '<p class="exp">' + esc(q.exp) + '</p>' +
+            (ok ? '' : '<p class="zk"><a href="#zukai">図解で確かめる</a></p>');
           res.hidden = false;
           answered += 1;
           if (ok) { correct += 1; }
@@ -514,7 +534,7 @@ body.member .line-card{display:none}
     return box;
   }
   var quizBox = document.getElementById('quizBox');
-  QUIZ.forEach(function (s, i) { var b = buildSet(s); b.id = 'q' + (i + 1); quizBox.appendChild(b); });
+  QUIZ.forEach(function (s, i) { var b = buildSet(s, i); b.id = 'q' + (i + 1); quizBox.appendChild(b); });
 
   /* ---------- 節3：過去問1選（下書きの印つき） ---------- */
   var STATES = ['', '○', '×', '？'];

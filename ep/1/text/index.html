@@ -287,12 +287,15 @@ body:has(.sec:target) .sec{margin:0}
 
 /* 上に固定の帯 */
 .sbar{position:sticky;top:0;z-index:30;padding:8px 16px;display:flex;flex-direction:column;gap:6px;background:rgba(244,250,252,.97);border-bottom:1px solid var(--line)}
-.sb-row{display:flex;align-items:center;gap:12px;min-height:32px}
+.sb-row{display:flex;align-items:center;gap:8px;min-height:32px}
+.sb-row .sb-b{flex:0 0 auto;margin-left:auto;padding:5px 10px}
 .sb-left{font-size:14px;font-weight:700;color:var(--sheet);line-height:1.4}
 .sb-left b{font-size:18px;font-weight:900;margin:0 1px}
 .sb-on{display:flex;flex-direction:column;gap:6px}
 .sb-note{font-size:11px;line-height:1.5;color:var(--sub);white-space:nowrap}
 .sb-btns{display:flex;gap:8px}
+/* 張り付いている間は1行（切替・残り・△だけかけ直す） */
+.sbar.stuck .sb-on{display:none}
 .sb-b{appearance:none;-webkit-appearance:none;flex:1 1 0;font:inherit;font-size:13px;font-weight:700;line-height:1.4;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:5px 8px;cursor:pointer;white-space:nowrap}
 .sb-b:disabled{opacity:.4;cursor:default}
 .sb-b:not(:disabled):active{background:#F5E1E1}
@@ -315,6 +318,9 @@ html body.sheet .mk.s-hint .hd{display:inline-block;font-size:.72em;width:.82em;
 html body.sheet .mk.s-open{cursor:pointer}
 /* 答え＋△：波線の下線と赤い縁どり。濃い地のピルでは下線を白にする */
 html body.sheet .mk.s-doubt{text-decoration:underline wavy var(--sheet);text-decoration-thickness:1.5px;text-underline-offset:3px;box-shadow:0 0 0 1.5px var(--sheet)}
+/* 「今回の数字」ページの数字（.nv）も赤シートの対象 */
+.nv.mk{justify-self:start;white-space:normal;text-align:left;font-size:18px;font-weight:900;line-height:1.3;color:var(--ink)}
+html body.sheet .nv.mk.s-open{color:var(--ink)}
 html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-doubt{text-decoration-color:#fff}
 
 /* 印刷では帯も仕掛けも出さず、文字のまま（sheet.js も印刷の前に赤シートを外す） */
@@ -362,10 +368,10 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
   <p class="smp-note">下に、第1回をまるごと載せています。</p>
 </div>
 <div class="sbar" id="sbar" data-ep="1">
-  <div class="sb-row"><button type="button" class="tgl" id="sheetTgl" role="switch" aria-checked="false"><span class="tl">赤シート</span><span class="sw" aria-hidden="true"></span></button><span class="sb-left" id="sbLeft" hidden>残り <b id="sbN">0</b> か所</span></div>
+  <div class="sb-row"><button type="button" class="tgl" id="sheetTgl" role="switch" aria-checked="false"><span class="tl">赤シート</span><span class="sw" aria-hidden="true"></span></button><span class="sb-left" id="sbLeft" hidden>残り <b id="sbN">0</b> か所</span><button type="button" class="sb-b" id="sbDoubt" disabled hidden>△だけかけ直す</button></div>
   <div class="sb-on" id="sbOn" hidden>
     <p class="sb-note">1回タップでヒント、2回で答え。答えをもう1回タップで△（あやしい）</p>
-    <div class="sb-btns"><button type="button" class="sb-b" id="sbAll">全部かけ直す</button><button type="button" class="sb-b" id="sbDoubt" disabled>△だけかけ直す</button></div>
+    <div class="sb-btns"><button type="button" class="sb-b" id="sbAll">全部かけ直す</button></div>
   </div>
 </div>
 
@@ -434,7 +440,7 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
 <section class="sec s3 nums" id="s3">
 <div class="top">耳で覚える宅建2027　第1回　2027年1月4日（月）</div>
 <div class="numh"><h2>今回の数字</h2></div>
-<div class="nl"><div class="nr"><span class="nv">1つ</span><span class="nk">知事免許になる事務所の県数</span></div><div class="nr"><span class="nv">2つ以上</span><span class="nk">大臣免許になる事務所の県数</span></div><div class="nr"><span class="nv">5年</span><span class="nk">免許の有効期間</span></div><div class="nr"><span class="nv">90日前〜30日前</span><span class="nk">更新の申請期間（満了日の）</span></div><div class="nr"><span class="nv">5年</span><span class="nk">免許を受けられない期間</span></div><div class="nr"><span class="nv">60日以内</span><span class="nk">聴聞の公示前に役員だった期間</span></div></div>
+<div class="nl"><div class="nr"><button class="mk nv" type="button">1つ</button><span class="nk">知事免許になる事務所の県数</span></div><div class="nr"><button class="mk nv" type="button">2つ以上</button><span class="nk">大臣免許になる事務所の県数</span></div><div class="nr"><button class="mk nv" type="button">5年</button><span class="nk">免許の有効期間</span></div><div class="nr"><button class="mk nv" type="button">90日前〜30日前</button><span class="nk">更新の申請期間（満了日の）</span></div><div class="nr"><button class="mk nv" type="button">5年</button><span class="nk">免許を受けられない期間</span></div><div class="nr"><button class="mk nv" type="button">60日以内</button><span class="nk">聴聞の公示前に役員だった期間</span></div></div>
 <div class="foot">条文は2026年4月1日施行版で照合</div>
 </section>
 <div class="smp-foot">
@@ -581,7 +587,7 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
   function setSheet(v) {
     on = v;
     tgl.setAttribute('aria-checked', v ? 'true' : 'false');
-    left.hidden = !v; onBox.hidden = !v;
+    left.hidden = !v; onBox.hidden = !v; btnDoubt.hidden = !v;
     items.forEach(function (it) { it.st = 0; });
     render(v);
   }
@@ -611,6 +617,17 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
     var f = function (e) { if (on) { render(!e.matches); } };
     if (mq.addEventListener) { mq.addEventListener('change', f); } else if (mq.addListener) { mq.addListener(f); }
   }
+
+  /* 上に張り付いている間は帯を1行に縮める（説明と「全部かけ直す」はページ上部にいるときだけ）。
+     帯の手前に高さ0の目印を置き、それが画面の上に出たら張り付いたとみなす */
+  var sent = document.createElement('div');
+  sent.setAttribute('aria-hidden', 'true');
+  sent.style.cssText = 'height:0;margin:0;padding:0;border:0';
+  bar.parentNode.insertBefore(sent, bar);
+  function stick() { bar.classList.toggle('stuck', sent.getBoundingClientRect().top < -1); }
+  window.addEventListener('scroll', stick, {passive: true});
+  window.addEventListener('resize', stick);
+  stick();
 
   load();
   render(false);
