@@ -430,7 +430,7 @@ body.member .line-card{display:none}
 
   <section class="sec" id="plan">
     <div class="shead"><h2 class="sh">2027年の配信予定</h2><p class="ssub">1月4日から、毎週月曜に本編を1本（予定）</p></div>
-    <ul class="past"><li><a class="prow" href="https://www.mimiobo.com/roadmap" data-umami-event="ep-roadmap" data-umami-event-ep="1"><span class="pico list" aria-hidden="true"></span><span class="pmid"><span class="pt">学習ロードマップ</span><span class="py">全41回の日付とテーマを見る</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
+    <ul class="past"><li><a class="prow" href="/roadmap" data-umami-event="ep-roadmap" data-umami-event-ep="1"><span class="pico list" aria-hidden="true"></span><span class="pmid"><span class="pt">学習ロードマップ</span><span class="py">全41回の日付とテーマを見る</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
   </section>
 
   <section class="sec" id="y2026">
@@ -459,6 +459,21 @@ body.member .line-card{display:none}
   var esc = function (s) {
     return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
   };
+
+  /* ---------- 3問済の印：前半・後半の両方を解き終えたら、この端末の localStorage に残す（送信しない） ---------- */
+  var setsDone = {};
+  function markSetDone(idx) {
+    setsDone[idx] = true;
+    for (var i = 0; i < QUIZ.length; i++) { if (!setsDone[i]) { return; } }
+    var m = /\/ep\/(\d+)/.exec(location.pathname);
+    if (!m) { return; }
+    try {
+      var o = JSON.parse(localStorage.getItem('takken2027-done') || '{}');
+      if (!o || typeof o !== 'object') { o = {}; }
+      o[m[1]] = true;
+      localStorage.setItem('takken2027-done', JSON.stringify(o));
+    } catch (_) {}
+  }
 
   /* ---------- 解き終えたその場に出すLINEの誘い ---------- */
   /* 組の途中（前半）を解き終えたら次の組へ。過去問1選への誘いは最後の組（後半）のあとだけ */
@@ -517,6 +532,7 @@ body.member .line-card{display:none}
             scoreText.textContent = total + '問中' + correct + '問正解';
             score.hidden = false;
             inv.hidden = false;
+            markSetDone(idx);
           }
         });
       });
