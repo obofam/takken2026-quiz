@@ -242,6 +242,15 @@ body:has(.sec:target) .sec{margin:0}
 .smp-tag{display:inline-block;font-size:12px;font-weight:700;color:var(--ink);background:var(--soft);border-radius:999px;padding:2px 12px}
 .smp-h{font-size:21px;font-weight:900;line-height:1.4;margin-top:8px}
 .smp-lead{font-size:13px;color:var(--sub);line-height:1.75;margin-top:6px}
+.smp-diff{margin:14px 0 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;text-align:left}
+.smp-diff table{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.55}
+.smp-diff th,.smp-diff td{padding:7px 8px;border-top:1px solid var(--line);vertical-align:top;text-align:left}
+.smp-diff thead th{border-top:0;background:var(--bg);font-weight:700;color:var(--sub);font-size:11.5px}
+.smp-diff thead th.pay{background:var(--soft);color:var(--ink)}
+.smp-diff tbody th{font-weight:700;color:var(--sub);white-space:nowrap;width:3.6em}
+.smp-diff td{color:var(--sub)}
+.smp-diff td.pay{background:var(--soft);font-weight:700;color:var(--text)}
+.smp-note{font-size:12px;color:var(--sub);margin-top:12px}
 .smp-foot{padding:6px 16px 36px;text-align:center}
 .smp-foot p{font-size:13px;color:var(--sub);line-height:1.75;margin-bottom:10px}
 .smp-line{display:block;text-decoration:none;background:var(--sky);color:var(--text);border-radius:999px;padding:10px 16px;font-size:15px;font-weight:900}
@@ -254,7 +263,17 @@ body:has(.sec:target) .sec{margin:0}
 <div class="smp-head">
   <span class="smp-tag">有料教材の見本</span>
   <h1 class="smp-h">やさしいテキスト　第1回</h1>
-  <p class="smp-lead">放送の順に、図・今日のポイント・寄り道・今回の数字をまとめたテキストです。第1回を、まるごと見本にしています。</p>
+  <p class="smp-lead">これを見ながら放送を聴くと、より理解が深まるように作っています。回のページの無料の図解は、このテキストからの抜粋です。</p>
+  <div class="smp-diff"><table>
+    <thead><tr><th></th><th>無料の図解</th><th class="pay">やさしいテキスト</th></tr></thead>
+    <tbody>
+      <tr><th>図</th><td>大事な図だけ（4枚）</td><td class="pay">放送の図をすべて（6枚）</td></tr>
+      <tr><th>まとめ</th><td>—</td><td class="pay">まぎらわしい所のまとめ・放送の寄り道</td></tr>
+      <tr><th>数字</th><td>—</td><td class="pay">今回の数字を1ページに</td></tr>
+      <tr><th>使い方</th><td>聴いたあとの見返し</td><td class="pay">見ながら聴く・試験前の総ざらい</td></tr>
+    </tbody>
+  </table></div>
+  <p class="smp-note">下に、第1回をまるごと載せています。</p>
 </div>
 <!-- ========== 前半 ========== -->
 <section class="sec s1" id="s1">
