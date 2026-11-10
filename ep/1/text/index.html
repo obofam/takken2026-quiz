@@ -344,9 +344,9 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
 .smp-h{font-size:21px;font-weight:900;line-height:1.4;margin-top:8px}
 .smp-lead{font-size:13px;color:var(--sub);line-height:1.75;margin-top:6px}
 .smp-diff{margin:14px 0 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;text-align:left}
-.smp-diff table{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.55}
+.smp-diff table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.55}
 .smp-diff th,.smp-diff td{padding:7px 8px;border-top:1px solid var(--line);vertical-align:top;text-align:left}
-.smp-diff thead th{border-top:0;background:var(--bg);font-weight:700;color:var(--sub);font-size:11.5px}
+.smp-diff thead th{border-top:0;background:var(--bg);font-weight:700;color:var(--sub);font-size:14px}
 .smp-diff thead th.pay{background:var(--soft);color:var(--ink)}
 .smp-diff tbody th{font-weight:700;color:var(--sub);white-space:nowrap;width:3.6em}
 .smp-diff td{color:var(--sub)}
@@ -431,7 +431,7 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
 
 <section class="card t-facts n2">
   <div class="hd"><span class="no">2</span><h2>免許はだれから？<small>決めるのは事務所の場所。物件の場所は関係ない</small></h2></div>
-  <div class="fcs"><div class="fc"><img src="/ep/1/img/onepref.webp" alt=""><div class="tx"><div class="w">知事</div><div class="n">事務所が1つの県だけ</div></div></div><div class="fc"><img src="/ep/1/img/twopref.webp" alt=""><div class="tx"><div class="w">大臣</div><div class="n">事務所が2つ以上の県</div></div></div></div>
+  <div class="fcs"><div class="fc"><img src="/ep/1/img/onepref.webp" alt=""><div class="tx"><div class="w"><button class="mk" type="button" data-alt="大臣">知事</button></div><div class="n">事務所が1つの県だけ</div></div></div><div class="fc"><img src="/ep/1/img/twopref.webp" alt=""><div class="tx"><div class="w"><button class="mk" type="button" data-alt="知事" data-alt-first="1">大臣</button></div><div class="n">事務所が2つ以上の県</div></div></div></div>
 </section>
 
 <section class="card t-facts n3">
@@ -683,7 +683,9 @@ html body.sheet .mk.s-hint.s-alt{padding:0 4px}
   stick();
 
   load();
-  setSheet(true); /* 見本：赤シートは最初からオン */
+  setSheet(true); /* 見本：赤シートは最初からオン。最初に隠すのは「今日のポイント」の中だけ（ほかは答えが見えている） */
+  items.forEach(function (it) { if (!it.el.closest('.core')) { it.st = 2; paint(it, true); } });
+  count();
 })();
 </script>
 <script>

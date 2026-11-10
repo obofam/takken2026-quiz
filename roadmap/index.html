@@ -45,7 +45,7 @@
   .how .n { flex: none; width: 1.6em; height: 1.6em; border-radius: 50%; background: var(--cyan-soft); color: var(--cyan-dark); font-size: .82rem; display: inline-flex; align-items: center; justify-content: center; }
   .how li { flex-wrap: wrap; row-gap: 0; }
   .how a.main { color: inherit; text-decoration: none; border-bottom: 1px solid var(--cyan); }
-  .how .oth { flex-basis: 100%; padding-left: 31px; font-size: .8rem; font-weight: 500; color: var(--muted); line-height: 1.6; }
+  .how .oth { flex-basis: 100%; padding-left: 31px; font-size: .85rem; font-weight: 500; color: var(--muted); line-height: 1.6; }
   .how .oth a { color: var(--cyan-dark); text-underline-offset: 2px; }
   .smp { font-size: .78rem; font-weight: 700; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; white-space: nowrap; align-self: center; }
   /* 分野でしぼるボタン */
@@ -53,7 +53,7 @@
   .filters button { font: inherit; font-size: .92rem; font-weight: 700; cursor: pointer; background: var(--card); border: 1px solid var(--cyan); color: var(--cyan-dark); border-radius: 999px; padding: 4px 14px; }
   .filters button[aria-pressed="true"] { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
   .part-lead { font-size: .95rem; color: var(--muted); margin: 0 0 12px; display: none; }
-  .week-note { font-size: .85rem; color: var(--muted); margin: 0 0 10px; line-height: 1.6; }
+  .week-note { font-size: .9rem; color: var(--muted); margin: 0 0 10px; line-height: 1.6; }
 
   /* 受験の地図：本試験50問の内訳（水色の濃淡だけ。分類を意味する別色は使わない） */
   .exam-map { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 12px 12px 14px; margin-bottom: 22px; }
@@ -63,21 +63,23 @@
   .em-seg i { display: block; height: 14px; }
   .em-seg:first-child i { border-radius: 7px 0 0 7px; }
   .em-seg:last-child i { border-radius: 0 7px 7px 0; }
-  .em-seg .nm { display: block; margin-top: 5px; font-size: .7rem; font-weight: 700; line-height: 1.4; }
-  .em-seg .nm span { display: block; }
-  .em-seg .cnt { display: block; font-size: .7rem; color: var(--muted); line-height: 1.4; }
+  .em-seg .cnt { display: block; font-size: .85rem; color: var(--muted); line-height: 1.4; }
+  .em-leg { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin: 10px 4px 0; padding: 0; }
+  .em-leg li { display: flex; align-items: center; gap: 7px; font-size: .88rem; font-weight: 700; line-height: 1.4; }
+  .em-leg i { flex: none; display: block; width: 12px; height: 12px; border-radius: 3px; }
   .em1 i { background: var(--cyan-dark); }
   .em2 i { background: var(--cyan); }
   .em3 i { background: var(--cyan-mid); }
   .em4 i { background: var(--cyan-soft); box-shadow: inset 0 0 0 1px var(--cyan-mid); }
 
   /* 自分の進み具合の帯（50問の帯と同じ区切り）と、本編の印 */
-  .em-h.pg-h { margin-top: 16px; font-size: .8rem; color: var(--muted); }
+  .em-h.pg-h { margin-top: 16px; font-size: .85rem; color: var(--muted); }
   .pg .em-seg i { background: var(--cyan-soft); box-shadow: inset 0 0 0 1px var(--cyan-mid); }
   .pg .em-seg .cnt { margin-top: 4px; }
+  .pg .em-seg .cnt { font-size: .85rem; }
   .pg-sum { font-size: .85rem; font-weight: 700; margin: 10px 4px 0; line-height: 1.6; }
   .pg-sum.none { font-weight: 500; color: var(--muted); }
-  .pg-note { font-size: .75rem; color: var(--muted); margin: 2px 4px 0; line-height: 1.6; }
+  .pg-note { font-size: .85rem; color: var(--muted); margin: 2px 4px 0; line-height: 1.6; }
   .exam-map [hidden] { display: none !important; }
   .marks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .mk { font: inherit; font-size: .78rem; font-weight: 700; line-height: 1.6; padding: 0 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--cyan); color: var(--cyan-dark); white-space: nowrap; }
@@ -96,7 +98,9 @@
   .sched tbody tr:first-child > * { border-top: 0; }
   .sched tr.ep.now { background: var(--cyan-soft); }
   .sched tr.ep.now .badge { background: var(--card); }
-  .sched tr.ep.past > td:not(.c-rec) { opacity: .55; }
+  /* まだ配信日が来ていない行（見本の回を除く）：字をグレーに。記録ボタンは出さない */
+  .sched tr.ep.fut > td, .sched tr.ep.fut .c-title, .sched tr.ep.fut .c-date .wd, .sched tr.ep.fut .c-part { color: #6B6B76; }
+  .sched tr.ep.fut .badge { color: #6B6B76; background: transparent; border: 1px solid #C9C9D1; padding: 0 8px; }
   .sched tr.ep.ms { background: var(--surface); }
   .c-date { white-space: nowrap; font-weight: 700; font-size: .98rem; }
   .c-date .wd { font-size: .82rem; font-weight: 500; color: var(--muted); margin-left: 1px; }
@@ -174,11 +178,12 @@
   <section class="exam-map" aria-label="本試験50問の内訳">
     <p class="em-h">本試験50問の内訳</p>
     <div class="em-bar">
-      <div class="em-seg em1" style="flex:20"><i></i><span class="nm">業法</span><span class="cnt">20問</span></div>
-      <div class="em-seg em2" style="flex:14"><i></i><span class="nm">権利関係</span><span class="cnt">14問</span></div>
-      <div class="em-seg em3" style="flex:8"><i></i><span class="nm"><span>法令上の</span><span>制限</span></span><span class="cnt">8問</span></div>
-      <div class="em-seg em4" style="flex:8"><i></i><span class="nm"><span>税・</span><span>その他</span></span><span class="cnt">8問</span></div>
+      <div class="em-seg em1" style="flex:20"><i></i></div>
+      <div class="em-seg em2" style="flex:14"><i></i></div>
+      <div class="em-seg em3" style="flex:8"><i></i></div>
+      <div class="em-seg em4" style="flex:8"><i></i></div>
     </div>
+    <ul class="em-leg"><li class="em1"><i></i>業法　20問</li><li class="em2"><i></i>権利関係　14問</li><li class="em3"><i></i>法令上の制限　8問</li><li class="em4"><i></i>税・その他　8問</li></ul>
     <p class="em-h pg-h">あなたの進み具合（聴いた・3問済の本編）</p>
     <div class="em-bar pg" id="pgBar"></div>
     <p class="pg-sum" id="pgSum"></p>
@@ -317,12 +322,13 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
           + ' data-umami-event="roadmap-link" data-umami-event-type="'+a[0]+'" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+a[1]+((a[0]==='mondai' && DN[e.n])?'<span class="ok">済</span>':'')+'</a>';
       });
       var marks = '';
-      if (e.kind==='本編' && e.n) {
+      var fut = !e.sample && num(e.d) > t; // 配信前の行：グレー・記録ボタンなし
+      if (e.kind==='本編' && e.n && !fut) {
         var st = LS[e.n]===2 ? 2 : (LS[e.n] ? 1 : 0);
         marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-label="聴いたかどうかを切り替え">'+ST_LABEL[st]+'</button>'
           ;
       }
-      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+'">'
+      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
         + '<td class="c-date">'+md(e)+'<span class="wd">('+esc(e.wd)+')</span>'+(e.note?'<span class="hol">'+esc(e.note)+'</span>':'')+'</td>'
         + '<td class="c-kind"><span class="badge'+k[1]+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
         + '<td class="c-part">'+esc(partName(e.part))+'</td>'
