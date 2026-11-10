@@ -326,6 +326,16 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
 /* 印刷では帯も仕掛けも出さず、文字のまま（sheet.js も印刷の前に赤シートを外す） */
 @media print{.sbar{display:none !important}}
 
+/* 小さい字を読みやすく（画面用だけ。PDFの元の base.css／sp.css は変えない）：13px・少し濃い色 */
+.it .sm,.top,.ne,.nq .qa,.foot{font-size:13px;color:#4F5963}
+.it .sm{white-space:normal}
+.top,.foot{line-height:1.4}
+.sb-note{font-size:12px;color:#4F5963;white-space:normal}
+/* オフのときの気づき（帯の切替の右） */
+.sb-off{font-size:13px;line-height:1.4;color:#4F5963;white-space:nowrap}
+/* 2択ヒント（知事／大臣）：箱が少し広がってよい */
+html body.sheet .mk.s-hint.s-alt{padding:0 4px}
+
 
 /* 見本ページ用（画面だけ）：幅をスマホに合わせ、上に見本の札、下に案内 */
 @media screen{html{background:#fff}body{width:auto;max-width:390px;background:#fff}.sec{width:auto}}
@@ -353,9 +363,9 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
 .epnav .en{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:var(--text);text-decoration:none}
 .epnav .en.nx{text-align:right}
 .epnav .en.none{visibility:hidden}
-.epnav .el{font-size:12px;font-weight:700;color:var(--ink)}
+.epnav .el{font-size:13px;font-weight:700;color:var(--ink)}
 .epnav .et{font-size:14px;font-weight:700;line-height:1.45}
-.epnav .ed{font-size:12px;color:var(--sub)}
+.epnav .ed{font-size:13px;color:#4F5963}
 .epnav span.en{background:transparent;border-style:dashed}
 @media print{.epnav{display:none}}
 </style>
@@ -378,7 +388,7 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
   <p class="smp-note">下に、第1回をまるごと載せています。</p>
 </div>
 <div class="sbar" id="sbar" data-ep="1">
-  <div class="sb-row"><button type="button" class="tgl" id="sheetTgl" role="switch" aria-checked="false"><span class="tl">赤シート</span><span class="sw" aria-hidden="true"></span></button><span class="sb-left" id="sbLeft" hidden>残り <b id="sbN">0</b> か所</span><button type="button" class="sb-b" id="sbDoubt" disabled hidden>△だけかけ直す</button></div>
+  <div class="sb-row"><button type="button" class="tgl" id="sheetTgl" role="switch" aria-checked="false"><span class="tl">赤シート</span><span class="sw" aria-hidden="true"></span></button><span class="sb-off" id="sbOff">大事な言葉を隠して練習できます</span><span class="sb-left" id="sbLeft" hidden>残り <b id="sbN">0</b> か所</span><button type="button" class="sb-b" id="sbDoubt" disabled hidden>△だけかけ直す</button></div>
   <div class="sb-on" id="sbOn" hidden>
     <p class="sb-note">1回タップでヒント、2回で答え。答えをもう1回タップで△（あやしい）</p>
     <div class="sb-btns"><button type="button" class="sb-b" id="sbAll">全部かけ直す</button></div>
@@ -389,12 +399,12 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
 <section class="sec s1" id="s1">
 <div class="top">耳で覚える宅建2027　第1回　2027年1月4日（月）</div>
 <div class="title"><div class="row"><span class="no">第1回</span><h1>100部屋貸しても、<br>免許はいらない</h1></div><div class="side">前半　宅建業と免許</div></div>
-<div class="core"><h2>今日のポイント</h2><p>「自分の物件を自分で貸す」以外の取引を、不特定多数にくり返し行うなら<span class="nb"><button class="mk" type="button">免許がいる</button>。</span>事務所が1つの県だけなら<span class="nb"><button class="mk" type="button">知事</button>、</span>2つ以上の県なら<span class="nb"><button class="mk" type="button">大臣</button>。</span></p></div>
+<div class="core"><h2>今日のポイント</h2><p>「自分の物件を自分で貸す」以外の取引を、不特定多数にくり返し行うなら<span class="nb"><button class="mk" type="button" data-alt="いらない">免許がいる</button>。</span>事務所が1つの県だけなら<span class="nb"><button class="mk" type="button" data-alt="大臣">知事</button>、</span>2つ以上の県なら<span class="nb"><button class="mk" type="button" data-alt="知事" data-alt-first="1">大臣</button>。</span></p></div>
 <div class="target">自ら売買・交換、または他人の売買・交換・貸借の代理・媒介</div>
 <div class="cards">
 <section class="card t-zones n1">
   <div class="hd"><span class="no">1</span><h2>免許がいるのは誰？<small>「業として」＝不特定多数に、くり返し行うこと</small></h2></div>
-  <div class="zones"><div class="zone ok"><button class="mk zh rv" type="button">免許がいる</button><div class="items" style="--cols:2"><div class="it"><img src="/ep/1/img/plots.webp" alt=""><div class="lb">地主さん</div><div class="sm">20区画を次々に売る</div></div><div class="it"><img src="/ep/1/img/broker.webp" alt=""><div class="lb">仲介する会社</div><div class="sm">他人の部屋の貸借でも</div></div></div></div><div class="zone ng"><button class="mk zh rv" type="button">いらない</button><div class="items" style="--cols:3"><div class="it"><img src="/ep/1/img/landlord.webp" alt=""><div class="lb">大家さん</div><div class="sm"><button class="mk" type="button">自ら貸借</button></div></div><div class="it"><img src="/ep/1/img/onetime.webp" alt=""><div class="lb">会社員</div><div class="sm">自宅を<span class="nb"><button class="mk" type="button">1回</button>売る</span></div></div><div class="it"><img src="/ep/1/img/cityhall.webp" alt=""><div class="lb">国・地方公共団体</div><div class="sm">適用除外</div></div></div></div></div>
+  <div class="zones"><div class="zone ok"><button class="mk zh rv" type="button" data-alt="いらない">免許がいる</button><div class="items" style="--cols:2"><div class="it"><img src="/ep/1/img/plots.webp" alt=""><div class="lb">地主さん</div><div class="sm">20区画を次々に売る</div></div><div class="it"><img src="/ep/1/img/broker.webp" alt=""><div class="lb">仲介する会社</div><div class="sm">他人の部屋の貸借でも</div></div></div></div><div class="zone ng"><button class="mk zh rv" type="button" data-alt="免許がいる" data-alt-first="1">いらない</button><div class="items" style="--cols:3"><div class="it"><img src="/ep/1/img/landlord.webp" alt=""><div class="lb">大家さん</div><div class="sm"><button class="mk" type="button">自ら貸借</button></div></div><div class="it"><img src="/ep/1/img/onetime.webp" alt=""><div class="lb">会社員</div><div class="sm">自宅を<span class="nb"><button class="mk" type="button">1回</button>売る</span></div></div><div class="it"><img src="/ep/1/img/cityhall.webp" alt=""><div class="lb">国・地方公共団体</div><div class="sm">適用除外</div></div></div></div></div>
 </section>
 
 <section class="card t-facts n2">
@@ -519,6 +529,8 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
     return out;
   }
 
+  function escHtml(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
   if (typeof module !== 'undefined' && module.exports) { module.exports = { hintOf: hintOf, hintHtml: hintHtml }; }
   if (typeof document === 'undefined') { return; }
 
@@ -527,15 +539,19 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
   var left = document.getElementById('sbLeft');
   var nEl = document.getElementById('sbN');
   var onBox = document.getElementById('sbOn');
+  var offNote = document.getElementById('sbOff');
   var btnAll = document.getElementById('sbAll');
   var btnDoubt = document.getElementById('sbDoubt');
   if (!bar || !tgl) { return; }
   var KEY = 'takken2027-sheet-ep' + (bar.getAttribute('data-ep') || '0');
-  var CLS = ['s-hide', 's-hint', 's-open', 's-doubt', 's-flag', 'open', 'rv'];
+  var CLS = ['s-hide', 's-hint', 's-alt', 's-open', 's-doubt', 's-flag', 'open', 'rv'];
 
   /* st: 0 隠す／1 ヒント／2 答え。doubt は答えにつける△（保存する） */
   var items = [].slice.call(document.querySelectorAll('.sec .mk')).map(function (el) {
-    return { el: el, html: el.innerHTML, hint: hintHtml(el.textContent), st: 0, doubt: false };
+    var alt = el.getAttribute('data-alt'), own = el.textContent;
+    /* data-alt（対の言葉）があれば、ヒントは「知事／大臣」の2択。並びは組に書いた順のまま（答えの位置で当たりが分からない） */
+    var hint = alt ? escHtml(el.getAttribute('data-alt-first') ? alt + '／' + own : own + '／' + alt) : hintHtml(own);
+    return { el: el, html: el.innerHTML, hint: hint, alt: !!alt, st: 0, doubt: false };
   });
   var on = false;
 
@@ -572,6 +588,7 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
       el.setAttribute('aria-label', '隠れています。押すとヒント');
     } else if (it.st === 1) {
       el.classList.add('s-hint');
+      if (it.alt) { el.classList.add('s-alt'); }
       el.innerHTML = it.hint;
       el.removeAttribute('aria-pressed');
       el.setAttribute('aria-label', 'ヒント。押すと答え');
@@ -598,6 +615,7 @@ html body.sheet .zh.s-doubt,html body.sheet .r.s-doubt,html body.sheet .pl.s-dou
   function setSheet(v) {
     on = v;
     tgl.setAttribute('aria-checked', v ? 'true' : 'false');
+    if (offNote) { offNote.hidden = v; }
     left.hidden = !v; onBox.hidden = !v; btnDoubt.hidden = !v;
     items.forEach(function (it) { it.st = 0; });
     render(v);
