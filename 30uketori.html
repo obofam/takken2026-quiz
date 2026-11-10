@@ -680,7 +680,7 @@
           <div class="link-grid">
             <a class="link-card" href="#audio">
               <b>🎧 限定音声12本</b>
-              <span>直前用の音声ドリルをまとめて聴けます。</span>
+              <span>音声の公開は終了しました。台本とポイント整理を読めます。</span>
             </a>
             <a class="link-card" href="#knock">
               <b>🥊 千本ノック</b>
@@ -708,7 +708,7 @@
         <section id="audio">
           <details open>
             <summary style="cursor:pointer;font-size:22px;line-height:1.35;padding-bottom:8px;border-bottom:2px solid var(--ink);">限定音声12本</summary>
-            <p class="lead">限定音声12本を、ここで再生できます。移動中や家事中に、その日の指定の1本をどうぞ。各回の「ポイント整理」を開くと、聴いた内容を表で確認できます。</p>
+            <p class="lead">限定音声12本の公開は、2026年11月で終了しました。各回の台本と「ポイント整理」は、引き続きここで読めます。</p>
             <div class="audio-list" id="audioList"></div>
           </details>
         </section>
@@ -1508,10 +1508,10 @@
             <span class="tag">${tag}</span>
             <div>
               <h3>${title}</h3>
-              <p>${ready ? file : "準備中（順次追加されます）"}</p>
+              <p>音声の公開は終了しました</p>
             </div>
           </div>
-          ${ready ? `<audio controls preload="none" src="audio/${file}"></audio>` : ""}${extrasHtml}
+          ${extrasHtml}
         </article>
       `;
       }).join("");
