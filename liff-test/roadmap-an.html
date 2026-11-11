@@ -383,9 +383,9 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     if (e.kind!=='本編' || !e.n) return;
     var base = EP_URL + e.n + '?src=roadmap';
     if (!e.zukai) e.zukai = base + '#zukai';
-    if (!e.mondai) e.mondai = base + '#maru';
+    if (!e.mondai) e.mondai = base;
   });
-  var LINKS = [['spotify','Spotify',1], ['youtube','YouTube',1], ['zukai','図解',0], ['mondai','○×3問',0]]; // 3つ目=別タブで開く
+  var LINKS = [['spotify','Spotify',1], ['youtube','YouTube',1], ['mondai','図解と3問',0]]; // 3つ目=別タブで開く
   // 節目の行（どの分野でしぼっても出す）。受験申込の日付は目安（7月の頭に置く）
   var MS = [
     {d: "2027-07-01", dl: "7月", wd: "", kind: "節目", ms: 1, theme: "受験申込（例年7月）", title: "日程は試験実施機関の発表で確定します"},
