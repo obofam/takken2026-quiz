@@ -363,7 +363,13 @@ body.member .line-card{display:block}
 .is-friend .only-a{display:none !important}
 .is-friend .only-b{display:block}
 .tbanner{background:var(--ink);color:#fff;font-size:12px;line-height:1.6;text-align:center;padding:2px 8px}
-.dstate{margin-top:10px;font-size:11px;line-height:1.4;color:var(--sub);opacity:.6;text-align:center}
+/* 試作の状態の箱（確認用・試作の間だけ）。スマホで読めるよう16px、本文と同じ濃い色 */
+.dbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px 14px;font-size:16px;line-height:1.6;color:var(--text);text-align:left}
+.dhead{font-size:13px;font-weight:700;line-height:1.4;color:#4F5963;margin:0}
+.drow{margin-top:8px}
+.dk{font-weight:700}
+.dv{white-space:pre-wrap}
+.dcopy{margin-top:14px;cursor:pointer}
 .next-box .lbtn{margin-top:10px}
 </style>
 </head>
@@ -441,7 +447,11 @@ body.member .line-card{display:block}
   </div>
 
   <div class="foot">条文は2026年4月1日施行版で照合</div>
-  <div class="dstate" id="dstate">状態：確認前</div>
+  <div class="dbox" id="dbox">
+    <p class="dhead">試作の状態（確認用）</p>
+    <div id="drows"></div>
+    <button type="button" class="pill dcopy" id="dcopy">この内容をコピー</button>
+  </div>
 </div>
 <script>
 (function () {
@@ -561,10 +571,75 @@ body.member .line-card{display:block}
   'use strict';
   var LIFF_ID = '2011606963-hH0DzETc';
   var body = document.body;
-  var stEl = document.getElementById('dstate');
+  var stEl = document.getElementById('drows');
   var mihon = new URLSearchParams(location.search).get('mihon');
-  function say(t) { if (stEl) { stEl.textContent = '状態：' + t; } }
+  /* 試作の状態の箱：状態・段階・エラー・LINEの情報を1行ずつ。取得できない項目は「取得できず」 */
+  var curState = '確認前';
+  var lastErr = null;
+  var boxLines = [];
+  var prog = {sdk: null, init: null, login: null, friend: null, full: null};
+  var STEPS = [['sdk', 'SDKの読み込み'], ['init', '初期化'], ['login', 'ログインの確認'], ['friend', '友だちの確認'], ['full', '全部の表示']];
+  function say(t) { curState = t; render(); }
   function why(e) { return String((e && e.message) || e || '不明').slice(0, 80); }
+  function get(fn) { try { var v = fn(); return (v === undefined || v === null || v === '') ? null : v; } catch (_) { return null; } }
+  function txt(v, f) { return (v === null || v === undefined) ? '取得できず' : (f ? f(v) : String(v)); }
+  function yn(v) { return v ? 'はい' : 'いいえ'; }
+  function stageText() {
+    if (mihon === 'mitouroku') { return '見本の表示のため確認していない'; }
+    var ok = '', ng = '';
+    STEPS.forEach(function (s) {
+      if (prog[s[0]] === 'ok') { ok = s[1]; }
+      if (prog[s[0]] === 'ng' && !ng) { ng = s[1]; }
+    });
+    return '最後に成功：' + (ok || 'なし') + ' ／ 失敗：' + (ng || 'なし');
+  }
+  function errText() {
+    if (!lastErr) { return 'なし'; }
+    var e = lastErr, parts = [];
+    try {
+      if (e && e.code) { parts.push('code：' + e.code); }
+      if (e && e.message) { parts.push('message：' + e.message); }
+      if (!parts.length) { parts.push(String(e)); }
+    } catch (_) { parts = ['取得できず']; }
+    return parts.join('\n');
+  }
+  function fail(e) {
+    lastErr = e;
+    for (var i = 0; i < STEPS.length; i++) {
+      if (prog[STEPS[i][0]] !== 'ok') { prog[STEPS[i][0]] = 'ng'; return; }
+    }
+  }
+  function render() {
+    if (!stEl) { return; }
+    var ctx = get(function () { return liff.getContext(); });
+    var rows = [
+      ['状態', curState],
+      ['段階', stageText()],
+      ['エラーの中身', errText()],
+      ['LINEの中か', txt(get(function () { return liff.isInClient(); }), yn)],
+      ['ログイン', txt(get(function () { return liff.isLoggedIn(); }), yn)],
+      ['OS', txt(get(function () { return liff.getOS(); }))],
+      ['LINEのバージョン', txt(get(function () { return liff.getLineVersion(); }))],
+      ['許可されている項目（scope）', txt(ctx && ctx.scope, function (s) { return Array.isArray(s) ? (s.length ? s.join(', ') : 'なし') : String(s); })],
+      ['種類（type）', txt(ctx && ctx.type)]
+    ];
+    stEl.textContent = '';
+    boxLines = [];
+    rows.forEach(function (r) {
+      var p = document.createElement('div');
+      p.className = 'drow';
+      var k = document.createElement('span');
+      k.className = 'dk';
+      k.textContent = r[0] + '：';
+      var v = document.createElement('span');
+      v.className = 'dv';
+      v.textContent = r[1];
+      p.appendChild(k);
+      p.appendChild(v);
+      stEl.appendChild(p);
+      boxLines.push(r[0] + '：' + r[1]);
+    });
+  }
   function loadScript(src) {
     return new Promise(function (ok, ng) {
       var s = document.createElement('script');
@@ -596,24 +671,38 @@ body.member .line-card{display:block}
   function judge() {
     if (mihon === 'mitouroku') { say('見本：登録していない表示（判定なし）'); return Promise.resolve(); }
     if (mihon === 'touroku') {
-      return showFull().then(function () { say('見本：登録している表示（判定なし）'); }, function (e) { console.warn(e); say('確認できなかった（' + why(e) + '）'); });
+      return showFull().then(function () { prog.full = 'ok'; say('見本：登録している表示（判定なし）'); }, function (e) { console.warn(e); prog.full = 'ng'; lastErr = e; say('確認できなかった（' + why(e) + '）'); });
     }
     return loadScript('https://static.line-scdn.net/liff/edge/2/sdk.js').then(function () {
+      prog.sdk = 'ok';
       return liff.init({liffId: LIFF_ID});
     }).then(function () {
+      prog.init = 'ok';
       var inClient = false;
       try { inClient = liff.isInClient(); } catch (_) {}
       if (inClient) { var b = document.getElementById('openLine'); if (b) { b.hidden = true; } }
-      if (!liff.isLoggedIn()) { say('LINEの外'); return; }
+      var li = liff.isLoggedIn();
+      prog.login = 'ok';
+      if (!li) { say('LINEの外'); return; }
       return liff.getFriendship().then(function (f) {
+        prog.friend = 'ok';
         if (f && f.friendFlag === true) {
-          return showFull().then(function () { say('LINEの中・友だち'); });
+          return showFull().then(function () { prog.full = 'ok'; say('LINEの中・友だち'); });
         }
         say('LINEの中・友だちではない');
       });
-    }).catch(function (e) { console.warn(e); say('確認できなかった（' + why(e) + '）'); });
+    }).catch(function (e) { console.warn(e); fail(e); say('確認できなかった（' + why(e) + '）'); });
   }
-  try { judge(); } catch (e) { console.warn(e); say('確認できなかった（' + why(e) + '）'); }
+  render();
+  try { judge(); } catch (e) { console.warn(e); fail(e); say('確認できなかった（' + why(e) + '）'); }
+  var copyBtn = document.getElementById('dcopy');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function () {
+      try {
+        navigator.clipboard.writeText('試作の状態（確認用）\n' + boxLines.join('\n')).catch(function () {});
+      } catch (_) {}
+    });
+  }
 })();
 </script>
 </body>
