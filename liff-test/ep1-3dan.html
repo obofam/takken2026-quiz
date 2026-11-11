@@ -202,7 +202,7 @@ html,body{background:var(--bg)}
 body{font-size:16px;overflow-x:hidden}
 .page{max-width:430px;margin:0 auto;background:var(--bg);padding:14px 16px 24px}
 .page>*+*{margin-top:12px}
-:root{--navh:58px}
+:root{--navh:48px}
 
 /* 一番上 */
 .top{font-size:12px;color:var(--sub);line-height:1.3;display:flex;flex-wrap:nowrap;justify-content:space-between;align-items:baseline;gap:8px}
@@ -217,8 +217,8 @@ body:not(.member) .mtgl .m0,body.member .mtgl .m1{font-weight:700;color:var(--in
 .pnote{font-size:12px;color:var(--sub);line-height:1.6;margin-top:6px;text-align:center}
 
 /* 上に固定されるボタン */
-.jump{position:sticky;top:0;z-index:30;margin-left:-16px;margin-right:-16px;padding:8px 16px;display:flex;align-items:center;gap:6px;background:rgba(244,250,252,.97);border-bottom:1px solid var(--line)}
-.jb{flex:1 1 auto;display:block;text-align:center;font-size:14px;font-weight:700;line-height:1.4;color:var(--ink);background:#fff;border:1.5px solid var(--sky);border-radius:999px;padding:7px 4px;text-decoration:none;white-space:nowrap}
+.jump{position:sticky;top:0;z-index:30;box-sizing:border-box;height:var(--navh);margin-left:-16px;margin-right:-16px;padding:4px 16px;display:flex;align-items:center;gap:6px;background:var(--bg);border-bottom:1px solid var(--line)}
+.jb{flex:1 1 0;min-width:0;text-align:center;font-size:14px;font-weight:700;line-height:1.4;color:var(--ink);background:#fff;border:1.5px solid var(--sky);border-radius:999px;padding:0 4px;min-height:40px;display:flex;align-items:center;justify-content:center;text-decoration:none;white-space:nowrap}
 .jb:active{background:var(--soft)}
 .jb:focus-visible,.pill:focus-visible,.dm:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
 
@@ -379,12 +379,15 @@ body.member .line-card{display:block}
 .tsample img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px;object-view-box:none;margin:0 0 10px}
 .is-buyer .tsample,.is-buyer .past.txt,.is-buyer #zukai,.is-buyer #maru{display:none}
 .thost{display:block}
-.sbar2{position:sticky;top:var(--navh);z-index:20;display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:rgba(244,250,252,.97);border-bottom:1px solid var(--line);margin:0 -16px;padding:6px 16px}
-.sb2{appearance:none;-webkit-appearance:none;font:inherit;font-size:13px;font-weight:700;line-height:1.4;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.textwrap{display:flex;flex-direction:column;gap:12px}
+.is-buyer #text1,.is-buyer #text2,.is-buyer .qset{scroll-margin-top:calc(var(--navh) + 52px)}
+.sbar2{position:sticky;top:var(--navh);z-index:20;box-sizing:border-box;height:44px;display:flex;align-items:center;flex-wrap:nowrap;gap:6px;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding:2px 16px}
+.sb2{appearance:none;-webkit-appearance:none;font:inherit;font-size:13px;font-weight:700;line-height:1.2;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:0 12px;min-height:40px;cursor:pointer;white-space:nowrap;flex:0 0 auto;-webkit-tap-highlight-color:transparent}
 .sb2:disabled{opacity:.4;cursor:default}
 .sb2[aria-pressed="true"]{background:var(--sheet);color:#fff}
 .sb2.r{margin-left:auto}
-.sb2-left{font-size:14px;font-weight:700;color:var(--sheet)}
+.sb2-left{font-size:14px;font-weight:700;color:var(--sheet);white-space:nowrap;flex:0 0 auto;min-width:3.6em}
+@media (min-width:820px){.sbar2{margin:0 -32px;padding:2px 32px}}
 .sb2:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
 </style>
 </head>
@@ -776,7 +779,7 @@ body.member .line-card{display:block}
     function render() {
       roots.forEach(function (r) { var w = r.querySelector('.tx'); if (w) { w.classList.toggle('sheet', on); } });
       items.forEach(paint); count();
-      elTgl.textContent = '赤シート：' + (on ? 'オン' : 'オフ');
+      elTgl.textContent = '赤シート ' + (on ? 'オン' : 'オフ');
       elTgl.setAttribute('aria-pressed', on ? 'true' : 'false');
     }
     items.forEach(function (it) {
@@ -819,15 +822,17 @@ body.member .line-card{display:block}
     var bar = document.createElement('div');
     bar.className = 'sbar2';
     bar.innerHTML = '<button type="button" class="sb2" data-r="tgl" aria-pressed="true"></button><span class="sb2-left" data-r="left"></span>' +
-      '<button type="button" class="sb2 r" data-r="doubt">△だけかけ直す</button><button type="button" class="sb2" data-r="all">全部かけ直す</button>';
+      '<button type="button" class="sb2 r" data-r="doubt" aria-label="△の印をつけたところだけ、かけ直す">△だけ</button><button type="button" class="sb2" data-r="all" aria-label="全部かけ直す">全部</button>';
     var point = document.createElement('section'); point.className = 'sec'; point.id = 'point';
     Array.prototype.forEach.call(document.querySelectorAll('#zukai .core'), function (c) { point.appendChild(c); });
     /* ここから画面を変える */
-    sec1.appendChild(bar); sec1.appendChild(h1.el); sec1.appendChild(q1);
+    sec1.appendChild(h1.el); sec1.appendChild(q1);
     sec2.appendChild(h2.el); sec2.appendChild(q2);
+    /* 赤シートの帯は前半・後半の両方で上に残るよう、2つの節をまとめる箱の先頭に置く */
+    var tw = document.createElement('div'); tw.className = 'textwrap';
+    tw.appendChild(bar); tw.appendChild(sec1); tw.appendChild(sec2);
     var zukai = document.getElementById('zukai');
-    zukai.parentNode.insertBefore(sec1, zukai);
-    zukai.parentNode.insertBefore(sec2, zukai);
+    zukai.parentNode.insertBefore(tw, zukai);
     if (point.children.length) { zukai.parentNode.insertBefore(point, honban); }
     body.classList.add('is-buyer');
     var jump = document.getElementById('jump');
