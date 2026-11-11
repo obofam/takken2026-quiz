@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>第1回 図解と3問（出し分けの試作）｜耳で覚える宅建2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* base.css — スマホ版・無料の図解・回のページで共有する部分（第9回の試作から抜き出し）
+   変数・タイトル帯・今日のポイント・対象ピル・カードの型（big / zones / gauge / timeline / compare / table / steps / facts）。
+   「隠す／見せる」の色や、ページごとの違いは sp.css / free.css / page.css 側。 */
+:root{
+  --sky:#17C5E8; --ink:#0A6477; --soft:#E3F8FC; --bg:#F4FAFC; --text:#141B21; --sub:#6B6B76; --line:#DCEEF3;
+  --gray-bg:#F1F3F4; --gray-ink:#6B6B76;
+  --sheet:#8E3B3B;
+  --lime:#D6F034; --lime-soft:#F4FBD2; --lime-dark:#4F6300;
+  --font:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+  --shadow:0 2px 8px rgba(20,27,33,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);word-break:auto-phrase;overflow-wrap:anywhere;color:var(--text);line-height:1.5}
+
+/* タイトル帯 */
+.title{background:var(--ink);color:#fff;border-radius:14px;padding:14px 16px 12px}
+.title .row{display:flex;align-items:center;gap:10px}
+.title .no{flex:0 0 auto;background:#fff;color:var(--ink);border-radius:999px;font-size:15px;font-weight:900;padding:1px 13px;line-height:1.5}
+.title h1{font-size:22px;font-weight:900;line-height:1.3;flex:1;min-width:0}
+.title .side{margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.35);font-size:18px;font-weight:700;line-height:1.3}
+
+/* 今日のポイント */
+.core{position:relative;overflow:hidden;background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:10px 14px 12px 20px}
+.core::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--sky)}
+.core h2{font-size:14px;font-weight:900;color:var(--ink);line-height:1.3;letter-spacing:.04em}
+.core p{font-size:17px;font-weight:700;margin-top:3px}
+
+/* 対象ピル */
+.target{align-self:flex-start;background:#fff;border:1.5px solid var(--sky);border-radius:16px;
+  padding:3px 14px;font-size:14px;font-weight:700;color:var(--ink);line-height:1.5}
+
+/* カード */
+.cards{display:flex;flex-direction:column;gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+  padding:12px 12px 14px;display:flex;flex-direction:column;position:relative}
+.hd{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.hd .no{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-size:15px;font-weight:900;display:grid;place-items:center}
+.hd h2{font-size:19px;font-weight:900;line-height:1.3}
+.hd small{display:block;font-size:14px;font-weight:400;color:var(--sub);line-height:1.4}
+
+img{object-view-box:inset(7% 0 7% 0)}
+.ill{width:100%;height:160px;object-fit:contain;display:block}
+.big{font-size:36px;font-weight:900;color:var(--ink);text-align:center;line-height:1.2;margin-top:4px}
+.notes{margin-top:6px;text-align:center;font-size:14px;line-height:1.6}
+.notes p+p{margin-top:2px}
+
+/* ===== zones（できる／できない） ===== */
+.zones{display:flex;flex-direction:column;gap:10px}
+.zone{border-radius:12px;padding:8px 6px 8px}
+.items{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:4px;margin-top:4px}
+.it{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.it img{width:100%;height:100px;object-fit:contain;display:block}
+.zone.ng .it img{mix-blend-mode:multiply}
+.it .lb{font-size:13px;font-weight:700;line-height:1.4;margin-top:2px;white-space:nowrap}
+.it .sm{font-size:12px;color:var(--sub);line-height:1.35;margin-top:2px;white-space:nowrap}
+
+/* ===== gauge（メーター） ===== */
+.t-gauge .gauge{position:relative}
+.t-gauge .gauge img{position:absolute;right:2px;top:0;width:56px;height:56px;object-fit:contain}
+.t-gauge .gauge svg{width:100%;height:auto;display:block}
+.t-gauge .gauge foreignObject{overflow:visible}
+.fo2{text-align:center;font-size:32px;font-weight:900;color:var(--ink);line-height:1.3;font-family:var(--font)}
+.fo20{font-size:14px;font-weight:700;color:var(--ink);line-height:1.3;font-family:var(--font)}
+.fo20.r{text-align:right}
+.fo20.l{text-align:left}
+.fo20.m{text-align:center}
+.t-gauge .notes{font-size:15px;font-weight:700}
+
+/* ===== timeline（相手方が履行に着手） ===== */
+.t-timeline .ill{height:150px}
+.route{position:relative;height:64px;margin-top:6px}
+.route .track{position:absolute;left:0;right:0;bottom:0;height:38px;display:flex;border-radius:999px;overflow:hidden}
+.route .go,.route .no2{flex:1;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900}
+.route .pole{position:absolute;left:50%;top:0;bottom:-4px;width:3px;margin-left:-1.5px;background:var(--ink);border-radius:2px}
+.route .flag{position:absolute;left:50%;top:0;margin-left:1.5px;background:var(--ink);color:#fff;font-size:14px;font-weight:700;line-height:1.6;
+  padding:1px 26px 1px 10px;clip-path:polygon(0 0,100% 0,calc(100% - 10px) 50%,100% 100%,0 100%);white-space:nowrap}
+.t-timeline .big{font-size:32px;margin-top:10px}
+.tbl{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.tbl .row{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.tbl .rr{display:flex;align-items:center;gap:6px;align-self:stretch}
+.tbl .a{display:flex;align-items:center;border-radius:999px;font-size:14px;line-height:1.7;padding:1px 12px;background:var(--soft);color:var(--ink);font-weight:700}
+.tbl .b{display:flex;align-items:center;border-radius:999px;font-size:14px;line-height:1.7;padding:1px 12px;flex:1;min-width:0;background:#fff;border:1px solid var(--line);white-space:nowrap}
+.t-timeline .notes{text-align:left;color:var(--sub)}
+
+/* ===== compare（比べ表：見出しの丸を横に並べ、行ごとに「項目名」→ 横に並ぶ値） ===== */
+.cmp{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));gap:6px;align-items:stretch;margin-top:6px}
+.cmp .ch{display:flex;align-items:center;justify-content:center;text-align:center;border-radius:999px;font-size:14px;font-weight:900;line-height:1.35;padding:4px 8px;color:#fff;background:var(--ink)}
+.cmp .ch.c1{background:var(--sky);color:var(--text)}
+.cmp .ch.c2{background:var(--gray-ink)}
+.cmp .ck{grid-column:1/-1;display:flex;align-items:center;gap:6px;margin-top:6px;font-size:14px;font-weight:700;color:var(--ink);line-height:1.3}
+.cmp .ck::before{content:"";flex:0 0 auto;width:5px;height:15px;border-radius:3px;background:var(--sky)}
+.cmp .cv{display:flex;align-items:center;justify-content:center;text-align:center;border-radius:12px;padding:7px 5px;font-size:13px;line-height:1.5;border:1.5px solid transparent}
+.cmp .cv.c0{background:var(--soft)}
+.cmp .cv.c1{background:#fff;border-color:var(--sky)}
+.cmp .cv.c2{background:var(--gray-bg)}
+.t-compare .ill{height:120px}
+
+/* ===== table（分かれ目の表：行ごとに区切り・必要／不要はピル） ===== */
+.tbt{display:grid;grid-template-columns:fit-content(104px) repeat(var(--n,2),minmax(0,1fr));column-gap:8px;margin-top:6px}
+.tbt .th{display:flex;align-items:center;justify-content:center;text-align:center;background:var(--soft);color:var(--ink);font-size:14px;font-weight:900;border-radius:999px;padding:3px 8px;line-height:1.4;margin-bottom:2px}
+.tbt .tr{display:contents}
+.tbt .tk,.tbt .tv{display:flex;align-items:center;padding:9px 2px;border-top:1.5px dashed var(--line)}
+.tbt .tr.f .tk,.tbt .tr.f .tv{border-top:0}
+.tbt .tk{font-size:14px;font-weight:700;line-height:1.4}
+.tbt .tv{justify-content:center;text-align:center;font-size:14px;line-height:1.45}
+.tbt .pl{display:inline-block;border-radius:999px;padding:0 14px;color:#fff;font-weight:900;font-size:14px;line-height:1.7;min-width:64px;text-align:center}
+.tbt .pl.y{background:var(--ink)}
+.tbt .pl.n{background:var(--gray-ink)}
+.tbt.n3{column-gap:4px;grid-template-columns:fit-content(92px) repeat(3,minmax(0,1fr))}
+.tbt.n3 .tk{font-size:12.5px}
+.tbt.n3 .pl{padding:0 4px;min-width:0;font-size:12.5px;white-space:nowrap}
+.tbt.n3 .tv{padding-left:0;padding-right:0}
+
+/* ===== steps（番号つきで縦に並べる） ===== */
+.stp{display:flex;flex-direction:column;margin-top:4px}
+.stp .st{display:grid;grid-template-columns:30px 76px minmax(0,1fr);gap:10px;align-items:center;padding:3px 0}
+.stp .st.ni{grid-template-columns:30px minmax(0,1fr)}
+.stp .rail{align-self:stretch;display:flex;flex-direction:column;align-items:center}
+.stp .rail i{flex:1;width:3px;background:var(--sky);border-radius:2px}
+.stp .st:first-child .rail i.u,.stp .st:last-child .rail i.d{background:transparent}
+.stp .rail .sn{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--soft);border:2px solid var(--sky);color:var(--ink);font-size:15px;font-weight:900;display:grid;place-items:center;margin:2px 0;line-height:1}
+.stp .si{width:76px;height:76px;object-fit:contain;display:block}
+.stp .tx{min-width:0}
+.stp .tx .t{font-size:19px;font-weight:900;line-height:1.3}
+.stp .tx .d{font-size:14px;line-height:1.5;margin-top:2px}
+
+/* ===== facts（数字・やめ方などを2〜4個並べる） ===== */
+.fcs{display:flex;flex-direction:column}
+.fc{display:flex;align-items:center;gap:10px;padding:4px 0}
+.fc+.fc{border-top:1.5px dashed var(--line);margin-top:4px;padding-top:8px}
+.fc img{flex:0 0 100px;width:100px;height:100px;object-fit:contain}
+.fc .tx{flex:1;min-width:0}
+.fc .sub{display:inline-block;background:var(--soft);color:var(--ink);font-size:14px;font-weight:700;border-radius:999px;padding:0 12px;line-height:1.7}
+.fc .w{font-size:34px;font-weight:900;color:var(--ink);line-height:1.2;margin-top:3px;white-space:nowrap}
+.fc .n{font-size:14px;line-height:1.5;margin-top:3px}
+.t-facts .tail{align-self:center;background:var(--soft);color:var(--ink);font-size:14px;font-weight:700;border-radius:999px;padding:0 16px;line-height:1.8;margin-top:8px}
+
+/* 隠す語と前後の句読点・かっこを一緒に折り返す（build.py の inline） */
+.nb{white-space:nowrap}
+
+/* スマホ幅ではスクロールバーを出さない（実機と同じ見え方。ビューアのスマホ枠でも同じになる） */
+@media (max-width:520px){html{scrollbar-width:none}html::-webkit-scrollbar{display:none}}
+
+/* masks.css — 赤シートで隠す仕掛け。無料の図解と、やさしいテキストの赤シート版（sheet.css が状態を上書き）で共有。
+   [[…]] は <button class="mk">。祖先に .sheet が付くと赤シート色（#8E3B3B）で隠れ、タップで .open になる。
+   .rv は「答えが見えている状態の見た目」（シートなし・開いた後）。zones / route / 結果ピルは .rv で本来の形に戻る。 */
+.mk{appearance:none;-webkit-appearance:none;display:inline-block;border:0;margin:0;padding:0 1px;font:inherit;font-weight:inherit;letter-spacing:inherit;
+  line-height:1.3;white-space:nowrap;vertical-align:baseline;text-align:inherit;
+  background:transparent;color:inherit;border-radius:4px;cursor:default;pointer-events:none;-webkit-tap-highlight-color:transparent}
+.big .mk,.fo2 .mk{line-height:1.15}
+.sheet .mk{pointer-events:auto;cursor:pointer;background:var(--sheet);color:transparent;user-select:none;-webkit-user-select:none}
+.sheet .mk.open{background:var(--soft);color:inherit;cursor:default;user-select:text;-webkit-user-select:text}
+.mk:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+
+/* zones */
+.zone{background:#fff;border:2px solid var(--sky)}
+.zone.ng:has(.zh.rv),.zone.ng:has(.zh:not(.mk)){background:var(--gray-bg);border-color:var(--gray-bg)}
+.zh.mk{display:inline-block;margin-left:2px;min-width:84px;text-align:center;padding:0 14px;font-size:15px;font-weight:900;line-height:1.6;border-radius:4px;background:var(--sheet);color:transparent}
+.zone.ok .zh.mk.rv{background:var(--ink);color:#fff;border-radius:999px}
+.zone.ng .zh.mk.rv{background:var(--gray-ink);color:#fff;border-radius:999px}
+.zh:not(.mk){display:inline-block;border-radius:999px;padding:0 14px;margin-left:2px;font-size:15px;font-weight:900;color:#fff;line-height:1.6}
+.zone.ok .zh:not(.mk){background:var(--ink)}
+.zone.ng .zh:not(.mk){background:var(--gray-ink)}
+
+/* timeline */
+.route .go,.route .no2{background:#fff;box-shadow:inset 0 0 0 2px var(--sky)}
+.route .go{border-radius:999px 0 0 999px;color:var(--ink)}
+.route .no2{border-radius:0 999px 999px 0;color:var(--gray-ink)}
+.route .go:has(.mk.rv),.route .go:not(:has(.mk)){background:var(--soft)}
+.route .no2:has(.mk.rv),.route .no2:not(:has(.mk)){background:repeating-linear-gradient(135deg,#F1F3F4 0 6px,#DDE0E3 6px 8px);box-shadow:none}
+.route .go .mk.rv,.route .no2 .mk.rv{background:transparent}
+.route .go .mk.rv{color:var(--ink)}
+.route .no2 .mk.rv{color:var(--gray-ink)}
+.tbl .r.mk{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:76px;border-radius:4px;font-size:14px;font-weight:900;line-height:1.7;padding:1px 12px;background:var(--sheet);color:transparent}
+.tbl .r.y.mk.rv{background:var(--ink);color:#fff;border-radius:999px}
+.tbl .r.n.mk.rv{background:var(--gray-ink);color:#fff;border-radius:999px}
+.tbl .r:not(.mk){display:flex;align-items:center;justify-content:center;flex:0 0 auto;min-width:76px;border-radius:999px;font-size:14px;font-weight:900;line-height:1.7;padding:1px 12px;color:#fff}
+.tbl .r.y:not(.mk){background:var(--ink)}
+.tbl .r.n:not(.mk){background:var(--gray-ink)}
+
+/* table のピル（必要／不要・できる／できない・いる／いらない） */
+.tbt .pl.mk{display:inline-block;min-width:64px;padding:0 14px;font-size:14px;font-weight:900;line-height:1.7;border-radius:4px;background:var(--sheet);color:transparent}
+.tbt .pl.y.mk.rv{background:var(--ink);color:#fff;border-radius:999px}
+.tbt .pl.n.mk.rv{background:var(--gray-ink);color:#fff;border-radius:999px}
+.tbt.n3 .pl.mk{padding:0 6px;min-width:0;font-size:13px}
+
+/* page.css — 回のページ（概要欄のリンク先 ep/N）。第9回の回のページ試作から。
+   カードの型は base.css。隠す言葉は普通の文字で出す（赤シートは有料のやさしいテキストの赤シート版だけ）。 */
+[hidden]{display:none !important}
+html{-webkit-text-size-adjust:100%}
+html,body{background:var(--bg)}
+body{font-size:16px;overflow-x:hidden}
+.page{max-width:430px;margin:0 auto;background:var(--bg);padding:14px 16px 24px}
+.page>*+*{margin-top:12px}
+:root{--navh:58px}
+
+/* 一番上 */
+.top{font-size:12px;color:var(--sub);line-height:1.3;display:flex;flex-wrap:nowrap;justify-content:space-between;align-items:baseline;gap:8px}
+a.lbtn{text-decoration:none;cursor:pointer}
+.smp{margin-left:auto;font-size:11px;font-weight:700;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:1px 8px;white-space:nowrap}
+.mtgl{margin-left:auto;font-size:11px;color:var(--sub);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+body:not(.member) .mtgl .m0,body.member .mtgl .m1{font-weight:700;color:var(--ink)}
+.listen{display:block;background:var(--sky);color:var(--text);border-radius:999px;padding:10px 16px;text-align:center;font-size:18px;font-weight:900;line-height:1.4;text-decoration:none}
+.listen.off{opacity:.4;cursor:default;pointer-events:none}
+.oapps{font-size:12px;color:var(--sub);line-height:1.7;margin-top:2px;text-align:center}
+.oapps a{color:#0A6477;text-underline-offset:2px}
+.pnote{font-size:12px;color:var(--sub);line-height:1.6;margin-top:6px;text-align:center}
+
+/* 上に固定されるボタン */
+.jump{position:sticky;top:0;z-index:30;margin-left:-16px;margin-right:-16px;padding:8px 16px;display:flex;align-items:center;gap:6px;background:rgba(244,250,252,.97);border-bottom:1px solid var(--line)}
+.jb{flex:1 1 auto;display:block;text-align:center;font-size:14px;font-weight:700;line-height:1.4;color:var(--ink);background:#fff;border:1.5px solid var(--sky);border-radius:999px;padding:7px 4px;text-decoration:none;white-space:nowrap}
+.jb:active{background:var(--soft)}
+.jb:focus-visible,.pill:focus-visible,.dm:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+
+/* 節 */
+.sec{scroll-margin-top:calc(var(--navh) + 8px);display:flex;flex-direction:column;gap:12px;padding-top:6px}
+.sec-h{font-size:24px;font-weight:900;color:var(--ink);line-height:1.3;display:flex;align-items:center;gap:10px}
+.sec-h::before{content:"";width:6px;height:24px;border-radius:3px;background:var(--sky)}
+
+/* 図解の各半分 */
+.half{display:flex;flex-direction:column;gap:12px}
+.half-h{background:color-mix(in srgb,#17C5E8 12%,white);color:var(--ink);border-left:6px solid var(--sky);border-radius:14px;padding:11px 16px 11px 12px;font-size:18px;font-weight:900;line-height:1.3}
+.core p{line-height:1.7}
+/* やさしいテキストにある図の札（無料の図解で飛んだ番号の位置）。図のカードより目立たせない */
+.gcard{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px dashed #C9D6DB;border-radius:14px;padding:9px 12px;color:var(--sub);text-decoration:none}
+.gcard .gno{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid #B9C4C9;color:var(--sub);font-size:12px;font-weight:700;line-height:1;display:grid;place-items:center}
+.gcard .gm{display:flex;flex-direction:column;min-width:0}
+.gcard .gt{font-size:14px;font-weight:700;line-height:1.4;color:var(--sub)}
+.gcard .gn{font-size:11px;line-height:1.4;color:var(--sub)}
+a.gcard:hover .gn{text-decoration:underline;text-underline-offset:2px}
+
+/* ===== ○×3問・過去問1選（確認ページと同じ） ===== */
+.over{font-size:12px;line-height:1.5;letter-spacing:.15em;color:var(--sky);text-transform:uppercase;font-weight:700}
+.qset{margin:0 0 24px;scroll-margin-top:calc(var(--navh) + 8px)}
+.qset:last-child{margin-bottom:0}
+.qset-label{margin:2px 0 10px;font-size:18px;line-height:1.5;font-weight:700}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 14px 16px;margin-bottom:12px}
+.qhead{display:flex;gap:10px;align-items:flex-start}
+.qno{flex:none;font-weight:900;color:var(--ink);background:var(--soft);border-radius:999px;font-size:13px;line-height:1;padding:6px 10px;margin-top:5px}
+.qtext{margin:0;font-size:16px;line-height:1.8}
+.qbtns{display:flex;gap:10px;margin-top:12px}
+.pill{font:inherit;font-size:17px;font-weight:700;line-height:1.2;color:var(--ink);background:#fff;border:1px solid var(--sky);border-radius:999px;min-width:76px;padding:10px 22px;cursor:pointer}
+.pill:hover:not(:disabled){background:var(--soft)}
+.pill:disabled{cursor:default;color:var(--sub);border-color:var(--line);background:#fafafa}
+.pill.chosen:disabled{color:var(--ink);border-color:var(--sky);background:var(--soft)}
+.pill.ghost{font-size:15px;min-width:0;padding:8px 18px}
+.qres{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:15px;line-height:1.8}
+.qres p{margin:0}
+.qres .verdict{font-weight:900;font-size:17px}
+.qres .answer{font-weight:700}
+.qres.ok{background:var(--lime-soft);border:1px solid var(--lime);color:var(--text)}
+.qres.ok .verdict{color:var(--lime-dark)}
+.qres.ng{background:#f4f4f6;border:1px solid #e4e4e8;color:var(--text)}
+.qres.ng .verdict{color:var(--sub)}
+.qres .zk{margin-top:6px;font-size:12px;line-height:1.5}
+.qres .zk a{color:var(--ink);text-underline-offset:2px}
+.score{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:4px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.score-text{margin:0;font-weight:700;font-size:17px;color:var(--ink)}
+
+.kk{margin:0}
+.kk-lock{position:relative}
+body:not(.member) .kk-body{filter:blur(4px);opacity:.55;pointer-events:none;user-select:none;-webkit-user-select:none}
+.kk-gate{position:absolute;left:6px;right:6px;top:18px;z-index:2;background:#fff;border:1.5px solid var(--sky);border-radius:14px;padding:14px;box-shadow:0 6px 20px rgba(20,27,33,.10)}
+.kk-gate p{margin:0 0 10px;font-size:14px;line-height:1.7;color:var(--text)}
+body.member .kk-gate{display:none}
+.lbtn.gate-btn{appearance:none;-webkit-appearance:none;border:0;width:100%;font-family:inherit;font-size:15px;font-weight:900}
+.kk-src{display:inline-block;margin:0 0 8px;background:var(--soft);color:var(--ink);font-size:12px;font-weight:700;line-height:1.7;padding:1px 12px;border-radius:999px}
+.kk-stem{margin:0 0 10px;font-size:16px;line-height:1.8}
+.kk-memo{margin:0 0 8px;font-size:13px;line-height:1.6;color:var(--sub)}
+.kk-item{display:flex;gap:8px;align-items:flex-start;margin:0 0 8px;font-size:15px;line-height:1.75}
+.kk-mark{flex:none;min-width:1.4em;font-weight:700;color:var(--ink)}
+.kk-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.kk-btns.wide{grid-template-columns:repeat(2,1fr)}
+.kk-btns .pill{min-width:0;padding:10px 6px;text-align:center}
+.kk-lines{list-style:none;margin:8px 0 0;padding:0;font-size:14px;line-height:1.75}
+.kk-lines li{display:flex;gap:8px;align-items:flex-start;margin:0 0 6px}
+.qres .kk-tail{margin-top:6px;font-size:14px;font-weight:700}
+.qres .kk-onair-l{margin-top:10px;font-size:13px;font-weight:700;color:var(--sub)}
+.qres .kk-onair{font-size:14px;line-height:1.75}
+.kk-again{margin-top:10px}
+/* 下書きの印（自分のメモ・採点しない） */
+.dm{appearance:none;-webkit-appearance:none;flex:none;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--sky);background:#fff;color:var(--ink);font:inherit;font-size:15px;font-weight:900;line-height:1;display:grid;place-items:center;padding:0;margin-top:0;cursor:pointer;user-select:none;-webkit-user-select:none}
+
+.shead{display:flex;flex-direction:column;gap:2px}
+.sh{font-size:18px;font-weight:900;line-height:1.4;color:var(--text)}
+.ssub{font-size:12px;line-height:1.6;color:var(--sub)}
+.past{list-style:none;display:flex;flex-direction:column;gap:10px}
+.prow{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px 12px;color:var(--text);text-decoration:none}
+.pico{flex:none;position:relative;width:32px;height:32px;border-radius:50%;background:#0A6477}
+.pico::after{content:"";position:absolute;left:12px;top:9px;width:0;height:0;border-style:solid;border-width:7px 0 7px 11px;border-color:transparent transparent transparent #fff}
+.pmid{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pt{font-size:14px;font-weight:700;line-height:1.5}
+.py{font-size:12px;line-height:1.4;color:#0A6477}
+.pico.list{background:var(--soft)}
+.pico.list::after{left:9px;top:10px;width:14px;height:2px;border:0;border-width:0;background:#0A6477;box-shadow:0 5px 0 #0A6477,0 10px 0 #0A6477}
+.pico.doc{background:var(--soft)}
+.pico.doc::after{left:10px;top:7px;width:12px;height:16px;border:2px solid #0A6477;border-radius:2px;background:#fff}
+.past.txt{margin-top:4px}
+.pgo{flex:none;width:9px;height:9px;border-top:2px solid #0A6477;border-right:2px solid #0A6477;transform:rotate(45deg);margin-right:4px}
+
+/* LINEの誘い：白地＋水色の枠、ボタンだけ水色塗り（正解のライム・不正解のグレーとぶつけない） */
+.line-inv,.line-card{background:#fff;border:1.5px solid var(--sky);border-radius:14px;padding:12px 14px}
+.line-inv{margin-top:10px}
+.line-inv p,.line-card p{margin:0 0 10px;font-size:14px;line-height:1.7}
+.line-inv p.lnote{margin:6px 0 0;text-align:center;font-size:12px;color:var(--sub);line-height:1.5}
+a.lbtn,.lbtn.gate-btn{cursor:pointer;text-decoration:none}
+body.member .line-inv .lnote{display:none}
+.lbtn{display:block;text-align:center;font-weight:900;font-size:15px;line-height:1.4;color:var(--text);background:var(--sky);border-radius:999px;padding:8px 18px;cursor:default;user-select:none}
+.line-card{margin-top:24px;padding:10px 12px}
+body.member .line-card{display:none}
+.line-card p{font-size:13px;margin-bottom:8px}
+.line-card .lbtn{font-size:14px;padding:6px 16px}
+.trust{margin-top:20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;background:transparent;border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none;padding:18px 2px 2px}
+.trust .art{flex:none;width:44px;height:44px;border-radius:12px;object-fit:cover;object-view-box:none;display:block}
+.trust .tx{min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.trust .tn{font-size:14px;font-weight:700;line-height:1.5;margin:0;color:var(--sub)}
+.trust .tl2{display:inline-block;font-size:13px;font-weight:400;line-height:1.6;color:#0A6477;text-decoration:underline;text-underline-offset:3px}
+.trust .tcopy{margin:0;font-size:12px;line-height:1.5;color:var(--sub)}
+.foot{font-size:12px;color:var(--sub);line-height:1.3;margin-top:16px}
+
+/* PCで開いたとき（メールのリンクから等）：同じページを1列のまま広げ、字を一回り大きく。別のPC版は作らない */
+@media (min-width:820px){
+  html,body{background:#E6F0F3}
+  body{font-size:17px}
+  .page{max-width:680px;margin:28px auto 40px;padding:22px 32px 32px;border-radius:20px;box-shadow:0 2px 18px rgba(20,27,33,.06)}
+  .page>*+*{margin-top:14px}
+  .jump{margin-left:-32px;margin-right:-32px;padding:10px 32px}
+  .top{font-size:13px}
+  .title h1{font-size:26px}
+  .title .side{font-size:20px}
+  .core p{font-size:19px}
+  .sec-h{font-size:26px}
+  .half-h{font-size:20px}
+  .qtext,.kk-stem{font-size:17px}
+  .kk-item{font-size:16px}
+  .pt{font-size:15px}
+}
+
+/* 小さい字を読みやすく（画面用だけ。PDFの元の base.css／sp.css は変えない）：13px・少し濃い色 */
+.it .sm,.top,.ssub,.py,.pnote,.lnote,.tcopy,.foot,.qres .zk,.kk-src,.oapps{font-size:13px;color:#4F5963}
+.it .sm{white-space:normal}
+.top,.foot{line-height:1.4}
+.pnote{margin-top:0}
+.kk-smp{font-size:13px;color:#4F5963;line-height:1.7;margin-top:8px}
+body.member .line-card{display:block}
+.next-box{background:#fff;border:1.5px dashed var(--sky);border-radius:14px;padding:12px 14px;scroll-margin-top:calc(var(--navh) + 8px)}
+.next-box p{margin:0;font-size:14px;line-height:1.7;text-align:center}
+.line-card p.lnote{margin:0 0 8px;font-size:12px;color:var(--sub);line-height:1.5}
+
+/* 出し分け試作だけの部品 */
+.slot{display:contents}
+.only-b{display:none}
+.is-friend .only-a{display:none !important}
+.is-friend .only-b{display:block}
+.tbanner{background:var(--ink);color:#fff;font-size:12px;line-height:1.6;text-align:center;padding:2px 8px}
+.dstate{margin-top:10px;font-size:11px;line-height:1.4;color:var(--sub);opacity:.6;text-align:center}
+.next-box .lbtn{margin-top:10px}
+</style>
+</head>
+<body>
+<div class="tbanner">試作（出し分けの確認用）</div>
+<div class="page">
+
+  <div class="top"><span>第1回　2027年1月4日（月）予定</span><span class="smp">2027年版の見本</span></div>
+  <div class="title">
+    <div class="row"><span class="no">第1回</span><h1>100部屋貸しても、<br>免許はいらない</h1></div>
+    <div class="side">宅建業と免許</div>
+  </div>
+  <a class="listen" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="1">音声番組を聴く（Spotify）</a>
+  <p class="pnote">この回の配信は 2027年1月4日（月）から（予定）。いまは番組のページが開きます。</p>
+  <p class="oapps">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm">stand.fm</a></p>
+
+  <nav class="jump" id="jump" aria-label="この回のページの節">
+    <a class="jb" href="#zukai">図解</a><a class="jb" href="#maru">○×3問</a><a class="jb" href="#honban">過去問1選</a>
+  </nav>
+
+  <!-- 節1：図解 -->
+  <section class="sec" id="zukai">
+    <h2 class="sec-h">図解</h2>
+<div class="half">
+  <div class="half-h">前半　宅建業と免許</div>
+
+  <div class="slot" id="slot-core1"></div>
+  <div class="target">自ら売買・交換、または他人の売買・交換・貸借の代理・媒介</div>
+  <div class="cards">
+<section class="card t-zones n1">
+  <div class="hd"><span class="no">1</span><h2>免許がいるのは誰？<small>「業として」＝不特定多数に、くり返し行うこと</small></h2></div>
+  <div class="zones"><div class="zone ok"><span class="zh">免許がいる</span><div class="items" style="--cols:2"><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/plots.webp" alt=""><div class="lb">地主さん</div><div class="sm">20区画を次々に売る</div></div><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/broker.webp" alt=""><div class="lb">仲介する会社</div><div class="sm">他人の部屋の貸借でも</div></div></div></div><div class="zone ng"><span class="zh">いらない</span><div class="items" style="--cols:3"><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/landlord.webp" alt=""><div class="lb">大家さん</div><div class="sm">自ら貸借</div></div><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/onetime.webp" alt=""><div class="lb">会社員</div><div class="sm">自宅を<span class="nb">1回売る</span></div></div><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/cityhall.webp" alt=""><div class="lb">国・地方公共団体</div><div class="sm">適用除外</div></div></div></div></div>
+</section>
+<div class="slot" id="slot-cards1"></div>
+  </div>
+</div>
+<div class="slot" id="slot-half2"></div>
+<div class="next-box only-a" id="zukai-next"><p>図解の続きは、<a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>でお届けします。</p><p class="lnote" style="margin-top:6px">LINEに登録している方は、LINEで開くと全部が表示されます。</p><a class="lbtn" id="openLine" href="https://liff.line.me/2011606963-hH0DzETc/ep1-dashiwake.html">LINEで開く</a></div>
+<p class="pnote only-b">LINEに登録している方向けに、全部を表示しています。</p>
+  </section>
+
+  <!-- 節2：○×3問 -->
+  <section class="sec" id="maru">
+    <h2 class="sec-h">○×3問</h2>
+    <div id="quizBox"></div>
+  </section>
+
+  <!-- 節3：過去問1選 -->
+  <section class="sec" id="honban">
+    <h2 class="sec-h">過去問1選</h2>
+    <div class="next-box only-a"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>では、この回のテーマに沿った過去問を解いていただけます。</p></div>
+    <div class="slot" id="slot-kk"></div>
+    <ul class="past txt"><li><a class="prow" href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1"><span class="pico doc" aria-hidden="true"></span><span class="pmid"><span class="pt">やさしいテキスト（有料）の見本</span><span class="py">図をすべて・寄り道・赤シート</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
+  </section>
+
+  <section class="sec" id="plan">
+    <div class="shead"><h2 class="sh">2027年の配信予定</h2><p class="ssub">1月4日から、毎週月曜に本編を1本（予定）</p></div>
+    <ul class="past"><li><a class="prow" href="https://takken.mimiobo.com/roadmap" data-umami-event="ep-roadmap" data-umami-event-ep="1"><span class="pico list" aria-hidden="true"></span><span class="pmid"><span class="pt">学習ロードマップ</span><span class="py">全41回の日付とテーマを見る</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
+  </section>
+
+  <section class="sec" id="y2026">
+    <div class="shead"><h2 class="sh"><span style="white-space:nowrap">去年の放送も聴いて、</span><span style="white-space:nowrap">さらに理解を深める</span></h2><p class="ssub">2026年に配信した、同じテーマの回です（Spotify）</p></div>
+    <ul class="past"><li><a class="prow" href="https://open.spotify.com/episode/5hoEjRtwI6MNdYBpBlfkY8" target="_blank" rel="noopener"><span class="pico" aria-hidden="true"></span><span class="pmid"><span class="pt">宅建業法は「最強の防具」</span><span class="py">2026年の放送・Spotifyで聴く</span></span><span class="pgo" aria-hidden="true"></span></a></li><li><a class="prow" href="https://open.spotify.com/episode/5sURqxWM12cDuBnno4wA3c" target="_blank" rel="noopener"><span class="pico" aria-hidden="true"></span><span class="pmid"><span class="pt">5年ごとに申請しないと免許が消える</span><span class="py">2026年の放送・Spotifyで聴く</span></span><span class="pgo" aria-hidden="true"></span></a></li><li><a class="prow" href="https://open.spotify.com/episode/0D1ZoOedid23YWNe6XviN5" target="_blank" rel="noopener"><span class="pico" aria-hidden="true"></span><span class="pmid"><span class="pt">暴行の罰金で不動産免許は消える</span><span class="py">2026年の放送・Spotifyで聴く</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
+  </section>
+
+  <div class="line-card only-a">
+    <p>図解の続きと、過去問1選は、LINEで受け取れます。毎週月曜に、こちらからお届けします。</p>
+    <p class="lnote">1月4日の配信開始から、お届けします（予定）。止まっても、月曜にまた届きます。</p>
+    <a class="lbtn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="1">LINEで受け取る</a>
+  </div>
+
+  <div class="trust">
+    <img class="art" src="https://takken.mimiobo.com/ep/1/img/artwork2027.webp" alt="耳で覚える宅建" width="44" height="44">
+    <div class="tx"><p class="tn">耳で覚える宅建</p><a class="tl2" href="https://www.mimiobo.com/" target="_blank" rel="noopener">www.mimiobo.com</a><p class="tcopy">© 2027 耳で覚える宅建</p></div>
+  </div>
+
+  <div class="foot">条文は2026年4月1日施行版で照合</div>
+  <div class="dstate" id="dstate">状態：確認前</div>
+</div>
+<script>
+(function () {
+  'use strict';
+  /* 3問のデータは build.py が data.json から差し込む（過去問1選はLINEで届けるため、このページには出さない） */
+  var QUIZ = [{"label": "前半　「宅建業と免許」の3問", "questions": [{"q": "自分が持っているマンション20戸を、不特定多数の人に、くり返し貸す場合、免許が必要である。", "a": false, "exp": "自ら貸借なので、何戸貸しても、宅建業に当たりません。"}, {"q": "知事の免許を受けた業者は、その県の中の物件しか取引できない。", "a": false, "exp": "区分を決めるのは事務所の場所だけで、物件はどこの県でもかまいません。"}, {"q": "更新の申請をしたのに、満了日までに処分がなかった場合、従前の免許は、満了日で切れる。", "a": false, "exp": "処分があるまでは、古い免許が有効です。更新されたあとの5年は、処分の日からではなく、前の免許が切れる日の翌日から数えます。"}]}, {"label": "後半　「免許の基準」の3問", "questions": [{"q": "破産手続開始の決定を受けた人は、復権を得てから5年たたないと、免許を受けられない。", "a": false, "exp": "復権を得れば、その日から、すぐ受けられます。"}, {"q": "道路交通法の違反で罰金を受けた人は、5年間、免許を受けられない。", "a": false, "exp": "罰金で欠格になる罪には、道路交通法の違反は入っていません。"}, {"q": "会社の非常勤の取締役が、傷害の罪で罰金を受けた場合、非常勤なので、その会社は免許を受けられる。", "a": false, "exp": "役員は、常勤か非常勤かを問いません。会社も、免許を受けられません。"}]}];
+  var esc = function (s) {
+    return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
+  };
+
+  /* ---------- 3問済の印：前半・後半の両方を解き終えたら、この端末の localStorage に残す（送信しない） ---------- */
+  var setsDone = {};
+  function markSetDone(idx) {
+    setsDone[idx] = true;
+    for (var i = 0; i < QUIZ.length; i++) { if (!setsDone[i]) { return; } }
+    var m = /\/ep\/(\d+)/.exec(location.pathname);
+    if (!m) { return; }
+    try {
+      var o = JSON.parse(localStorage.getItem('takken2027-done') || '{}');
+      if (!o || typeof o !== 'object') { o = {}; }
+      o[m[1]] = true;
+      localStorage.setItem('takken2027-done', JSON.stringify(o));
+    } catch (_) {}
+  }
+
+  /* ---------- 解き終えたその場に出すLINEの誘い ---------- */
+  /* 組の途中（前半）を解き終えたら次の組へ。過去問1選への誘いは最後の組（後半）のあとだけ */
+  function makeInv(next) {
+    var d = document.createElement('div');
+    d.className = 'line-inv';
+    d.hidden = true;
+    if (next) {
+      d.innerHTML = '<a class="lbtn" href="#' + next.id + '">' + esc(next.name) + 'の3問へ</a>';
+    } else {
+      d.innerHTML = '<a class="lbtn" href="#honban">過去問1選について</a>';
+    }
+    return d;
+  }
+
+  /* ---------- 節2：○×3問（確認ページと同じ） ---------- */
+  function buildSet(set, idx) {
+    var box = document.createElement('div');
+    box.className = 'qset';
+    box.innerHTML = '<div class="over">Quiz</div><h3 class="qset-label">' + esc(set.label) + '</h3>';
+    var total = set.questions.length, answered = 0, correct = 0, cards = [];
+    var score = document.createElement('div');
+    score.className = 'score';
+    score.hidden = true;
+    score.innerHTML = '<p class="score-text"></p><button type="button" class="pill ghost">もう一度</button>';
+    var scoreText = score.querySelector('.score-text');
+    var next = (idx + 1 < QUIZ.length) ? {id: 'q' + (idx + 2), name: String(QUIZ[idx + 1].label).split('　')[0]} : null;
+    var inv = makeInv(next);
+    set.questions.forEach(function (q, i) {
+      var card = document.createElement('div');
+      card.className = 'qcard';
+      card.innerHTML =
+        '<div class="qhead"><span class="qno">Q' + (i + 1) + '</span><p class="qtext">' + esc(q.q) + '</p></div>' +
+        '<div class="qbtns">' +
+        '<button type="button" class="pill" data-v="1" aria-label="○（正しい）">○</button>' +
+        '<button type="button" class="pill" data-v="0" aria-label="×（誤り）">×</button>' +
+        '</div>' +
+        '<div class="qres" hidden aria-live="polite"></div>';
+      var btns = card.querySelectorAll('.pill');
+      var res = card.querySelector('.qres');
+      Array.prototype.forEach.call(btns, function (b) {
+        b.addEventListener('click', function () {
+          var ok = ((b.getAttribute('data-v') === '1') === q.a);
+          Array.prototype.forEach.call(btns, function (x) { x.disabled = true; });
+          b.classList.add('chosen');
+          res.className = 'qres ' + (ok ? 'ok' : 'ng');
+          res.innerHTML =
+            '<p class="verdict">' + (ok ? '正解' : '不正解') + '</p>' +
+            '<p class="answer">正しい答え　' + (q.a ? '○' : '×') + '</p>' +
+            '<p class="exp">' + esc(q.exp) + '</p>' +
+            (ok ? '' : '<p class="zk"><a href="#zukai">図解で確かめる</a></p>');
+          res.hidden = false;
+          answered += 1;
+          if (ok) { correct += 1; }
+          if (answered === total) {
+            scoreText.textContent = total + '問中' + correct + '問正解';
+            score.hidden = false;
+            inv.hidden = false;
+            markSetDone(idx);
+          }
+        });
+      });
+      card._reset = function () {
+        Array.prototype.forEach.call(btns, function (x) { x.disabled = false; x.classList.remove('chosen'); });
+        res.hidden = true;
+        res.innerHTML = '';
+      };
+      cards.push(card);
+      box.appendChild(card);
+    });
+    score.querySelector('button').addEventListener('click', function () {
+      cards.forEach(function (c) { c._reset(); });
+      answered = 0; correct = 0; score.hidden = true; inv.hidden = true;
+      cards[0].scrollIntoView({block: 'nearest'});
+    });
+    box.appendChild(score);
+    box.appendChild(inv);
+    return box;
+  }
+  var quizBox = document.getElementById('quizBox');
+  QUIZ.forEach(function (s, i) { var b = buildSet(s, i); b.id = 'q' + (i + 1); quizBox.appendChild(b); });
+
+  /* やさしいテキストのリンク（#q1・#q2）から来たとき：3問の組はあとから作るので、作ったあとでその組まで送る */
+  if (/^#q\d+$/.test(location.hash)) {
+    var qt = document.getElementById(location.hash.slice(1));
+    if (qt) { setTimeout(function () { qt.scrollIntoView({block: 'start'}); }, 0); }
+  }
+})();
+</script>
+<script>
+/* 出し分け：LINEの中で開き、友だちと確かめられたときだけ、ep1-full.html / ep1-full.js を読み込む。失敗したら登録前の表示のまま */
+(function () {
+  'use strict';
+  var LIFF_ID = '2011606963-hH0DzETc';
+  var body = document.body;
+  var stEl = document.getElementById('dstate');
+  var mihon = new URLSearchParams(location.search).get('mihon');
+  function say(t) { if (stEl) { stEl.textContent = '状態：' + t; } }
+  function why(e) { return String((e && e.message) || e || '不明').slice(0, 80); }
+  function loadScript(src) {
+    return new Promise(function (ok, ng) {
+      var s = document.createElement('script');
+      s.src = src; s.onload = ok;
+      s.onerror = function () { ng(new Error('読み込めない ' + src)); };
+      document.head.appendChild(s);
+    });
+  }
+  function showFull() {
+    return fetch('ep1-full.html', {cache: 'no-store'}).then(function (r) {
+      if (!r.ok) { throw new Error('ep1-full.html ' + r.status); }
+      return r.text();
+    }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      var parts = {};
+      Array.prototype.forEach.call(doc.querySelectorAll('[data-slot]'), function (n) { parts[n.getAttribute('data-slot')] = n; });
+      var map = {core1: 'slot-core1', cards1: 'slot-cards1', half2: 'slot-half2', kk: 'slot-kk'};
+      Object.keys(map).forEach(function (k) {
+        var slot = document.getElementById(map[k]);
+        if (!parts[k] || !slot) { throw new Error('差し込み先なし ' + k); }
+        slot.appendChild(document.importNode(parts[k], true));
+        var w = slot.firstElementChild;
+        while (w && w.firstChild) { slot.insertBefore(w.firstChild, w); }
+        if (w) { slot.removeChild(w); }
+      });
+      return loadScript('ep1-full.js');
+    }).then(function () { body.classList.add('is-friend'); });
+  }
+  function judge() {
+    if (mihon === 'mitouroku') { say('見本：登録していない表示（判定なし）'); return Promise.resolve(); }
+    if (mihon === 'touroku') {
+      return showFull().then(function () { say('見本：登録している表示（判定なし）'); }, function (e) { console.warn(e); say('確認できなかった（' + why(e) + '）'); });
+    }
+    return loadScript('https://static.line-scdn.net/liff/edge/2/sdk.js').then(function () {
+      return liff.init({liffId: LIFF_ID});
+    }).then(function () {
+      var inClient = false;
+      try { inClient = liff.isInClient(); } catch (_) {}
+      if (inClient) { var b = document.getElementById('openLine'); if (b) { b.hidden = true; } }
+      if (!liff.isLoggedIn()) { say('LINEの外'); return; }
+      return liff.getFriendship().then(function (f) {
+        if (f && f.friendFlag === true) {
+          return showFull().then(function () { say('LINEの中・友だち'); });
+        }
+        say('LINEの中・友だちではない');
+      });
+    }).catch(function (e) { console.warn(e); say('確認できなかった（' + why(e) + '）'); });
+  }
+  try { judge(); } catch (e) { console.warn(e); say('確認できなかった（' + why(e) + '）'); }
+})();
+</script>
+</body>
+</html>
