@@ -77,7 +77,7 @@ async function entitlements(userId,now=Date.now()){
   const q=new URLSearchParams({select:'plan,valid_until',user_id:'eq.'+userId,or:'(valid_until.is.null,valid_until.gt.'+new Date(now).toISOString()+')',order:'valid_until.asc.nullsfirst'});
   const rows=await supabase('/rest/v1/entitlements?'+q);
   if(!Array.isArray(rows))fail(503,'database_unavailable');
-  return rows.filter(r=>['ume','take','matsu'].includes(r?.plan)&&(r.valid_until===null||Date.parse(r.valid_until)>now)).map(r=>({plan:r.plan,valid_until:r.valid_until}));
+  return rows.filter(r=>['ume','take','matsu','text'].includes(r?.plan)&&(r.valid_until===null||Date.parse(r.valid_until)>now)).map(r=>({plan:r.plan,valid_until:r.valid_until}));
 }
 async function linkedSessionData(userId){
   const q=new URLSearchParams({select:'provider',user_id:'eq.'+userId});

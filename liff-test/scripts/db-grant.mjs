@@ -1,10 +1,10 @@
-// テスト用の権利付与。`node scripts/db-grant.mjs <利用者id先頭8文字> <ume|take|matsu> [--revoke]`。.env.local を読む（鍵・値は表示しない）。
+// テスト用の権利付与。`node scripts/db-grant.mjs <利用者id先頭8文字> <ume|take|matsu|text> [--revoke]`。.env.local を読む（鍵・値は表示しない）。
 // 付与は grant_entitlement RPC（valid_until=2027-10-17、source は manual:test:<利用者id>:<plan>）。--revoke は同じ source の行だけ消す。
 // source が一意制約（entitlements_source_key）なので、利用者・プランごとに末尾を変えている。
 import fs from 'node:fs';
 const [prefix, plan, flag] = process.argv.slice(2);
-if (!/^[0-9a-f]{8}$/i.test(prefix || '') || !['ume', 'take', 'matsu'].includes(plan) || (flag && flag !== '--revoke')) {
-  console.error('usage: node scripts/db-grant.mjs <利用者id先頭8文字> <ume|take|matsu> [--revoke]'); process.exit(1);
+if (!/^[0-9a-f]{8}$/i.test(prefix || '') || !['ume', 'take', 'matsu', 'text'].includes(plan) || (flag && flag !== '--revoke')) {
+  console.error('usage: node scripts/db-grant.mjs <利用者id先頭8文字> <ume|take|matsu|text> [--revoke]'); process.exit(1);
 }
 const env = {}; for (const l of fs.readFileSync(new URL('../.env.local', import.meta.url), 'utf8').split(/\r?\n/)) { const m = l.match(/^(\w+)=(.*)$/); if (m) env[m[1]] = m[2].trim(); }
 const h = { apikey: env.SUPABASE_SECRET_KEY, Authorization: 'Bearer ' + env.SUPABASE_SECRET_KEY, 'Content-Type': 'application/json' };

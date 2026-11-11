@@ -1,9 +1,9 @@
 'use strict';
 const s=require('../lib/server');
-// 学習カルテ用の回答記録。権利（ume/take/matsu のどれか・期限内）の判定はここ（サーバー）で行う。集計はクライアント。
+// 学習カルテ用の回答記録。権利（ume/take/matsu のどれか・期限内。text だけでは通らない）の判定はここ（サーバー）で行う。集計はクライアント。
 module.exports=s.endpoint(['GET'],async(req,res)=>{
   const current=await s.session(req);
-  if(!(await s.entitlements(current.userId)).length)s.fail(403,'karte_not_entitled');
+  if(!(await s.entitlements(current.userId)).some(e=>['ume','take','matsu'].includes(e.plan)))s.fail(403,'karte_not_entitled');
   const q=new URLSearchParams({select:'quiz_id,question_id,value,answered_at,attempt_id',user_id:'eq.'+current.userId,order:'answered_at.asc',limit:'5000'});
   const rows=await s.supabase('/rest/v1/answers?'+q);
   if(!Array.isArray(rows))s.fail(503,'database_unavailable');

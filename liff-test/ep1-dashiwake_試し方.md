@@ -39,3 +39,33 @@ https://liff.line.me/2011606963-hH0DzETc/ep1-dashiwake.html
 - LINEの外でログイン済みは、従来どおり getFriendship の結果で決める（true のときだけB）。isLoggedIn が false・init 失敗は A。
 - 変えた理由：getFriendship が実機で「There is no login bot linked to this channel.（400）」になり、LINE側の設定を直しても Bにならなかったため。
 - A の「LINEで開く」ボタンと「LINEに登録している方は…」の説明文は削除（LINE内で開けば誰でも全部が見えてしまうため）。友だち追加のリンクは残す。
+
+## 3段の試作（ep1-3dan.html）
+通常・LINE登録者・やさしいテキスト購入者の3段。`ep1-dashiwake.html` は残してある。
+
+- 1段目（通常）：図解1枚、○×3問、友だち追加の案内
+- 2段目（LINE登録者）：図解ぜんぶ、今日のポイント、過去問1選。いちばん下に「やさしいテキスト」の見本1枚と「続きはこちら」（リンク先は仮で `plans-preview.html`）。枠は `&mihon_text=0` で消える
+- 3段目（やさしいテキスト購入者）：前半のテキスト、前半の○×3問、後半のテキスト、後半の○×3問、今日のポイント、過去問1選（放送の順）。赤シートはテキストの大事な語・数字（前半12・後半12か所）
+
+### 切替のURL（ブラウザで確認）
+- `ep1-3dan.html?mihon=mitouroku`：1段目
+- `ep1-3dan.html?mihon=touroku`：2段目（`&mihon_text=0` で見本の枠なし）
+- `ep1-3dan.html?mihon=kounyu`：3段目。`/api/ep-text?ep=1&mihon=1` を呼ぶので、サーバーの環境変数 `ALLOW_TEXT_PREVIEW=1` が要る（なければ2段目のまま、状態の箱に401）
+
+### 本物の判定
+LINEの中で開く → 2段目 → IDトークンで `/api/session` にPOST → `/api/ep-text?ep=1`。200なら3段目、403・401・失敗なら2段目のまま。状態の箱の「text」に結果が出る。
+
+```
+https://liff.line.me/2011606963-hH0DzETc/ep1-3dan.html
+```
+
+### 購入者にする（テスト）
+先にマイグレーション `supabase/migrations/202611110001_text_plan.sql` をテストSupabaseのSQL Editorで適用する。そのあと：
+
+```
+node scripts/db-grant.mjs <id先頭8文字> text
+node scripts/db-grant.mjs <id先頭8文字> text --revoke
+```
+
+### テキストの作り方
+元は `6_有料PDF\やさしいテキスト_2027\第01回_宅建業と免許.html`。`node scripts/build-ep1-text.mjs` で `api/_ep-text/ep1.js` を作る（タグを除いた文言が元と一致しなければ失敗する）。有料の中身は `api/_` 以下だけで、URLでは取れない。
