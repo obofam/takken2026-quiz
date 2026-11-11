@@ -37,6 +37,16 @@
   .eyebrow { font-size: .85rem; font-weight: 700; letter-spacing: .18em; color: var(--muted); margin-bottom: 14px; }
   .hero h1 { font-size: 1.5rem; font-weight: 900; line-height: 1.55; }
   .hero p { font-size: .95rem; color: var(--muted); margin-top: 14px; line-height: 1.85; }
+  .hero p.core { font-size: 1rem; font-weight: 700; color: var(--text); }
+  /* 図解と3問：3つの画面で見られるもの */
+  .tiers { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 12px 16px 6px; margin-bottom: 22px; }
+  .tiers h2 { font-size: .9rem; font-weight: 700; margin-bottom: 4px; line-height: 1.5; }
+  .tiers dl { margin: 0; }
+  .tiers .row { display: grid; grid-template-columns: 8.2em 1fr; column-gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .tiers .row:first-child { border-top: 0; }
+  .tiers dt { font-size: .9rem; font-weight: 700; line-height: 1.5; }
+  .tiers dt small { display: block; font-size: .78rem; font-weight: 500; color: var(--muted); }
+  .tiers dd { font-size: .92rem; line-height: 1.6; }
   .start-note { text-align: center; margin: 0 0 22px; display: none; }
   .start-note p { font-weight: 700; color: var(--cyan-dark); margin-bottom: 10px; }
   .btn-o { display: inline-block; font-weight: 700; text-decoration: none; color: var(--cyan-dark); background: var(--card); border: 1.5px solid var(--cyan); border-radius: 999px; padding: 8px 26px; }
@@ -168,6 +178,7 @@
   <header class="hero">
     <div class="eyebrow">ROADMAP 2027</div>
     <h1>耳で覚える宅建2027<br>学習ロードマップ</h1>
+    <p class="core"><span class="nb">忙しい社会人の勉強は、止まりがちです。</span><br><span class="nb">ここなら、静かに、淡々と続けられます。</span></p>
     <p><span class="nb">2027年1月4日から、</span><span class="nb">毎週月曜に本編を1本（予定）。</span><br>本試験（2027年10月17日・予定）まで全41回</p>
   </header>
   <div class="start-note" id="startNote">
@@ -192,8 +203,17 @@
 
   <ul class="how">
     <li><span class="n">1</span><a class="main" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="spotify">音声で聴く（Spotify）</a><span class="oth">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="standfm">stand.fm</a></span></li>
-    <li><span class="n">2</span>○×3問で確かめる</li>
+    <li><span class="n">2</span>「図解と3問」で確かめる</li>
   </ul>
+
+  <section class="tiers" aria-label="図解と3問で見られるもの">
+    <h2>「図解と3問」で見られるもの</h2>
+    <dl>
+      <div class="row"><dt>登録なし</dt><dd>○×3問と、図解の最初の1枚</dd></div>
+      <div class="row"><dt>LINE登録<small>無料</small></dt><dd>図解の続きと、過去問1選</dd></div>
+      <div class="row"><dt>やさしいテキスト<small>有料・準備中</small></dt><dd>同じページでテキストが開きます。○×も過去問も、その中で解ける予定です</dd></div>
+    </dl>
+  </section>
 
   <nav class="filters" id="filters" aria-label="分野でしぼる"></nav>
   <p class="part-lead" id="partLead"></p>
@@ -202,8 +222,8 @@
 
   <section class="line-cta">
     <div class="over">LINE</div>
-    <p class="head" id="lineHead">過去問1選は、LINEで</p>
-    <p class="body" id="lineBody"><span class="nb">各回の3問のあとに、</span><span class="nb">本試験の過去問を1問。</span><br><span class="nb">復習カードも届きます。</span><span class="nb">登録は無料です。</span></p>
+    <p class="head" id="lineHead">図解の続きと過去問1選は、LINEで</p>
+    <p class="body" id="lineBody"><span class="nb">毎週月曜に、こちらからお届けします。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録は無料です。</span></p>
     <a class="btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="roadmap-line">LINEで受け取る</a>
   </section>
 
@@ -232,7 +252,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   if (t < 20270104) {
     document.getElementById('startNote').style.display = 'block';
     document.getElementById('lineHead').textContent = '始まったら、LINEでお知らせします';
-    document.getElementById('lineBody').innerHTML = '<span class="nb">各回の過去問1選と復習カードも、</span><span class="nb">LINEで受け取れます。</span><span class="nb">登録は無料です。</span>';
+    document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録は無料です。</span>';
   }
   function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function md(e){ var p=e.d.split('-'); return (+p[1])+'/'+(+p[2]); }
