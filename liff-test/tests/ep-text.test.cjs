@@ -109,6 +109,6 @@ test('the paid text lives only under api/_ep-text, and no public file contains i
 test('the 3-step page has no arrows, no emoji, no name, and the sample frame can be switched off',()=>{
   const html=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8');
   assert.doesNotMatch(html,/[→←↑↓]|[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
-  assert.match(html,/mihon_text/);assert.match(html,/plans-preview\.html/);assert.match(html,/mihon=1/);
+  assert.match(html,/mihon_text/);assert.match(html,/id="tsample"[\s\S]{0,600}takken\.mimiobo\.com\/ep\/1\/text/);assert.match(html,/mihon=1/);
   assert.doesNotMatch(html,/narabi|まとめて解く/);
 });
