@@ -141,20 +141,34 @@
   .faq dd { font-size: .92rem; }
   .faq dd a { color: var(--cyan-dark); }
 
-  /* スマホ：日付を左に置き、右に「種別・分野／テーマ／タイトル」を縦に積む */
+  /* スマホ：1回＝1枚のカード。左に番号、中に日付・テーマ・タイトル、右に大きな丸ボタン */
   @media (max-width: 767px) {
+    .sched { background: transparent; border: 0; box-shadow: none; overflow: visible; margin-bottom: 34px; }
     .sched table, .sched tbody, .sched tr.month, .sched tr.month th { display: block; }
     .sched thead { display: none; }
-    .sched tr.ep { display: grid; grid-template-columns: 4.3em auto 1fr auto; grid-template-areas: "date kind part rec" "date theme theme theme" "date title title title"; column-gap: 10px; row-gap: 2px; padding: 12px 14px; border-top: 1px solid var(--line); }
-    .sched tbody tr:first-child { border-top: 0; }
+    .sched tr.month th { background: transparent; font-size: .92rem; padding: 14px 4px 6px; }
+    .sched tr.ep { display: grid; grid-template-columns: 2.5rem auto 1fr 56px; grid-template-areas: "kind date part rec" "kind theme theme rec" "kind title title rec"; column-gap: 8px; row-gap: 2px; align-items: center; padding: 12px 12px 12px 6px; margin-bottom: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+    .sched tr.ep.sub, .sched tr.ep.ms { grid-template-columns: 4.6rem auto 1fr 56px; }
+    .sched tr.ep.now { background: var(--cyan-soft); border-color: var(--cyan); }
+    .sched tr.ep.ms { background: var(--surface); box-shadow: none; }
     .sched tr.ep > td { display: block; padding: 0; border: 0; }
-    .c-date { grid-area: date; white-space: normal; }
-    .c-date .wd { display: block; margin-left: 0; }
-    .c-kind { grid-area: kind; align-self: center; }
-    .c-part { grid-area: part; align-self: center; }
+    .c-date { grid-area: date; white-space: normal; font-size: .92rem; align-self: start; }
+    .c-date .wd { display: inline; margin-left: 1px; font-size: .92rem; }
+    .c-date .hol { font-size: .8rem; }
+    .c-kind { grid-area: kind; align-self: center; text-align: center; }
+    .c-part { grid-area: part; align-self: start; font-size: .92rem; }
     .c-theme { grid-area: theme; margin-top: 2px; }
     .c-title { grid-area: title; }
-    .c-rec { grid-area: rec; align-self: center; }
+    .c-rec { grid-area: rec; align-self: center; justify-self: end; }
+    .bignum { display: block; font-size: 1.9rem; font-weight: 900; line-height: 1.1; color: var(--cyan-dark); }
+    .badge.bd-main { display: none; }
+    .c-kind .badge { font-size: .78rem; padding: 1px 4px; white-space: nowrap; }
+    .now-badge { display: block; margin: 4px auto 0; width: fit-content; }
+    .acts { gap: 0 18px; margin-top: 2px; }
+    .acts a { display: inline-flex; align-items: center; min-height: 44px; font-size: .92rem; border-bottom: 0; text-decoration: underline; text-decoration-color: var(--cyan); text-underline-offset: 4px; }
+    .filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; position: sticky; top: 0; z-index: 3; background: var(--surface); padding: 8px 0; margin-bottom: 4px; }
+    .filters::-webkit-scrollbar { display: none; }
+    .filters button { flex: none; white-space: nowrap; }
   }
 
   /* PC：幅を広げ、絞り込みを上に固定 */
@@ -171,21 +185,82 @@
     .sched th.c-rec { width: 84px; }
     .sched td.c-rec { text-align: right; }
   }
+
+  /* 見直し案：上の帯・1画面目のカード・使い方の箱・分野タブの件数・丸い記録ボタン */
+  .proto { background: var(--cyan-soft); color: var(--text); text-align: center; font-size: .92rem; font-weight: 700; padding: 6px 12px; border-bottom: 1px solid var(--cyan-mid); }
+  .container { padding-top: 16px; }
+  .hero { padding: 0 0 14px; border-bottom: 0; margin-bottom: 0; }
+  .hero h1 { font-size: 1.15rem; line-height: 1.5; }
+  .hero p { margin-top: 10px; line-height: 1.7; font-size: .92rem; }
+  .hero p.core { font-size: 1rem; margin-top: 10px; }
+  .pcard { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 16px; }
+  .cd { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .cd-l { font-size: .92rem; color: var(--muted); font-weight: 500; line-height: 1.4; }
+  .cd-n { font-size: 2.4rem; font-weight: 900; color: var(--cyan-dark); line-height: 1.1; }
+  .cd-n small { font-size: .92rem; font-weight: 700; color: var(--text); margin-left: 3px; }
+  .cd-d { font-size: .92rem; color: var(--muted); text-align: right; line-height: 1.5; }
+  .pg-wrap { display: flex; align-items: center; gap: 16px; border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
+  .ring { flex: none; width: 84px; height: 84px; }
+  .ring .bg { stroke: var(--cyan-soft); fill: none; stroke-width: 10; }
+  .ring .fg { stroke: var(--cyan); fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset .5s ease; }
+  .ring text { font-size: 24px; font-weight: 900; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  .stats { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 8px; }
+  .stat b { display: block; font-size: 1.6rem; font-weight: 900; line-height: 1.15; color: var(--text); }
+  .stat.l b { color: var(--cyan-dark); }
+  .stat.d b { color: #3A6008; }
+  .stat span { font-size: .92rem; color: var(--muted); line-height: 1.4; }
+  .pcard .pg-note { margin: 10px 0 0; }
+  .pcard [hidden] { display: none !important; }
+  .howbox { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .howbox > summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; padding: 0 16px; font-size: 1rem; font-weight: 700; list-style: none; }
+  .howbox > summary::-webkit-details-marker { display: none; }
+  .howbox > summary::after { content: ""; margin-left: auto; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .2s; }
+  .howbox[open] > summary::after { transform: rotate(-135deg); }
+  .howbox .in { padding: 0 12px 4px; }
+  .howbox .exam-map, .howbox .tiers, .howbox .how { box-shadow: none; margin-bottom: 12px; }
+  @media (min-width: 768px) { .bignum { display: none; } }
+  .filters button { min-height: 44px; }
+  .filters button .fc { font-size: .8rem; font-weight: 700; background: var(--gray-pill); color: var(--muted); border-radius: 999px; padding: 1px 7px; margin-left: 6px; }
+  .filters button[aria-pressed="true"] .fc { background: rgba(255,255,255,.25); color: #fff; }
+  .start-note { margin-bottom: 16px; }
+  button.mk-l { width: 56px; height: 56px; min-width: 56px; border-radius: 50%; border: 2px solid var(--line); background: var(--card); color: var(--muted); font-size: .9rem; font-weight: 700; padding: 0; line-height: 1; cursor: pointer; }
+  button.mk-l[data-st="1"] { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
+  button.mk-l[data-st="2"] { background: var(--cyan-soft); border-color: var(--cyan-dark); color: var(--cyan-dark); }
 </style>
 </head>
 <body>
+
 <div class="container">
   <header class="hero">
-    <div class="eyebrow">ROADMAP 2027</div>
-    <h1>耳で覚える宅建2027<br>学習ロードマップ</h1>
+    <h1>耳で覚える宅建2027　学習ロードマップ</h1>
     <p class="core"><span class="nb">忙しい社会人の勉強は、止まりがちです。</span><br><span class="nb">ここなら、静かに、淡々と続けられます。</span></p>
     <p><span class="nb">2027年1月4日から、</span><span class="nb">毎週月曜に本編を1本（予定）。</span><br>本試験（2027年10月17日・予定）まで全41回</p>
   </header>
+
+  <section class="pcard" aria-label="本試験までと進み具合">
+    <div class="cd">
+      <div><div class="cd-l">本試験まで</div><div class="cd-n"><span id="daysLeft">-</span><small>日</small></div></div>
+      <div class="cd-d">2027年10月17日<br>予定</div>
+    </div>
+    <div class="pg-wrap" id="pgWrap">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" id="ringFg" cx="60" cy="60" r="50" transform="rotate(-90 60 60)" stroke-dasharray="314.16" stroke-dashoffset="314.16"/><text x="60" y="60" id="ringPct">0%</text></svg>
+      <div class="stats">
+        <div class="stat l"><b id="stL">0</b><span>聴いた</span></div>
+        <div class="stat d"><b id="stD">0</b><span>3問済</span></div>
+        <div class="stat"><b id="stT">41</b><span>本編</span></div>
+      </div>
+    </div>
+    <p class="pg-note" id="pgNote">いまは、この端末にだけ残ります。LINEで記録を引き継げるように準備しています。</p>
+  </section>
+
   <div class="start-note" id="startNote">
     <p>第1回だけ、見本を先に公開しています。</p>
     <a class="btn-o" href="/ep/1?src=roadmap" data-umami-event="roadmap-sample">第1回の見本を見る</a>
   </div>
 
+  <details class="howbox">
+    <summary>使い方</summary>
+    <div class="in">
   <section class="exam-map" aria-label="本試験50問の内訳">
     <p class="em-h">本試験50問の内訳</p>
     <div class="em-bar">
@@ -195,12 +270,7 @@
       <div class="em-seg em4" style="flex:8"><i></i></div>
     </div>
     <ul class="em-leg"><li class="em1"><i></i>業法　20問</li><li class="em2"><i></i>権利関係　14問</li><li class="em3"><i></i>法令上の制限　8問</li><li class="em4"><i></i>税・その他　8問</li></ul>
-    <p class="em-h pg-h">あなたの進み具合（聴いた・3問済の本編）</p>
-    <div class="em-bar pg" id="pgBar"></div>
-    <p class="pg-sum" id="pgSum"></p>
-    <p class="pg-note">いまは、この端末にだけ残ります。LINEで記録を引き継げるように準備しています。</p>
   </section>
-
   <ul class="how">
     <li><span class="n">1</span><a class="main" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="spotify">音声で聴く（Spotify）</a><span class="oth">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="standfm">stand.fm</a></span></li>
     <li><span class="n">2</span>「図解と3問」で確かめる</li>
@@ -214,6 +284,8 @@
       <div class="row"><dt>やさしいテキスト<small>有料・準備中</small></dt><dd>同じページでテキストが開きます。○×も過去問も、その中で解ける予定です</dd></div>
     </dl>
   </section>
+    </div>
+  </details>
 
   <nav class="filters" id="filters" aria-label="分野でしぼる"></nav>
   <p class="part-lead" id="partLead"></p>
@@ -274,26 +346,37 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   }
   function wr(key, o){ try { localStorage.setItem(key, JSON.stringify(o)); } catch(_) {} }
   var K_L = 'takken2027-listened', K_D = 'takken2027-done';
-  var ST_LABEL = ['未聴', '聴了', '復習']; // 復習も聴いた扱いで数える
+  var ST_LABEL = ['未聴', '聴いた', '復習']; // 復習も聴いた扱いで数える
   var HONPEN = EPS.filter(function(e){ return e.kind==='本編' && e.n; });
   var PG = [20,14,8,8];
+  var EXAM = new Date(2027, 9, 17);
+  function renderCountdown(){
+    var diff = Math.ceil((EXAM - new Date()) / 86400000);
+    document.getElementById('daysLeft').textContent = diff > 0 ? diff : 0;
+  }
   function renderProgress(){
-    var L = rd(K_L), D = rd(K_D), html = '', nl = 0, nd = 0;
-    // 配信前（2027-01-04より前）は、記録が1件もない端末では進み具合の帯と注記を隠す
-    var showPg = t >= 20270104 || Object.keys(L).length>0 || Object.keys(D).length>0;
-    [].forEach.call(document.querySelectorAll('.pg-h, #pgBar, #pgSum, .pg-note'), function(el){ el.hidden = !showPg; });
-    var nr = 0;
-    HONPEN.forEach(function(e){ if (L[e.n]) nl++; if (L[e.n]===2) nr++; if (D[e.n]) nd++; });
-    PG.forEach(function(w,i){
-      var tot = 0, got = 0;
-      HONPEN.forEach(function(e){ if (e.part===i+1){ tot++; if (L[e.n]||D[e.n]) got++; } });
-      var pc = tot ? Math.round(got/tot*100) : 0;
-      html += '<div class="em-seg" style="flex:'+w+'"><i style="background:linear-gradient(90deg,var(--cyan-dark) '+pc+'%,var(--cyan-soft) '+pc+'%)"></i><span class="cnt">'+got+'/'+tot+'</span></div>';
+    var L = rd(K_L), D = rd(K_D), nl = 0, nd = 0, pt = {};
+    // 配信前（2027-01-04より前）は、記録が1件もない端末では進み具合を隠す
+    var showPg = true; // ロードマップ＝トラッカー：進み具合はいつも出す（0でも）
+    document.getElementById('pgWrap').hidden = !showPg;
+    document.getElementById('pgNote').hidden = !showPg;
+    HONPEN.forEach(function(e){
+      if (L[e.n]) nl++;
+      if (D[e.n]) nd++;
+      var p = pt[e.part] || (pt[e.part] = [0,0]); p[1]++; if (L[e.n]) p[0]++;
     });
-    document.getElementById('pgBar').innerHTML = html;
-    var sum = document.getElementById('pgSum');
-    if (nl===0 && nd===0){ sum.className='pg-sum none'; sum.textContent='聴いた・3問済で進みます'; }
-    else { sum.className='pg-sum'; sum.textContent='聴いた '+nl+'回'+(nr?'（うち復習 '+nr+'）':'')+'／3問済 '+nd+'回（本編'+HONPEN.length+'回）'; }
+    var pc = HONPEN.length ? Math.round(nl/HONPEN.length*100) : 0;
+    document.getElementById('stL').textContent = nl;
+    document.getElementById('stD').textContent = nd;
+    document.getElementById('stT').textContent = HONPEN.length;
+    document.getElementById('ringPct').textContent = pc + '%';
+    document.getElementById('ringFg').setAttribute('stroke-dashoffset', (314.16*(1-pc/100)).toFixed(1));
+    // 分野タブの「聴いた数/本編の数」
+    Array.prototype.forEach.call(document.querySelectorAll('#filters .fc'), function(el){
+      var p = +el.getAttribute('data-p'), a, b;
+      if (p) { a = (pt[p]||[0,0])[0]; b = (pt[p]||[0,0])[1]; } else { a = nl; b = HONPEN.length; }
+      el.textContent = a + '/' + b;
+    });
   }
   var KIND = {'本編':['本編',''], '短尺':['復習',' tag'], 'まとめ':['まとめ',' line'], '補強':['もう1論点',' line']};
   // 本編の図解・問題は回のページ（ep/N）の節へ。?src=roadmap で Umami に入口が残る（YouTube は ?src=yt）
@@ -302,9 +385,9 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     if (e.kind!=='本編' || !e.n) return;
     var base = EP_URL + e.n + '?src=roadmap';
     if (!e.zukai) e.zukai = base + '#zukai';
-    if (!e.mondai) e.mondai = base + '#maru';
+    if (!e.mondai) e.mondai = base;
   });
-  var LINKS = [['spotify','Spotify',1], ['youtube','YouTube',1], ['zukai','図解',0], ['mondai','○×3問',0]]; // 3つ目=別タブで開く
+  var LINKS = [['spotify','Spotify',1], ['youtube','YouTube',1], ['mondai','図解と3問',0]]; // 3つ目=別タブで開く
   // 節目の行（どの分野でしぼっても出す）。受験申込の日付は目安（7月の頭に置く）
   var MS = [
     {d: "2027-07-01", dl: "7月", wd: "", kind: "節目", ms: 1, theme: "受験申込（例年7月）", title: "日程は試験実施機関の発表で確定します"},
@@ -350,7 +433,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
       }
       html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
         + '<td class="c-date">'+md(e)+'<span class="wd">('+esc(e.wd)+')</span>'+(e.note?'<span class="hol">'+esc(e.note)+'</span>':'')+'</td>'
-        + '<td class="c-kind"><span class="badge'+k[1]+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
+        + '<td class="c-kind">'+(e.kind==='本編' ? '<span class="bignum">'+e.n+'</span>' : '')+'<span class="badge'+k[1]+(e.kind==='本編'?' bd-main':'')+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
         + '<td class="c-part">'+esc(partName(e.part))+'</td>'
         + '<td class="c-theme">'+esc(s.theme)+'</td>'
         + '<td class="c-title">'+titleHtml+(acts?'<div class="acts">'+acts+'</div>':'')+'</td>'
@@ -367,10 +450,10 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     });
   }
 
-  var fb = '<button type="button" data-p="0" data-umami-event="roadmap-filter" data-umami-event-part="すべて">すべて</button>';
+  var fb = '<button type="button" data-p="0" data-umami-event="roadmap-filter" data-umami-event-part="すべて">すべて<span class="fc" data-p="0"></span></button>';
   PARTS.forEach(function(p,i){
     var n = partName(i+1);
-    fb += '<button type="button" data-p="'+(i+1)+'" data-umami-event="roadmap-filter" data-umami-event-part="'+esc(n)+'">'+esc(n)+'</button>';
+    fb += '<button type="button" data-p="'+(i+1)+'" data-umami-event="roadmap-filter" data-umami-event-part="'+esc(n)+'">'+esc(n)+'<span class="fc" data-p="'+(i+1)+'"></span></button>';
   });
   var filters = document.getElementById('filters');
   filters.innerHTML = fb;
@@ -390,6 +473,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     if (window.umami) { try { umami.track('roadmap_progress', { to: ST_LABEL[nx] }); } catch(_) {} }
     renderProgress();
   });
+  renderCountdown();
   render();
   // 開いたとき、今週の行まで自動でスクロール（#p1〜#p5 で開いたときはしない）
   if (nowEp && !/^#p[1-9]$/.test(location.hash)) {
