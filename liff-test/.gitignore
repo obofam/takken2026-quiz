@@ -5,3 +5,6 @@ node_modules/
 
 .vercel
 .env*
+
+# 有料テキストの中身（scripts/build-ep1-text.mjs で作る。公開リポジトリに入れない。Vercel には .vercelignore に無いので載る）
+api/_ep-text/
