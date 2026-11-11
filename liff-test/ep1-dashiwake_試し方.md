@@ -32,3 +32,10 @@ https://liff.line.me/2011606963-hH0DzETc/ep1-dashiwake.html
 - LINE Developers 側（推測。管理画面は未確認）：LINEログインのチャネルに公式アカウントを結びつける（bot link。友だち追加オプションを「On」）。`getFriendship()` に必要。スコープに `profile` が要る可能性
 - Supabase への記録は今回なし。登録者の識別をサーバー側でもやるなら、ID トークンの検証（`api/session` の仕組み）に乗せる
 - 判定は端末の表示の出し分けだけで、全部版のファイルは URL を知っていれば誰でも取れる（秘密にはならない）。続きを本当に限るなら、サーバー側でIDトークン検証したうえで返す形が要る
+
+## 2026-11-11 追記：判定の変更
+- LINEの中でログイン済みなら、登録者として全部（B）を表示。getFriendship は参考（3秒で返らなければ失敗扱い）。
+- getFriendship が成功して friendFlag が false のときだけ A に戻す。失敗・未確定は B のまま（状態は「LINEの中（友だちの確認はできなかった）」）。
+- LINEの外でログイン済みは、従来どおり getFriendship の結果で決める（true のときだけB）。isLoggedIn が false・init 失敗は A。
+- 変えた理由：getFriendship が実機で「There is no login bot linked to this channel.（400）」になり、LINE側の設定を直しても Bにならなかったため。
+- A の「LINEで開く」ボタンと「LINEに登録している方は…」の説明文は削除（LINE内で開けば誰でも全部が見えてしまうため）。友だち追加のリンクは残す。

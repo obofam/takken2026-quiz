@@ -407,7 +407,7 @@ body.member .line-card{display:block}
   </div>
 </div>
 <div class="slot" id="slot-half2"></div>
-<div class="next-box only-a" id="zukai-next"><p>図解の続きは、<a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>でお届けします。</p><p class="lnote" style="margin-top:6px">LINEに登録している方は、LINEで開くと全部が表示されます。</p><a class="lbtn" id="openLine" href="https://liff.line.me/2011606963-hH0DzETc/ep1-dashiwake.html">LINEで開く</a></div>
+<div class="next-box only-a" id="zukai-next"><p>図解の続きは、<a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>でお届けします。</p></div>
 <p class="pnote only-b">LINEに登録している方向けに、全部を表示しています。</p>
   </section>
 
@@ -566,7 +566,8 @@ body.member .line-card{display:block}
 })();
 </script>
 <script>
-/* 出し分け：LINEの中で開き、友だちと確かめられたときだけ、ep1-full.html / ep1-full.js を読み込む。失敗したら登録前の表示のまま */
+/* 出し分け：LINEの中でログイン済みなら登録者として全部を表示（getFriendship は参考。400で失敗しても全部のまま）。
+   LINEの外のログイン済みは getFriendship の結果で決める。ep1-full.html / ep1-full.js は表示するときだけ読み込む。失敗したら登録前の表示のまま */
 (function () {
   'use strict';
   var LIFF_ID = '2011606963-hH0DzETc';
@@ -576,6 +577,7 @@ body.member .line-card{display:block}
   /* 試作の状態の箱：状態・段階・エラー・LINEの情報を1行ずつ。取得できない項目は「取得できず」 */
   var curState = '確認前';
   var lastErr = null;
+  var judgeNote = '';
   var boxLines = [];
   var prog = {sdk: null, init: null, login: null, friend: null, full: null};
   var STEPS = [['sdk', 'SDKの読み込み'], ['init', '初期化'], ['login', 'ログインの確認'], ['friend', '友だちの確認'], ['full', '全部の表示']];
@@ -591,7 +593,7 @@ body.member .line-card{display:block}
       if (prog[s[0]] === 'ok') { ok = s[1]; }
       if (prog[s[0]] === 'ng' && !ng) { ng = s[1]; }
     });
-    return '最後に成功：' + (ok || 'なし') + ' ／ 失敗：' + (ng || 'なし');
+    return (judgeNote ? judgeNote + '　' : '') + '最後に成功：' + (ok || 'なし') + ' ／ 失敗：' + (ng || 'なし');
   }
   function errText() {
     if (!lastErr) { return 'なし'; }
@@ -668,6 +670,22 @@ body.member .line-card{display:block}
       return loadScript('ep1-full.js');
     }).then(function () { body.classList.add('is-friend'); });
   }
+  /* getFriendship を呼ぶ。3秒たっても返らなければ失敗扱い。結果は {f} か {err} の1回だけ */
+  function friendCheck() {
+    return new Promise(function (resolve) {
+      var done = false;
+      var t = setTimeout(function () {
+        if (!done) { done = true; resolve({err: new Error('友だちの確認が3秒たっても返らなかった')}); }
+      }, 3000);
+      var p;
+      try { p = Promise.resolve(liff.getFriendship()); } catch (e) { p = Promise.reject(e); }
+      p.then(function (f) {
+        if (!done) { done = true; clearTimeout(t); resolve({f: f}); }
+      }, function (e) {
+        if (!done) { done = true; clearTimeout(t); resolve({err: e}); }
+      });
+    });
+  }
   function judge() {
     if (mihon === 'mitouroku') { say('見本：登録していない表示（判定なし）'); return Promise.resolve(); }
     if (mihon === 'touroku') {
@@ -678,17 +696,40 @@ body.member .line-card{display:block}
       return liff.init({liffId: LIFF_ID});
     }).then(function () {
       prog.init = 'ok';
-      var inClient = false;
-      try { inClient = liff.isInClient(); } catch (_) {}
-      if (inClient) { var b = document.getElementById('openLine'); if (b) { b.hidden = true; } }
       var li = liff.isLoggedIn();
       prog.login = 'ok';
       if (!li) { say('LINEの外'); return; }
-      return liff.getFriendship().then(function (f) {
+      var inClient = false;
+      try { inClient = liff.isInClient(); } catch (_) {}
+      if (inClient) {
+        /* LINEの中でログイン済み：登録者として扱う。getFriendship は結果が出てから1回だけ描く（参考） */
+        return friendCheck().then(function (r) {
+          var f = r.f;
+          if (f && f.friendFlag === true) {
+            prog.friend = 'ok';
+            judgeNote = '判定：LINEの中でログイン済みのため、全部を表示（友だちも確認できた）';
+            return showFull().then(function () { prog.full = 'ok'; say('LINEの中・友だち'); });
+          }
+          if (f && f.friendFlag === false) {
+            prog.friend = 'ok';
+            judgeNote = '判定：友だちではないと確認できたため、登録していない表示に戻した';
+            say('LINEの中・友だちではない');
+            return;
+          }
+          fail(r.err || new Error('友だちの確認の結果が取れなかった'));
+          judgeNote = '判定：LINEの中でログイン済みのため、全部を表示（友だちの確認はできず）';
+          return showFull().then(function () { prog.full = 'ok'; say('LINEの中（友だちの確認はできなかった）'); });
+        });
+      }
+      /* LINEの外でログイン済み：getFriendship の結果で決める（true のときだけ全部） */
+      return friendCheck().then(function (r) {
+        if (r.err) { throw r.err; }
         prog.friend = 'ok';
-        if (f && f.friendFlag === true) {
+        if (r.f && r.f.friendFlag === true) {
+          judgeNote = '判定：友だち確認の結果で全部を表示';
           return showFull().then(function () { prog.full = 'ok'; say('LINEの中・友だち'); });
         }
+        judgeNote = '判定：友だち確認の結果で登録していない表示';
         say('LINEの中・友だちではない');
       });
     }).catch(function (e) { console.warn(e); fail(e); say('確認できなかった（' + why(e) + '）'); });
