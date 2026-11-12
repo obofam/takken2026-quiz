@@ -311,6 +311,15 @@ body.member .kk-gate{display:none}
 .pgo{flex:none;width:9px;height:9px;border-top:2px solid #0A6477;border-right:2px solid #0A6477;transform:rotate(45deg);margin-right:4px}
 
 /* LINEの誘い：白地＋水色の枠、ボタンだけ水色塗り（正解のライム・不正解のグレーとぶつけない） */
+/* 有料版（やさしいテキスト）の見本への入口：無料の部分（水色）と見分けられるよう、濃い色の枠と札 */
+.tcard{display:block;position:relative;margin-top:22px;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:22px 14px 14px;text-decoration:none;color:var(--text)}
+.tcard .tlab{position:absolute;top:-13px;left:14px;background:var(--ink);color:#fff;font-size:14px;font-weight:900;line-height:1.5;border-radius:999px;padding:2px 14px}
+.tcard .tbody{display:flex;gap:14px;align-items:center}
+.tcard img{flex:0 0 auto;width:84px;height:auto;border:1px solid var(--line);border-radius:6px;box-shadow:0 2px 8px rgba(10,100,119,.15)}
+.tcard .tmid{display:block;min-width:0}
+.tcard .tt{display:block;font-size:19px;font-weight:900;color:var(--ink);line-height:1.4}
+.tcard .td{display:block;font-size:16px;line-height:1.7;margin-top:4px}
+.tcard .tgo{display:block;margin-top:14px;text-align:center;background:var(--ink);color:#fff;font-weight:900;font-size:16px;line-height:1.4;border-radius:999px;padding:12px 18px}
 .line-inv,.line-card{background:#fff;border:1.5px solid var(--sky);border-radius:14px;padding:12px 14px}
 .line-inv{margin-top:10px}
 .line-inv p,.line-card p{margin:0 0 10px;font-size:14px;line-height:1.7}
@@ -430,7 +439,12 @@ body.member .line-card{display:block}
   <section class="sec" id="honban">
     <h2 class="sec-h">過去問1選</h2>
     <div class="next-box"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">では、</span><span class="nk">この回のテーマに沿った過去問を</span><span class="nk">解いていただけます。</span></p></div>
-    <ul class="past txt"><li><a class="prow" href="/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1"><span class="pico doc" aria-hidden="true"></span><span class="pmid"><span class="pt">やさしいテキスト（有料）の見本</span><span class="py">図をすべて・寄り道・赤シート</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
+    <a class="tcard" href="/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1">
+      <span class="tlab">有料版の見本</span>
+      <span class="tbody"><img src="/ep/1/text/a4-p1.webp" alt="" width="800" height="1133" loading="lazy">
+        <span class="tmid"><span class="tt">やさしいテキスト</span><span class="td"><span class="nk">放送を聴きながら見る</span><span class="nk">テキストです。</span><br><span class="nk">図をすべて・寄り道・</span><span class="nk">赤シートつき。</span></span></span></span>
+      <span class="tgo">見本を見る</span>
+    </a>
   </section>
 
   <section class="sec" id="plan">
