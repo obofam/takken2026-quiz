@@ -12,6 +12,15 @@ function client(){
   return injected;
 }
 function price(){const id=process.env.STRIPE_PRICE_KARTE;if(typeof id!=='string'||!/^price_[A-Za-z0-9_]+$/.test(id))s.fail(503,'payment_not_configured');return id;}
+// 2027の商品：価格は環境変数でなく lookup_key（takken2027_<コード>）で引く。見つからなければ未設定扱い。
+async function priceByLookupKey(lookupKey){
+  let list;
+  try{list=await client().prices.list({lookup_keys:[lookupKey],active:true,limit:1});}
+  catch(e){if(e instanceof s.HttpError)throw e;s.fail(503,'payment_not_configured');}
+  const id=list?.data?.[0]?.id;
+  if(typeof id!=='string'||!/^price_[A-Za-z0-9_]+$/.test(id))s.fail(503,'payment_not_configured');
+  return id;
+}
 function webhookSigningValue(){const v=process.env.STRIPE_WEBHOOK_SECRET;if(typeof v!=='string'||!/^whsec_\S+$/.test(v))s.fail(503,'webhook_not_configured');return v;}
 // Valid-until is configuration, not a constant: "until this year's exam" changes each season.
 function validUntil(){
@@ -26,4 +35,4 @@ async function rawBody(req,limit=1000000){
   for await(const chunk of req){size+=chunk.length;if(size>limit)s.fail(413,'body_too_large');chunks.push(Buffer.from(chunk));}
   return Buffer.concat(chunks);
 }
-module.exports={DEFAULT_VALID_UNTIL,setClient,client,price,webhookSigningValue,validUntil,rawBody};
+module.exports={DEFAULT_VALID_UNTIL,setClient,client,price,priceByLookupKey,webhookSigningValue,validUntil,rawBody};

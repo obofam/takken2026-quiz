@@ -94,6 +94,18 @@ Kei の赤入れ「全体的にわかりづらい。全体の構成が把握し�
 8. `node scripts/db-users.mjs` に `entitlements=1 [ume~2027-10-17]` が出ること。同じイベントを再送（`stripe events resend <evt_…>`）しても1行のままであること。
 9. Checkout 画面で戻る（キャンセル）と `ep10-preview.html?checkout=cancel` に戻り、「決済を中止しました。」が出ること。
 
+## 2027の商品（Stripe テスト・2026-11-12）
+
+値段は仮置き（Keiの最終決定ではない）。Stripe はテストモードのみ。
+
+- 台帳：`lib/products.js`（8商品の コード・名前・値段・plan・lookup_key＝`takken2027_<コード>`）。値段はここだけ。`kounyu-test.html` は `GET /api/products`（名前と値段）で読む。
+- 含む関係：DBには買った plan を1行だけ書き、読むときに広げる（`includes` / `has`）。`zenbu` は text・haru・natsu・last30・matome を含み、`bansou` は zenbu の全部＋bansou。`matome` は単独では付与しない。`ume`・`take`・`matsu` は従来どおり。`/api/ep-text` は `has(…,'text')`、`/api/karte` は ume/take/matsu/zenbu/bansou で通す（text・haru だけでは通さない）。
+- `POST /api/checkout`：`{product:"<コード>"}`。省略時は従来の学習カルテ（`STRIPE_PRICE_KARTE`）。価格は `prices.list({lookup_keys})` で引く。台帳にないコードは 400 `invalid_product`、価格なしは 503 `payment_not_configured`。戻り先は `/kounyu-test.html`。
+- `POST /api/stripe-webhook`：`metadata.plan` が台帳の plan（または `ume`）なら付与。`metadata.product` があれば、その商品の plan と一致しないものは skip。
+- 価格の作り方：`node scripts/stripe-setup.mjs`（`.env.local` のテスト鍵で、無い商品・価格だけ作る。冪等）。`--dry-run` は作る予定だけ表示（Stripe には問い合わせる）。
+- マイグレーション：`supabase/migrations/202611120001_products_2027.sql` を `202611110001_text_plan.sql` の後にテスト用 Supabase へ適用。
+- 試し方：デプロイ後、LINEの中で `https://liff.line.me/2011606963-hH0DzETc/kounyu-test.html` を開く → 商品の「テスト決済へ」→ テストカード 4242… → 戻ると権利が表示される（Webhook 経由で付与）。`node scripts/db-grant.mjs <id先頭8文字> <plan>` でも権利を足せる。
+
 ## 2026-09-17 の状態（Sprint 1）
 
 共通ログインAPI、単回の連携チケット、回答の1行保存・復元、端末内再送キューを実装。9/17レビューA-1〜A-14を修正。A-13はLINEログインをまたぐ連携チケットの保持、A-14は `GET /api/session` の連携済みprovider一覧に対応。今回の作業ではデプロイ・実メール送信を行っていない。

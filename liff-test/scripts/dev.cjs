@@ -2,8 +2,8 @@
 // Small local harness for the Vercel handlers; serves only listed public assets.
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const root=path.join(__dirname,'..');
-const files=new Set(['index.html','ep10-preview.html','account.html','site-header.js','plans-preview.html','privacy.html','auth-callback.html','app.js','config.js','style.css','sync.js','auth-client.js','auth-callback.js','ui-messages.js','karte.html','checks.html','quiz-catalog.js','karte-core.js','navi-core.js',...['free','karte','navi','bansou'].map(n=>'img/icons/plan-'+n+'.svg')]);
-const handlers=Object.fromEntries(['session','answers','email','email-verify','link','checkout','stripe-webhook','karte','ep-text'].map(name=>['/api/'+name,require('../api/'+name)]));
+const files=new Set(['index.html','ep10-preview.html','account.html','site-header.js','plans-preview.html','privacy.html','auth-callback.html','app.js','config.js','style.css','sync.js','auth-client.js','auth-callback.js','ui-messages.js','karte.html','kounyu-test.html','checks.html','quiz-catalog.js','karte-core.js','navi-core.js',...['free','karte','navi','bansou'].map(n=>'img/icons/plan-'+n+'.svg')]);
+const handlers=Object.fromEntries(['session','answers','email','email-verify','link','checkout','stripe-webhook','karte','ep-text','products'].map(name=>['/api/'+name,require('../api/'+name)]));
 const server=http.createServer(async(req,res)=>{
   res.setHeader('Cache-Control','no-store');res.setHeader('Referrer-Policy','no-referrer');res.setHeader('X-Content-Type-Options','nosniff');
   res.status=n=>{res.statusCode=n;return res;};res.json=data=>{res.setHeader('Content-Type','application/json');res.end(JSON.stringify(data));};
