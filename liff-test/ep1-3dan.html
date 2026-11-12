@@ -373,25 +373,34 @@ body.member .line-card{display:block}
 .next-box .lbtn{margin-top:10px}
 
 /* 3段の試作だけの部品 */
-.tcard{position:relative;margin-top:24px;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:22px 14px 14px;text-decoration:none;color:var(--text)}
+.tcard{display:block;position:relative;margin-top:24px;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:22px 14px 14px;text-decoration:none;color:var(--text)}
 .tcard .tlab{position:absolute;top:-13px;left:14px;background:var(--ink);color:#fff;font-size:14px;font-weight:900;line-height:1.5;border-radius:999px;padding:2px 14px}
 .tcard .tbody{display:flex;gap:14px;align-items:center}
-.tcard img{flex:0 0 auto;width:84px;height:auto;border:1px solid var(--line);border-radius:6px;box-shadow:0 2px 8px rgba(10,100,119,.15)}
+.tcard img{object-view-box:none;flex:0 0 auto;width:84px;height:auto;border:1px solid var(--line);border-radius:6px;box-shadow:0 2px 8px rgba(10,100,119,.15)}
 .tcard .tmid{display:block;min-width:0}
 .tcard .tt{display:block;font-size:19px;font-weight:900;color:var(--ink);line-height:1.4}
 .tcard .td{display:block;font-size:16px;line-height:1.7;margin-top:4px}
 .tcard .tgo{display:block;margin-top:14px;text-align:center;background:var(--ink);color:#fff;font-weight:900;font-size:16px;line-height:1.4;border-radius:999px;padding:12px 18px}
 .nk{display:inline-block}
+.is-friend.no-tcard .tcard{display:none}
 .is-buyer .tcard,.is-buyer .past.txt,.is-buyer #zukai,.is-buyer #maru{display:none}
 .thost{display:block}
 .textwrap{display:flex;flex-direction:column;gap:12px}
 .is-buyer #text1,.is-buyer #text2,.is-buyer .qset{scroll-margin-top:calc(var(--navh) + 52px)}
-.sbar2{position:sticky;top:var(--navh);z-index:20;box-sizing:border-box;height:44px;display:flex;align-items:center;flex-wrap:nowrap;gap:6px;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding:2px 16px}
-.sb2{appearance:none;-webkit-appearance:none;font:inherit;font-size:13px;font-weight:700;line-height:1.2;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:0 12px;min-height:40px;cursor:pointer;white-space:nowrap;flex:0 0 auto;-webkit-tap-highlight-color:transparent}
+.sbar2{position:sticky;top:var(--navh);z-index:20;box-sizing:border-box;height:48px;display:flex;align-items:center;flex-wrap:nowrap;gap:6px;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding:2px 16px}
+.sb2{appearance:none;-webkit-appearance:none;font:inherit;font-size:13px;font-weight:700;line-height:1.2;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:0 11px;min-height:40px;cursor:pointer;white-space:nowrap;flex:0 0 auto;-webkit-tap-highlight-color:transparent}
 .sb2:disabled{opacity:.4;cursor:default}
 .sb2[aria-pressed="true"]{background:var(--sheet);color:#fff}
+.sb2-lab{font-size:13px;font-weight:900;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
+.seg{display:flex;flex:0 0 auto}
+.seg .sb2{border-radius:0;padding:0 10px}
+.seg .sb2:first-child{border-radius:999px 0 0 999px;border-right-width:0}
+.seg .sb2:last-child{border-radius:0 999px 999px 0}
 .sb2.r{margin-left:auto}
-.sb2-left{font-size:14px;font-weight:700;color:var(--sheet);white-space:nowrap;flex:0 0 auto;min-width:3.6em}
+.sb2-cnt{display:flex;flex-direction:column;justify-content:center;font-size:12px;font-weight:700;line-height:1.3;color:var(--sheet);white-space:nowrap;flex:0 0 auto;text-align:left}
+.shint{margin:0;font-size:14px;line-height:1.7;color:#4F5963}
+.pdfrow{display:block;margin:4px 0 0;text-align:center}
+.pdfbtn{display:inline-block;box-sizing:border-box;min-height:44px;line-height:1.4;padding:10px 20px;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--ink);border-radius:999px;text-decoration:none}
 @media (min-width:820px){.sbar2{margin:0 -32px;padding:2px 32px}}
 .sb2:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
 </style>
@@ -442,8 +451,8 @@ body.member .line-card{display:block}
     <h2 class="sec-h">過去問1選</h2>
     <div class="next-box only-a"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>では、この回のテーマに沿った過去問を解いていただけます。</p></div>
     <div class="slot" id="slot-kk"></div>
-    <ul class="past txt only-a"><li><a class="prow" href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1"><span class="pico doc" aria-hidden="true"></span><span class="pmid"><span class="pt">やさしいテキスト（有料）の見本</span><span class="py">図をすべて・寄り道・赤シート</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
-  <a class="tcard only-b" id="tsample" href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text-more" data-umami-event-ep="1">
+    
+  <a class="tcard" id="tsample" href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text-more" data-umami-event-ep="1">
       <span class="tlab">有料版の見本</span>
       <span class="tbody"><img src="https://takken.mimiobo.com/ep/1/text/a4-p1.webp" alt="" width="800" height="1133" loading="lazy">
         <span class="tmid"><span class="tt">やさしいテキスト</span><span class="td"><span class="nk">放送を聴きながら見る</span><span class="nk">テキストです。</span><br><span class="nk">図をすべて・寄り道・</span><span class="nk">赤シートつき。</span></span></span></span>
@@ -453,7 +462,7 @@ body.member .line-card{display:block}
 
   <section class="sec" id="plan">
     <div class="shead"><h2 class="sh">2027年の配信予定</h2><p class="ssub">1月4日から、毎週月曜に本編を1本（予定）</p></div>
-    <ul class="past"><li><a class="prow" href="https://takken.mimiobo.com/roadmap" data-umami-event="ep-roadmap" data-umami-event-ep="1"><span class="pico list" aria-hidden="true"></span><span class="pmid"><span class="pt">学習ロードマップ</span><span class="py">全41回の日付とテーマを見る</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
+    <ul class="past"><li><a class="prow" href="https://takken.mimiobo.com/roadmap" data-umami-event="ep-roadmap" data-umami-event-ep="1"><span class="pico list" aria-hidden="true"></span><span class="pmid"><span class="pt">学習ロードマップ・進捗トラッカー</span><span class="py">全41回の予定を見る・聴いた回を記録する</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
   </section>
 
   <section class="sec" id="y2026">
@@ -596,7 +605,7 @@ body.member .line-card{display:block}
    1段目（通常）：LINEの外・未登録。2段目（LINE登録者）：LINEの中でログイン済み ／ ep1-full.html / ep1-full.js ・ ep1-nukigaki.html（やさしいテキストからの図の抜粋）を読み込んで全部を表示。
    3段目（やさしいテキスト購入者）：2段目の表示のあとで、IDトークンを /api/session に送ってセッションを作り、/api/ep-text?ep=1 を GET。
    200 なら「テキストを見ながら聴く」形に切り替える。403・401・失敗なら2段目のまま（壊さない）。
-   ?mihon=mitouroku（1段目）／touroku（2段目）／kounyu（3段目。/api/ep-text?ep=1&mihon=1 を呼ぶ）。?mihon_text=0 で2段目の「やさしいテキスト」の枠を消す。 */
+   ?mihon=mitouroku（1段目）／touroku（2段目）／kounyu（3段目。/api/ep-text?ep=1&mihon=1 を呼ぶ）。?mihon_text=0 で2段目の「やさしいテキスト」の枠を消す（1段目は消さない）。 */
 (function () {
   'use strict';
   var LIFF_ID = '2011606963-hH0DzETc';
@@ -604,7 +613,7 @@ body.member .line-card{display:block}
   var stEl = document.getElementById('drows');
   var qs = new URLSearchParams(location.search);
   var mihon = qs.get('mihon');
-  if (qs.get('mihon_text') === '0') { var ts = document.getElementById('tsample'); if (ts) { ts.parentNode.removeChild(ts); } }
+  if (qs.get('mihon_text') === '0') { body.classList.add('no-tcard'); }
   /* 試作の状態の箱：状態・段階・エラー・LINEの情報を1行ずつ。取得できない項目は「取得できず」 */
   var curState = '確認前';
   var lastErr = null;
@@ -759,42 +768,21 @@ body.member .line-card{display:block}
 
   /* ---------- 3段目：やさしいテキスト ---------- */
   var buyerShown = false;
-  function hintOf(text) {
-    var chars = Array.from(String(text)), i, out = '';
-    if (/[0-9０-９]/.test(chars.join(''))) {
-      for (i = 0; i < chars.length; i++) { out += /[0-9０-９]/.test(chars[i]) ? '○' : chars[i]; }
-      return out;
-    }
-    var keep = function (ch) { return '・、〜'.indexOf(ch) >= 0 || /\s/.test(ch); };
-    var n = chars.filter(function (ch) { return !keep(ch); }).length;
-    var head = n <= 2 ? 0 : (n <= 5 ? 1 : 2), k = 0;
-    for (i = 0; i < chars.length; i++) {
-      if (keep(chars[i])) { out += chars[i]; } else { out += (k < head ? chars[i] : '○'); k += 1; }
-    }
-    return out;
-  }
-  function hintHtml(text) {
-    var h = Array.from(hintOf(text)), src = Array.from(String(text)), out = '', i;
-    for (i = 0; i < h.length; i++) {
-      out += (/[0-9]/.test(src[i] || '') && h[i] === '○') ? '<span class="hd">○</span>' : esc(h[i]);
-    }
-    return out;
-  }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
 
-  /* 赤シート：隠す ／ ヒント ／ 答え ／ △（あやしい）。△は端末の localStorage に残す（使えなくても動く） */
+  /* 赤シート：かくれている語を押す＝答え。答えを押す＝△（あやしい）。△を押す＝△を外す。△は端末の localStorage に残す（使えなくても動く）。
+     帯：「かける｜はずす」で全部に一斉に効く。「△だけ」＝△の語だけかくし、ほかは見える状態にする。 */
   function setupSheet(roots, bar) {
     var KEY = 'takken2027-sheet-ep1';
-    var CLS = ['s-hide', 's-hint', 's-open', 's-doubt', 's-flag'];
     var items = [];
     roots.forEach(function (root) {
       Array.prototype.forEach.call(root.querySelectorAll('.rs'), function (el) {
-        items.push({el: el, wrap: root.querySelector('.tx'), html: el.innerHTML, hint: hintHtml(el.textContent), st: 0, doubt: false});
+        items.push({el: el, html: el.innerHTML, open: false, doubt: false});
       });
     });
     var on = true;
-    var elLeft = bar.querySelector('[data-r="left"]'), elTgl = bar.querySelector('[data-r="tgl"]');
-    var elAll = bar.querySelector('[data-r="all"]'), elDoubt = bar.querySelector('[data-r="doubt"]');
+    var elOn = bar.querySelector('[data-r="on"]'), elOff = bar.querySelector('[data-r="off"]');
+    var elHid = bar.querySelector('[data-r="hid"]'), elNum = bar.querySelector('[data-r="num"]'), elDoubt = bar.querySelector('[data-r="doubt"]');
     try {
       var a = JSON.parse(window.localStorage.getItem(KEY) || '[]');
       if (Array.isArray(a)) { a.forEach(function (i) { if (items[i]) { items[i].doubt = true; } }); }
@@ -808,43 +796,43 @@ body.member .line-card{display:block}
     }
     function paint(it) {
       var el = it.el;
-      CLS.forEach(function (c) { el.classList.remove(c); });
-      if (!on) { el.innerHTML = it.html; el.removeAttribute('aria-label'); return; }
-      if (it.st === 0) {
-        el.classList.add('s-hide'); if (it.doubt) { el.classList.add('s-flag'); }
-        el.innerHTML = it.html; el.setAttribute('aria-label', '隠れています。押すとヒント');
-      } else if (it.st === 1) {
-        el.classList.add('s-hint'); el.innerHTML = it.hint; el.setAttribute('aria-label', 'ヒント。押すと答え');
+      ['s-hide', 's-open', 's-doubt'].forEach(function (c) { el.classList.remove(c); });
+      if (!on) { el.removeAttribute('aria-label'); return; }
+      if (it.doubt) { el.classList.add('s-doubt'); }
+      if (it.open) {
+        el.classList.add('s-open');
+        el.setAttribute('aria-label', it.doubt ? '答え。あやしい印あり。押すと印を外す' : '答え。もう一度押すとあやしい印');
       } else {
-        el.classList.add('s-open'); if (it.doubt) { el.classList.add('s-doubt'); }
-        el.innerHTML = it.html; el.setAttribute('aria-label', it.doubt ? '答え。あやしい印あり' : '答え。もう一度押すとあやしい印');
+        el.classList.add('s-hide');
+        el.setAttribute('aria-label', it.doubt ? '隠れています。あやしい印あり。押すと答え' : '隠れています。押すと答え');
       }
     }
     function count() {
-      var rest = 0, d = 0;
-      items.forEach(function (it) { if (it.st < 2) { rest += 1; } if (it.doubt) { d += 1; } });
-      elLeft.textContent = on ? '残り ' + rest : '';
-      elDoubt.disabled = !on || d === 0;
-      elAll.disabled = !on;
+      var hid = 0, d = 0;
+      items.forEach(function (it) { if (on && !it.open) { hid += 1; } if (it.doubt) { d += 1; } });
+      elHid.textContent = 'かくれている ' + hid;
+      elNum.textContent = '△ ' + d;
+      elDoubt.disabled = d === 0;
     }
     function render() {
       roots.forEach(function (r) { var w = r.querySelector('.tx'); if (w) { w.classList.toggle('sheet', on); } });
-      items.forEach(paint); count();
-      elTgl.textContent = '赤シート ' + (on ? 'オン' : 'オフ');
-      elTgl.setAttribute('aria-pressed', on ? 'true' : 'false');
+      items.forEach(paint);
+      count();
+      elOn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      elOff.setAttribute('aria-pressed', on ? 'false' : 'true');
     }
     items.forEach(function (it) {
       function step() {
         if (!on) { return; }
-        if (it.st < 2) { it.st += 1; } else { it.doubt = !it.doubt; save(); }
+        if (!it.open) { it.open = true; } else { it.doubt = !it.doubt; save(); }
         paint(it); count();
       }
       it.el.addEventListener('click', step);
       it.el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); step(); } });
     });
-    elTgl.addEventListener('click', function () { on = !on; items.forEach(function (it) { it.st = 0; }); render(); });
-    elAll.addEventListener('click', function () { items.forEach(function (it) { it.st = 0; }); render(); });
-    elDoubt.addEventListener('click', function () { items.forEach(function (it) { if (it.doubt) { it.st = 0; } }); render(); });
+    elOn.addEventListener('click', function () { on = true; items.forEach(function (it) { it.open = false; }); render(); });
+    elOff.addEventListener('click', function () { on = false; items.forEach(function (it) { it.open = true; }); render(); });
+    elDoubt.addEventListener('click', function () { on = true; items.forEach(function (it) { it.open = !it.doubt; }); render(); });
     render();
     return items.length;
   }
@@ -872,8 +860,8 @@ body.member .line-card{display:block}
     var sec2 = document.createElement('section'); sec2.className = 'sec'; sec2.id = 'text2';
     var bar = document.createElement('div');
     bar.className = 'sbar2';
-    bar.innerHTML = '<button type="button" class="sb2" data-r="tgl" aria-pressed="true"></button><span class="sb2-left" data-r="left"></span>' +
-      '<button type="button" class="sb2 r" data-r="doubt" aria-label="△の印をつけたところだけ、かけ直す">△だけ</button><button type="button" class="sb2" data-r="all" aria-label="全部かけ直す">全部</button>';
+    bar.innerHTML = '<span class="sb2-lab">赤シート</span><span class="seg"><button type="button" class="sb2" data-r="on" aria-pressed="true" aria-label="赤シートをかける（全部の語をかくす）">かける</button><button type="button" class="sb2" data-r="off" aria-pressed="false" aria-label="赤シートをはずす（全部の語を見せる）">はずす</button></span>' +
+      '<button type="button" class="sb2 r" data-r="doubt" aria-label="△の印をつけた語だけをかくす">△だけ</button><span class="sb2-cnt"><span data-r="hid"></span><span data-r="num"></span></span>';
     var point = document.createElement('section'); point.className = 'sec'; point.id = 'point';
     Array.prototype.forEach.call(document.querySelectorAll('#zukai .core'), function (c) { point.appendChild(c); });
     /* ここから画面を変える */
@@ -881,7 +869,18 @@ body.member .line-card{display:block}
     sec2.appendChild(h2.el); sec2.appendChild(q2);
     /* 赤シートの帯は前半・後半の両方で上に残るよう、2つの節をまとめる箱の先頭に置く */
     var tw = document.createElement('div'); tw.className = 'textwrap';
-    tw.appendChild(bar); tw.appendChild(sec1); tw.appendChild(sec2);
+    var hint = document.createElement('p'); hint.className = 'shint';
+    hint.innerHTML = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと△（あやしい）がつきます。</span>';
+    var pdfRow = document.createElement('div'); pdfRow.className = 'pdfrow';
+    var pdfUrl = '/api/ep-pdf?ep=1' + (mihon === 'kounyu' ? '&mihon=1' : '');
+    pdfRow.innerHTML = '<a class="pdfbtn" id="pdfbtn" href="' + pdfUrl + '" target="_blank" rel="noopener" data-umami-event="ep-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く</a>';
+    /* LINEの中ではPDFが開きにくいことがある。試作は同じ画面内で開く。将来は liff.openWindow({url, external:true}) で外のブラウザに出す（外にはログインのクッキーが無いので、別の仕組みが要る） */
+    pdfRow.firstChild.addEventListener('click', function (e) {
+      var inClient = false;
+      try { inClient = !!(window.liff && liff.isInClient && liff.isInClient()); } catch (_) {}
+      if (inClient) { e.preventDefault(); location.href = pdfUrl; }
+    });
+    tw.appendChild(bar); tw.appendChild(hint); tw.appendChild(sec1); tw.appendChild(sec2); tw.appendChild(pdfRow);
     var zukai = document.getElementById('zukai');
     zukai.parentNode.insertBefore(tw, zukai);
     if (point.children.length) { zukai.parentNode.insertBefore(point, honban); }

@@ -130,11 +130,13 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 .xs svg.tm{width:560px;max-width:none;height:auto}
 .tx.sheet .rs{cursor:pointer;user-select:none;-webkit-user-select:none}
 .tx.sheet .rs:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tx.sheet .rs{position:relative}
+.tx.sheet .rs::before{content:"";position:absolute;left:-2px;right:-2px;top:-9px;bottom:-9px}
 .tx.sheet .rs.s-hide{background:var(--sheet) !important;color:transparent !important;border-color:var(--sheet) !important;box-shadow:none}
-.tx.sheet .rs.s-hide.s-flag{background-image:linear-gradient(90deg,rgba(255,255,255,.8) 50%,transparent 50%);background-size:6px 3px;background-repeat:repeat-x;background-position:0 100%}
-.tx.sheet .rs.s-hint{background:#F5E1E1 !important;color:var(--sheet) !important;border-color:var(--sheet) !important;box-shadow:none}
-.tx.sheet .rs.s-hint .hd{display:inline-block;font-size:.72em;width:.82em;text-align:center}
-.tx.sheet .rs.s-doubt{text-decoration:underline wavy var(--sheet);text-decoration-thickness:1.5px;text-underline-offset:3px;box-shadow:0 0 0 1.5px var(--sheet)}
+.tx.sheet .rs.s-doubt{box-shadow:none !important;text-decoration:underline;text-decoration-color:#0A6477;text-decoration-thickness:2px;text-underline-offset:3px}
+.tx.sheet .rs.s-doubt::after{content:"△";font-size:.66em;font-weight:900;color:#0A6477;margin-left:2px;text-decoration:none;display:inline-block}
+.tx.sheet .rs.s-doubt.s-hide{text-decoration-color:transparent}
+.tx.sheet .rs.s-doubt.s-hide::after{color:#fff}
 `;
 
 const html = '<style>' + css + '</style>' +
@@ -142,6 +144,10 @@ const html = '<style>' + css + '</style>' +
   '<div class="tx" data-part="2">' + p2 + '</div>';
 fs.mkdirSync(new URL('../api/_ep-text/', import.meta.url), { recursive: true });
 fs.writeFileSync(OUT, "'use strict';\n// build-ep1-text.mjs が作る。手で直さない。やさしいテキスト第1回（有料）。公開しない（api/_ は URL で取れない）。\nmodule.exports = " + JSON.stringify(html) + ';\n');
+/* 印刷用A4版（PDF）：api/_ep-text/ep1.pdf にコピー（購入者に api/ep-pdf.js が返す）。元が無ければここで止まる */
+const PDF_SRC = new URL('../../../6_有料PDF/やさしいテキスト_2027/第01回_宅建業と免許.pdf', import.meta.url);
+if (!fs.existsSync(PDF_SRC)) throw new Error('PDF の元がない: 第01回_宅建業と免許.pdf');
+fs.copyFileSync(PDF_SRC, new URL('../api/_ep-text/ep1.pdf', import.meta.url));
 console.log('written', html.length, 'chars; rs part1=' + rsCount(p1), 'part2=' + rsCount(p2));
 
 /* ============================================================

@@ -132,5 +132,58 @@ test('the 3-step page: no picture-illustration cards or img/*.webp for figures; 
   assert.doesNotMatch(html,/ep\/1\/img\/(?!artwork2027)/);
   assert.doesNotMatch(html,/class="card t-/);
   assert.match(html,/ep1-nukigaki\.html/);assert.match(html,/id="slot-fig1"/);
-  assert.match(html,/class="tcard only-b"[\s\S]{0,300}有料版の見本[\s\S]{0,700}見本を見る/);
+  assert.match(html,/class="tcard" id="tsample"[\s\S]{0,300}有料版の見本[\s\S]{0,700}見本を見る/);
+  assert.doesNotMatch(html,/ul class="past txt/);assert.match(html,/学習ロードマップ・進捗トラッカー[\s\S]{0,80}全41回の予定を見る・聴いた回を記録する/);
+  assert.doesNotMatch(html,/s-hint|hintOf|ヒント。/);assert.match(html,/かける[\s\S]{0,200}はずす/);assert.match(html,/かくれている/);
+});
+
+// ---- GET /api/ep-pdf（印刷用A4版）：判定は ep-text と同じ。PDFの実体が無い環境でも通るよう読み込みを差し替える ----
+const pdfApi=require('../api/ep-pdf');
+function pdfResponse(){const r=response();r.body=null;r.send=function(b){this.body=b;return this;};return r;}
+test('ep-pdf: 401 / 403 / 404 / 405, and the file is never read before the check passes',async()=>{
+  database();
+  const calls=[];const orig=pdfApi.source.read;pdfApi.source.read=ep=>{calls.push(ep);return Buffer.from('%PDF-test');};
+  try{
+    const a=pdfResponse();await pdfApi(request('ep=1',{cookie:undefined},'/api/ep-pdf'),a);assert.equal(a.code,401);assert.equal(a.body,null);
+    database({entitlements:[{plan:'ume',valid_until:null}]});
+    const b=pdfResponse();await pdfApi(request('ep=1',{},'/api/ep-pdf'),b);assert.equal(b.code,403);assert.deepEqual(b.data,{error:'text_not_entitled'});
+    database();
+    for(const q of ['ep=2','ep=0','ep=','ep=1abc']){const c=pdfResponse();await pdfApi(request(q,{},'/api/ep-pdf'),c);assert.equal(c.code,404,q);}
+    const d=pdfResponse();await pdfApi({...request('ep=1',{},'/api/ep-pdf'),method:'POST'},d);assert.equal(d.code,405);
+    assert.deepEqual(calls,[]);
+  }finally{pdfApi.source.read=orig;}
+});
+test('ep-pdf: text / zenbu / bansou get 200 application/pdf (inline, UTF-8 filename, no-store)',async()=>{
+  const orig=pdfApi.source.read;pdfApi.source.read=()=>Buffer.from('%PDF-test');
+  try{
+    for(const plan of ['text','zenbu','bansou']){
+      database({entitlements:[{plan,valid_until:null}]});
+      const res=pdfResponse();await pdfApi(request('ep=1',{},'/api/ep-pdf'),res);
+      assert.equal(res.code,200,plan);assert.equal(res.headers['Content-Type'],'application/pdf');
+      assert.equal(res.headers['Content-Disposition'],"inline; filename*=UTF-8''"+encodeURIComponent('やさしいテキスト_第1回_宅建業と免許.pdf'));
+      assert.equal(res.headers['Cache-Control'],'no-store');assert.equal(String(res.body),'%PDF-test');
+    }
+  }finally{pdfApi.source.read=orig;}
+});
+test('ep-pdf: mihon=1 works without a login only when ALLOW_TEXT_PREVIEW=1',async()=>{
+  const orig=pdfApi.source.read;pdfApi.source.read=()=>Buffer.from('%PDF-test');
+  try{
+    database();
+    for(const v of [undefined,'0','true']){
+      if(v===undefined)delete process.env.ALLOW_TEXT_PREVIEW;else process.env.ALLOW_TEXT_PREVIEW=v;
+      const r=pdfResponse();await pdfApi(request('ep=1&mihon=1',{cookie:undefined},'/api/ep-pdf'),r);assert.equal(r.code,401,String(v));assert.equal(r.body,null);
+    }
+    process.env.ALLOW_TEXT_PREVIEW='1';
+    const ok=pdfResponse();await pdfApi(request('ep=1&mihon=1',{cookie:undefined},'/api/ep-pdf'),ok);assert.equal(ok.code,200);
+    const plain=pdfResponse();await pdfApi(request('ep=1',{cookie:undefined},'/api/ep-pdf'),plain);assert.equal(plain.code,401);
+    const bad=pdfResponse();await pdfApi(request('ep=2&mihon=1',{cookie:undefined},'/api/ep-pdf'),bad);assert.equal(bad.code,404);
+  }finally{pdfApi.source.read=orig;}
+});
+test('ep-pdf: the PDF lives only under api/_ep-text (git-ignored), and vercel.json ships it with the function',()=>{
+  const root=path.join(__dirname,'..');
+  const v=JSON.parse(fs.readFileSync(path.join(root,'vercel.json'),'utf8'));
+  assert.deepEqual(v.functions['api/ep-pdf.js'],{includeFiles:'api/_ep-text/ep1.pdf'});
+  assert.ok(v.headers&&v.regions&&v.crons);
+  assert.match(fs.readFileSync(path.join(root,'.gitignore'),'utf8'),/^api\/_ep-text\/$/m);
+  assert.match(fs.readFileSync(path.join(root,'scripts/build-ep1-text.mjs'),'utf8'),/ep1\.pdf/);
 });
