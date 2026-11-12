@@ -134,7 +134,14 @@ test('the 3-step page: no picture-illustration cards or img/*.webp for figures; 
   assert.match(html,/ep1-nukigaki\.html/);assert.match(html,/id="slot-fig1"/);
   assert.match(html,/class="tcard" id="tsample"[\s\S]{0,300}有料版の見本[\s\S]{0,700}見本を見る/);
   assert.doesNotMatch(html,/ul class="past txt/);assert.match(html,/学習ロードマップ・進捗トラッカー[\s\S]{0,80}全41回の予定を見る・聴いた回を記録する/);
-  assert.doesNotMatch(html,/s-hint|hintOf|ヒント。/);assert.match(html,/かける[\s\S]{0,200}はずす/);assert.match(html,/かくれている/);
+  assert.doesNotMatch(html,/s-hint|ヒント。/);assert.match(html,/かける[\s\S]{0,200}はずす/);assert.match(html,/かくれている/);
+  assert.doesNotMatch(html,/△|doubt|takken2027-sheet|△だけ/);assert.match(html,/もう一度押すと、またかくれます。/);
+  // ヒントの規則（ページ内の hintOf を取り出して確かめる）
+  const src=html.match(/function hintOf\(text\) \{[\s\S]*?\n  \}\n/)[0];
+  const hintOf=new Function(src+'return hintOf;')();
+  assert.equal(hintOf('5年'),'\u25CB年');assert.equal(hintOf('免許がいる'),'免\u25CB\u25CB\u25CB\u25CB');
+  assert.equal(hintOf('1人でも欠格'),'\u25CB人でも欠格');assert.equal(hintOf('届出の日から5年'),'届出の日から\u25CB年');
+  assert.equal(hintOf('背'),'\u25CB');assert.equal(hintOf('知事'),'知\u25CB');assert.equal(hintOf('復権の日から、すぐ'),'復\u25CB\u25CB\u25CB\u25CB○、\u25CB\u25CB');
 });
 
 // ---- GET /api/ep-pdf（印刷用A4版）：判定は ep-text と同じ。PDFの実体が無い環境でも通るよう読み込みを差し替える ----

@@ -387,17 +387,14 @@ body.member .line-card{display:block}
 .thost{display:block}
 .textwrap{display:flex;flex-direction:column;gap:12px}
 .is-buyer #text1,.is-buyer #text2,.is-buyer .qset{scroll-margin-top:calc(var(--navh) + 52px)}
-.sbar2{position:sticky;top:var(--navh);z-index:20;box-sizing:border-box;height:48px;display:flex;align-items:center;flex-wrap:nowrap;gap:6px;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding:2px 16px}
-.sb2{appearance:none;-webkit-appearance:none;font:inherit;font-size:13px;font-weight:700;line-height:1.2;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:0 11px;min-height:40px;cursor:pointer;white-space:nowrap;flex:0 0 auto;-webkit-tap-highlight-color:transparent}
-.sb2:disabled{opacity:.4;cursor:default}
+.sbar2{position:sticky;top:var(--navh);z-index:20;box-sizing:border-box;height:44px;display:flex;align-items:center;flex-wrap:nowrap;gap:8px;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding:2px 16px}
+.sb2{appearance:none;-webkit-appearance:none;font:inherit;font-size:14px;font-weight:700;line-height:1.2;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:0 14px;min-height:40px;cursor:pointer;white-space:nowrap;flex:0 0 auto;-webkit-tap-highlight-color:transparent}
 .sb2[aria-pressed="true"]{background:var(--sheet);color:#fff}
-.sb2-lab{font-size:13px;font-weight:900;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
+.sb2-lab{font-size:14px;font-weight:900;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
 .seg{display:flex;flex:0 0 auto}
-.seg .sb2{border-radius:0;padding:0 10px}
 .seg .sb2:first-child{border-radius:999px 0 0 999px;border-right-width:0}
 .seg .sb2:last-child{border-radius:0 999px 999px 0}
-.sb2.r{margin-left:auto}
-.sb2-cnt{display:flex;flex-direction:column;justify-content:center;font-size:12px;font-weight:700;line-height:1.3;color:var(--sheet);white-space:nowrap;flex:0 0 auto;text-align:left}
+.sb2-cnt{margin-left:auto;font-size:14px;font-weight:700;line-height:1.3;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
 .shint{margin:0;font-size:14px;line-height:1.7;color:#4F5963}
 .pdfrow{display:block;margin:4px 0 0;text-align:center}
 .pdfbtn{display:inline-block;box-sizing:border-box;min-height:44px;line-height:1.4;padding:10px 20px;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--ink);border-radius:999px;text-decoration:none}
@@ -768,51 +765,47 @@ body.member .line-card{display:block}
 
   /* ---------- 3段目：やさしいテキスト ---------- */
   var buyerShown = false;
+
+  /* 赤シートのヒント：数字は ○ に置き換え（単位などはそのまま）。数字がない語は頭の1字＋残りを ○（1字だけの語は ○ だけ）。「・」「、」「〜」と空白はそのまま。 */
+  function hintOf(text) {
+    var chars = Array.from(String(text)), i, out = '';
+    if (/[0-9０-９]/.test(chars.join(''))) {
+      for (i = 0; i < chars.length; i++) { out += /[0-9０-９]/.test(chars[i]) ? '\u25CB' : chars[i]; }
+      return out;
+    }
+    var keep = function (ch) { return '・、〜'.indexOf(ch) >= 0 || /\s/.test(ch); };
+    var n = chars.filter(function (ch) { return !keep(ch); }).length, head = n <= 1 ? 0 : 1, k = 0;
+    for (i = 0; i < chars.length; i++) {
+      if (keep(chars[i])) { out += chars[i]; } else { out += (k < head ? chars[i] : '\u25CB'); k += 1; }
+    }
+    return out;
+  }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
 
-  /* 赤シート：かくれている語を押す＝答え。答えを押す＝△（あやしい）。△を押す＝△を外す。△は端末の localStorage に残す（使えなくても動く）。
-     帯：「かける｜はずす」で全部に一斉に効く。「△だけ」＝△の語だけかくし、ほかは見える状態にする。 */
+  /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。「かける｜はずす」は全部に一斉に効く */
   function setupSheet(roots, bar) {
-    var KEY = 'takken2027-sheet-ep1';
     var items = [];
     roots.forEach(function (root) {
       Array.prototype.forEach.call(root.querySelectorAll('.rs'), function (el) {
-        items.push({el: el, html: el.innerHTML, open: false, doubt: false});
+        items.push({el: el, html: el.innerHTML, hint: hintOf(el.textContent), open: false});
       });
     });
     var on = true;
-    var elOn = bar.querySelector('[data-r="on"]'), elOff = bar.querySelector('[data-r="off"]');
-    var elHid = bar.querySelector('[data-r="hid"]'), elNum = bar.querySelector('[data-r="num"]'), elDoubt = bar.querySelector('[data-r="doubt"]');
-    try {
-      var a = JSON.parse(window.localStorage.getItem(KEY) || '[]');
-      if (Array.isArray(a)) { a.forEach(function (i) { if (items[i]) { items[i].doubt = true; } }); }
-    } catch (e) { /* 保存が使えなくても動く */ }
-    function save() {
-      try {
-        var a = [];
-        items.forEach(function (it, i) { if (it.doubt) { a.push(i); } });
-        window.localStorage.setItem(KEY, JSON.stringify(a));
-      } catch (e) { /* 保存が使えなくても動く */ }
-    }
+    var elOn = bar.querySelector('[data-r="on"]'), elOff = bar.querySelector('[data-r="off"]'), elHid = bar.querySelector('[data-r="hid"]');
     function paint(it) {
       var el = it.el;
-      ['s-hide', 's-open', 's-doubt'].forEach(function (c) { el.classList.remove(c); });
-      if (!on) { el.removeAttribute('aria-label'); return; }
-      if (it.doubt) { el.classList.add('s-doubt'); }
+      el.classList.remove('s-hide', 's-open');
+      if (!on) { el.innerHTML = it.html; el.removeAttribute('aria-label'); return; }
       if (it.open) {
-        el.classList.add('s-open');
-        el.setAttribute('aria-label', it.doubt ? '答え。あやしい印あり。押すと印を外す' : '答え。もう一度押すとあやしい印');
+        el.classList.add('s-open'); el.innerHTML = it.html; el.setAttribute('aria-label', '答え。もう一度押すとかくれます');
       } else {
-        el.classList.add('s-hide');
-        el.setAttribute('aria-label', it.doubt ? '隠れています。あやしい印あり。押すと答え' : '隠れています。押すと答え');
+        el.classList.add('s-hide'); el.innerHTML = it.html + '<span class="hv" aria-hidden="true">' + esc(it.hint) + '</span>'; el.setAttribute('aria-label', 'かくれています。押すと答え');
       }
     }
     function count() {
-      var hid = 0, d = 0;
-      items.forEach(function (it) { if (on && !it.open) { hid += 1; } if (it.doubt) { d += 1; } });
+      var hid = 0;
+      items.forEach(function (it) { if (on && !it.open) { hid += 1; } });
       elHid.textContent = 'かくれている ' + hid;
-      elNum.textContent = '△ ' + d;
-      elDoubt.disabled = d === 0;
     }
     function render() {
       roots.forEach(function (r) { var w = r.querySelector('.tx'); if (w) { w.classList.toggle('sheet', on); } });
@@ -824,15 +817,14 @@ body.member .line-card{display:block}
     items.forEach(function (it) {
       function step() {
         if (!on) { return; }
-        if (!it.open) { it.open = true; } else { it.doubt = !it.doubt; save(); }
+        it.open = !it.open;
         paint(it); count();
       }
       it.el.addEventListener('click', step);
       it.el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); step(); } });
     });
     elOn.addEventListener('click', function () { on = true; items.forEach(function (it) { it.open = false; }); render(); });
-    elOff.addEventListener('click', function () { on = false; items.forEach(function (it) { it.open = true; }); render(); });
-    elDoubt.addEventListener('click', function () { on = true; items.forEach(function (it) { it.open = !it.doubt; }); render(); });
+    elOff.addEventListener('click', function () { on = false; render(); });
     render();
     return items.length;
   }
@@ -860,8 +852,7 @@ body.member .line-card{display:block}
     var sec2 = document.createElement('section'); sec2.className = 'sec'; sec2.id = 'text2';
     var bar = document.createElement('div');
     bar.className = 'sbar2';
-    bar.innerHTML = '<span class="sb2-lab">赤シート</span><span class="seg"><button type="button" class="sb2" data-r="on" aria-pressed="true" aria-label="赤シートをかける（全部の語をかくす）">かける</button><button type="button" class="sb2" data-r="off" aria-pressed="false" aria-label="赤シートをはずす（全部の語を見せる）">はずす</button></span>' +
-      '<button type="button" class="sb2 r" data-r="doubt" aria-label="△の印をつけた語だけをかくす">△だけ</button><span class="sb2-cnt"><span data-r="hid"></span><span data-r="num"></span></span>';
+    bar.innerHTML = '<span class="sb2-lab">赤シート</span><span class="seg"><button type="button" class="sb2" data-r="on" aria-pressed="true" aria-label="赤シートをかける（全部の語をかくす）">かける</button><button type="button" class="sb2" data-r="off" aria-pressed="false" aria-label="赤シートをはずす（全部の語を見せる）">はずす</button></span><span class="sb2-cnt" data-r="hid"></span>';
     var point = document.createElement('section'); point.className = 'sec'; point.id = 'point';
     Array.prototype.forEach.call(document.querySelectorAll('#zukai .core'), function (c) { point.appendChild(c); });
     /* ここから画面を変える */
@@ -870,7 +861,7 @@ body.member .line-card{display:block}
     /* 赤シートの帯は前半・後半の両方で上に残るよう、2つの節をまとめる箱の先頭に置く */
     var tw = document.createElement('div'); tw.className = 'textwrap';
     var hint = document.createElement('p'); hint.className = 'shint';
-    hint.innerHTML = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと△（あやしい）がつきます。</span>';
+    hint.innerHTML = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと、またかくれます。</span>';
     var pdfRow = document.createElement('div'); pdfRow.className = 'pdfrow';
     var pdfUrl = '/api/ep-pdf?ep=1' + (mihon === 'kounyu' ? '&mihon=1' : '');
     pdfRow.innerHTML = '<a class="pdfbtn" id="pdfbtn" href="' + pdfUrl + '" target="_blank" rel="noopener" data-umami-event="ep-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く</a>';
