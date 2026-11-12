@@ -136,12 +136,20 @@ test('the 3-step page: no picture-illustration cards or img/*.webp for figures; 
   assert.doesNotMatch(html,/ul class="past txt/);assert.match(html,/学習ロードマップ・進捗トラッカー[\s\S]{0,80}全41回の予定を見る・聴いた回を記録する/);
   assert.doesNotMatch(html,/s-hint|ヒント。/);assert.match(html,/かける[\s\S]{0,200}はずす/);assert.match(html,/かくれている/);
   assert.doesNotMatch(html,/△|doubt|takken2027-sheet|△だけ/);assert.match(html,/もう一度押すと、またかくれます。/);
-  // ヒントの規則（ページ内の hintOf を取り出して確かめる）
-  const src=html.match(/function hintOf\(text\) \{[\s\S]*?\n  \}\n/)[0];
-  const hintOf=new Function(src+'return hintOf;')();
-  assert.equal(hintOf('5年'),'\u25CB年');assert.equal(hintOf('免許がいる'),'免\u25CB\u25CB\u25CB\u25CB');
-  assert.equal(hintOf('1人でも欠格'),'\u25CB人でも欠格');assert.equal(hintOf('届出の日から5年'),'届出の日から\u25CB年');
-  assert.equal(hintOf('背'),'\u25CB');assert.equal(hintOf('知事'),'知\u25CB');assert.equal(hintOf('復権の日から、すぐ'),'復\u25CB\u25CB\u25CB\u25CB○、\u25CB\u25CB');
+  // ヒントの規則（build-ep1-text.mjs の表が決めた data-hint を、組み上がったテキストで確かめる）
+  const built=require('../api/_ep-text/ep1');
+  const got=[...built.matchAll(/class="([^"]*\brs\b[^"]*)" role="button" tabindex="0" data-hint="([^"]*)">([^<]*)</g)].map(m=>m[3]+'=>'+m[2]);
+  const C='\u25CB';
+  assert.deepEqual(got,[
+    '免許がいる=>いる／いらない','知事=>知事／大臣','大臣=>知事／大臣','いらない=>いる／いらない','いらない=>いる／いらない','免許がいる=>いる／いらない',
+    '当たらない=>当たる／当たらない','いらない=>いる／いらない','いらない=>いる／いらない','適用されない=>適'+C.repeat(5),'事務所の場所=>事'+C.repeat(5),'免許換え=>免'+C.repeat(3),
+    '5年=>'+C+'年','すぐ=>す'+C,'すぐ=>す'+C,'すぐ=>す'+C,'欠格になる罪=>欠'+C.repeat(5),'背任=>背'+C,'欠格にならない=>欠格になる／欠格にならない',
+    '道路交通法=>道'+C.repeat(4),'控訴=>控'+C,'届出の日から5年=>届出の日から'+C+'年','1人でも欠格=>'+C+'人でも欠格','免許を受けられる=>受けられる／受けられない']);
+  // 6字を超える語は、核だけにかけ直してある（数字の語は前後の言葉を見せるので対象外）
+  for(const m of built.matchAll(/class="[^"]*\brs\b[^"]*" role="button" tabindex="0" data-hint="[^"]*">([^<]*)</g)){
+    if(!/[0-9]/.test(m[1])&&!/[／]/.test(m[0]))assert.ok(Array.from(m[1]).length<=6,m[1]);
+  }
+  assert.equal(got.length,24);
 });
 
 // ---- GET /api/ep-pdf（印刷用A4版）：判定は ep-text と同じ。PDFの実体が無い環境でも通るよう読み込みを差し替える ----

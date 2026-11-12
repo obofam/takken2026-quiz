@@ -32,6 +32,53 @@ const once = (h, from, to) => {
   return h.replace(from, to);
 };
 const RS = ' role="button" tabindex="0"';
+/* --- 赤シートのヒントの表（回ごとに1つ。全41回に広げるときは回の番号で足す） ---
+   ヒントの種類は3つ。自動で決まるのは「数字」と「言葉」。「どっち」と「かける範囲の狭め直し」はこの表で指定する。
+   1. 数字  ：数字だけを ○ にして、単位と前後の言葉はそのまま（例：5年 → ○年）。自動。
+   2. どっち：選択肢が2〜3個に決まる語。選択肢を全角「／」で並べて見せる（choice）。選択肢はテキスト内で実際に使われている言い方だけ。
+   3. 言葉  ：頭の1字＋残りを ○（1字の語は ○ だけ）。自動。6字を超える語は広すぎるので、核の語だけにかけ直す（narrow：答えの語 → かける範囲）。 */
+const HINTS = {
+  1: {
+    choice: {
+      '免許がいる': 'いる／いらない', 'いらない': 'いる／いらない',
+      '知事': '知事／大臣', '大臣': '知事／大臣',
+      '当たらない': '当たる／当たらない',
+      '欠格にならない': '欠格になる／欠格にならない',
+      '免許を受けられる': '受けられる／受けられない',
+    },
+    narrow: {
+      '事務所の場所だけ': '事務所の場所',
+      '復権の日から、すぐ': 'すぐ',
+      '満了の日から、すぐ': 'すぐ',
+      '罰金でも欠格になる罪': '欠格になる罪',
+      '道路交通法の違反': '道路交通法',
+      '控訴している間': '控訴',
+    },
+  },
+};
+const EP = 1;
+const TABLE = HINTS[EP];
+const CIRCLE = '\u25CB';
+const hintOf = text => {
+  if (TABLE.choice[text]) return TABLE.choice[text];
+  const chars = Array.from(text);
+  if (/[0-9０-９]/.test(text)) return chars.map(c => (/[0-9０-９]/.test(c) ? CIRCLE : c)).join('');
+  const keep = c => '・、〜'.indexOf(c) >= 0 || /\s/.test(c);
+  const n = chars.filter(c => !keep(c)).length, head = n <= 1 ? 0 : 1;
+  let k = 0;
+  return chars.map(c => (keep(c) ? c : (k++ < head ? c : CIRCLE))).join('');
+};
+/* かける範囲の狭め直し：rs が答えの語ぜんぶにかかっているものを、核の語だけにかけ直す（文言は変えない。タグだけ） */
+const narrowAll = h => h.replace(/<(span|b)( class="([^"]*)")( role="button" tabindex="0")>([^<]*)<\/\1>/g, (m, tag, _c, cls, role, text) => {
+  const core = TABLE.narrow[text]; if (!core) return m;
+  const i = text.indexOf(core); if (i < 0) throw new Error('narrow: ' + text);
+  const pre = text.slice(0, i), post = text.slice(i + core.length);
+  const outer = cls.split(/\s+/).filter(c => c !== 'rs').join(' ');
+  const inner = `<span class="rs"${role}>${core}</span>`;
+  return tag === 'b' ? `<b>${pre}${inner}${post}</b>` : `<span class="${outer}">${pre}${inner}${post}</span>`;
+});
+const esc = t => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const hintAll = h => h.replace(/(<(?:span|b) class="[^"]*\brs\b[^"]*" role="button" tabindex="0")>([^<]*)</g, (m, open, text) => `${open} data-hint="${esc(hintOf(text))}">${text}<`);
 const pill = (h, cls, text, ctx) => once(h, ctx, ctx.replace(`<span class="${cls}">${text}</span>`, `<span class="${cls} rs"${RS}>${text}</span>`));
 const bold = (h, text) => once(h, `<b>${text}</b>`, `<b class="rs"${RS}>${text}</b>`);
 /* 全文版（赤シートあり）と、無料の抜粋用（赤シートなし）を同じ手順で作る */
@@ -68,6 +115,9 @@ const inline = h => h.replace(/<svg( class="ic")?><use href="#([^"]+)"\/><\/svg>
 });
 p1 = inline(p1); p2 = inline(p2);
 if (/<use /.test(p1 + p2)) throw new Error('use left');
+/* 帯は1つの塊として折り返されるので、前の「（開き括弧）と後ろの「。、」）」が帯から離れて行頭・行末に残らないよう、くっつけて折らない箱に入れる（タグだけ） */
+const glue = h => h.replace(/([「『（]?)(<(span|b) class="[^"]*\brs\b[^"]*"[^>]*>[^<]*<\/\3>)([。、」』）]?)/g, (m, a, el, _t, z) => (a || z) ? `<span class="nb">${a}${el}${z}</span>` : m);
+if (withRs) { p1 = glue(hintAll(narrowAll(p1))); p2 = glue(hintAll(narrowAll(p2))); }
 return [p1, p2];
 };
 const [p1, p2] = make(true);
@@ -130,10 +180,16 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 .xs svg.tm{width:560px;max-width:none;height:auto}
 .tx.sheet .rs{cursor:pointer;user-select:none;-webkit-user-select:none}
 .tx.sheet .rs:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.tx.sheet .rs{position:relative}
+.tx.sheet .rs{position:relative;display:inline-grid;justify-items:start;align-items:center}
+.tx.sheet .rs.pill,.tx.sheet .rs.go{justify-items:center}
 .tx.sheet .rs::before{content:"";position:absolute;left:-2px;right:-2px;top:-9px;bottom:-9px}
+.tx.sheet .rs .av,.tx.sheet .rs .hv{grid-area:1/1;white-space:nowrap}
+.nb{white-space:nowrap}
+.tx.sheet .rs .hv{padding:0 2px;color:#fff !important;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;pointer-events:none}
 .tx.sheet .rs.s-hide{background:var(--sheet) !important;color:transparent !important;border-color:var(--sheet) !important;box-shadow:none}
-.tx.sheet .rs .hv{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;color:#fff !important;font-size:max(11px,.72em);font-weight:700;line-height:1;letter-spacing:0;pointer-events:none}
+.tx.sheet .rs.s-hide .av{visibility:hidden}
+.tx.sheet .rs.s-open .hv{visibility:hidden}
+.go .rs{box-shadow:none}
 `;
 
 const html = '<style>' + css + '</style>' +

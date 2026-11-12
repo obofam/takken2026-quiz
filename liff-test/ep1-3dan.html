@@ -766,20 +766,6 @@ body.member .line-card{display:block}
   /* ---------- 3段目：やさしいテキスト ---------- */
   var buyerShown = false;
 
-  /* 赤シートのヒント：数字は ○ に置き換え（単位などはそのまま）。数字がない語は頭の1字＋残りを ○（1字だけの語は ○ だけ）。「・」「、」「〜」と空白はそのまま。 */
-  function hintOf(text) {
-    var chars = Array.from(String(text)), i, out = '';
-    if (/[0-9０-９]/.test(chars.join(''))) {
-      for (i = 0; i < chars.length; i++) { out += /[0-9０-９]/.test(chars[i]) ? '\u25CB' : chars[i]; }
-      return out;
-    }
-    var keep = function (ch) { return '・、〜'.indexOf(ch) >= 0 || /\s/.test(ch); };
-    var n = chars.filter(function (ch) { return !keep(ch); }).length, head = n <= 1 ? 0 : 1, k = 0;
-    for (i = 0; i < chars.length; i++) {
-      if (keep(chars[i])) { out += chars[i]; } else { out += (k < head ? chars[i] : '\u25CB'); k += 1; }
-    }
-    return out;
-  }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
 
   /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。「かける｜はずす」は全部に一斉に効く */
@@ -787,7 +773,7 @@ body.member .line-card{display:block}
     var items = [];
     roots.forEach(function (root) {
       Array.prototype.forEach.call(root.querySelectorAll('.rs'), function (el) {
-        items.push({el: el, html: el.innerHTML, hint: hintOf(el.textContent), open: false});
+        items.push({el: el, html: el.innerHTML, hint: el.getAttribute('data-hint') || '', open: false});
       });
     });
     var on = true;
@@ -797,9 +783,9 @@ body.member .line-card{display:block}
       el.classList.remove('s-hide', 's-open');
       if (!on) { el.innerHTML = it.html; el.removeAttribute('aria-label'); return; }
       if (it.open) {
-        el.classList.add('s-open'); el.innerHTML = it.html; el.setAttribute('aria-label', '答え。もう一度押すとかくれます');
+        el.classList.add('s-open'); el.innerHTML = '<span class="av">' + it.html + '</span><span class="hv" aria-hidden="true">' + esc(it.hint) + '</span>'; el.setAttribute('aria-label', '答え。もう一度押すとかくれます');
       } else {
-        el.classList.add('s-hide'); el.innerHTML = it.html + '<span class="hv" aria-hidden="true">' + esc(it.hint) + '</span>'; el.setAttribute('aria-label', 'かくれています。押すと答え');
+        el.classList.add('s-hide'); el.innerHTML = '<span class="av">' + it.html + '</span><span class="hv" aria-hidden="true">' + esc(it.hint) + '</span>'; el.setAttribute('aria-label', 'かくれています。押すと答え');
       }
     }
     function count() {

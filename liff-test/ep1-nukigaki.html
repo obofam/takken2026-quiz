@@ -193,10 +193,16 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 .xs svg.tm{width:560px;max-width:none;height:auto}
 .tx.sheet .rs{cursor:pointer;user-select:none;-webkit-user-select:none}
 .tx.sheet .rs:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.tx.sheet .rs{position:relative}
+.tx.sheet .rs{position:relative;display:inline-grid;justify-items:start;align-items:center}
+.tx.sheet .rs.pill,.tx.sheet .rs.go{justify-items:center}
 .tx.sheet .rs::before{content:"";position:absolute;left:-2px;right:-2px;top:-9px;bottom:-9px}
+.tx.sheet .rs .av,.tx.sheet .rs .hv{grid-area:1/1;white-space:nowrap}
+.nb{white-space:nowrap}
+.tx.sheet .rs .hv{padding:0 2px;color:#fff !important;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;pointer-events:none}
 .tx.sheet .rs.s-hide{background:var(--sheet) !important;color:transparent !important;border-color:var(--sheet) !important;box-shadow:none}
-.tx.sheet .rs .hv{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;color:#fff !important;font-size:max(11px,.72em);font-weight:700;line-height:1;letter-spacing:0;pointer-events:none}
+.tx.sheet .rs.s-hide .av{visibility:hidden}
+.tx.sheet .rs.s-open .hv{visibility:hidden}
+.go .rs{box-shadow:none}
 </style>
 <div data-slot="fig1">
 <div class="tx" data-fig="1"><figure class="fig">
