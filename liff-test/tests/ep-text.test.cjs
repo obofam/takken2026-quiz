@@ -133,7 +133,7 @@ test('the 3-step page: no picture-illustration cards or img/*.webp for figures; 
   assert.doesNotMatch(html,/class="card t-/);
   assert.match(html,/ep1-nukigaki\.html/);assert.match(html,/id="slot-fig1"/);
   assert.match(html,/class="tcard" id="tsample"[\s\S]{0,300}有料版の見本[\s\S]{0,700}見本を見る/);
-  assert.doesNotMatch(html,/ul class="past txt/);assert.match(html,/学習ロードマップ・進捗トラッカー[\s\S]{0,80}全41回の予定を見る・聴いた回を記録する/);
+  assert.doesNotMatch(html,/ul class="past txt/);assert.match(html,/学習ロードマップ（兼 進捗トラッカー）[\s\S]{0,80}全41回の予定を見る・聴いた回を記録する/);
   assert.doesNotMatch(html,/s-hint|ヒント。/);assert.match(html,/かける[\s\S]{0,200}はずす/);assert.match(html,/かくれている/);
   assert.doesNotMatch(html,/△|doubt|takken2027-sheet|△だけ/);assert.match(html,/もう一度押すと、またかくれます。/);
   // ヒントの規則（build-ep1-text.mjs の表が決めた data-hint を、組み上がったテキストで確かめる）
