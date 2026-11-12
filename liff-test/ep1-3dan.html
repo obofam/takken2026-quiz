@@ -821,8 +821,8 @@ body.member .line-card{display:block}
     var tpl = document.createElement('template');
     tpl.innerHTML = html;
     var style = tpl.content.querySelector('style');
-    var t1 = tpl.content.querySelector('[data-part="1"]'), t2 = tpl.content.querySelector('[data-part="2"]');
-    if (!style || !t1 || !t2) { throw new Error('テキストの形が想定と違う'); }
+    var t1 = tpl.content.querySelector('[data-part="1"]'), t2 = tpl.content.querySelector('[data-part="2"]'), t3 = tpl.content.querySelector('[data-part="3"]');
+    if (!style || !t1 || !t2 || !t3) { throw new Error('テキストの形が想定と違う'); }
     var q1 = document.getElementById('q1'), q2 = document.getElementById('q2'), honban = document.getElementById('honban');
     if (!q1 || !q2 || !honban) { throw new Error('3問の組が見つからない'); }
     function host(part) {
@@ -833,7 +833,8 @@ body.member .line-card{display:block}
       root.appendChild(part);
       return {el: h, root: root};
     }
-    var h1 = host(t1), h2 = host(t2);
+    var h1 = host(t1), h2 = host(t2), h3 = host(t3);
+    var sec3 = document.createElement('section'); sec3.className = 'sec'; sec3.id = 'numbers'; sec3.appendChild(h3.el);
     var sec1 = document.createElement('section'); sec1.className = 'sec'; sec1.id = 'text1';
     var sec2 = document.createElement('section'); sec2.className = 'sec'; sec2.id = 'text2';
     var bar = document.createElement('div');
@@ -861,6 +862,7 @@ body.member .line-card{display:block}
     var zukai = document.getElementById('zukai');
     zukai.parentNode.insertBefore(tw, zukai);
     if (point.children.length) { zukai.parentNode.insertBefore(point, honban); }
+    zukai.parentNode.insertBefore(sec3, honban);
     body.classList.add('is-buyer');
     var jump = document.getElementById('jump');
     if (jump) { jump.innerHTML = '<a class="jb" href="#text1">前半</a><a class="jb" href="#text2">後半</a><a class="jb" href="#honban">過去問1選</a>'; }
@@ -868,7 +870,7 @@ body.member .line-card{display:block}
     if (a1) { a1.setAttribute('href', '#text2'); a1.textContent = '後半のテキストへ'; }
     if (a2) { a2.setAttribute('href', point.children.length ? '#point' : '#honban'); a2.textContent = point.children.length ? '今日のポイントへ' : '過去問1選について'; }
     var n = 0;
-    try { n = setupSheet([h1.root, h2.root], bar); } catch (e) { console.warn(e); }
+    try { n = setupSheet([h1.root, h2.root, h3.root], bar); } catch (e) { console.warn(e); }
     buyerShown = true;
     setTier('3段目（やさしいテキスト購入者）');
     return n;

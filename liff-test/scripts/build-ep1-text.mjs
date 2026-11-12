@@ -64,7 +64,7 @@ const CIRCLE = '\u25CB';
 const hintOf = text => {
   if (TABLE.choice[text]) return TABLE.choice[text];
   const chars = Array.from(text);
-  if (/[0-9０-９]/.test(text)) return chars.map(c => (/[0-9０-９]/.test(c) ? CIRCLE : c)).join('');
+  if (/[0-9０-９]/.test(text)) return text.replace(/[0-9０-９]+/g, CIRCLE);
   const keep = c => '・、〜'.indexOf(c) >= 0 || /\s/.test(c);
   const n = chars.filter(c => !keep(c)).length, head = n <= 1 ? 0 : 1;
   let k = 0;
@@ -122,6 +122,16 @@ const glue = h => h.replace(/([「『（]?)(<(span|b) class="[^"]*\brs\b[^"]*"[^
 if (withRs) { p1 = glue(hintAll(narrowAll(p1))); p2 = glue(hintAll(narrowAll(p2))); }
 return [p1, p2];
 };
+/* --- 今回の数字（有料だけ。無料の抜粋・1段目・2段目には入れない）。元は data.json。公開中の見本ページの節と一字も違わないことを照合する --- */
+const NUM_DIR = '../../../6_有料PDF/やさしいテキスト_2027/直感図解/第01回_宅建業と免許/';
+const numData = JSON.parse(fs.readFileSync(new URL(NUM_DIR + 'data.json', import.meta.url), 'utf8')).numbers;
+const sample = fs.readFileSync(new URL('../../ep/1/text/index.html', import.meta.url), 'utf8');
+const sampleSec = sample.match(/<!-- ========== 今回の数字 ========== -->[\s\S]*?<div class="nl">([\s\S]*?)<\/div>\s*<div class="rvq"/);
+if (!sampleSec) throw new Error('見本ページに今回の数字の節がない');
+const sampleNums = [...sampleSec[1].matchAll(/<button class="mk nv" type="button">([^<]*)<\/button><span class="nk">([^<]*)<\/span>/g)].map(m => ({ n: m[1], k: m[2] }));
+if (JSON.stringify(sampleNums) !== JSON.stringify(numData.map(x => ({ n: x.n, k: x.k })))) throw new Error('今回の数字：data.json と見本ページが食い違う');
+if (numData.length !== 6) throw new Error('今回の数字は6組のはず');
+const p3 = '<h2 class="numh">今回の数字</h2><div class="nl">' + numData.map(x => `<div class="nr"><span class="nv rs"${RS} data-hint="${esc(hintOf(x.n))}">${x.n}</span><span class="nk">${x.k}</span></div>`).join('') + '</div>';
 const [p1, p2] = make(true);
 const [n1, n2] = make(false);
 
@@ -130,6 +140,7 @@ const after = [p1, p2].map(plain);
 if (before[0] !== after[0] || before[1] !== after[1]) throw new Error('text changed');
 const afterN = [n1, n2].map(plain);
 if (before[0] !== afterN[0] || before[1] !== afterN[1]) throw new Error('text changed (nukigaki base)');
+if (plain(p3) !== plain('今回の数字' + numData.map(x => x.n + x.k).join(''))) throw new Error('text changed (numbers)');
 const rsCount = h => (h.match(/class="[^"]*\brs\b/g) || []).length;
 
 /* --- CSS：元のCSSを Shadow DOM 用にし、スマホの1列に組み直す --- */
@@ -194,16 +205,25 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 .go .rs{box-shadow:none}
 `;
 
-const html = '<style>' + css + '</style>' +
+const numCss = `
+/* 今回の数字（有料だけ。抜粋には入れない） */
+.numh{font-size:22px;font-weight:900;color:var(--ink);line-height:1.3}
+.nl{display:flex;flex-direction:column;gap:8px}
+.nr{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.nv{font-size:24px;font-weight:900;color:var(--ink);line-height:1.3}
+.nr .nk{font-size:16px;line-height:1.5}
+`;
+const html = '<style>' + css + numCss + '</style>' +
   '<div class="tx" data-part="1">' + p1 + '</div>' +
-  '<div class="tx" data-part="2">' + p2 + '</div>';
+  '<div class="tx" data-part="2">' + p2 + '</div>' +
+  '<div class="tx" data-part="3">' + p3 + '</div>';
 fs.mkdirSync(new URL('../api/_ep-text/', import.meta.url), { recursive: true });
 fs.writeFileSync(OUT, "'use strict';\n// build-ep1-text.mjs が作る。手で直さない。やさしいテキスト第1回（有料）。公開しない（api/_ は URL で取れない）。\nmodule.exports = " + JSON.stringify(html) + ';\n');
 /* 印刷用A4版（PDF）：api/_ep-text/ep1.pdf にコピー（購入者に api/ep-pdf.js が返す）。元が無ければここで止まる */
 const PDF_SRC = new URL('../../../6_有料PDF/やさしいテキスト_2027/第01回_宅建業と免許.pdf', import.meta.url);
 if (!fs.existsSync(PDF_SRC)) throw new Error('PDF の元がない: 第01回_宅建業と免許.pdf');
 fs.copyFileSync(PDF_SRC, new URL('../api/_ep-text/ep1.pdf', import.meta.url));
-console.log('written', html.length, 'chars; rs part1=' + rsCount(p1), 'part2=' + rsCount(p2));
+console.log('written', html.length, 'chars; rs part1=' + rsCount(p1), 'part2=' + rsCount(p2), 'part3=' + rsCount(p3));
 
 /* ============================================================
    無料の抜粋（ep1-nukigaki.html）：図だけを、赤シートなしで。置き場所は公開してよい静的ファイル。

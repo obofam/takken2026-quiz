@@ -144,12 +144,21 @@ test('the 3-step page: no picture-illustration cards or img/*.webp for figures; 
     '免許がいる=>いる／いらない','知事=>知事／大臣','大臣=>知事／大臣','いらない=>いる／いらない','いらない=>いる／いらない','免許がいる=>いる／いらない',
     '当たらない=>当たる／当たらない','いらない=>いる／いらない','いらない=>いる／いらない','適用されない=>適用される／適用されない','事務所の場所=>事'+C.repeat(5),'免許換え=>免'+C.repeat(3),
     '5年=>'+C+'年','すぐ=>すぐ／5年','すぐ=>すぐ／5年','すぐ=>すぐ／5年','欠格になる罪=>欠'+C.repeat(5),'背任=>背'+C,'欠格にならない=>欠格になる／欠格にならない',
-    '道路交通法=>道'+C.repeat(4),'控訴=>控'+C,'届出の日から5年=>届出の日から'+C+'年','1人でも欠格=>'+C+'人でも欠格','免許を受けられる=>受けられる／受けられない']);
+    '道路交通法=>道'+C.repeat(4),'控訴=>控'+C,'届出の日から5年=>届出の日から'+C+'年','1人でも欠格=>'+C+'人でも欠格','免許を受けられる=>受けられる／受けられない',
+    '1つ=>'+C+'つ','2つ以上=>'+C+'つ以上','5年=>'+C+'年','90日前〜30日前=>'+C+'日前〜'+C+'日前','5年=>'+C+'年','60日以内=>'+C+'日以内']);
   // 6字を超える語は、核だけにかけ直してある（数字の語は前後の言葉を見せるので対象外）
   for(const m of built.matchAll(/class="[^"]*\brs\b[^"]*" role="button" tabindex="0" data-hint="[^"]*">([^<]*)</g)){
     if(!/[0-9]/.test(m[1])&&!/[／]/.test(m[0]))assert.ok(Array.from(m[1]).length<=6,m[1]);
   }
-  assert.equal(got.length,24);
+  assert.equal(got.length,30);
+  // 今回の数字：有料の全文だけ。6組、今日のポイントの下・過去問1選の前（画面側）
+  assert.match(built,/data-part="3"/);
+  const nums=[...built.matchAll(/<span class="nv rs"[^>]*>([^<]*)<\/span><span class="nk">([^<]*)</g)].map(m=>m[1]+'|'+m[2]);
+  assert.deepEqual(nums,['1つ|知事免許になる事務所の県数','2つ以上|大臣免許になる事務所の県数','5年|免許の有効期間','90日前〜30日前|更新の申請期間（満了日の）','5年|免許を受けられない期間','60日以内|聴聞の公示前に役員だった期間']);
+  const nk=fs.readFileSync(path.join(__dirname,'../ep1-nukigaki.html'),'utf8');
+  assert.ok(!nk.includes('今回の数字')&&!nk.includes('data-part="3"'));
+  const pg=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8');
+  assert.match(pg,/insertBefore\(sec3, honban\)/);assert.match(pg,/setupSheet\(\[h1\.root, h2\.root, h3\.root\]/);
 });
 
 // ---- GET /api/ep-pdf（印刷用A4版）：判定は ep-text と同じ。PDFの実体が無い環境でも通るよう読み込みを差し替える ----
