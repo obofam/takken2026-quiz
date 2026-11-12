@@ -217,6 +217,9 @@
   .howbox > summary::after { content: ""; margin-left: auto; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .2s; }
   .howbox[open] > summary::after { transform: rotate(-135deg); }
   .howbox .in { padding: 0 12px 4px; }
+  .newlist { margin: 0; padding: 0 16px 14px 2.4em; font-size: .95rem; line-height: 1.7; }
+  .newlist li { padding: 3px 0; }
+  .newlist li::marker { color: var(--cyan-dark); font-weight: 700; }
   .howbox .exam-map, .howbox .tiers, .howbox .how { box-shadow: none; margin-bottom: 12px; }
   @media (min-width: 768px) { .bignum { display: none; } }
   .filters button { min-height: 44px; }
@@ -257,6 +260,20 @@
     <p>第1回だけ、見本を先に公開しています。</p>
     <a class="btn-o" href="/ep/1?src=roadmap" data-umami-event="roadmap-sample">第1回の見本を見る</a>
   </div>
+
+  <details class="howbox" id="newBox" style="display:none">
+    <summary data-umami-event="roadmap-new2027">2027年版で変わったこと</summary>
+    <ol class="newlist">
+      <li>音声を全部、新しく録り直しました。2人の会話で進みます。</li>
+      <li>聴いたあと、その回の○×3問ですぐ確かめられます（「図解と3問」・登録なし）。</li>
+      <li>図解が、絵と大きな数字で見て分かる形になりました。</li>
+      <li>LINEで毎週月曜にお届けします。止まっても、月曜にまた届きます。</li>
+      <li>全41回の予定と、自分の進み具合が、このページで見られます。</li>
+      <li>条文と1つずつ照らしてから出す仕組みにしました。</li>
+      <li>LINEに登録すると、答えた記録が残ります。苦手な論点から、放送と問題に戻れます（準備中）。</li>
+      <li>放送を聴きながら見る「やさしいテキスト」ができます（準備中）。</li>
+    </ol>
+  </details>
 
   <details class="howbox">
     <summary>使い方</summary>
@@ -323,6 +340,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   // 配信開始前：見本の案内を出し、LINEの枠を「始まったらお知らせ」に
   if (t < 20270104) {
     document.getElementById('startNote').style.display = 'block';
+    document.getElementById('newBox').style.display = 'block';
     document.getElementById('lineHead').textContent = '始まったら、LINEでお知らせします';
     document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録は無料です。</span>';
   }
