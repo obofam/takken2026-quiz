@@ -358,6 +358,33 @@ body.member .line-card{display:block}
 .next-box{background:#fff;border:1.5px dashed var(--sky);border-radius:14px;padding:12px 14px;scroll-margin-top:calc(var(--navh) + 8px)}
 .next-box p{margin:0;font-size:14px;line-height:1.7;text-align:center}
 .line-card p.lnote{margin:0 0 8px;font-size:12px;color:var(--sub);line-height:1.5}
+
+/* スマホ・老眼の見直し：小さい字は14px以上（飾りの札は13px）・押す所は44px以上・文節で折り返す */
+.top,.foot{font-size:14px;line-height:1.5}
+.top{flex-wrap:wrap}
+.smp{font-size:13px}
+.ssub,.py,.pnote,.lnote,.tcopy,.oapps,.qres .zk,.kk-src,.kk-smp,.line-card p.lnote,.line-inv p.lnote{font-size:14px;line-height:1.65}
+.line-card p{font-size:14px}
+.trust .tcopy{font-size:13px}
+.qno{font-size:14px}
+.over{font-size:13px}
+.next-box p{font-size:15px}
+.pt{font-size:15px}
+.nk{display:inline-block}
+.jb{min-height:44px;display:flex;align-items:center;justify-content:center;font-size:15px;padding:6px 4px}
+.pill{min-height:48px}
+.pill.ghost{min-height:44px}
+.lbtn{min-height:44px;display:flex;align-items:center;justify-content:center;padding:8px 18px}
+.line-card .lbtn{font-size:15px;padding:8px 16px;min-height:48px}
+.oapps a{display:inline-block;padding:11px 8px}
+.oapps{margin-top:0}
+.qres .zk a{display:inline-block;padding:12px 0;margin:-12px 0}
+.trust .tl2{font-size:14px;display:inline-flex;align-items:center;min-height:44px}
+.qres{line-height:1.75}
+.next-box a{display:inline-block;padding:12px 2px;margin:-12px 0}
+@media (max-width:600px){
+  .sec-h{font-size:22px}
+}
 </style>
 </head>
 <body>
@@ -369,7 +396,7 @@ body.member .line-card{display:block}
     <div class="side">宅建業と免許</div>
   </div>
   <a class="listen" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="1">音声番組を聴く（Spotify）</a>
-  <p class="pnote">この回の配信は 2027年1月4日（月）から（予定）。いまは番組のページが開きます。</p>
+  <p class="pnote"><span class="nk">この回の配信は</span> <span class="nk">2027年1月4日（月）から（予定）。</span><span class="nk">いまは番組のページが開きます。</span></p>
   <p class="oapps">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm">stand.fm</a></p>
 
   <nav class="jump" id="jump" aria-label="この回のページの節">
@@ -382,15 +409,15 @@ body.member .line-card{display:block}
 <div class="half">
   <div class="half-h">前半　宅建業と免許</div>
 
-  <div class="target">自ら売買・交換、または他人の売買・交換・貸借の代理・媒介</div>
+  <div class="target"><span class="nk">自ら売買・交換、</span><span class="nk">または他人の売買・交換・貸借の</span><span class="nk">代理・媒介</span></div>
   <div class="cards">
 <section class="card t-zones n1">
-  <div class="hd"><span class="no">1</span><h2>免許がいるのは誰？<small>「業として」＝不特定多数に、くり返し行うこと</small></h2></div>
+  <div class="hd"><span class="no">1</span><h2>免許がいるのは誰？<small><span class="nk">「業として」＝不特定多数に、</span><span class="nk">くり返し行うこと</span></small></h2></div>
   <div class="zones"><div class="zone ok"><span class="zh">免許がいる</span><div class="items" style="--cols:2"><div class="it"><img src="/ep/1/img/plots.webp" alt=""><div class="lb">地主さん</div><div class="sm">20区画を次々に売る</div></div><div class="it"><img src="/ep/1/img/broker.webp" alt=""><div class="lb">仲介する会社</div><div class="sm">他人の部屋の貸借でも</div></div></div></div><div class="zone ng"><span class="zh">いらない</span><div class="items" style="--cols:3"><div class="it"><img src="/ep/1/img/landlord.webp" alt=""><div class="lb">大家さん</div><div class="sm">自ら貸借</div></div><div class="it"><img src="/ep/1/img/onetime.webp" alt=""><div class="lb">会社員</div><div class="sm">自宅を<span class="nb">1回売る</span></div></div><div class="it"><img src="/ep/1/img/cityhall.webp" alt=""><div class="lb">国・地方公共団体</div><div class="sm">適用除外</div></div></div></div></div>
 </section>
   </div>
 </div>
-<div class="next-box" id="zukai-next"><p>図解の続きは、<a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>でお届けします。</p></div>
+<div class="next-box" id="zukai-next"><p><span class="nk">図解の続きは、</span><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">でお届けします。</span></p></div>
   </section>
 
   <!-- 節2：○×3問 -->
@@ -402,23 +429,23 @@ body.member .line-card{display:block}
   <!-- 節3：過去問1選 -->
   <section class="sec" id="honban">
     <h2 class="sec-h">過去問1選</h2>
-    <div class="next-box"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>では、この回のテーマに沿った過去問を解いていただけます。</p></div>
+    <div class="next-box"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">では、</span><span class="nk">この回のテーマに沿った過去問を</span><span class="nk">解いていただけます。</span></p></div>
     <ul class="past txt"><li><a class="prow" href="/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1"><span class="pico doc" aria-hidden="true"></span><span class="pmid"><span class="pt">やさしいテキスト（有料）の見本</span><span class="py">図をすべて・寄り道・赤シート</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
   </section>
 
   <section class="sec" id="plan">
-    <div class="shead"><h2 class="sh">2027年の配信予定</h2><p class="ssub">1月4日から、毎週月曜に本編を1本（予定）</p></div>
+    <div class="shead"><h2 class="sh">2027年の配信予定</h2><p class="ssub"><span class="nk">1月4日から、</span><span class="nk">毎週月曜に本編を1本（予定）</span></p></div>
     <ul class="past"><li><a class="prow" href="/roadmap" data-umami-event="ep-roadmap" data-umami-event-ep="1"><span class="pico list" aria-hidden="true"></span><span class="pmid"><span class="pt">学習ロードマップ</span><span class="py">全41回の日付とテーマを見る</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
   </section>
 
   <section class="sec" id="y2026">
-    <div class="shead"><h2 class="sh"><span style="white-space:nowrap">去年の放送も聴いて、</span><span style="white-space:nowrap">さらに理解を深める</span></h2><p class="ssub">2026年に配信した、同じテーマの回です（Spotify）</p></div>
+    <div class="shead"><h2 class="sh"><span style="white-space:nowrap">去年の放送も聴いて、</span><span style="white-space:nowrap">さらに理解を深める</span></h2><p class="ssub"><span class="nk">2026年に配信した、</span><span class="nk">同じテーマの回です（Spotify）</span></p></div>
     <ul class="past"><li><a class="prow" href="https://open.spotify.com/episode/5hoEjRtwI6MNdYBpBlfkY8" target="_blank" rel="noopener"><span class="pico" aria-hidden="true"></span><span class="pmid"><span class="pt">宅建業法は「最強の防具」</span><span class="py">2026年の放送・Spotifyで聴く</span></span><span class="pgo" aria-hidden="true"></span></a></li><li><a class="prow" href="https://open.spotify.com/episode/5sURqxWM12cDuBnno4wA3c" target="_blank" rel="noopener"><span class="pico" aria-hidden="true"></span><span class="pmid"><span class="pt">5年ごとに申請しないと免許が消える</span><span class="py">2026年の放送・Spotifyで聴く</span></span><span class="pgo" aria-hidden="true"></span></a></li><li><a class="prow" href="https://open.spotify.com/episode/0D1ZoOedid23YWNe6XviN5" target="_blank" rel="noopener"><span class="pico" aria-hidden="true"></span><span class="pmid"><span class="pt">暴行の罰金で不動産免許は消える</span><span class="py">2026年の放送・Spotifyで聴く</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
   </section>
 
   <div class="line-card">
-    <p>図解の続きと、過去問1選は、LINEで受け取れます。毎週月曜に、こちらからお届けします。</p>
-    <p class="lnote">1月4日の配信開始から、お届けします（予定）。止まっても、月曜にまた届きます。</p>
+    <p><span class="nk">図解の続きと、</span><span class="nk">過去問1選は、</span><span class="nk">LINEで受け取れます。</span><br><span class="nk">毎週月曜に、</span><span class="nk">こちらからお届けします。</span></p>
+    <p class="lnote"><span class="nk">1月4日の配信開始から、</span><span class="nk">お届けします（予定）。</span><span class="nk">止まっても、</span><span class="nk">月曜にまた届きます。</span></p>
     <a class="lbtn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="1">LINEで受け取る</a>
   </div>
 
@@ -436,6 +463,18 @@ body.member .line-card{display:block}
   var QUIZ = [{"label": "前半　「宅建業と免許」の3問", "questions": [{"q": "自分が持っているマンション20戸を、不特定多数の人に、くり返し貸す場合、免許が必要である。", "a": false, "exp": "自ら貸借なので、何戸貸しても、宅建業に当たりません。"}, {"q": "知事の免許を受けた業者は、その県の中の物件しか取引できない。", "a": false, "exp": "区分を決めるのは事務所の場所だけで、物件はどこの県でもかまいません。"}, {"q": "更新の申請をしたのに、満了日までに処分がなかった場合、従前の免許は、満了日で切れる。", "a": false, "exp": "処分があるまでは、古い免許が有効です。更新されたあとの5年は、処分の日からではなく、前の免許が切れる日の翌日から数えます。"}]}, {"label": "後半　「免許の基準」の3問", "questions": [{"q": "破産手続開始の決定を受けた人は、復権を得てから5年たたないと、免許を受けられない。", "a": false, "exp": "復権を得れば、その日から、すぐ受けられます。"}, {"q": "道路交通法の違反で罰金を受けた人は、5年間、免許を受けられない。", "a": false, "exp": "罰金で欠格になる罪には、道路交通法の違反は入っていません。"}, {"q": "会社の非常勤の取締役が、傷害の罪で罰金を受けた場合、非常勤なので、その会社は免許を受けられる。", "a": false, "exp": "役員は、常勤か非常勤かを問いません。会社も、免許を受けられません。"}]}];
   var esc = function (s) {
     return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
+  };
+
+  /* 文末の「です／ます／ない」だけが次の行に落ちないよう、最後の文節（約5字）をひとかたまりにする */
+  var nbt = function (str) {
+    str = String(str);
+    var segs;
+    try { segs = Array.from(new Intl.Segmenter('ja', {granularity: 'word'}).segment(str), function (x) { return x.segment; }); }
+    catch (_) { segs = [str.slice(0, -5), str.slice(-5)]; }
+    var n = 0, i = segs.length;
+    while (i > 0 && n < 5) { i--; n += segs[i].length; }
+    if (i <= 0 || n > 9) { var k = Math.max(0, str.length - 5); return esc(str.slice(0, k)) + '<span class="nk">' + esc(str.slice(k)) + '</span>'; }
+    return esc(segs.slice(0, i).join('')) + '<span class="nk">' + esc(segs.slice(i).join('')) + '</span>';
   };
 
   /* ---------- 3問済の印：前半・後半の両方を解き終えたら、この端末の localStorage に残す（送信しない） ---------- */
@@ -484,7 +523,7 @@ body.member .line-card{display:block}
       var card = document.createElement('div');
       card.className = 'qcard';
       card.innerHTML =
-        '<div class="qhead"><span class="qno">Q' + (i + 1) + '</span><p class="qtext">' + esc(q.q) + '</p></div>' +
+        '<div class="qhead"><span class="qno">Q' + (i + 1) + '</span><p class="qtext">' + nbt(q.q) + '</p></div>' +
         '<div class="qbtns">' +
         '<button type="button" class="pill" data-v="1" aria-label="○（正しい）">○</button>' +
         '<button type="button" class="pill" data-v="0" aria-label="×（誤り）">×</button>' +
@@ -501,7 +540,7 @@ body.member .line-card{display:block}
           res.innerHTML =
             '<p class="verdict">' + (ok ? '正解' : '不正解') + '</p>' +
             '<p class="answer">正しい答え　' + (q.a ? '○' : '×') + '</p>' +
-            '<p class="exp">' + esc(q.exp) + '</p>' +
+            '<p class="exp">' + nbt(q.exp) + '</p>' +
             (ok ? '' : '<p class="zk"><a href="#zukai">図解で確かめる</a></p>');
           res.hidden = false;
           answered += 1;

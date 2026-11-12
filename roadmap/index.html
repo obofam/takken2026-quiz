@@ -222,7 +222,7 @@
   .newlist li { counter-increment: nw; position: relative; padding: 10px 0 10px 40px; border-top: 1px solid var(--line); }
   .newlist li::before { content: counter(nw); position: absolute; left: 0; top: 11px; width: 28px; height: 28px; border-radius: 50%; background: var(--cyan-soft); color: var(--cyan-dark); font-weight: 700; font-size: .95rem; display: flex; align-items: center; justify-content: center; }
   .newlist b { display: block; font-size: 1.02rem; line-height: 1.55; }
-  .newlist span { display: block; font-size: .95rem; line-height: 1.7; color: var(--muted); margin-top: 2px; }
+  .newlist li > span { display: block; font-size: .95rem; line-height: 1.7; color: var(--muted); margin-top: 2px; }
   .howbox .exam-map, .howbox .tiers, .howbox .how { box-shadow: none; margin-bottom: 12px; }
   @media (min-width: 768px) { .bignum { display: none; } }
   .filters button { min-height: 44px; }
@@ -232,6 +232,60 @@
   button.mk-l { width: 56px; height: 56px; min-width: 56px; border-radius: 50%; border: 2px solid var(--line); background: var(--card); color: var(--muted); font-size: .9rem; font-weight: 700; padding: 0; line-height: 1; cursor: pointer; }
   button.mk-l[data-st="1"] { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
   button.mk-l[data-st="2"] { background: var(--cyan-soft); border-color: var(--cyan-dark); color: var(--cyan-dark); }
+
+  /* スマホ・老眼の見直し：本文16px・注記14px以上・押す所44px以上・文節で折り返す */
+  :root { --muted: #4E5B66; }
+  .hero p { font-size: 1rem; }
+  .hero p.core { font-size: 1.05rem; }
+  .pg-note { font-size: .9rem; }
+  .cd-l, .cd-d { font-size: .95rem; }
+  .stat span { font-size: .95rem; }
+  .btn-o { min-height: 48px; padding: 10px 26px; line-height: 1.7; }
+  .newlist b { font-size: 1.05rem; }
+  .newlist li > span { font-size: 1rem; }
+  .cnt8 { font-size: .85rem; }
+  .em-h, .tiers h2 { font-size: 1rem; }
+  .em-leg li { font-size: .95rem; }
+  .tiers dt, .tiers dd { font-size: 1rem; line-height: 1.65; }
+  .tiers dt small { font-size: .875rem; }
+  .how .oth { font-size: .9rem; }
+  .how a.main { display: inline-block; padding: 8px 0 6px; }
+  .how .oth a { display: inline-block; padding: 11px 6px; }
+  .part-lead, .week-note { font-size: 1rem; }
+  .filters button { font-size: 1rem; }
+  .filters button .fc { font-size: .85rem; }
+  .sched tr.month th { font-size: 1rem; }
+  .c-title { font-size: 1rem; line-height: 1.65; color: #3E4A54; }
+  .c-date .hol { font-size: .9rem; }
+  .badge, .now-badge { font-size: .82rem; }
+  .acts .ok { font-size: .82rem; }
+  .acts a { font-size: 1rem; }
+  .sched tr.ep.fut > td, .sched tr.ep.fut .c-title, .sched tr.ep.fut .c-date .wd, .sched tr.ep.fut .c-part { color: #4E5B66; }
+  .sched tr.ep.fut .badge { color: #4E5B66; border-color: #AEB8C0; }
+  .line-cta .over { font-size: .85rem; }
+  .line-cta .body { font-size: 1rem; }
+  .btn { min-height: 48px; padding: 11px 30px; }
+  .howbox > summary { min-height: 52px; padding: 8px 16px; }
+  .howbox > summary::after { flex: none; }
+  .howbox > summary .st { flex: 1; min-width: 0; line-height: 1.5; padding-right: 12px; }
+  .faq dt { font-size: 1rem; margin-top: 14px; }
+  .faq dd { font-size: 1rem; }
+  .faq dd a { display: inline-block; padding: 12px 2px; margin: -12px 0; }
+  @media (max-width: 767px) {
+    .tiers .row { display: block; }
+    .tiers dd { margin-top: 2px; }
+    .em-leg { grid-template-columns: 1fr; }
+    .c-date, .c-date .wd, .c-part { font-size: 1rem; }
+    .c-date .hol { font-size: .9rem; width: 0; min-width: 100%; white-space: nowrap; }
+    .c-kind .badge { font-size: .82rem; }
+    .sched tr.ep { grid-template-columns: 2.5rem auto 1fr 56px; grid-template-areas: "kind date part rec" "kind theme theme rec" "kind title title title"; row-gap: 4px; padding: 14px 12px 14px 6px; }
+    .sched tr.ep.nrc { grid-template-columns: 2.5rem auto 1fr; grid-template-areas: "kind date part" "kind theme theme" "kind title title"; }
+    .sched tr.ep.nrc > td.c-rec { display: none; }
+    .sched tr.ep.sub, .sched tr.ep.ms { grid-template-columns: auto auto 1fr; grid-template-areas: "kind date part" "theme theme theme" "title title title"; column-gap: 10px; padding: 14px 14px; }
+    .sched tr.ep.sub .c-kind, .sched tr.ep.ms .c-kind { text-align: left; align-self: center; }
+    .sched tr.ep.sub .c-title:empty, .sched tr.ep.ms .c-title:empty { display: none; }
+    .c-kind .badge { white-space: nowrap; }
+  }
 </style>
 </head>
 <body>
@@ -256,7 +310,7 @@
         <div class="stat"><b id="stT">41</b><span>本編</span></div>
       </div>
     </div>
-    <p class="pg-note" id="pgNote">いまは、この端末にだけ残ります。LINEで記録を引き継げるように準備しています。</p>
+    <p class="pg-note" id="pgNote"><span class="nb">いまは、この端末にだけ残ります。</span><span class="nb">LINEで記録を引き継げるように</span><span class="nb">準備しています。</span></p>
   </section>
 
   <div class="start-note" id="startNote">
@@ -265,16 +319,16 @@
   </div>
 
   <details class="howbox" id="newBox" style="display:none">
-    <summary data-umami-event="roadmap-new2027">2027年、ここがパワーアップします<span class="cnt8">8つ</span></summary>
+    <summary data-umami-event="roadmap-new2027"><span class="st">2027年、<span class="nb">ここがパワーアップします<span class="cnt8">8つ</span></span></span></summary>
     <ol class="newlist">
-      <li><b>全41回、ぜんぶ新しく録りました。</b><span>2人の会話で進むので、通勤や家事の合間に聴けます。</span></li>
-      <li><b>聴いたら、その場で3問。</b><span>回ごとの○×3問で、覚えたかどうかがすぐ分かります。登録はいりません。</span></li>
-      <li><b>図解は、見て分かる絵に。</b><span>絵と大きな数字で、要点がひと目で入ります。</span></li>
-      <li><b>毎週月曜、こちらから届きます。</b><span>LINEに登録しておけば、その週の回をお知らせします。止まっても、月曜にまた届きます。</span></li>
-      <li><b>いま、どこまで来たかが見える。</b><span>全41回の予定と自分の進み具合が、このページ1枚で分かります。</span></li>
-      <li><b>中身は、条文と1つずつ照らしてから。</b><span>出す前に、法律の条文と照合する仕組みにしました。</span></li>
-      <li><b>苦手な所から、やり直せます（準備中）。</b><span>LINEで答えた記録が残り、まちがえやすい論点の放送と問題に戻れます。</span></li>
-      <li><b>聴きながら見るテキスト（準備中）。</b><span>放送と同じ順に並んだ「やさしいテキスト」。耳と目の両方で確かめられます。</span></li>
+      <li><b><span class="nb">全41回、</span><span class="nb">ぜんぶ新しく録りました。</span></b><span><span class="nb">2人の会話で進むので、</span><span class="nb">通勤や家事の合間に聴けます。</span></span></li>
+      <li><b><span class="nb">聴いたら、</span><span class="nb">その場で3問。</span></b><span><span class="nb">回ごとの○×3問で、</span><span class="nb">覚えたかどうかがすぐ分かります。</span><span class="nb">登録はいりません。</span></span></li>
+      <li><b><span class="nb">図解は、</span><span class="nb">見て分かる絵に。</span></b><span><span class="nb">絵と大きな数字で、</span><span class="nb">要点がひと目で入ります。</span></span></li>
+      <li><b><span class="nb">毎週月曜、</span><span class="nb">こちらから届きます。</span></b><span><span class="nb">LINEに登録しておけば、</span><span class="nb">その週の回をお知らせします。</span><span class="nb">止まっても、</span><span class="nb">月曜にまた届きます。</span></span></li>
+      <li><b><span class="nb">いま、</span><span class="nb">どこまで来たかが見える。</span></b><span><span class="nb">全41回の予定と</span><span class="nb">自分の進み具合が、</span><span class="nb">このページ1枚で分かります。</span></span></li>
+      <li><b><span class="nb">中身は、</span><span class="nb">条文と1つずつ照らしてから。</span></b><span><span class="nb">出す前に、</span><span class="nb">法律の条文と</span><span class="nb">照合する仕組みにしました。</span></span></li>
+      <li><b><span class="nb">苦手な所から、</span><span class="nb">やり直せます（準備中）。</span></b><span><span class="nb">LINEで答えた記録が残り、</span><span class="nb">まちがえやすい論点の</span><span class="nb">放送と問題に戻れます。</span></span></li>
+      <li><b><span class="nb">聴きながら見るテキスト</span><span class="nb">（準備中）。</span></b><span><span class="nb">放送と同じ順に並んだ</span><span class="nb">「やさしいテキスト」。</span><span class="nb">耳と目の両方で確かめられます。</span></span></li>
     </ol>
   </details>
 
@@ -299,9 +353,9 @@
   <section class="tiers" aria-label="図解と3問で見られるもの">
     <h2>「図解と3問」で見られるもの</h2>
     <dl>
-      <div class="row"><dt>登録なし</dt><dd>○×3問と、図解の最初の1枚</dd></div>
-      <div class="row"><dt>LINE登録<small>無料</small></dt><dd>図解の続きと、過去問1選</dd></div>
-      <div class="row"><dt>やさしいテキスト<small>有料・準備中</small></dt><dd>同じページでテキストが開きます。○×も過去問も、その中で解ける予定です</dd></div>
+      <div class="row"><dt>登録なし</dt><dd><span class="nb">○×3問と、</span><span class="nb">図解の最初の1枚</span></dd></div>
+      <div class="row"><dt>LINE登録<small>無料</small></dt><dd><span class="nb">図解の続きと、</span><span class="nb">過去問1選</span></dd></div>
+      <div class="row"><dt>やさしいテキスト<small>有料・準備中</small></dt><dd><span class="nb">同じページでテキストが開きます。</span><span class="nb">○×も過去問も、</span><span class="nb">その中で解ける予定です</span></dd></div>
     </dl>
   </section>
     </div>
@@ -309,7 +363,7 @@
 
   <nav class="filters" id="filters" aria-label="分野でしぼる"></nav>
   <p class="part-lead" id="partLead"></p>
-  <p class="week-note">月曜は本編。木曜は短い復習・もう1論点・まとめ。</p>
+  <p class="week-note"><span class="nb">月曜は本編。</span><span class="nb">木曜は短い復習・</span><span class="nb">もう1論点・まとめ。</span></p>
   <main class="sched"><table id="sched"></table></main>
 
   <section class="line-cta">
@@ -323,7 +377,7 @@
     <h2>よくある質問</h2>
     <dl>
       <dt>途中からでも大丈夫？</dt>
-      <dd>どの回からでも聴けます。迷ったら業法から。</dd>
+      <dd><span class="nb">どの回からでも聴けます。</span><span class="nb">迷ったら業法から。</span></dd>
       <dt>去年の回は？</dt>
       <dd>2026年の回も<a href="/archive.html" data-umami-event="roadmap-archive">聴けます</a>。</dd>
     </dl>
@@ -348,6 +402,16 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録は無料です。</span>';
   }
   function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  // 文末の「です／ます／違反」だけが次の行に落ちないよう、最後の文節（約5字）をひとかたまりにする
+  function nbt(str){
+    var segs;
+    try { segs = Array.from(new Intl.Segmenter('ja',{granularity:'word'}).segment(str), function(x){ return x.segment; }); }
+    catch(_) { segs = [str.slice(0,-5), str.slice(-5)]; }
+    var n = 0, i = segs.length;
+    while (i > 0 && n < 5) { i--; n += segs[i].length; }
+    if (i <= 0 || n > 9) { var k = Math.max(0, str.length-5); return esc(str.slice(0,k)) + '<span class="nb">' + esc(str.slice(k)) + '</span>'; }
+    return esc(segs.slice(0,i).join('')) + '<span class="nb">' + esc(segs.slice(i).join('')) + '</span>';
+  }
   function md(e){ var p=e.d.split('-'); return (+p[1])+'/'+(+p[2]); }
   function partName(i){ return PARTS[i-1][0].replace(/^第\d部 /,''); }
   // 「キャッチ ── テーマ」を分ける。区切りがない回はそのままテーマにする
@@ -437,7 +501,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
       var label = e.kind==='本編' ? '本編 #'+e.n : k[0];
       var isNow = nowEp===e;
       var s = split(e);
-      var titleHtml = s.title ? esc(s.title) : (e.sub && e.sub!=='タイトル未定' ? '<span class="tbd">'+esc(e.sub)+'</span>' : '');
+      var titleHtml = s.title ? nbt(s.title) : (e.sub && e.sub!=='タイトル未定' ? '<span class="tbd">'+esc(e.sub)+'</span>' : '');
       var acts = '';
       var early = e.sample && num(e.d) > t; // 見本として配信前から出す回
       if (num(e.d) <= t || e.sample) LINKS.forEach(function(a){
@@ -452,11 +516,11 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
         marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-label="聴いたかどうかを切り替え">'+ST_LABEL[st]+'</button>'
           ;
       }
-      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
+      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(marks?'':' nrc')+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
         + '<td class="c-date">'+md(e)+'<span class="wd">('+esc(e.wd)+')</span>'+(e.note?'<span class="hol">'+esc(e.note)+'</span>':'')+'</td>'
         + '<td class="c-kind">'+(e.kind==='本編' ? '<span class="bignum">'+e.n+'</span>' : '')+'<span class="badge'+k[1]+(e.kind==='本編'?' bd-main':'')+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
         + '<td class="c-part">'+esc(partName(e.part))+'</td>'
-        + '<td class="c-theme">'+esc(s.theme)+'</td>'
+        + '<td class="c-theme">'+nbt(s.theme)+'</td>'
         + '<td class="c-title">'+titleHtml+(acts?'<div class="acts">'+acts+'</div>':'')+'</td>'
         + '<td class="c-rec">'+marks+'</td>'
         + '</tr>';
