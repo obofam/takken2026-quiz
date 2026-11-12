@@ -146,6 +146,16 @@
   .btn-ghost{display:inline-block;background:#fff;color:var(--accent);border:2px solid var(--accent);font-weight:700;
     font-size:15px;border-radius:999px;padding:12px 26px;text-decoration:none}
 
+  .nw{display:inline-block;white-space:nowrap}
+  .card-h{font-size:19px;font-weight:900;line-height:1.5;margin:0 0 12px}
+  .pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:16px 0 0}
+  .pill{background:var(--accent-soft);color:var(--text);font-size:13px;font-weight:700;border-radius:999px;padding:4px 12px;line-height:1.6}
+  .cta-btns{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:20px}
+  .cta-btns a{text-align:center;min-width:220px}
+  @media(min-width:560px){.cta-btns{flex-direction:row;justify-content:center}}
+  .mail-icons{display:flex;justify-content:center;gap:28px;margin:0 0 16px}
+  .mail-icon{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .mail-icon span{font-size:12px;font-weight:700;color:var(--muted);line-height:1.6}
   footer{text-align:center;padding:40px 0 56px;font-size:13px;color:var(--muted)}
   footer p{font-size:13px}
   footer .foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin:20px 0 0;padding:0;list-style:none}
@@ -170,9 +180,14 @@
       <p class="lead">よく聴かれている回と、独学でこぼれやすい回を選んで並べました。迷ったら、まずはこの数本から。</p>
       <p class="lead" style="font-size:13px;margin-top:14px">※ここに並べているのは<b>2026年度の放送</b>です。数字や制度は2026年度の試験（令和8年4月1日時点の法令）に合わせて話しています。その後に法改正があった部分は、2027年版の回やお手元のテキストで確認してください。</p>
       <div class="ctabox" style="margin-top:24px">
-        <p class="eyebrow eyebrow-center" style="margin-bottom:8px;font-size:12px;color:var(--accent)">2027</p>
-        <p>耳で覚える宅建2027は、1月4日（月）から始まります（予定）。</p>
-        <a class="btn-fill" href="https://takken.mimiobo.com/roadmap" target="_blank" rel="noopener" data-umami-event="archive_to_roadmap">配信予定と第1回の見本を見る</a>
+        <p class="eyebrow eyebrow-center" style="margin-bottom:8px;font-size:12px;color:var(--accent)">2027の予告と見本</p>
+        <h3 class="card-h"><span class="nw">耳で覚える宅建2027は、</span><span class="nw">1月4日（月）から（予定）</span></h3>
+        <p>全41回を、毎週月曜に1本ずつ。聴いたあとに確かめられる「図解と3問」もできました。</p>
+        <div class="pills"><span class="pill">全41回・毎週月曜</span><span class="pill">図解と3問</span><span class="pill">LINEとメールでお知らせ</span></div>
+        <div class="cta-btns">
+          <a class="btn-fill" href="https://takken.mimiobo.com/ep/1" target="_blank" rel="noopener" data-umami-event="archive_2027_mihon_click">第1回の見本を見る</a>
+          <a class="btn-ghost" href="https://takken.mimiobo.com/roadmap" target="_blank" rel="noopener" data-umami-event="archive_2027_roadmap_click">配信予定を見る</a>
+        </div>
       </div>
     </div>
   </section>
@@ -226,8 +241,18 @@
   <section class="band-white" id="mail2027">
     <div class="wrap">
       <p class="eyebrow eyebrow-center">NEWSLETTER</p>
-      <h2>耳で覚える宅建2027 お知らせは、LINEとメールで</h2>
+      <h2>耳で覚える宅建2027<br><span class="nw">お知らせは、</span><span class="nw">LINEとメールで</span></h2>
       <div class="mailbox">
+        <div class="mail-icons">
+          <div class="mail-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#17C5E8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7h24a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3H19l-8 6v-6H8a3 3 0 0 1-3-3V10a3 3 0 0 1 3-3z"/></svg>
+            <span>LINE</span>
+          </div>
+          <div class="mail-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#17C5E8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="9" width="30" height="22" rx="3"/><path d="M6 11l14 11L34 11"/></svg>
+            <span>メール</span>
+          </div>
+        </div>
         <p>お知らせは、LINEとメールの両方でお届けします。中身は同じです。<br>お好きなほうでどうぞ。両方でも、どちらか片方でも大丈夫です。<br>12月はLINEの配信をお休みします。1月にまた始めます。</p>
         <a class="btn-fill" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="archive_mail2027_click">メールでも受け取る（無料）</a>
         <p class="mail-note">登録ページ（Substack）が開きます。メールアドレスを入れて「登録」を押してください。アプリやシェアの案内が出たら「スキップ」で大丈夫です。いつでも解除できます。</p>
