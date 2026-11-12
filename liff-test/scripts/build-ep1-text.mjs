@@ -10,12 +10,14 @@ const src = fs.readFileSync(SRC, 'utf8');
 /* --- 部品を取り出す --- */
 const symbols = {};
 for (const m of src.matchAll(/<symbol id="([^"]+)" viewBox="([^"]+)">([\s\S]*?)<\/symbol>/g)) symbols[m[1]] = { vb: m[2], inner: m[3] };
-const pages = [...src.matchAll(/<section class="page">([\s\S]*?)<\/section>\s*(?=<!--|<\/div>)/g)].map(m => m[1]);
+const pages = [...src.matchAll(/<section class="page(?: p\d)?">([\s\S]*?)<\/section>\s*(?=<!--|<\/div>)/g)].map(m => m[1]);
 if (pages.length !== 2) throw new Error('page count ' + pages.length);
 let css = src.match(/<style>([\s\S]*?)<\/style>/)[1];
 
 /* --- ページごとに、印刷用の枠（ページ上の帯・題・下の帯）を外す --- */
 const strip = (html, withTitle) => {
+  /* 印刷用A4版だけにある「今回の数字」の帯は読み飛ばす（スマホ用は下で data.json から作った節を1つだけ出す＝二重にしない） */
+  html = html.replace(/\s*<!-- 今回の数字:ここから -->[\s\S]*?<!-- 今回の数字:ここまで -->/g, '');
   html = html.replace(/\s*<div class="pbar">[\s\S]*?<\/div>\n/, '\n');
   if (withTitle) html = html.replace(/\s*<div class="ttl">[\s\S]*?<\/div>\n/, '\n');
   html = html.replace(/\s*<div class="grow"><\/div>[\s\S]*$/, '\n');

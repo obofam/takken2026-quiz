@@ -135,6 +135,18 @@
   .pnl .m b{font-weight:900;color:var(--ink)}
 
   
+  .page.p1,.page.p2{padding-top:14px;gap:3px}
+  .page.p1 .fig,.page.p2 .fig{padding-top:4px;padding-bottom:4px}
+  .page.p1 .fig > .cap,.page.p2 .fig > .cap{margin-bottom:3px}
+  
+  .nband{flex:0 0 auto;display:flex;align-items:stretch;gap:0;border:1px solid var(--line);border-radius:12px;background:var(--pale);overflow:hidden}
+  .nband .nh{flex:0 0 52px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:900;color:#fff;background:var(--ink);line-height:1.3;padding:0 4px}
+  .nband .ni{flex:1;min-width:0;padding:2px 8px 3px;border-left:1px solid var(--line)}
+  .nband .ni:first-of-type{border-left:0}
+  .nband .nv{display:block;font-size:16px;font-weight:900;color:var(--ink);line-height:1.3}
+  .nband .nk{display:block;font-size:11px;font-weight:700;line-height:1.35;color:var(--sub)}
+
+  
   .grow{flex:1}
   .foot{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:10px}
   .foot .next{flex:1;font-size:13px;font-weight:700;line-height:1.6;color:var(--sub)}
@@ -145,7 +157,14 @@
   .colophon{display:block;font-size:11px;font-weight:400;color:var(--sub);margin-top:2px}
 
   
-  
+  @media print{
+    body{background:#fff}
+    .intro{display:none}
+    .spread{display:block;padding:0}
+    .page{box-shadow:none;border-radius:0;break-after:page;margin:0}
+    .page:last-child{break-after:auto}
+  }
+
 
 :host{display:block;font-family:var(--font);color:var(--text);font-size:15px;line-height:1.6;letter-spacing:.02em;word-break:auto-phrase;overflow-wrap:anywhere;--sheet:#8E3B3B}
 .tx{display:flex;flex-direction:column;gap:12px}
