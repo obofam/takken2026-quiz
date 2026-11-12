@@ -95,14 +95,14 @@ test('a user with only the text plan cannot read the karte (and the answers tabl
 });
 test('the paid text lives only under api/_ep-text, and no public file contains it',()=>{
   const root=path.join(__dirname,'..');
-  const marker='役所が変わるときは';
+  const marker='なぜ、駆け込み廃業も取消しと同じ扱いなの';
   assert.ok(require('../api/_ep-text/ep1').includes(marker));
   const skip=new Set(['node_modules','.git','.vercel','api','tests','scripts','supabase','content']);
   const hits=[];
   (function walk(dir){for(const f of fs.readdirSync(dir,{withFileTypes:true})){
     if(skip.has(f.name))continue;
     const p=path.join(dir,f.name);
-    if(f.isDirectory())walk(p);else if(/\.(html|js|json|css|svg)$/.test(f.name)&&fs.readFileSync(p,'utf8').includes('役所が変わるときは'))hits.push(p);
+    if(f.isDirectory())walk(p);else if(/\.(html|js|json|css|svg)$/.test(f.name)&&fs.readFileSync(p,'utf8').includes('なぜ、駆け込み廃業も取消しと同じ扱いなの'))hits.push(p);
   }})(root);
   assert.deepEqual(hits,[]);
 });
@@ -111,4 +111,26 @@ test('the 3-step page has no arrows, no emoji, no name, and the sample frame can
   assert.doesNotMatch(html,/[→←↑↓]|[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
   assert.match(html,/mihon_text/);assert.match(html,/id="tsample"[\s\S]{0,600}takken\.mimiobo\.com\/ep\/1\/text/);assert.match(html,/mihon=1/);
   assert.doesNotMatch(html,/narabi|まとめて解く/);
+});
+test('the free excerpt (ep1-nukigaki.html): figures 1,3,5,6,8 only, no red-sheet marks, nothing paid-only',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../ep1-nukigaki.html'),'utf8');
+  assert.deepEqual([...html.matchAll(/data-fig="(\d+)"/g)].map(m=>Number(m[1])),[1,3,5,6,8]);
+  assert.deepEqual([...html.matchAll(/class="cap"><span class="n">(\d+)</g)].map(m=>Number(m[1])),[1,3,5,6,8]);
+  assert.deepEqual([...html.matchAll(/<span class="gno">(\d+)</g)].map(m=>Number(m[1])),[2,4,7]);
+  assert.equal([...html.matchAll(/class="gcard" href="https:\/\/takken\.mimiobo\.com\/ep\/1\/text"/g)].length,3);
+  assert.doesNotMatch(html,/class="[^"]*\brs\b[^"]*"|role="button"|class="mk"|class="aside"|<use /);
+  assert.doesNotMatch(html,/[→←↑↓]|[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
+  for(const w of ['転貸','又貸し','適用されない','事務所に数える','継続して業務ができる施設','取消しの理由','聴聞の公示','ワンポイント','駆け込み廃業も取消し'])
+    assert.ok(!html.includes(w),w);
+  // the free excerpt is a subset of the paid text (same words)
+  const paid=require('../api/_ep-text/ep1');
+  const strip=h=>h.replace(/<[^>]+>/g,'').replace(/\s+/g,'');
+  for(const f of html.match(/<figure class="fig">[\s\S]*?<\/figure>/g))assert.ok(strip(paid).includes(strip(f)));
+});
+test('the 3-step page: no picture-illustration cards or img/*.webp for figures; excerpt is loaded',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8');
+  assert.doesNotMatch(html,/ep\/1\/img\/(?!artwork2027)/);
+  assert.doesNotMatch(html,/class="card t-/);
+  assert.match(html,/ep1-nukigaki\.html/);assert.match(html,/id="slot-fig1"/);
+  assert.match(html,/class="tcard only-b"[\s\S]{0,300}有料版の見本[\s\S]{0,700}見本を見る/);
 });

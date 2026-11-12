@@ -34,7 +34,10 @@ const once = (h, from, to) => {
 const RS = ' role="button" tabindex="0"';
 const pill = (h, cls, text, ctx) => once(h, ctx, ctx.replace(`<span class="${cls}">${text}</span>`, `<span class="${cls} rs"${RS}>${text}</span>`));
 const bold = (h, text) => once(h, `<b>${text}</b>`, `<b class="rs"${RS}>${text}</b>`);
+/* 全文版（赤シートあり）と、無料の抜粋用（赤シートなし）を同じ手順で作る */
+const make = withRs => {
 let [p1, p2] = raw;
+if (withRs) {
 // 前半
 p1 = p1.replace(/<span class="mk">/g, `<span class="rs"${RS}>`);
 for (const t of ['当たらない', 'いらない', '適用されない', '事務所の場所だけ', '免許換え']) p1 = bold(p1, t);
@@ -50,7 +53,7 @@ p2 = once(p2, '<span class="go">満了の日から、すぐ</span>', `<span clas
 p2 = once(p2, '原則、届出の日から5年欠格です', `原則、<span class="rs"${RS}>届出の日から5年</span>欠格です`);
 p2 = once(p2, '<span class="pill ng">罰金でも欠格になる罪</span>', `<span class="pill ng rs"${RS}>罰金でも欠格になる罪</span>`);
 p2 = once(p2, '<span class="pill ok">欠格にならない</span>', `<span class="pill ok rs"${RS}>欠格にならない</span>`);
-
+}
 /* --- アイコンの <use> を、その場の svg に置き換える（Shadow DOM の中でも壊れない） --- */
 /* 図7：字を大きくした分、枠と字の位置を少しだけずらす（図形の位置だけ。字は変えない） */
 p2 = once(p2, '<rect x="20" y="24" width="82" height="20" rx="3"', '<rect x="8" y="23" width="96" height="22" rx="3"');
@@ -65,10 +68,16 @@ const inline = h => h.replace(/<svg( class="ic")?><use href="#([^"]+)"\/><\/svg>
 });
 p1 = inline(p1); p2 = inline(p2);
 if (/<use /.test(p1 + p2)) throw new Error('use left');
+return [p1, p2];
+};
+const [p1, p2] = make(true);
+const [n1, n2] = make(false);
 
 /* --- 文言が変わっていないか --- */
 const after = [p1, p2].map(plain);
 if (before[0] !== after[0] || before[1] !== after[1]) throw new Error('text changed');
+const afterN = [n1, n2].map(plain);
+if (before[0] !== afterN[0] || before[1] !== afterN[1]) throw new Error('text changed (nukigaki base)');
 const rsCount = h => (h.match(/class="[^"]*\brs\b/g) || []).length;
 
 /* --- CSS：元のCSSを Shadow DOM 用にし、スマホの1列に組み直す --- */
@@ -134,3 +143,36 @@ const html = '<style>' + css + '</style>' +
 fs.mkdirSync(new URL('../api/_ep-text/', import.meta.url), { recursive: true });
 fs.writeFileSync(OUT, "'use strict';\n// build-ep1-text.mjs が作る。手で直さない。やさしいテキスト第1回（有料）。公開しない（api/_ は URL で取れない）。\nmodule.exports = " + JSON.stringify(html) + ';\n');
 console.log('written', html.length, 'chars; rs part1=' + rsCount(p1), 'part2=' + rsCount(p2));
+
+/* ============================================================
+   無料の抜粋（ep1-nukigaki.html）：図だけを、赤シートなしで。置き場所は公開してよい静的ファイル。
+   1段目＝図1、2段目＝図1・3・5・6・8。図2・4・7は「この図はやさしいテキストに」の札だけ（中身は入れない）。
+   図の番号はテキストのまま。図の外の文（芯・寄り道・囲み）は入れない。
+   ============================================================ */
+const FREE = [1, 3, 5, 6, 8];
+const PAID_ONLY = [2, 4, 7];
+const figsOf = h => [...h.matchAll(/<figure class="fig">[\s\S]*?<\/figure>/g)].map(m => m[0]);
+const figNo = f => Number(f.match(/<span class="n">(\d+)<\/span>/)[1]);
+const capTitle = f => f.match(/<div class="cap"><span class="n">\d+<\/span>([^<]*)/)[1];
+const origFigs = {}; for (const h of raw) for (const f of figsOf(h)) origFigs[figNo(f)] = f;
+const nukiFigs = {}; for (const h of [n1, n2]) for (const f of figsOf(h)) nukiFigs[figNo(f)] = f;
+const allNos = Object.keys(origFigs).map(Number).sort((a, b) => a - b);
+if (allNos.join() !== '1,2,3,4,5,6,7,8') throw new Error('figure numbers ' + allNos);
+for (const n of FREE) {
+  if (plain(origFigs[n]) !== plain(nukiFigs[n])) throw new Error('nukigaki text changed in fig ' + n);
+  if (/\brs\b|role="button"/.test(nukiFigs[n])) throw new Error('rs in nukigaki fig ' + n);
+  if (/<use /.test(nukiFigs[n])) throw new Error('use left in fig ' + n);
+}
+const TEXT_URL = 'https://takken.mimiobo.com/ep/1/text';
+const card = n => '<a class="gcard" href="' + TEXT_URL + '" data-umami-event="ep-text" data-umami-event-ep="1"><span class="gno">' + n + '</span><span class="gm"><span class="gt">' + capTitle(origFigs[n]) + '</span><span class="gn">この図はやさしいテキストに</span></span></a>';
+const fig = n => '<div class="tx" data-fig="' + n + '">' + nukiFigs[n] + '</div>';
+/* 1〜5＝前半、6〜8＝後半。図の順に並べ、有料だけの図の所に札を置く */
+const seq = nos => nos.map(n => FREE.includes(n) ? fig(n) : card(n)).join('\n');
+const nukiHtml =
+  '<!-- 第1回 図解：やさしいテキストからの抜粋（無料・LINE登録者向け）。scripts/build-ep1-text.mjs が作る。手で直さない。赤シートなし。 -->\n' +
+  '<style data-nk="css">' + css.replace(/\/\*[\s\S]*?\*\//g, '') + '</style>\n' +
+  '<div data-slot="fig1">\n' + fig(1) + '\n</div>\n' +
+  '<div data-slot="cards1">\n' + seq([2, 3, 4, 5]) + '\n</div>\n' +
+  '<div data-slot="cards2">\n' + seq([6, 7, 8]) + '\n</div>\n';
+fs.writeFileSync(new URL('../ep1-nukigaki.html', import.meta.url), nukiHtml);
+console.log('nukigaki', nukiHtml.length, 'chars; free figs', FREE.join(','), 'cards', PAID_ONLY.join(','));

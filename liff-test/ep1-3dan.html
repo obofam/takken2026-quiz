@@ -373,11 +373,16 @@ body.member .line-card{display:block}
 .next-box .lbtn{margin-top:10px}
 
 /* 3段の試作だけの部品 */
-.tsample{background:#fff;border:1.5px solid var(--sky);border-radius:14px;padding:12px 14px;margin-top:24px}
-.tsample .tl{margin:0 0 4px;font-size:16px;font-weight:900;color:var(--ink);line-height:1.4}
-.tsample p{margin:0 0 10px;font-size:14px;line-height:1.7}
-.tsample img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px;object-view-box:none;margin:0 0 10px}
-.is-buyer .tsample,.is-buyer .past.txt,.is-buyer #zukai,.is-buyer #maru{display:none}
+.tcard{position:relative;margin-top:24px;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:22px 14px 14px;text-decoration:none;color:var(--text)}
+.tcard .tlab{position:absolute;top:-13px;left:14px;background:var(--ink);color:#fff;font-size:14px;font-weight:900;line-height:1.5;border-radius:999px;padding:2px 14px}
+.tcard .tbody{display:flex;gap:14px;align-items:center}
+.tcard img{flex:0 0 auto;width:84px;height:auto;border:1px solid var(--line);border-radius:6px;box-shadow:0 2px 8px rgba(10,100,119,.15)}
+.tcard .tmid{display:block;min-width:0}
+.tcard .tt{display:block;font-size:19px;font-weight:900;color:var(--ink);line-height:1.4}
+.tcard .td{display:block;font-size:16px;line-height:1.7;margin-top:4px}
+.tcard .tgo{display:block;margin-top:14px;text-align:center;background:var(--ink);color:#fff;font-weight:900;font-size:16px;line-height:1.4;border-radius:999px;padding:12px 18px}
+.nk{display:inline-block}
+.is-buyer .tcard,.is-buyer .past.txt,.is-buyer #zukai,.is-buyer #maru{display:none}
 .thost{display:block}
 .textwrap{display:flex;flex-direction:column;gap:12px}
 .is-buyer #text1,.is-buyer #text2,.is-buyer .qset{scroll-margin-top:calc(var(--navh) + 52px)}
@@ -417,10 +422,7 @@ body.member .line-card{display:block}
   <div class="slot" id="slot-core1"></div>
   <div class="target">自ら売買・交換、または他人の売買・交換・貸借の代理・媒介</div>
   <div class="cards">
-<section class="card t-zones n1">
-  <div class="hd"><span class="no">1</span><h2>免許がいるのは誰？<small>「業として」＝不特定多数に、くり返し行うこと</small></h2></div>
-  <div class="zones"><div class="zone ok"><span class="zh">免許がいる</span><div class="items" style="--cols:2"><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/plots.webp" alt=""><div class="lb">地主さん</div><div class="sm">20区画を次々に売る</div></div><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/broker.webp" alt=""><div class="lb">仲介する会社</div><div class="sm">他人の部屋の貸借でも</div></div></div></div><div class="zone ng"><span class="zh">いらない</span><div class="items" style="--cols:3"><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/landlord.webp" alt=""><div class="lb">大家さん</div><div class="sm">自ら貸借</div></div><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/onetime.webp" alt=""><div class="lb">会社員</div><div class="sm">自宅を<span class="nb">1回売る</span></div></div><div class="it"><img src="https://takken.mimiobo.com/ep/1/img/cityhall.webp" alt=""><div class="lb">国・地方公共団体</div><div class="sm">適用除外</div></div></div></div></div>
-</section>
+<div class="slot" id="slot-fig1"></div>
 <div class="slot" id="slot-cards1"></div>
   </div>
 </div>
@@ -441,12 +443,12 @@ body.member .line-card{display:block}
     <div class="next-box only-a"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>では、この回のテーマに沿った過去問を解いていただけます。</p></div>
     <div class="slot" id="slot-kk"></div>
     <ul class="past txt only-a"><li><a class="prow" href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1"><span class="pico doc" aria-hidden="true"></span><span class="pmid"><span class="pt">やさしいテキスト（有料）の見本</span><span class="py">図をすべて・寄り道・赤シート</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
-  <div class="tsample only-b" id="tsample">
-    <p class="tl">やさしいテキスト</p>
-    <p>図をすべて、寄り道、赤シートがついたテキストです。第1回の1ページ目の見本です。</p>
-    <img src="https://takken.mimiobo.com/ep/1/text/a4-p1.webp" alt="やさしいテキスト第1回の1ページ目（見本）" width="800" height="1133" loading="lazy">
-    <a class="lbtn" href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text-more" data-umami-event-ep="1">続きはこちら</a>
-  </div>
+  <a class="tcard only-b" id="tsample" href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text-more" data-umami-event-ep="1">
+      <span class="tlab">有料版の見本</span>
+      <span class="tbody"><img src="https://takken.mimiobo.com/ep/1/text/a4-p1.webp" alt="" width="800" height="1133" loading="lazy">
+        <span class="tmid"><span class="tt">やさしいテキスト</span><span class="td"><span class="nk">放送を聴きながら見る</span><span class="nk">テキストです。</span><br><span class="nk">図をすべて・寄り道・</span><span class="nk">赤シートつき。</span></span></span></span>
+      <span class="tgo">見本を見る</span>
+    </a>
   </section>
 
   <section class="sec" id="plan">
@@ -591,7 +593,7 @@ body.member .line-card{display:block}
 </script>
 <script>
 /* 3段の出し分け。
-   1段目（通常）：LINEの外・未登録。2段目（LINE登録者）：LINEの中でログイン済み ／ ep1-full.html / ep1-full.js を読み込んで全部を表示。
+   1段目（通常）：LINEの外・未登録。2段目（LINE登録者）：LINEの中でログイン済み ／ ep1-full.html / ep1-full.js ・ ep1-nukigaki.html（やさしいテキストからの図の抜粋）を読み込んで全部を表示。
    3段目（やさしいテキスト購入者）：2段目の表示のあとで、IDトークンを /api/session に送ってセッションを作り、/api/ep-text?ep=1 を GET。
    200 なら「テキストを見ながら聴く」形に切り替える。403・401・失敗なら2段目のまま（壊さない）。
    ?mihon=mitouroku（1段目）／touroku（2段目）／kounyu（3段目。/api/ep-text?ep=1&mihon=1 を呼ぶ）。?mihon_text=0 で2段目の「やさしいテキスト」の枠を消す。 */
@@ -685,15 +687,62 @@ body.member .line-card{display:block}
       document.head.appendChild(s);
     });
   }
+  /* 図：やさしいテキストからの抜粋（ep1-nukigaki.html）。1段目は図1だけ、2段目は図1・3・5・6・8（図2・4・7は札）。
+     図ごとに Shadow DOM に入れ、3段目のテキストと同じCSSで出す。赤シートなし */
+  var nukiP = null;
+  function loadNuki() {
+    if (!nukiP) {
+      nukiP = fetch('ep1-nukigaki.html', {cache: 'no-store'}).then(function (r) {
+        if (!r.ok) { throw new Error('ep1-nukigaki.html ' + r.status); }
+        return r.text();
+      }).then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var style = doc.querySelector('style[data-nk="css"]');
+        var parts = {};
+        Array.prototype.forEach.call(doc.querySelectorAll('[data-slot]'), function (n) { parts[n.getAttribute('data-slot')] = n; });
+        if (!style || !parts.fig1 || !parts.cards1 || !parts.cards2) { throw new Error('抜粋の形が想定と違う'); }
+        return {style: style, parts: parts};
+      });
+    }
+    return nukiP;
+  }
+  function putFigs(target, part, style) {
+    Array.prototype.forEach.call(part.children, function (ch) {
+      if (ch.hasAttribute('data-fig')) {
+        var h = document.createElement('div');
+        h.className = 'thost';
+        var root = h.attachShadow({mode: 'open'});
+        root.appendChild(style.cloneNode(true));
+        root.appendChild(document.importNode(ch, true));
+        target.appendChild(h);
+      } else {
+        target.appendChild(document.importNode(ch, true));
+      }
+    });
+  }
+  var fig1Shown = false;
+  function showFig1() {
+    return loadNuki().then(function (n) {
+      var slot = document.getElementById('slot-fig1');
+      if (fig1Shown || !slot) { return; }
+      fig1Shown = true;
+      putFigs(slot, n.parts.fig1, n.style);
+    }).catch(function (e) { console.warn(e); lastErr = e; render(); });
+  }
   function showFull() {
-    return fetch('ep1-full.html', {cache: 'no-store'}).then(function (r) {
+    return Promise.all([fetch('ep1-full.html', {cache: 'no-store'}).then(function (r) {
       if (!r.ok) { throw new Error('ep1-full.html ' + r.status); }
       return r.text();
-    }).then(function (html) {
-      var doc = new DOMParser().parseFromString(html, 'text/html');
+    }), loadNuki()]).then(function (res) {
+      var nuki = res[1];
+      var doc = new DOMParser().parseFromString(res[0], 'text/html');
       var parts = {};
       Array.prototype.forEach.call(doc.querySelectorAll('[data-slot]'), function (n) { parts[n.getAttribute('data-slot')] = n; });
-      var map = {core1: 'slot-core1', cards1: 'slot-cards1', half2: 'slot-half2', kk: 'slot-kk'};
+      /* ep1-full.html の絵の図解は使わない：後半の図の入れ物を空にして、抜粋の図（後半）を入れる */
+      var cards2 = parts.half2 && parts.half2.querySelector('.cards');
+      if (!cards2) { throw new Error('後半の図の入れ物なし'); }
+      while (cards2.firstChild) { cards2.removeChild(cards2.firstChild); }
+      var map = {core1: 'slot-core1', half2: 'slot-half2', kk: 'slot-kk'};
       Object.keys(map).forEach(function (k) {
         var slot = document.getElementById(map[k]);
         if (!parts[k] || !slot) { throw new Error('差し込み先なし ' + k); }
@@ -702,6 +751,8 @@ body.member .line-card{display:block}
         while (w && w.firstChild) { slot.insertBefore(w.firstChild, w); }
         if (w) { slot.removeChild(w); }
       });
+      putFigs(document.getElementById('slot-cards1'), nuki.parts.cards1, nuki.style);
+      putFigs(document.querySelector('#slot-half2 .cards'), nuki.parts.cards2, nuki.style);
       return loadScript('ep1-full.js');
     }).then(function () { body.classList.add('is-friend'); setTier('2段目（LINE登録者）'); });
   }
@@ -962,6 +1013,7 @@ body.member .line-card{display:block}
     }).catch(function (e) { console.warn(e); fail(e); say('確認できなかった（' + why(e) + '）'); });
   }
   render();
+  showFig1();
   try { judge(); } catch (e) { console.warn(e); fail(e); say('確認できなかった（' + why(e) + '）'); }
   var copyBtn = document.getElementById('dcopy');
   if (copyBtn) {

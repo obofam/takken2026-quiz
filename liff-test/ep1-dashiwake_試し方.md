@@ -41,6 +41,8 @@ https://liff.line.me/2011606963-hH0DzETc/ep1-dashiwake.html
 - A の「LINEで開く」ボタンと「LINEに登録している方は…」の説明文は削除（LINE内で開けば誰でも全部が見えてしまうため）。友だち追加のリンクは残す。
 
 ## 3段の試作（ep1-3dan.html）
+2026-11-12：1段目・2段目の図は、絵の図解ではなく「やさしいテキストからの抜粋」になった（`ep1-nukigaki.html`。1段目＝図1、2段目＝図1・3・5・6・8、図2・4・7は「この図はやさしいテキストに」の札。赤シートなし）。`node scripts/build-ep1-text.mjs` が全文版と一緒に作る。`ep1-dashiwake.html`・`ep1-full.html` は旧版のまま残してある。
+
 通常・LINE登録者・やさしいテキスト購入者の3段。`ep1-dashiwake.html` は残してある。
 
 - 1段目（通常）：図解1枚、○×3問、友だち追加の案内
