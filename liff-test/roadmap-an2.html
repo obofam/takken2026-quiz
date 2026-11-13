@@ -401,6 +401,28 @@
     .faq dt { font-size: 14px; margin-top: 8px; line-height: 1.5; }
     .faq dd { font-size: 14px; line-height: 1.5; }
   }
+
+  /* 赤入れ：下のメッセージの囲み・分野コンプリートのバッジ */
+  .core-foot { background: var(--cyan-soft); border-radius: 14px; padding: 18px 16px; margin: 26px auto 0; max-width: 480px; font-weight: 500; line-height: 1.6; }
+  .core-foot .cf1 { display: block; font-size: 14px; font-weight: 700; color: var(--muted); }
+  .core-foot .cf2 { display: block; margin-top: 6px; font-size: 16px; font-weight: 900; line-height: 1.7; }
+  .core-foot .mk-u { padding: 0 4px; background: linear-gradient(transparent 60%, var(--cyan-mid) 60%, var(--cyan-mid) 92%, transparent 92%); }
+  @media (min-width: 768px) { .core-foot .cf2 { font-size: 18px; } }
+  .bdg { display: flex; justify-content: center; gap: 10px; border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; }
+  .bdg .bd { width: 27px; height: 27px; border-radius: 50%; border: 1px solid #C3CCD3; background: var(--card); color: #4E5B66; font-size: 13px; font-weight: 700; line-height: 25px; text-align: center; transition: background .4s, border-color .4s; }
+  .bdg .bd.on { background: #8CCB2B; border-color: #8CCB2B; color: #fff; }
+  .pcard .bdg { grid-column: 1 / -1; }
+  .filters button .fc.ok, .filters button[aria-pressed="true"] .fc.ok { background: #E9F8C9; color: #3A6008; }
+  .phc.ok { color: inherit; }
+  .phk { display: inline-block; margin-left: 6px; font-size: 12px; font-weight: 700; line-height: 1.5; padding: 0 8px; border-radius: 999px; background: #E9F8C9; color: #3A6008; vertical-align: 1px; }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 8px); background: var(--text); color: #fff; font-size: 14px; font-weight: 700; line-height: 1.5; padding: 8px 18px; border-radius: 999px; opacity: 0; pointer-events: none; transition: opacity .5s ease, transform .5s ease; z-index: 20; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* 赤入れ：使い方の「音声で聴く」行（Spotifyだけボタン・ほかは小さな文字リンク） */
+  .how .lead { font-weight: 700; }
+  .how a.spbtn { display: inline-flex; align-items: center; min-height: 38px; padding: 0 16px; font-size: 14px; font-weight: 700; line-height: 1; color: var(--cyan-dark); text-decoration: none; background: var(--card); border: 1.5px solid var(--cyan); border-radius: 999px; }
+  .how .oth { font-size: 13px; line-height: 1.5; }
+  .how .oth a { display: inline-block; padding: 11px 0; margin: -11px 0; text-decoration: underline; text-underline-offset: 3px; }
 </style>
 </head>
 <body>
@@ -425,6 +447,7 @@
         <div class="stat"><b id="stT">41</b><span>本編</span></div>
       </div>
     </div>
+    <div class="bdg" id="bdg" aria-label="分野ごとのバッジ"></div>
     <p class="pg-note" id="pgNote"><span class="nb">いまは、この端末にだけ残ります。</span><span class="nb">LINEで記録を引き継げるように</span><span class="nb">準備しています。</span></p>
   </section>
 
@@ -459,7 +482,7 @@
     <ul class="em-leg"><li class="em1"><i></i>業法　20問</li><li class="em2"><i></i>権利関係　14問</li><li class="em3"><i></i>法令上の制限　8問</li><li class="em4"><i></i>税・その他　8問</li></ul>
   </section>
   <ul class="how">
-    <li><span class="n">1</span><a class="main" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="spotify">音声で聴く（Spotify）</a><span class="oth">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="standfm">stand.fm</a></span></li>
+    <li><span class="n">1</span><span class="lead">音声で聴く</span><a class="spbtn" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="spotify">Spotify</a><span class="oth">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="standfm">stand.fm</a></span></li>
     <li><span class="n">2</span>【図解と3問】のページで確かめる</li>
   </ul>
 
@@ -491,7 +514,7 @@
   <section class="line-cta">
     <div class="over">LINE・メール</div>
     <p class="head" id="lineHead"><span class="nb">図解の続きと過去問1選は、</span><span class="nb">LINEかメールで</span></p>
-    <p class="body" id="lineBody"><span class="nb">毎週月曜に、こちらからお届けします。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録は無料です。</span></p>
+    <p class="body" id="lineBody"><span class="nb">毎週月曜に、こちらからお届けします。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録無料です。</span></p>
     <div class="btns"><a class="btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="roadmap-line">LINEで受け取る</a><a class="btn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="roadmap-mail">メールで受け取る</a></div>
   </section>
 
@@ -504,8 +527,9 @@
       <dd><span class="nb">2026年の回は、</span><span class="nb"><a href="https://takken.mimiobo.com/tracker.html" data-umami-event="roadmap-tracker2026">2026年の進捗トラッカー</a>から</span><span class="nb">聴けます。</span></dd>
     </dl>
   </section>
-  <p class="core-foot"><span><span style="display:inline-block;white-space:nowrap">忙しい社会人の勉強は、</span><span style="display:inline-block;white-space:nowrap">止まりがちです。</span></span><br><span><span style="display:inline-block;white-space:nowrap">ここなら、静かに、</span><span style="display:inline-block;white-space:nowrap">淡々と続けられます。</span></span></p>
+  <p class="core-foot"><span class="cf1"><span style="display:inline-block;white-space:nowrap">忙しい社会人の勉強は、</span><span style="display:inline-block;white-space:nowrap">止まりがちです。</span></span><span class="cf2"><span class="mk-u"><span style="display:inline-block;white-space:nowrap">ここなら、静かに、</span><span style="display:inline-block;white-space:nowrap">淡々と続けられます。</span></span></span></p>
 </div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script>
 // 各回の spotify / youtube に URL を入れる。zukai（図解）/ mondai（問題）は本編なら回のページから自動で作る（下の EP_URL）。
 // 補強・まとめ・短尺に回のページができたら、その回の zukai / mondai に URL を直接入れる（直接入れた値が優先）。
@@ -524,7 +548,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     document.getElementById('heroNote').textContent = '1月4日から、毎週月曜更新';
     document.getElementById('newBox').style.display = 'block';
     document.getElementById('lineHead').innerHTML = '<span class="nb">始まったら、</span><span class="nb">LINEかメールでお知らせします</span>';
-    document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録は無料です。</span>';
+    document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録無料です。</span>';
   }
   function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   // 文末の「です／ます／違反」だけが次の行に落ちないよう、最後の文節（約5字）をひとかたまりにする
@@ -564,7 +588,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     var diff = Math.ceil((EXAM - TODAY) / 86400000);
     document.getElementById('daysLeft').textContent = diff > 0 ? diff : 0;
   }
-  function renderProgress(){
+  function renderProgress(announce){
     var L = rd(K_L), D = rd(K_D), nl = 0, nd = 0, pt = {};
     // 配信前（2027-01-04より前）は、記録が1件もない端末では進み具合を隠す
     var showPg = true; // ロードマップ＝トラッカー：進み具合はいつも出す（0でも）
@@ -585,12 +609,31 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
       var p = pt[+el.getAttribute('data-p')] || [0,0];
       el.textContent = p[0] + '/' + p[1];
     });
+    // 分野コンプリート：バッジ・見出しの札・タブの色（毎回、今の記録から計算）
+    var names = ['業','権','法','税','直'], full = {};
+    PARTS.forEach(function(_, i){ var q = pt[i+1] || [0,0]; full[i+1] = q[1] > 0 && q[0] === q[1]; });
+    var bd = document.getElementById('bdg');
+    if (!bd.firstChild) bd.innerHTML = names.map(function(c,i){ return '<span class="bd" data-p="'+(i+1)+'" role="img" aria-label="'+esc(partName(i+1))+'"><span aria-hidden="true">'+c+'</span></span>'; }).join('');
+    Array.prototype.forEach.call(bd.children, function(el){ var p = +el.getAttribute('data-p'); el.classList.toggle('on', !!full[p]); el.setAttribute('aria-label', partName(p) + (full[p] ? '、コンプリート' : '')); });
+    Array.prototype.forEach.call(document.querySelectorAll('#sched tr.ph th'), function(th){
+      var p = +th.querySelector('.phc').getAttribute('data-p'), k = th.querySelector('.phk');
+      if (full[p] && !k) { k = document.createElement('span'); k.className = 'phk'; k.textContent = 'コンプリート'; th.appendChild(k); }
+      if (!full[p] && k) th.removeChild(k);
+    });
+    if (announce) PARTS.forEach(function(_, i){ if (full[i+1] && !prevFull[i+1]) showToast(partName(i+1) + '、コンプリート。'); });
+    prevFull = full;
     // 分野タブの「聴いた数/本編の数」
     Array.prototype.forEach.call(document.querySelectorAll('#filters .fc'), function(el){
       var p = +el.getAttribute('data-p'), a, b;
       if (p) { a = (pt[p]||[0,0])[0]; b = (pt[p]||[0,0])[1]; } else { a = nl; b = HONPEN.length; }
       el.textContent = a + '/' + b;
+      el.classList.toggle('ok', b > 0 && a === b);
     });
+  }
+  var prevFull = {}, toastTimer;
+  function showToast(msg){
+    var t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2600);
   }
   var KIND = {'本編':['本編',''], '短尺':['復習',' tag'], 'まとめ':['まとめ',' line'], '補強':['もう1論点',' line']};
   // 本編の図解・問題は回のページ（ep/N）の節へ。?src=roadmap で Umami に入口が残る（YouTube は ?src=yt）
@@ -696,7 +739,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     var tr = b.closest('tr'); tr.classList.remove('s1','s2'); if (nx) tr.classList.add('s'+nx);
     updateRail();
     if (window.umami) { try { umami.track('roadmap_progress', { to: ST_LABEL[nx] }); } catch(_) {} }
-    renderProgress();
+    renderProgress(true);
   });
   renderCountdown();
   render();
