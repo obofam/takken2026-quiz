@@ -221,7 +221,8 @@ test('production ep/1: tsuzuki.html is the free excerpt (same as ep1-nukigaki.ht
   for(const [f,h] of files){
     assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|data-hint|data-part=|ワンポイント/,f);
     if(f!=='index.html')assert.ok(!h.includes('今回の数字'),f);// index.html にあるのは見本カードの説明文「今回の数字」だけ（既存の文言）
-    assert.doesNotMatch(h,/_ep-text|api\/ep-text|api\/session/,f);
+    // 本番の第1回（index.html）だけは、購入の確認（GET /api/ep-text）を呼ぶ。テキストの中身はAPIが返すので、ここには無い
+    assert.doesNotMatch(h,f==='index.html'?/_ep-text|api\/session/:/_ep-text|api\/ep-text|api\/session/,f);
     for(const w of ['転貸','又貸し','事務所に数える','継続して業務ができる施設','取消しの理由','聴聞の公示','駆け込み廃業も取消し'])assert.ok(!h.includes(w),f+':'+w);
   }
   const page=files.find(x=>x[0]==='index.html')[1];
@@ -317,6 +318,51 @@ test('the paid text is public only in ep/1/text/: no other public file carries i
     assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|data-hint|data-part=|ワンポイント|setupSheet|tpl-css/,f);
     assert.ok(!h.includes(marker),f);
   }
+});
+
+// ---- 本番の購入者の見え方：ep/1/index.html が /api/ep-text で 200 のときだけ読み込む共通の部品（ep/_shared/）。有料の中身を入れない・二重に持たない ----
+const sharedDir=path.join(__dirname,'../../ep/_shared');
+const shared=()=>({js:fs.readFileSync(path.join(sharedDir,'text-view.js'),'utf8'),css:fs.readFileSync(path.join(sharedDir,'text-view.css'),'utf8')});
+test('production buyer view: ep/_shared parts carry no paid content (no text sentence, no hint table, no marker, no red-sheet marks)',()=>{
+  const {js,css}=shared(),built=require('../api/_ep-text/ep1');
+  for(const [f,h] of [['text-view.js',js],['text-view.css',css]]){
+    assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|role="button"|今回の数字|ワンポイント|_ep-text|api\/ep-text|api\/session|tpl-css/,f);
+    for(const w of ['転貸','又貸し','適用されない','事務所に数える','継続して業務ができる施設','取消しの理由','聴聞の公示','駆け込み廃業も取消し','いる／いらない','知事／大臣','欠格になる／欠格にならない'])assert.ok(!h.includes(w),f+':'+w);
+    assert.ok(!h.includes('なぜ、駆け込み廃業も取消しと同じ扱いなの'),f);
+    assert.doesNotMatch(h,/[→←↑↓]|[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u,f);
+  }
+  // テキストの文（8字以上の字の並び）が1つも入っていない
+  const sentences=built.replace(/<style>[\s\S]*?<\/style>/g,'').split(/<[^>]+>/).map(x=>x.trim()).filter(x=>x.length>=8);
+  assert.ok(sentences.length>20);
+  for(const t of sentences)assert.ok(!js.includes(t)&&!css.includes(t),t);
+});
+test('production buyer view: the shared js/css are the same parts as the trial page and the sample page (no second copy of the red sheet)',()=>{
+  const {js,css}=shared(),dan=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8'),sampleHtml=sample();
+  const view=dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function getText\(preview\))/)[0];
+  assert.ok(js.includes(view),'showBuyer + setupSheet');
+  const sheetJs=dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function showBuyer\(html\))/)[0];
+  assert.ok(js.includes(sheetJs)&&sampleHtml.includes(sheetJs),'setupSheet is the same in trial, shared and sample');
+  for(const re of [/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/,/\.jump\{[^}]*\}\n\.jb\{[^}]*\}\n\.jb:active\{[^}]*\}/,/\.is-buyer \.tcard[^\n]*\n\.thost\{[^\n]*\n\.textwrap\{[^\n]*\n\.is-buyer #text1[^\n]*\n/]){
+    const part=dan.match(re)[0];assert.ok(css.includes(part),String(re));
+  }
+  assert.ok(sampleHtml.includes(dan.match(/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/)[0]));
+  assert.match(css,/:root\{--navh:48px\}/);
+  assert.match(js,/window\.TakkenTextView = \{ show: showBuyer \}/);
+  assert.match(js,/\/api\/ep-pdf\?ep=1/);
+});
+test('production ep/1/index.html: ep-text is called only after the login check, only with a session; 401/403/failure leave the page as it is; ep-view gets tier text',()=>{
+  const h=fs.readFileSync(path.join(__dirname,'../../ep/1/index.html'),'utf8');
+  assert.equal((h.match(/fetch\('\/api\/ep-text\?ep=1'/g)||[]).length,1);
+  assert.doesNotMatch(h,/api\/ep-text\?ep=1&|mihon=1|ALLOW_TEXT_PREVIEW/);
+  // ログインの確認（TakkenProgress.init）が済んでから textCheck。セッション（provider）が無ければ呼ばない
+  assert.match(h,/judged\.then\(goProgress, goProgress\)\.then\(textCheck\)\.then\(settleView, settleView\)/);
+  assert.match(h,/who = window\.TakkenProgress && window\.TakkenProgress\.provider\(\)[\s\S]{0,200}if \(!who\) \{ setText\('呼んでいない/);
+  assert.match(h,/if \(res\.status === 200 && typeof res\.json\.html === 'string'\) \{ return showText\(res\.json\.html\); \}/);
+  assert.match(h,/\/ep\/_shared\/text-view\.css[\s\S]{0,60}\/ep\/_shared\/text-view\.js/);
+  assert.match(h,/window\.umami\.track\('ep-view', \{ep: '1', tier: kind\}\)/);assert.match(h,/sendView\('text'\)/);
+  assert.match(h,/\['text', textState\]/);
+  // 二重にログインしない：progress-sync には liffId を渡さない・このページは /api/session を直接呼ばない
+  assert.ok(!/TakkenProgress\.init\(\{liffId/.test(h));assert.doesNotMatch(h,/api\/session/);
 });
 
 test('print-only bands (page bar 1／2・2／2, print title, next/problem bands) are not in any build output',()=>{

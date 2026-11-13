@@ -1,0 +1,26 @@
+/* 自動生成：liff-test/scripts/build-ep1-text.mjs（正本は liff-test/ep1-3dan.html と、見本ページと同じ部品）。直さない。
+   やさしいテキスト購入者の見え方のCSS（上の近道・赤シートの帯・印刷用ボタン）。有料の中身は入れない。 */
+:root{--navh:48px}
+.jump{position:sticky;top:0;z-index:30;box-sizing:border-box;height:var(--navh);margin-left:-16px;margin-right:-16px;padding:4px 16px;display:flex;align-items:center;gap:6px;background:var(--bg);border-bottom:1px solid var(--line)}
+.jb{flex:1 1 0;min-width:0;text-align:center;font-size:14px;font-weight:700;line-height:1.4;color:var(--ink);background:#fff;border:1.5px solid var(--sky);border-radius:999px;padding:0 4px;min-height:40px;display:flex;align-items:center;justify-content:center;text-decoration:none;white-space:nowrap}
+.jb:active{background:var(--soft)}
+.jb:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+@media (min-width:820px){.jump{margin-left:-32px;margin-right:-32px;padding:4px 32px}}
+.is-buyer .tcard,.is-buyer .past.txt,.is-buyer #zukai,.is-buyer #maru{display:none}
+.thost{display:block}
+.textwrap{display:flex;flex-direction:column;gap:12px}
+.is-buyer #text1,.is-buyer #text2,.is-buyer .qset{scroll-margin-top:calc(var(--navh) + 52px)}
+.sbar2{position:sticky;top:var(--navh);z-index:20;box-sizing:border-box;height:44px;display:flex;align-items:center;flex-wrap:nowrap;gap:8px;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding:2px 16px}
+.sb2{appearance:none;-webkit-appearance:none;font:inherit;font-size:14px;font-weight:700;line-height:1.2;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:0 14px;min-height:40px;cursor:pointer;white-space:nowrap;flex:0 0 auto;-webkit-tap-highlight-color:transparent}
+.sb2[aria-pressed="true"]{background:var(--sheet);color:#fff}
+.sb2-lab{font-size:14px;font-weight:900;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
+.seg{display:flex;flex:0 0 auto}
+.seg .sb2:first-child{border-radius:999px 0 0 999px;border-right-width:0}
+.seg .sb2:last-child{border-radius:0 999px 999px 0}
+.sb2-cnt{margin-left:auto;font-size:14px;font-weight:700;line-height:1.3;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
+.shint{margin:0;font-size:14px;line-height:1.7;color:#4F5963}
+.pdfrow{display:block;margin:4px 0 0;text-align:center}
+.pdfbtn{display:inline-block;box-sizing:border-box;min-height:44px;line-height:1.4;padding:10px 20px;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--ink);border-radius:999px;text-decoration:none}
+@media (min-width:820px){.sbar2{margin:0 -32px;padding:2px 32px}}
+.sb2:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+.is-buyer .only-a,.is-buyer .line-card{display:none !important}

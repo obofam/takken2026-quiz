@@ -285,6 +285,10 @@ const sheetJs = must(dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function showB
 const sheetCss = must(dan.match(/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/), 'ep1-3dan.html の赤シートの帯のCSS')[0];
 const jumpCss = must(dan.match(/\.jump\{[^}]*\}\n\.jb\{[^}]*\}\n\.jb:active\{[^}]*\}/), 'ep1-3dan.html の上の近道のCSS')[0];
 const pdfCss = must(dan.match(/\.pdfrow\{[^}]*\}\n\.pdfbtn\{[^}]*\}/), 'ep1-3dan.html のPDFボタンのCSS')[0];
+/* 上の近道：見本ページと、本番の購入者の見え方（ep/_shared/text-view.css）で、同じ文字列を使う */
+const jumpBlock = jumpCss + `
+.jb:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+@media (min-width:820px){.jump{margin-left:-32px;margin-right:-32px;padding:4px 32px}}`;
 const full = read('../ep1-full.html');
 const cores = [...full.matchAll(/<div class="core"><h2>今日のポイント<\/h2><p>[^<]*<\/p><\/div>/g)].map(m => m[0]);
 if (cores.length !== 2) throw new Error('見本ページ：今日のポイントが2つ見つからない');
@@ -343,9 +347,7 @@ a{color:var(--ink);text-underline-offset:2px}
 .core::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--sky)}
 .core h2{font-size:14px;font-weight:900;color:var(--ink);line-height:1.3;letter-spacing:.04em}
 .core p{font-size:17px;font-weight:700;margin-top:3px;line-height:1.7}
-${jumpCss}
-.jb:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
-@media (min-width:820px){.jump{margin-left:-32px;margin-right:-32px;padding:4px 32px}}
+${jumpBlock}
 ${sheetCss}
 ${pdfCss}
 .sec-h{font-size:24px;font-weight:900;color:var(--ink);line-height:1.3;display:flex;align-items:center;gap:10px}
@@ -511,3 +513,42 @@ if (sampleRs !== 30) throw new Error('見本ページ：赤シートが30か所�
 if (/△/.test(samplePage)) throw new Error('見本ページに△がある');
 fs.writeFileSync(SAMPLE_OUT, samplePage);
 console.log('sample page written: ep/1/text/index.html', samplePage.length, 'chars; rs=' + sampleRs);
+
+/* ============================================================
+   本番の購入者の見え方（ep/1/index.html が、/api/ep-text で 200 が返った人にだけ読み込む共通の部品）。
+   赤シートの動き・テキストの差し込み・近道と帯のCSSは、試し用 ep1-3dan.html から切り出して、見本ページと同じものを使う（手で二重に書かない）。
+   入れるのは見た目と動きだけ。有料の中身（ヒントの表・図・本文・今回の数字）は入れない（中身は /api/ep-text が返す HTML の中）。
+   ============================================================ */
+const viewJs = must(dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function getText\(preview\))/), 'ep1-3dan.html の購入者の見え方（showBuyer まで）')[0];
+const buyerBaseCss = must(dan.match(/\.is-buyer \.tcard[^\n]*\n\.thost\{[^\n]*\n\.textwrap\{[^\n]*\n\.is-buyer #text1[^\n]*\n/), 'ep1-3dan.html の購入者の見え方のCSS')[0];
+const SHARED = new URL('../../ep/_shared/', import.meta.url);
+if (!/\/ep\/_shared\/$/.test(SHARED.pathname)) throw new Error('共通の部品の書き出し先が想定と違う: ' + SHARED.pathname);
+const viewJsOut = `/* 自動生成：liff-test/scripts/build-ep1-text.mjs（正本は liff-test/ep1-3dan.html）。直さない。
+   やさしいテキスト購入者の見え方の動き（赤シート・テキストの差し込み・近道）。ep/1/index.html が、購入の確認（テキストのAPI）で 200 が返った人にだけ読み込む。
+   有料の中身は入れない（テキストの HTML は引数で受け取る）。 */
+(function () {
+  'use strict';
+  var body = document.body;
+  var mihon = null;
+  var buyerShown = false;
+  function setTier() {}
+${viewJs}
+  window.TakkenTextView = { show: showBuyer };
+})();
+`;
+const viewCssOut = `/* 自動生成：liff-test/scripts/build-ep1-text.mjs（正本は liff-test/ep1-3dan.html と、見本ページと同じ部品）。直さない。
+   やさしいテキスト購入者の見え方のCSS（上の近道・赤シートの帯・印刷用ボタン）。有料の中身は入れない。 */
+:root{--navh:48px}
+${jumpBlock}
+${buyerBaseCss}${sheetCss}
+.is-buyer .only-a,.is-buyer .line-card{display:none !important}
+`;
+if (/class="[^"]*\brs\b|role="button"|今回の数字|ワンポイント|_ep-text|api\/ep-text/.test(viewJsOut + viewCssOut)) throw new Error('共通の部品に有料の中身が入っている');
+const paidSentences = [p1, p2, p3].flatMap(h => h.split(/<[^>]+>/)).map(x => x.trim()).filter(x => x.length >= 8);
+for (const t of paidSentences) {
+  if ((viewJsOut + viewCssOut).includes(t)) throw new Error('共通の部品にテキストの文が入っている: ' + t);
+}
+fs.mkdirSync(SHARED, { recursive: true });
+fs.writeFileSync(new URL('text-view.js', SHARED), viewJsOut);
+fs.writeFileSync(new URL('text-view.css', SHARED), viewCssOut);
+console.log('shared parts written: ep/_shared/text-view.js', viewJsOut.length, 'chars, text-view.css', viewCssOut.length, 'chars');

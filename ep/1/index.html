@@ -766,13 +766,14 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   /* 記録の同期。LINEの判定（liff.init）はこのページがすでに済ませているので、ここでは二重に init しない（liffId を渡さない）。
      LINEの中でログイン済みなら ID トークンでサーバーのセッションに入り、メールのログインなどはクッキーのセッションがあるときだけ。なければ端末だけ。 */
   function startProgress() {
-    new Promise(function (ok, ng) {
+    return new Promise(function (ok, ng) {
       var sc = document.createElement('script'); sc.src = '/progress-sync.js'; sc.async = true; sc.onload = ok; sc.onerror = ng; document.head.appendChild(sc);
     }).then(function () {
       if (!window.TakkenProgress) { return; }
-      window.TakkenProgress.init({cookieHint: true});
+      var started = window.TakkenProgress.init({cookieHint: true});
       progReady = true;
       if (progDoneKey) { window.TakkenProgress.set('done', progDoneKey, true); }
+      return started; /* ログインの確認が済むまで待てるよう返す（下の判定のスクリプトが、済んだあとにテキストの確認をする） */
     }).catch(function () {});
   }
   window.__epProgressStart = startProgress; /* 下の判定のスクリプトが、判定のあとに呼ぶ */
@@ -871,6 +872,9 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
    はっきり friendFlag:false と返ったときだけ登録なしのまま。失敗・不明は、LINEの中なら続きを出す。LINEの外では何も変えない。
    LINEの外で、LINEのログイン画面へ送る関数は呼ばない。SDKは表示のあとで読み込む。
    続きの中身：/ep/1/tsuzuki.html（図解の抜粋。ビルドが書き出す）、/ep/1/line-full.html・line-full.js（今日のポイント・過去問1選）。
+   3段目＝やさしいテキストを買った人：記録の同期（ログインの確認）が済んだあと、ログインのセッションがある人だけ GET /api/ep-text?ep=1。
+   200 なら、共通の部品（/ep/_shared/text-view.css・text-view.js）を読み込んで購入者の見え方に切り替える（有料の中身はAPIが返す。このファイルには入れない）。
+   401・403・失敗は、いまの見え方のまま（何も出さない）。ログインの印が無い人は呼ばない。
    ?joutai=1 で「表示の状態（確認用）」を出す。?mihon=touroku は localhost／127.0.0.1 のときだけ効く（手元の確認用）。 */
 (function () {
   'use strict';
@@ -881,7 +885,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   var mihon = isLocal ? qs.get('mihon') : null;
   var showBox = (qs.get('joutai') === '1');
   var stEl = null, boxLines = [];
-  var curState = '確認前', lastErr = null, judgeNote = '', tier = '登録なし';
+  var curState = '確認前', lastErr = null, judgeNote = '', tier = '登録なし', textState = '確認前';
   var prog = {sdk: null, init: null, login: null, friend: null, full: null};
   var STEPS = [['sdk', 'SDKの読み込み'], ['init', '初期化'], ['login', 'ログインの確認'], ['friend', '友だちの確認'], ['full', '続きの表示']];
   function warn(e) { if (showBox) { try { console.warn(e); } catch (_) {} } }
@@ -920,6 +924,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
     var ctx = get(function () { return window.liff.getContext(); });
     var rows = [
       ['いまの段', tier],
+      ['text', textState],
       ['状態', curState],
       ['段階', stageText()],
       ['エラーの中身', errText()],
@@ -960,11 +965,11 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
     });
   }
 
-  /* どちらの見え方になったかを Umami に1回だけ送る（window.umami が無ければ何もしない。読み込み待ちで最大5秒ほど待つ） */
-  var tracked = false;
-  function track(kind) {
-    if (tracked) { return; }
-    tracked = true;
+  /* どちらの見え方になったかを Umami に1回だけ送る（window.umami が無ければ何もしない。読み込み待ちで最大5秒ほど待つ）。
+     見え方（open / line / mail）はいったん覚えておき、テキストの確認が済んでから送る（買った人は text だけを送る。二重に数えない）。
+     確認が長引いても、4秒たてば覚えておいた見え方を送る。 */
+  var tracked = false, viewKind = null, trackTimer = null;
+  function sendView(kind) {
     var n = 0;
     (function send() {
       try {
@@ -973,6 +978,22 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
       if (++n < 20) { setTimeout(send, 250); }
     })();
   }
+  function track(kind) {
+    if (tracked) { return; }
+    tracked = true;
+    sendView(kind);
+  }
+  function trackText() {
+    if (trackedText) { return; }
+    trackedText = true; tracked = true;
+    sendView('text');
+  }
+  var trackedText = false;
+  function pendView(kind) {
+    viewKind = kind;
+    if (!trackTimer) { trackTimer = setTimeout(function () { if (viewKind) { track(viewKind); } }, 4000); }
+  }
+  function settleView() { if (viewKind) { track(viewKind); } }
 
   function loadScript(src) {
     return new Promise(function (ok, ng) {
@@ -1058,13 +1079,13 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
       });
     });
   }
-  function openView(msg) { tier = '登録なし'; say(msg); track('open'); }
+  function openView(msg) { tier = '登録なし'; say(msg); pendView('open'); }
   function lineView(note) {
     judgeNote = note;
     return showFull().then(function () {
       prog.full = 'ok';
       say('LINEの中');
-      track('line');
+      pendView('line');
     }, function (e) {
       warn(e); prog.full = 'ng'; lastErr = e;
       openView('続きを表示できなかった（' + why(e) + '）');
@@ -1093,7 +1114,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
     return showFull().then(function () {
       prog.full = 'ok'; tier = 'メール登録者';
       say('メールのリンクから');
-      track('mail');
+      pendView('mail');
     }, function (e) {
       warn(e); prog.full = 'ng'; lastErr = e;
       openView('続きを表示できなかった（' + why(e) + '）');
@@ -1134,12 +1155,54 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
     });
   }
 
+  /* ---------- 3段目：やさしいテキスト ---------- */
+  function loadCss(href) {
+    return new Promise(function (ok, ng) {
+      var l = document.createElement('link');
+      l.rel = 'stylesheet'; l.href = href; l.onload = ok;
+      l.onerror = function () { ng(new Error('読み込めない ' + href)); };
+      document.head.appendChild(l);
+    });
+  }
+  function setText(t) { textState = t; render(); }
+  function showText(html) {
+    return Promise.all([loadCss('/ep/_shared/text-view.css'), loadScript('/ep/_shared/text-view.js')]).then(function () {
+      if (!window.TakkenTextView) { throw new Error('テキストの表示の部品が動かない'); }
+      /* 今日のポイント・過去問1選の差し込み（LINE・メールの見え方と同じ続き）がまだなら、先に入れる。入れられなくても、テキストは出す */
+      return fullShown ? null : showFull().catch(function (e) { warn(e); lastErr = e; });
+    }).then(function () {
+      var n = window.TakkenTextView.show(html);
+      tier = 'やさしいテキスト購入者';
+      judgeNote = judgeNote || '判定：テキストの確認が200';
+      setText('200（テキストを表示。赤シート ' + n + ' か所）');
+      say('やさしいテキスト購入者');
+      trackText();
+    });
+  }
+  /* ログインの確認（記録の同期）が済んだあとに呼ぶ。ログインのセッションが無い人は呼ばない。失敗しても今の見え方は壊さない（reject しない） */
+  function textCheck() {
+    var who = null;
+    try { who = window.TakkenProgress && window.TakkenProgress.provider(); } catch (_) {}
+    if (!who) { setText('呼んでいない（ログインのセッションなし）'); return Promise.resolve(); }
+    setText('確認中');
+    return fetch('/api/ep-text?ep=1', {credentials: 'same-origin', cache: 'no-store'}).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) { return {status: r.status, json: j || {}}; });
+    }).then(function (res) {
+      if (res.status === 200 && typeof res.json.html === 'string') { return showText(res.json.html); }
+      setText(res.status + '（いまの見え方のまま）');
+    }).catch(function (e) { warn(e); setText('失敗（' + why(e) + '）　いまの見え方のまま'); });
+  }
+
   if (showBox) { makeBox(); }
   render();
   var judged;
   try { judged = Promise.resolve(judge()); } catch (e) { fail(e); openView('確認できなかった（' + why(e) + '）'); judged = Promise.resolve(); }
-  var goProgress = function () { try { if (window.__epProgressStart) { window.__epProgressStart(); } } catch (_) {} };
-  judged.then(goProgress, goProgress);
+  var goProgress = function () {
+    var p = null;
+    try { if (window.__epProgressStart) { p = window.__epProgressStart(); } } catch (_) {}
+    return Promise.resolve(p).catch(function () {});
+  };
+  judged.then(goProgress, goProgress).then(textCheck).then(settleView, settleView);
 })();
 </script>
 </body>
