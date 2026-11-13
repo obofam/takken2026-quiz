@@ -395,6 +395,28 @@ body.member .line-card{display:block}
 @media (max-width:600px){
   .sec-h{font-size:22px}
 }
+
+/* LINEの中で開いた人（LINE登録者）への出し分け。判定のあと、続きを差し込み、登録の案内を隠す */
+.slot{display:contents}
+.only-b{display:none}
+.is-friend .only-a{display:none !important}
+.is-friend .only-b{display:block}
+/* 差し込む続き（過去問1選・図の札）のスマホ・老眼の見直し：本文16px・注記14px以上・押す所44px以上 */
+.kk-item{font-size:16px}
+.kk-lines{font-size:15px}
+.kk-memo,.qres .kk-onair-l{font-size:14px}
+.qres .kk-onair{font-size:15px}
+.dm{width:44px;height:44px}
+.gcard{min-height:44px}
+.gcard .gno{width:26px;height:26px;font-size:14px}
+.gcard .gn{font-size:14px}
+/* 表示の状態（確認用）：?joutai=1 をつけたときだけ出る */
+.dbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px 14px;font-size:16px;line-height:1.6;color:var(--text);text-align:left}
+.dhead{font-size:14px;font-weight:700;line-height:1.4;color:#4F5963;margin:0}
+.drow{margin-top:8px}
+.dk{font-weight:700}
+.dv{white-space:pre-wrap}
+.dcopy{margin-top:14px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -419,6 +441,7 @@ body.member .line-card{display:block}
 <div class="half">
   <div class="half-h">前半　宅建業と免許</div>
 
+  <div class="slot" id="slot-core1"></div>
   <div class="target"><span class="nk">自ら売買・交換、</span><span class="nk">または他人の売買・交換・貸借の</span><span class="nk">代理・媒介</span></div>
   <div class="cards">
 <template id="nk-fig1"><style data-nk="css">
@@ -645,9 +668,12 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   </figure></div></template>
 <div class="thost" id="slot-fig1"></div>
 <script>(function(){var t=document.getElementById("nk-fig1"),h=document.getElementById("slot-fig1");if(!t||!h||!h.attachShadow){return;}var r=h.attachShadow({mode:"open"});r.appendChild(t.content.cloneNode(true));})();</script>
+<div class="slot" id="slot-cards1"></div>
   </div>
 </div>
-<div class="next-box" id="zukai-next"><p><span class="nk">図解の続きは、</span><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">でお届けします。</span></p></div>
+<div class="slot" id="slot-half2"></div>
+<p class="pnote only-b"><span class="nk">LINEに登録している方向けに、</span><span class="nk">全部を表示しています。</span></p>
+<div class="next-box only-a" id="zukai-next"><p><span class="nk">図解の続きは、</span><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">でお届けします。</span></p></div>
   </section>
 
   <!-- 節2：○×3問 -->
@@ -659,7 +685,8 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   <!-- 節3：過去問1選 -->
   <section class="sec" id="honban">
     <h2 class="sec-h">過去問1選</h2>
-    <div class="next-box"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">では、</span><span class="nk">この回のテーマに沿った過去問を</span><span class="nk">解いていただけます。</span></p></div>
+    <div class="next-box only-a"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">では、</span><span class="nk">この回のテーマに沿った過去問を</span><span class="nk">解いていただけます。</span></p></div>
+    <div class="slot" id="slot-kk"></div>
     <a class="tcard" href="/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1">
       <span class="tlab">有料版の見本</span>
       <span class="tbody"><img src="/ep/1/text/a4-p1.webp" alt="" width="800" height="1133" loading="lazy">
@@ -678,7 +705,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
     <ul class="past"><li><a class="prow" href="https://open.spotify.com/episode/5hoEjRtwI6MNdYBpBlfkY8" target="_blank" rel="noopener"><span class="pico" aria-hidden="true"></span><span class="pmid"><span class="pt">宅建業法は「最強の防具」</span><span class="py">2026年の放送・Spotifyで聴く</span></span><span class="pgo" aria-hidden="true"></span></a></li><li><a class="prow" href="https://open.spotify.com/episode/5sURqxWM12cDuBnno4wA3c" target="_blank" rel="noopener"><span class="pico" aria-hidden="true"></span><span class="pmid"><span class="pt">5年ごとに申請しないと免許が消える</span><span class="py">2026年の放送・Spotifyで聴く</span></span><span class="pgo" aria-hidden="true"></span></a></li><li><a class="prow" href="https://open.spotify.com/episode/0D1ZoOedid23YWNe6XviN5" target="_blank" rel="noopener"><span class="pico" aria-hidden="true"></span><span class="pmid"><span class="pt">暴行の罰金で不動産免許は消える</span><span class="py">2026年の放送・Spotifyで聴く</span></span><span class="pgo" aria-hidden="true"></span></a></li></ul>
   </section>
 
-  <div class="line-card">
+  <div class="line-card only-a">
     <p><span class="nk">図解の続きと、</span><span class="nk">過去問1選は、</span><span class="nk">LINEで受け取れます。</span><br><span class="nk">毎週月曜に、</span><span class="nk">こちらからお届けします。</span></p>
     <p class="lnote"><span class="nk">1月4日の配信開始から、</span><span class="nk">お届けします（予定）。</span><span class="nk">止まっても、</span><span class="nk">月曜にまた届きます。</span></p>
     <a class="lbtn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="1">LINEで受け取る</a>
@@ -813,6 +840,248 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
     var qt = document.getElementById(location.hash.slice(1));
     if (qt) { setTimeout(function () { qt.scrollIntoView({block: 'start'}); }, 0); }
   }
+})();
+</script>
+<script>
+/* LINEの中で開いた人（LINE登録者）への出し分け。1段目＝登録なし（HTMLに最初から入っている今の形）／2段目＝LINE登録者（続きを足す）。
+   判定：LIFF SDKを読み liff.init → LINEの中（isInClient）でログイン済み（isLoggedIn）なら登録者。getFriendship は参考（3秒で打ち切り）。
+   はっきり friendFlag:false と返ったときだけ登録なしのまま。失敗・不明は、LINEの中なら続きを出す。LINEの外では何も変えない。
+   LINEの外で、LINEのログイン画面へ送る関数は呼ばない。SDKは表示のあとで読み込む。
+   続きの中身：/ep/1/tsuzuki.html（図解の抜粋。ビルドが書き出す）、/ep/1/line-full.html・line-full.js（今日のポイント・過去問1選）。
+   ?joutai=1 で「表示の状態（確認用）」を出す。?mihon=touroku は localhost／127.0.0.1 のときだけ効く（手元の確認用）。 */
+(function () {
+  'use strict';
+  var LIFF_ID = '2012583516-7vmvMorb';
+  var body = document.body;
+  var qs = new URLSearchParams(location.search);
+  var isLocal = (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+  var mihon = isLocal ? qs.get('mihon') : null;
+  var showBox = (qs.get('joutai') === '1');
+  var stEl = null, boxLines = [];
+  var curState = '確認前', lastErr = null, judgeNote = '', tier = '登録なし';
+  var prog = {sdk: null, init: null, login: null, friend: null, full: null};
+  var STEPS = [['sdk', 'SDKの読み込み'], ['init', '初期化'], ['login', 'ログインの確認'], ['friend', '友だちの確認'], ['full', '続きの表示']];
+  function warn(e) { if (showBox) { try { console.warn(e); } catch (_) {} } }
+  function say(t) { curState = t; render(); }
+  function why(e) { return String((e && e.message) || e || '不明').slice(0, 80); }
+  function get(fn) { try { var v = fn(); return (v === undefined || v === null || v === '') ? null : v; } catch (_) { return null; } }
+  function txt(v, f) { return (v === null || v === undefined) ? '取得できず' : (f ? f(v) : String(v)); }
+  function yn(v) { return v ? 'はい' : 'いいえ'; }
+  function fail(e) {
+    lastErr = e;
+    for (var i = 0; i < STEPS.length; i++) {
+      if (prog[STEPS[i][0]] !== 'ok') { prog[STEPS[i][0]] = 'ng'; return; }
+    }
+  }
+  function stageText() {
+    if (mihon === 'touroku') { return '見本の表示のため確認していない'; }
+    var ok = '', ng = '';
+    STEPS.forEach(function (s) {
+      if (prog[s[0]] === 'ok') { ok = s[1]; }
+      if (prog[s[0]] === 'ng' && !ng) { ng = s[1]; }
+    });
+    return (judgeNote ? judgeNote + '　' : '') + '最後に成功：' + (ok || 'なし') + ' ／ 失敗：' + (ng || 'なし');
+  }
+  function errText() {
+    if (!lastErr) { return 'なし'; }
+    var e = lastErr, parts = [];
+    try {
+      if (e && e.code) { parts.push('code：' + e.code); }
+      if (e && e.message) { parts.push('message：' + e.message); }
+      if (!parts.length) { parts.push(String(e)); }
+    } catch (_) { parts = ['取得できず']; }
+    return parts.join('\n');
+  }
+  function render() {
+    if (!stEl) { return; }
+    var ctx = get(function () { return window.liff.getContext(); });
+    var rows = [
+      ['いまの段', tier],
+      ['状態', curState],
+      ['段階', stageText()],
+      ['エラーの中身', errText()],
+      ['LINEの中か', txt(get(function () { return window.liff.isInClient(); }), yn)],
+      ['ログイン', txt(get(function () { return window.liff.isLoggedIn(); }), yn)],
+      ['OS', txt(get(function () { return window.liff.getOS(); }))],
+      ['LINEのバージョン', txt(get(function () { return window.liff.getLineVersion(); }))],
+      ['許可されている項目（scope）', txt(ctx && ctx.scope, function (s) { return Array.isArray(s) ? (s.length ? s.join(', ') : 'なし') : String(s); })],
+      ['種類（type）', txt(ctx && ctx.type)]
+    ];
+    stEl.textContent = '';
+    boxLines = [];
+    rows.forEach(function (r) {
+      var p = document.createElement('div');
+      p.className = 'drow';
+      var k = document.createElement('span');
+      k.className = 'dk';
+      k.textContent = r[0] + '：';
+      var v = document.createElement('span');
+      v.className = 'dv';
+      v.textContent = r[1];
+      p.appendChild(k);
+      p.appendChild(v);
+      stEl.appendChild(p);
+      boxLines.push(r[0] + '：' + r[1]);
+    });
+  }
+  function makeBox() {
+    var page = document.querySelector('.page');
+    if (!page) { return; }
+    var box = document.createElement('div');
+    box.className = 'dbox';
+    box.innerHTML = '<p class="dhead">表示の状態（確認用）</p><div id="drows"></div><button type="button" class="pill dcopy" id="dcopy">この内容をコピー</button>';
+    page.appendChild(box);
+    stEl = box.querySelector('#drows');
+    box.querySelector('#dcopy').addEventListener('click', function () {
+      try { navigator.clipboard.writeText('表示の状態（確認用）\n' + boxLines.join('\n')).catch(function () {}); } catch (_) {}
+    });
+  }
+
+  /* どちらの見え方になったかを Umami に1回だけ送る（window.umami が無ければ何もしない。読み込み待ちで最大5秒ほど待つ） */
+  var tracked = false;
+  function track(kind) {
+    if (tracked) { return; }
+    tracked = true;
+    var n = 0;
+    (function send() {
+      try {
+        if (window.umami && typeof window.umami.track === 'function') { window.umami.track('ep-view', {ep: '1', tier: kind}); return; }
+      } catch (_) { return; }
+      if (++n < 20) { setTimeout(send, 250); }
+    })();
+  }
+
+  function loadScript(src) {
+    return new Promise(function (ok, ng) {
+      var s = document.createElement('script');
+      s.src = src; s.async = true; s.onload = ok;
+      s.onerror = function () { ng(new Error('読み込めない ' + src)); };
+      document.head.appendChild(s);
+    });
+  }
+  function fetchHtml(url) {
+    return fetch(url).then(function (r) {
+      if (!r.ok) { throw new Error(url + ' ' + r.status); }
+      return r.text();
+    }).then(function (html) { return new DOMParser().parseFromString(html, 'text/html'); });
+  }
+  function slotsOf(doc) {
+    var parts = {};
+    Array.prototype.forEach.call(doc.querySelectorAll('[data-slot]'), function (n) { parts[n.getAttribute('data-slot')] = n; });
+    return parts;
+  }
+  /* 図：やさしいテキストからの抜粋（tsuzuki.html）。図ごとに Shadow DOM に入れる。赤シートなし */
+  function putFigs(target, part, style) {
+    Array.prototype.forEach.call(part.children, function (ch) {
+      if (ch.hasAttribute('data-fig')) {
+        var h = document.createElement('div');
+        h.className = 'thost';
+        var root = h.attachShadow({mode: 'open'});
+        root.appendChild(style.cloneNode(true));
+        root.appendChild(document.importNode(ch, true));
+        target.appendChild(h);
+      } else {
+        target.appendChild(document.importNode(ch, true));
+      }
+    });
+  }
+  var fullShown = false;
+  function showFull() {
+    return Promise.all([fetchHtml('/ep/1/line-full.html'), fetchHtml('/ep/1/tsuzuki.html')]).then(function (res) {
+      if (fullShown) { return; }
+      var parts = slotsOf(res[0]);
+      var nuki = slotsOf(res[1]);
+      var style = res[1].querySelector('style[data-nk="css"]');
+      if (!style || !nuki.cards1 || !nuki.cards2) { throw new Error('図の抜粋の形が想定と違う'); }
+      /* 先に差し込み先を全部確かめる（ここで失敗しても、画面には触らない） */
+      var map = {core1: 'slot-core1', half2: 'slot-half2', kk: 'slot-kk'};
+      var dst = {};
+      Object.keys(map).forEach(function (k) {
+        dst[k] = document.getElementById(map[k]);
+        if (!parts[k] || !dst[k]) { throw new Error('差し込み先なし ' + k); }
+      });
+      var c1 = document.getElementById('slot-cards1');
+      var c2 = parts.half2.querySelector('.cards');
+      if (!c1 || !c2) { throw new Error('図の入れ物なし'); }
+      fullShown = true;
+      Object.keys(map).forEach(function (k) {
+        dst[k].appendChild(document.importNode(parts[k], true));
+        var w = dst[k].firstElementChild;
+        while (w && w.firstChild) { dst[k].insertBefore(w.firstChild, w); }
+        if (w) { dst[k].removeChild(w); }
+      });
+      putFigs(c1, nuki.cards1, style);
+      putFigs(document.querySelector('#slot-half2 .cards'), nuki.cards2, style);
+      body.classList.add('is-friend');
+      tier = 'LINE登録者';
+      /* 過去問1選の動き（line-full.js）。読み込めなくても、続きの表示は残す */
+      return loadScript('/ep/1/line-full.js').catch(function (e) { warn(e); lastErr = e; });
+    });
+  }
+
+  /* getFriendship を呼ぶ。3秒たっても返らなければ不明扱い。結果は {f} か {err} の1回だけ */
+  function friendCheck() {
+    return new Promise(function (resolve) {
+      var done = false;
+      var t = setTimeout(function () {
+        if (!done) { done = true; resolve({err: new Error('友だちの確認が3秒たっても返らなかった')}); }
+      }, 3000);
+      var p;
+      try { p = Promise.resolve(window.liff.getFriendship()); } catch (e) { p = Promise.reject(e); }
+      p.then(function (f) {
+        if (!done) { done = true; clearTimeout(t); resolve({f: f}); }
+      }, function (e) {
+        if (!done) { done = true; clearTimeout(t); resolve({err: e}); }
+      });
+    });
+  }
+  function openView(msg) { tier = '登録なし'; say(msg); track('open'); }
+  function lineView(note) {
+    judgeNote = note;
+    return showFull().then(function () {
+      prog.full = 'ok';
+      say('LINEの中');
+      track('line');
+    }, function (e) {
+      warn(e); prog.full = 'ng'; lastErr = e;
+      openView('続きを表示できなかった（' + why(e) + '）');
+    });
+  }
+  function judge() {
+    if (mihon === 'touroku') { return lineView('見本の表示（判定なし）'); }
+    return loadScript('https://static.line-scdn.net/liff/edge/2/sdk.js').then(function () {
+      prog.sdk = 'ok';
+      return window.liff.init({liffId: LIFF_ID});
+    }).then(function () {
+      prog.init = 'ok';
+      var li = window.liff.isLoggedIn();
+      var inClient = false;
+      try { inClient = window.liff.isInClient(); } catch (_) {}
+      prog.login = 'ok';
+      if (!(inClient && li)) { openView('LINEの外（またはログインしていない）'); return; }
+      return friendCheck().then(function (r) {
+        var f = r.f;
+        if (f && f.friendFlag === false) {
+          prog.friend = 'ok';
+          judgeNote = '判定：友だちではないと確認できたため、登録なしの表示のまま';
+          openView('LINEの中・友だちではない');
+          return;
+        }
+        if (f && f.friendFlag === true) { prog.friend = 'ok'; return lineView('判定：LINEの中でログイン済みのため、続きを表示（友だちも確認できた）'); }
+        fail(r.err || new Error('友だちの確認の結果が取れなかった'));
+        return lineView('判定：LINEの中でログイン済みのため、続きを表示（友だちの確認はできず）');
+      });
+    }).catch(function (e) {
+      /* LINEの外ではSDKのinitが失敗することがある。握りつぶして、登録なしの表示のまま */
+      warn(e);
+      fail(e);
+      openView('確認できなかった（' + why(e) + '）');
+    });
+  }
+
+  if (showBox) { makeBox(); }
+  render();
+  try { judge(); } catch (e) { fail(e); openView('確認できなかった（' + why(e) + '）'); }
 })();
 </script>
 </body>

@@ -259,3 +259,16 @@ const nukiHtml =
   '<div data-slot="cards2">\n' + seq([6, 7, 8]) + '\n</div>\n';
 fs.writeFileSync(new URL('../ep1-nukigaki.html', import.meta.url), nukiHtml);
 console.log('nukigaki', nukiHtml.length, 'chars; free figs', FREE.join(','), 'cards', PAID_ONLY.join(','));
+
+/* 本番用の写し：同じ抜粋を、公開サイトの ep/1/tsuzuki.html に書き出す（手で写さない）。
+   ep/1/index.html が、LINE登録者と判定されたあとに fetch して差し込む。
+   書き出すのは無料の抜粋（nukiHtml）だけ。有料の全文（api/_ep-text/）は本番側に絶対に書き出さない。
+   書き出す前に、有料だけの語・赤シート・今回の数字が入っていないことを確かめる。 */
+const PROD_OUT = new URL('../../ep/1/tsuzuki.html', import.meta.url);
+if (/_ep-text/.test(PROD_OUT.pathname) || !/\/ep\/1\/tsuzuki\.html$/.test(PROD_OUT.pathname)) throw new Error('本番用の書き出し先が想定と違う: ' + PROD_OUT.pathname);
+if (/class="[^"]*\brs\b[^"]*"|role="button"|data-hint|data-part=|今回の数字|ワンポイント|data-hint/.test(nukiHtml)) throw new Error('本番用の抜粋に有料の中身が入っている');
+for (const w of ['転貸', '又貸し', '適用されない', '事務所に数える', '継続して業務ができる施設', '取消しの理由', '聴聞の公示', '駆け込み廃業も取消し']) {
+  if (nukiHtml.includes(w)) throw new Error('本番用の抜粋に有料の語が入っている: ' + w);
+}
+fs.writeFileSync(PROD_OUT, nukiHtml);
+console.log('production copy written: ep/1/tsuzuki.html', nukiHtml.length, 'chars');

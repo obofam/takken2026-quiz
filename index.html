@@ -3,6 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<script>
+/* LINEから開く住所（liff.line.me/<ID>/ep/1 など）の受け渡し。URLに liff.state があるときだけ動く。ふつうの来訪では何もしない（SDKも読まない）。
+   LIFFはエンドポイント（このトップ）を ?liff.state=/ep/1 つきで開き、liff.init() が目的のページへ送る。
+   4秒たっても移動しない・SDKの読み込みやinitが失敗したら、liff.state の中身（同一サイト内のパスだけ）へ自分で送る。送れなければ元に戻す。 */
+(function () {
+  try {
+    var m = /[?&#]liff\.state=([^&#]*)/.exec(location.search + location.hash);
+    if (!m) { return; }
+    var root = document.documentElement;
+    root.style.visibility = 'hidden';
+    var finished = false, timer = null;
+    var back = function () { root.style.visibility = ''; };
+    var go = function () {
+      if (finished) { return; }
+      finished = true;
+      clearTimeout(timer);
+      try {
+        var p = decodeURIComponent(m[1].replace(/\+/g, ' '));
+        if (/^\/(?![\/\\])/.test(p) && !/[\u0000-\u001f]/.test(p) && p !== '/' && new URL(p, location.origin).origin === location.origin) {
+          location.replace(p);
+          return;
+        }
+      } catch (_) {}
+      back();
+    };
+    window.addEventListener('pageshow', function (e) { if (e.persisted) { back(); } });
+    timer = setTimeout(go, 4000);
+    var s = document.createElement('script');
+    s.src = 'https://static.line-scdn.net/liff/edge/2/sdk.js';
+    s.async = true;
+    s.onerror = go;
+    s.onload = function () {
+      try {
+        var r = window.liff.init({liffId: '2012583516-7vmvMorb'});
+        if (r && r.then) { r.then(function () {}, go); }
+      } catch (_) { go(); }
+    };
+    document.head.appendChild(s);
+  } catch (_) { try { document.documentElement.style.visibility = ''; } catch (__) {} }
+})();
+</script>
 <title>耳で覚える宅建2026｜スマホで解ける一問一答問題集</title>
 <!-- Umami analytics (トラッカーと同一ID・ホスト名で分離) -->
 <script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>

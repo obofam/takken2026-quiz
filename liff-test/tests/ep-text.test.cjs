@@ -211,3 +211,23 @@ test('ep-pdf: the PDF lives only under api/_ep-text (git-ignored), and vercel.js
   assert.match(fs.readFileSync(path.join(root,'.gitignore'),'utf8'),/^api\/_ep-text\/$/m);
   assert.match(fs.readFileSync(path.join(root,'scripts/build-ep1-text.mjs'),'utf8'),/ep1\.pdf/);
 });
+
+// ---- 本番（公開サイトの ep/1/）に置く LINE登録者向けの続き：無料の抜粋だけ。有料の中身を入れない ----
+test('production ep/1: tsuzuki.html is the free excerpt (same as ep1-nukigaki.html) and the LINE parts carry nothing paid',()=>{
+  const prod=path.join(__dirname,'../../ep/1');
+  const tz=fs.readFileSync(path.join(prod,'tsuzuki.html'),'utf8');
+  assert.equal(tz,fs.readFileSync(path.join(__dirname,'../ep1-nukigaki.html'),'utf8'));
+  const files=['tsuzuki.html','line-full.html','line-full.js','index.html'].map(f=>[f,fs.readFileSync(path.join(prod,f),'utf8')]);
+  for(const [f,h] of files){
+    assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|data-hint|data-part=|ワンポイント/,f);
+    if(f!=='index.html')assert.ok(!h.includes('今回の数字'),f);// index.html にあるのは見本カードの説明文「今回の数字」だけ（既存の文言）
+    assert.doesNotMatch(h,/_ep-text|api\/ep-text|api\/session/,f);
+    for(const w of ['転貸','又貸し','事務所に数える','継続して業務ができる施設','取消しの理由','聴聞の公示','駆け込み廃業も取消し'])assert.ok(!h.includes(w),f+':'+w);
+  }
+  const page=files.find(x=>x[0]==='index.html')[1];
+  assert.match(page,/2012583516-7vmvMorb/);
+  assert.doesNotMatch(page,/liff\.login\(|2011606963/);
+  assert.match(page,/takken2027-done/);
+  const top=fs.readFileSync(path.join(__dirname,'../../index.html'),'utf8');
+  assert.match(top,/liff\.state/);assert.match(top,/2012583516-7vmvMorb/);
+});
