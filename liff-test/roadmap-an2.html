@@ -409,7 +409,7 @@
 <div class="container">
   <header class="hero">
     <h1><span class="h1-top">耳で覚える宅建2027</span><span class="h1-main">学習ロードマップ</span><span class="h1-sub">（兼 進捗トラッカー）</span></h1>
-    <p><span class="nb">2027年1月4日から、</span><span class="nb">毎週月曜に本編を1本（予定）。</span></p>
+    <p id="heroNote">毎週月曜更新</p>
   </header>
 
   <section class="pcard" aria-label="本試験までと進み具合">
@@ -520,6 +520,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   // 配信開始前：見本の案内を出し、LINEの枠を「始まったらお知らせ」に
   if (t < 20270104) {
     document.getElementById('startNote').style.display = 'block';
+    document.getElementById('heroNote').textContent = '1月4日から、毎週月曜更新';
     document.getElementById('newBox').style.display = 'block';
     document.getElementById('lineHead').innerHTML = '<span class="nb">始まったら、</span><span class="nb">LINEかメールでお知らせします</span>';
     document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録は無料です。</span>';
