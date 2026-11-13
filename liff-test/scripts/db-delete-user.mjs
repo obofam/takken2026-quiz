@@ -9,7 +9,7 @@ const users = await (await fetch(env.SUPABASE_URL + '/rest/v1/users?select=id', 
 const target = users.filter(u => u.id.startsWith(prefix));
 if (target.length !== 1) { console.log('target not unique:', target.length); process.exit(1); }
 const id = target[0].id;
-for (const t of ['answers', 'attempts', 'link_tickets', 'identities', 'entitlements', 'users']) {
+for (const t of ['answers', 'attempts', 'link_tickets', 'identities', 'entitlements', 'progress', 'users']) {
   const filter = t === 'users' ? 'id=eq.' + id : 'user_id=eq.' + id;
   const r = await fetch(env.SUPABASE_URL + '/rest/v1/' + t + '?' + filter, { method: 'DELETE', headers: h });
   const b = await r.json().catch(() => []);

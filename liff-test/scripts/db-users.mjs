@@ -6,10 +6,12 @@ const get = async p => (await fetch(env.SUPABASE_URL + '/rest/v1/' + p, { header
 const users = await get('users?select=id,created_at&order=created_at');
 const ids = await get('identities?select=user_id,provider,subject');
 const answers = await get('answers?select=user_id');
+const prog = await get('progress?select=user_id,listened,done');
 const ents = await get('entitlements?select=user_id,plan,valid_until');
 for (const u of users) {
   const mine = ids.filter(i => i.user_id === u.id).map(i => i.provider + ':' + (i.provider === 'email' ? i.subject.replace(/^(.).*@/, '$1***@') : i.subject.slice(0, 8) + '…'));
   console.log(u.id.slice(0, 8), u.created_at.slice(0, 19).replace('T', ' ') + 'Z', 'identities=[' + mine.join(', ') + ']', 'answers=' + answers.filter(a => a.user_id === u.id).length,
+    'progress=' + (p => p ? 'listened:' + Object.keys(p.listened).length + ' done:' + Object.keys(p.done).length : 'none')(prog.find(x => x.user_id === u.id)),
     'entitlements=' + (e => e.length ? e.length + ' [' + e.map(x => x.plan + (x.valid_until ? '~' + x.valid_until.slice(0, 10) : '')).join(', ') + ']' : '0')(ents.filter(x => x.user_id === u.id)));
 }
 if (!users.length) console.log('(no users)');

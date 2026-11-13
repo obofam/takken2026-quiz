@@ -1,5 +1,21 @@
 # LIFF本人テスト・Sprint 1／2／3
 
+## 記録の同期（progress）（2026-11-13）
+
+ロードマップの「聴いた・復習」と、第1回の「3問済」を、ログインした人はサーバーにも置く。ログインしていない人の動きは今までと同じ（端末の localStorage だけ）。
+
+- 表：`public.progress`（`user_id` 主キー、`listened` jsonb、`done` jsonb、`updated_at`）。RLS あり・anon／authenticated は権限なし・service_role だけ。migration `supabase/migrations/202611130001_progress.sql`（`202611120001_products_2027.sql` の次に1回だけ適用）。
+- 形：`listened` は `{"1":1|2}`（1=聴いた、2=復習）、`done` は `{"1":true}`。端末の `takken2027-listened`／`takken2027-done` と同じ形。キーは英数字とハイフンの 1〜40 文字、1つの map は 400 キーまで。違反は `invalid_progress`（API は 400）。
+- RPC：`set_progress(user, kind, key, value)`（value が JSON null ならキーを消す）、`merge_progress(user, listened, done)`（サーバーに無いキーだけを足す）。
+- API `/api/progress`：`GET` は `{listened, done, updatedAt}`（行がなければ空）。`POST` は `{kind, key, value}` か `{merge:true, listened, done}`。どちらも最新の `{listened, done, updatedAt}` を返す。未ログイン 401・許可リスト外 403。
+- 画面側 `progress-sync.js`（`window.TakkenProgress`）：`init({liffId, onChange, sessionReady})`・`set(kind, key, value)`・`state()`（`local`／`synced`／`error`）・`provider()`（`line`／`email`）。ログインの確かめ方は、LINEの中でログイン済みなら ID トークンで `/api/session`、そうでなければ `GET /api/session`、どちらもだめなら端末だけ（LINE ログインの画面へは飛ばさない）。
+- 合わせ込みの規則：その利用者でこの端末がまだなら（印 `takken2027-synced-<storageKey末尾16文字>` が無い）、端末の記録を `merge` で送り、印をつける。サーバーにあるキーはサーバーの値が残る。そのあと待ち行列を送り直し、`GET` の結果で端末の2つのキーを置き換えて `onChange` を呼ぶ。印は端末の記録を送れた後にだけつく。
+- 送り直し：変更は `takken2027-progress-queue`（localStorage）に入れてから送る。送れなかった分は残り、次の `init` で `GET` の前に古い順に送る。同じキーへの変更は最後の1件にまとまる。検査に落ちた（400）分は捨てる。
+- 画面の状態の3つ（`roadmap-an2.html` の日数カードの注記）：`local`／`error` は「いまは、この端末にだけ残ります。LINEで開くと、記録が残ります。」、`synced`（LINE）は「LINEに記録しています。機種を変えても残ります。」、`synced`（メール）は「メールアドレスに記録しています。ほかの端末でも同じ記録が出ます。」。
+- 組み込み：`roadmap-an2.html`（記録ボタン）と `ep1-3dan.html`（3問済。このページは自分でログインするので `sessionReady` を渡して二重ログインを避ける。試し用の `/ep1-3dan.html` でも第1回として書く）。
+- Vercel 無料プランの関数 12 個の上限のため、`api/keepalive.js` はやめて `/api/products?keepalive=1` に統合（`vercel.json` の cron も同じ）。`api/` 直下は 12 個。
+- 確かめ方：`node scripts/db-users.mjs` で利用者ごとの `progress=listened:N done:M`。`node scripts/db-delete-user.mjs` は progress も消す。テストは `tests/progress-db.test.cjs`（pglite）・`progress-api.test.cjs`・`progress-sync.test.cjs`。
+
 ## Sprint 4（2026-10-06）：3問チェックを全放送回へ
 
 指示書は `SPRINT4_指示書_2026-10-06.md`。**migration `supabase/migrations/202610060002_sprint4_catalog.sql` を Sprint 1・2 の後に1回だけ適用してからデプロイ**（未適用だと、ログイン中に第10回以外へ答えても DB が `invalid_answer` で拒否し、同期が「失敗」になる）。

@@ -49,6 +49,7 @@ async function supabase(path,{method='GET',body,accessToken,headers:extra}={}){
     if(message.includes('identity_conflict'))fail(409,'identity_conflict');
     if(message.includes('attempt_owner_mismatch'))fail(409,'attempt_conflict');
     if(message.includes('invalid_answer'))fail(400,'invalid_answer');
+    if(message.includes('invalid_progress'))fail(400,'invalid_progress');
     if(['22007','22008'].includes(data?.code))fail(400,'invalid_answer_time');
     if(message.includes('not_allowed'))fail(403,'not_allowed');
     if(message.includes('invalid_link'))fail(401,'invalid_link');

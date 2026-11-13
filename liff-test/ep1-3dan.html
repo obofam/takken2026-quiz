@@ -484,6 +484,7 @@ body.member .line-card{display:block}
     <button type="button" class="pill dcopy" id="dcopy">この内容をコピー</button>
   </div>
 </div>
+<script src="progress-sync.js"></script>
 <script>
 (function () {
   'use strict';
@@ -498,7 +499,7 @@ body.member .line-card{display:block}
   function markSetDone(idx) {
     setsDone[idx] = true;
     for (var i = 0; i < QUIZ.length; i++) { if (!setsDone[i]) { return; } }
-    var m = /\/ep\/(\d+)/.exec(location.pathname);
+    var m = /\/ep\/?(\d+)/.exec(location.pathname); /* /ep/1 でも、試し用の /ep1-3dan.html でも第1回 */
     if (!m) { return; }
     try {
       var o = JSON.parse(localStorage.getItem('takken2027-done') || '{}');
@@ -506,6 +507,7 @@ body.member .line-card{display:block}
       o[m[1]] = true;
       localStorage.setItem('takken2027-done', JSON.stringify(o));
     } catch (_) {}
+    try { if (window.TakkenProgress) { TakkenProgress.set('done', m[1], true); } } catch (_) {}
   }
 
   /* ---------- 解き終えたその場に出すLINEの誘い ---------- */
@@ -910,6 +912,7 @@ body.member .line-card{display:block}
           return null;
         });
       }
+      sessionMade = true;
       return getText(false);
     }).then(function (res) { if (res) { applyText(res); } }).catch(function (e) { console.warn(e); setText('失敗（' + why(e) + '）　登録者の表示のまま'); });
   }
@@ -987,7 +990,13 @@ body.member .line-card{display:block}
         setText('登録していないため確認していない');
         say('LINEの中・友だちではない');
       });
-    }).catch(function (e) { console.warn(e); fail(e); say('確認できなかった（' + why(e) + '）'); });
+    }).catch(function (e) { console.warn(e); fail(e); say('確認できなかった（' + why(e) + '）'); }).then(startProgress);
+  }
+  /* 記録の同期。ログインはこのページの buyerCheck が済ませている（二重に /api/session へ POST しない）。
+     済んでいなければ、progress-sync.js 側の確認（LINEの中ならID トークン、メールのログインなら GET /api/session）に任せる。 */
+  var sessionMade = false;
+  function startProgress() {
+    try { if (window.TakkenProgress) { TakkenProgress.init({liffId: LIFF_ID, sessionReady: sessionMade}); } } catch (_) {}
   }
   render();
   showFig1();

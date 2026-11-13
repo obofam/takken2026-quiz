@@ -471,7 +471,7 @@
       </div>
     </div>
     <details class="pgd"><summary>分野別の進み具合</summary><div class="pgl" id="pgl"></div></details>
-    <p class="pg-note" id="pgNote"><span class="nb">いまは、この端末にだけ残ります。</span><span class="nb">LINEで記録を引き継げるように</span><span class="nb">準備しています。</span></p>
+    <p class="pg-note" id="pgNote"><span class="nb">いまは、この端末にだけ残ります。</span><span class="nb">LINEで開くと、</span><span class="nb">記録が残ります。</span></p>
   </section>
 
   <div class="start-note" id="startNote">
@@ -553,6 +553,9 @@
   <p class="core-foot"><span class="cf1"><span style="display:inline-block;white-space:nowrap">忙しい社会人の勉強は、</span><span style="display:inline-block;white-space:nowrap">止まりがちです。</span></span><span class="cf2"><span class="mk-u"><span style="display:inline-block;white-space:nowrap">ここでは、</span><span style="display:inline-block;white-space:nowrap">静かに、淡々と</span><span style="display:inline-block;white-space:nowrap">続けることを</span><span style="display:inline-block;white-space:nowrap">サポートします。</span></span></span></p>
 </div>
 <button type="button" class="gonow" id="goNow" hidden>今週へ</button>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script src="config.js"></script>
+<script src="progress-sync.js"></script>
 <script>
 // 各回の spotify / youtube に URL を入れる。zukai（図解）/ mondai（問題）は本編なら回のページから自動で作る（下の EP_URL）。
 // 補強・まとめ・短尺に回のページができたら、その回の zukai / mondai に URL を直接入れる（直接入れた値が優先）。
@@ -753,6 +756,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     var cur0 = o[n]===2 ? 2 : (o[n] ? 1 : 0), nx = (cur0 + 1) % 3; // 未聴→聴了→復習→未聴（2026のトラッカーと同じ）
     if (nx) { o[n] = nx; } else { delete o[n]; }
     wr(K_L, o);
+    try { if (window.TakkenProgress) { TakkenProgress.set('listened', n, nx || null); } } catch(_) {}
     b.setAttribute('data-st', nx); b.textContent = ST_LABEL[nx];
     var tr = b.closest('tr'); tr.classList.remove('s1','s2'); if (nx) tr.classList.add('s'+nx);
     updateRail();
@@ -774,9 +778,24 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   });
   window.addEventListener('scroll', updateGo, { passive: true });
   window.addEventListener('resize', updateGo);
+  // 日数のカードの注記：記録の置き場所を状態で出し分ける（端末だけ／LINE／メール）
+  function nbs(a){ return a.map(function(s){ return '<span class="nb">'+s+'</span>'; }).join(''); }
+  function renderNote(){
+    var s = 'local', p = null;
+    try { if (window.TakkenProgress) { s = TakkenProgress.state(); p = TakkenProgress.provider(); } } catch(_) {}
+    var t = s==='synced'
+      ? (p==='email' ? ['メールアドレスに記録しています。','ほかの端末でも同じ記録が出ます。'] : ['LINEに記録しています。','機種を変えても残ります。'])
+      : ['いまは、この端末にだけ残ります。','LINEで開くと、','記録が残ります。'];
+    document.getElementById('pgNote').innerHTML = nbs(t);
+  }
   renderCountdown();
   render();
   updateGo();
+  try {
+    if (window.TakkenProgress) {
+      TakkenProgress.init({ liffId: window.TEST_LIFF_ID, onChange: function(){ render(); renderNote(); } });
+    }
+  } catch(_) {}
   // 開いたとき、今週の行まで自動でスクロール（#p1〜#p5 で開いたときはしない）
   if (nowEp && !/^#p[1-9]$/.test(location.hash)) {
     var goNow = function(){ var r = document.querySelector('#sched tr.now'); if (r) r.scrollIntoView({block:'center', behavior:'instant'}); };
