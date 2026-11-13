@@ -117,7 +117,7 @@ test('the free excerpt (ep1-nukigaki.html): figures 1,3,5,6,8 only, no red-sheet
   assert.deepEqual([...html.matchAll(/data-fig="(\d+)"/g)].map(m=>Number(m[1])),[1,3,5,6,8]);
   assert.deepEqual([...html.matchAll(/class="cap"><span class="n">(\d+)</g)].map(m=>Number(m[1])),[1,3,5,6,8]);
   assert.deepEqual([...html.matchAll(/<span class="gno">(\d+)</g)].map(m=>Number(m[1])),[2,4,7]);
-  assert.equal([...html.matchAll(/class="gcard" href="https:\/\/takken\.mimiobo\.com\/ep\/1\/text"/g)].length,3);
+  assert.equal([...html.matchAll(/class="gcard"><span class="gno">\d+<\/span><span class="gm"><span class="gt">[^<]*<\/span><span class="gn">この図は、<a href="https:\/\/takken\.mimiobo\.com\/ep\/1\/text"/g)].length,3);
   assert.doesNotMatch(html,/class="[^"]*\brs\b[^"]*"|role="button"|class="mk"|class="aside"|<use /);
   assert.doesNotMatch(html,/[→←↑↓]|[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
   for(const w of ['転貸','又貸し','適用されない','事務所に数える','継続して業務ができる施設','取消しの理由','聴聞の公示','ワンポイント','駆け込み廃業も取消し'])

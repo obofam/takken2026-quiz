@@ -239,7 +239,6 @@ body:not(.member) .mtgl .m0,body.member .mtgl .m1{font-weight:700;color:var(--in
 .gcard .gm{display:flex;flex-direction:column;min-width:0}
 .gcard .gt{font-size:14px;font-weight:700;line-height:1.4;color:var(--sub)}
 .gcard .gn{font-size:11px;line-height:1.4;color:var(--sub)}
-a.gcard:hover .gn{text-decoration:underline;text-underline-offset:2px}
 
 /* ===== ○×3問・過去問1選（確認ページと同じ） ===== */
 .over{font-size:12px;line-height:1.5;letter-spacing:.15em;color:var(--sky);text-transform:uppercase;font-weight:700}
@@ -410,6 +409,12 @@ body.member .line-card{display:block}
 .gcard{min-height:44px}
 .gcard .gno{width:26px;height:26px;font-size:14px}
 .gcard .gn{font-size:14px}
+.gcard .gn a{color:#0A6477;text-decoration:underline;text-underline-offset:3px;display:inline-block;padding:11px 0;margin:-11px 0}
+.pnote.haishin{font-size:13px;color:#4F5963;margin-top:2px}
+.kk-src{display:block;background:none;border-radius:0;padding:0;margin:0 0 6px;font-size:13px;font-weight:400;color:#4F5963;line-height:1.6}
+.kk-over{margin-bottom:-6px}
+.lbtns{display:flex;gap:8px}
+.lbtns .lbtn{flex:1 1 0;min-width:0;padding:8px 6px;font-size:14px}
 /* 表示の状態（確認用）：?joutai=1 をつけたときだけ出る */
 .dbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px 14px;font-size:16px;line-height:1.6;color:var(--text);text-align:left}
 .dhead{font-size:14px;font-weight:700;line-height:1.4;color:#4F5963;margin:0}
@@ -428,8 +433,9 @@ body.member .line-card{display:block}
     <div class="side">宅建業と免許</div>
   </div>
   <a class="listen" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="1">音声番組を聴く（Spotify）</a>
-  <p class="pnote"><span class="nk">この回の配信は</span> <span class="nk">2027年1月4日（月）から（予定）。</span><span class="nk">いまは番組のページが開きます。</span></p>
   <p class="oapps">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm">stand.fm</a></p>
+  <!-- 配信が始まったら（2027年1月4日以降）この注記は要らない。外す -->
+  <p class="pnote haishin"><span class="nk">この回の配信は</span> <span class="nk">2027年1月4日（月）から（予定）。</span><span class="nk">いまは番組のページが開きます。</span></p>
 
   <nav class="jump" id="jump" aria-label="この回のページの節">
     <a class="jb" href="#zukai">図解</a><a class="jb" href="#maru">○×3問</a><a class="jb" href="#honban">過去問1選</a>
@@ -672,8 +678,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   </div>
 </div>
 <div class="slot" id="slot-half2"></div>
-<p class="pnote only-b"><span class="nk">LINEに登録している方向けに、</span><span class="nk">全部を表示しています。</span></p>
-<div class="next-box only-a" id="zukai-next"><p><span class="nk">図解の続きは、</span><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">でお届けします。</span></p></div>
+<div class="next-box only-a" id="zukai-next"><p><span class="nk">図解の続きは、</span><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">か</span><a href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="1" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">メール</a><span class="nk">でお届けします。</span></p></div>
   </section>
 
   <!-- 節2：○×3問 -->
@@ -684,8 +689,9 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 
   <!-- 節3：過去問1選 -->
   <section class="sec" id="honban">
+    <div class="over kk-over">チャレンジ！</div>
     <h2 class="sec-h">過去問1選</h2>
-    <div class="next-box only-a"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">では、</span><span class="nk">この回のテーマに沿った過去問を</span><span class="nk">解いていただけます。</span></p></div>
+    <div class="next-box only-a"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">か</span><a href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="1" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">メール</a><span class="nk">に登録すると、</span><span class="nk">この回のテーマに沿った過去問を</span><span class="nk">解いていただけます。</span></p></div>
     <div class="slot" id="slot-kk"></div>
     <a class="tcard" href="/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="1">
       <span class="tlab">有料版の見本</span>
@@ -706,9 +712,9 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   </section>
 
   <div class="line-card only-a">
-    <p><span class="nk">図解の続きと、</span><span class="nk">過去問1選は、</span><span class="nk">LINEで受け取れます。</span><br><span class="nk">毎週月曜に、</span><span class="nk">こちらからお届けします。</span></p>
-    <p class="lnote"><span class="nk">1月4日の配信開始から、</span><span class="nk">お届けします（予定）。</span><span class="nk">止まっても、</span><span class="nk">月曜にまた届きます。</span></p>
-    <a class="lbtn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="1">LINEで受け取る</a>
+    <p><span class="nk">図解の続きと、</span><span class="nk">過去問1選は、</span><span class="nk">LINEかメールで受け取れます。</span><br><span class="nk">毎週月曜に、</span><span class="nk">こちらからお届けします。</span></p>
+    <p class="lnote"><span class="nk">1月4日の配信開始から、</span><span class="nk">お届けします（予定）。</span></p>
+    <div class="lbtns"><a class="lbtn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="1">LINEで受け取る</a><a class="lbtn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="1">メールで受け取る</a></div>
   </div>
 
   <div class="trust">

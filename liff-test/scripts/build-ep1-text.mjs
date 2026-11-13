@@ -247,7 +247,7 @@ for (const n of FREE) {
   if (/<use /.test(nukiFigs[n])) throw new Error('use left in fig ' + n);
 }
 const TEXT_URL = 'https://takken.mimiobo.com/ep/1/text';
-const card = n => '<a class="gcard" href="' + TEXT_URL + '" data-umami-event="ep-text" data-umami-event-ep="1"><span class="gno">' + n + '</span><span class="gm"><span class="gt">' + capTitle(origFigs[n]) + '</span><span class="gn">この図はやさしいテキストに</span></span></a>';
+const card = n => '<div class="gcard"><span class="gno">' + n + '</span><span class="gm"><span class="gt">' + capTitle(origFigs[n]) + '</span><span class="gn">この図は、<a href="' + TEXT_URL + '" data-umami-event="ep-text" data-umami-event-ep="1">やさしいテキスト（有料）</a>に</span></span></div>';
 const fig = n => '<div class="tx" data-fig="' + n + '">' + nukiFigs[n] + '</div>';
 /* 1〜5＝前半、6〜8＝後半。図の順に並べ、有料だけの図の所に札を置く */
 const seq = nos => nos.map(n => FREE.includes(n) ? fig(n) : card(n)).join('\n');
