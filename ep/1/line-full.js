@@ -12,7 +12,7 @@
     box.className = 'kk';
     var marks = k.items.map(function () { return 0; });
     var items = k.items.map(function (it, i) {
-      return '<div class="kk-item"><button type="button" class="dm" data-i="' + i + '"></button>' +
+      return '<div class="kk-item">' +
         '<span class="kk-mark">' + esc(it.m) + '</span><span>' + esc(it.t) + '</span></div>';
     }).join('');
     var wide = k.buttons.some(function (b) { return b.length > 1; });
@@ -24,7 +24,7 @@
       '<span class="kk-src">' + esc(k.year + ' 問' + k.no + (k.revised ? '（改題）' : '')) + '</span>' +
       '<p class="kk-stem">' + esc(k.stem) + '</p>' +
       '<div>' +
-      '<p class="kk-memo">選択肢ごとに○×のメモをつけられます</p>' + items +
+      items +
       '<div class="kk-btns' + (wide ? ' wide' : '') + '">' + btnHtml + '</div>' +
       '<div class="qres" hidden aria-live="polite"></div>' +
       '<div class="kk-again" hidden><button type="button" class="pill ghost">もう一度</button></div>' +
