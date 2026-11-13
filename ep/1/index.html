@@ -745,7 +745,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
     return esc(segs.slice(0, i).join('')) + '<span class="nk">' + esc(segs.slice(i).join('')) + '</span>';
   };
 
-  /* ---------- 3問済の印：前半・後半の両方を解き終えたら、この端末の localStorage に残す（送信しない） ---------- */
+  /* ---------- 3問済の印：前半・後半の両方を解き終えたら、この端末の localStorage に残す（ログインしている人は、サーバーにも置く） ---------- */
   var setsDone = {};
   function markSetDone(idx) {
     setsDone[idx] = true;
@@ -758,7 +758,24 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
       o[m[1]] = true;
       localStorage.setItem('takken2027-done', JSON.stringify(o));
     } catch (_) {}
+    /* ログインしている人は、サーバーにも置く（ログインしていない人は端末だけ）。同期の部品が動き出す前なら、動き出してから送る */
+    progDoneKey = m[1];
+    if (progReady) { try { window.TakkenProgress.set('done', progDoneKey, true); } catch (_) {} }
   }
+  var progDoneKey = null, progReady = false;
+  /* 記録の同期。LINEの判定（liff.init）はこのページがすでに済ませているので、ここでは二重に init しない（liffId を渡さない）。
+     LINEの中でログイン済みなら ID トークンでサーバーのセッションに入り、メールのログインなどはクッキーのセッションがあるときだけ。なければ端末だけ。 */
+  function startProgress() {
+    new Promise(function (ok, ng) {
+      var sc = document.createElement('script'); sc.src = '/progress-sync.js'; sc.async = true; sc.onload = ok; sc.onerror = ng; document.head.appendChild(sc);
+    }).then(function () {
+      if (!window.TakkenProgress) { return; }
+      window.TakkenProgress.init({cookieHint: true});
+      progReady = true;
+      if (progDoneKey) { window.TakkenProgress.set('done', progDoneKey, true); }
+    }).catch(function () {});
+  }
+  window.__epProgressStart = startProgress; /* 下の判定のスクリプトが、判定のあとに呼ぶ */
 
   /* ---------- 解き終えたその場に出すLINEの誘い ---------- */
   /* 組の途中（前半）を解き終えたら次の組へ。過去問1選への誘いは最後の組（後半）のあとだけ */
@@ -1119,7 +1136,10 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 
   if (showBox) { makeBox(); }
   render();
-  try { judge(); } catch (e) { fail(e); openView('確認できなかった（' + why(e) + '）'); }
+  var judged;
+  try { judged = Promise.resolve(judge()); } catch (e) { fail(e); openView('確認できなかった（' + why(e) + '）'); judged = Promise.resolve(); }
+  var goProgress = function () { try { if (window.__epProgressStart) { window.__epProgressStart(); } } catch (_) {} };
+  judged.then(goProgress, goProgress);
 })();
 </script>
 </body>

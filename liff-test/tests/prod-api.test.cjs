@@ -22,6 +22,21 @@ test('本番側のコードは liff-test の正本と同じ（sync-prod.mjs --ch
   const r=spawnSync(process.execPath,[path.join(__dirname,'..','scripts','sync-prod.mjs'),'--check'],{encoding:'utf8'});
   assert.equal(r.status,0,r.stderr);
 });
+test('本番の画面側：progress-sync.js は正本の写しで、ロードマップ・第1回・ログインの画面がつながっている。戻り先と行き先',()=>{
+  const read=f=>fs.readFileSync(path.join(prod,f),'utf8');
+  assert.equal(read('progress-sync.js').split(String.fromCharCode(10)).slice(1).join(String.fromCharCode(10)),fs.readFileSync(path.join(__dirname,'..','progress-sync.js'),'utf8'));
+  const road=read('roadmap/index.html'),ep=read('ep/1/index.html'),login=read('login/index.html');
+  assert.match(road,/TakkenProgress\.init\(\{ liffId: '2012583516-7vmvMorb', cookieHint: true/);
+  assert.match(road,/pgSet\('listened'/);assert.match(road,/href="\/login"/);
+  assert.equal((road.match(/href="\/login"/g)||[]).length,2); // 初期表示と、描き直しの注記だけ
+  assert.match(ep,/TakkenProgress\.set\('done'/);assert.match(ep,/init\(\{cookieHint: true\}\)/);assert.ok(!/TakkenProgress\.init\(\{liffId/.test(ep)); // 二重に liff.init しない
+  assert.match(login,/<meta name="robots" content="noindex">/);assert.match(login,/cloud\.umami\.is/);assert.match(login,/liff\.line\.me\/2012583516-7vmvMorb\/roadmap/);
+  assert.ok(!/ep10-preview|checks\.html|karte|宅建ドック/.test(login));
+  const cb=read('auth-callback.js');
+  assert.match(cb,/'\/roadmap'/);assert.match(cb,/\/login\?auth=/);assert.ok(!/mimiobo-next|ep10-preview|account\.html|roadmap-an2/.test(cb));
+  // /login は login/index.html、/auth-callback.html はファイルそのまま：リライトは要らない
+  assert.ok(fs.existsSync(path.join(prod,'auth-callback.html')));
+});
 test('直下の vercel.json：公開ページのヘッダーなどは足さず、cron とPDF同梱だけ。.vercelignore は api を除外しない',()=>{
   const v=JSON.parse(fs.readFileSync(path.join(prod,'vercel.json'),'utf8'));
   assert.equal(v.headers,undefined);assert.equal(v.rewrites,undefined);

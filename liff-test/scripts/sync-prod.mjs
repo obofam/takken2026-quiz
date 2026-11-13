@@ -1,6 +1,6 @@
 // 本番（リポジトリ直下の api/）用のコードを、この liff-test の正本から作る。手で直さない。
 // 使い方：node scripts/sync-prod.mjs（作る） / node scripts/sync-prod.mjs --check（ずれがないか確かめる。tests/prod-api.test.cjs が使う）
-// 正本は liff-test（lib/*.js・api/*.js・quiz-catalog.js）。本番側は ../api/_lib/（共通）と ../api/*.js（入口）で、写しを作る。
+// 正本は liff-test（lib/*.js・api/*.js・quiz-catalog.js・progress-sync.js＝画面側の共通ファイル。本番では直下の /progress-sync.js）。本番側は ../api/_lib/（共通）と ../api/*.js（入口）で、写しを作る。
 // 違いは require の相対パスだけ（入口は ../lib/ → ./_lib/、../quiz-catalog → ./_lib/quiz-catalog）。
 import fs from 'node:fs';
 import path from 'node:path';
@@ -13,6 +13,8 @@ export function expected() {
   for (const f of ['server.js', 'stripe.js', 'products.js'])
     out.set(path.join(prod, 'api/_lib', f), HEADER + fs.readFileSync(path.join(test, 'lib', f), 'utf8'));
   out.set(path.join(prod, 'api/_lib/quiz-catalog.js'), HEADER + fs.readFileSync(path.join(test, 'quiz-catalog.js'), 'utf8'));
+  // 画面側の共通ファイル（本番のロードマップ・第1回が /progress-sync.js として読む）。中身は同じ、先頭に注記だけ足す。
+  out.set(path.join(prod, 'progress-sync.js'), HEADER + fs.readFileSync(path.join(test, 'progress-sync.js'), 'utf8'));
   for (const f of fs.readdirSync(path.join(test, 'api')).filter(n => n.endsWith('.js'))) {
     const src = fs.readFileSync(path.join(test, 'api', f), 'utf8')
       .replaceAll("require('../lib/", "require('./_lib/").replaceAll("require('../quiz-catalog')", "require('./_lib/quiz-catalog')");

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>ログイン｜耳で覚える宅建2027</title>
+<!-- Umami analytics (page: login) -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{ --cyan:#17C5E8; --ink:#0A6477; --soft:#E3F8FC; --text:#2B3A46; --muted:#56636E; --line:#D9E0E6; --surface:#F4F7F9; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+  body { font-family: "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans", "Yu Gothic", sans-serif; color: var(--text); background: var(--surface); line-height: 1.8; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 20px 16px 40px; }
+  .brand { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.5; margin-bottom: 16px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 22px 18px; }
+  h1 { font-size: 24px; font-weight: 900; line-height: 1.5; color: var(--ink); margin-bottom: 8px; }
+  .lead { font-size: 16px; line-height: 1.8; }
+  .sec { margin-top: 20px; }
+  .state { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.7; background: var(--soft); border-radius: 10px; padding: 10px 14px; }
+  .btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: 10px 18px; margin-top: 12px; font: inherit; font-size: 16px; font-weight: 700; line-height: 1.4; text-align: center; text-decoration: none; color: #fff; background: var(--ink); border: 2px solid var(--ink); border-radius: 999px; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .btn.o { color: var(--ink); background: #fff; }
+  .btn[disabled] { opacity: .6; cursor: default; }
+  .or { font-size: 14px; color: var(--muted); margin-top: 18px; line-height: 1.6; }
+  label { display: block; font-size: 14px; font-weight: 700; margin-top: 8px; line-height: 1.6; }
+  input[type=email] { display: block; width: 100%; min-height: 48px; margin-top: 4px; padding: 10px 12px; font: inherit; font-size: 16px; color: var(--text); background: #fff; border: 1.5px solid #B8C4CC; border-radius: 10px; }
+  .msg { font-size: 15px; line-height: 1.7; margin-top: 12px; }
+  .msg.err { color: #8A3A2E; }
+  .foot { margin-top: 22px; font-size: 14px; line-height: 1.7; color: var(--muted); }
+  .foot a { color: var(--ink); display: inline-block; min-height: 44px; padding: 10px 0; }
+  .foot p { margin: 0; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">耳で覚える宅建2027</div>
+  <main class="card">
+    <h1>ログイン</h1>
+    <p class="lead">ログインすると、聴いた回と3問の記録が残ります。機種を変えても、ほかの端末でも、同じ記録が出ます。</p>
+
+    <!-- 確認が終わるまで、どちらも出さない（点滅を避ける） -->
+    <div id="vIn" class="sec" hidden>
+      <p class="state" id="inState">LINEでログインしています</p>
+      <a class="btn" id="toRoad" href="/roadmap" data-umami-event="login-to-roadmap">学習ロードマップへ</a>
+      <button type="button" class="btn o" id="btnLink" hidden data-umami-event="login-link">LINEとメールの記録を1つにまとめる</button>
+      <button type="button" class="btn o" id="btnOut" data-umami-event="login-logout">ログアウト</button>
+    </div>
+
+    <div id="vOut" class="sec" hidden>
+      <p class="msg err" id="authErr" role="alert" hidden>ログインできませんでした。もう一度、メールアドレスを入れてください。</p>
+      <div id="lineBox">
+        <a class="btn" href="https://liff.line.me/2012583516-7vmvMorb/roadmap" data-umami-event="login-line">LINEで開く</a>
+        <p class="or">または、メールで</p>
+      </div>
+      <label for="email">メールアドレス</label>
+      <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+      <button type="button" class="btn o" id="btnMail" data-umami-event="login-mail">ログインのリンクを送る</button>
+    </div>
+
+    <p class="msg" id="msg" role="status" aria-live="polite" hidden></p>
+  </main>
+  <div class="foot">
+    <p><a href="https://www.mimiobo.com/privacy">プライバシーポリシー</a></p>
+    <p>記録の削除は <a href="mailto:info@mimiobo.com">info@mimiobo.com</a> へ</p>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var LIFF_ID = '2012583516-7vmvMorb';
+  var HINT = 'takken2027-login-hint', SLOT = 'mimiobo-link-ticket';
+  var $ = function (id) { return document.getElementById(id); };
+  var inLine = /\sLine\//i.test(navigator.userAgent || '');
+  function say(t, err) { var m = $('msg'); m.textContent = t || ''; m.hidden = !t; m.className = 'msg' + (err ? ' err' : ''); }
+  function lget(k) { try { return localStorage.getItem(k); } catch (_) { return null; } }
+  function api(url, method, body) {
+    var o = { method: method || 'GET', credentials: 'same-origin' };
+    if (body !== undefined) { o.headers = { 'Content-Type': 'application/json' }; o.body = JSON.stringify(body); }
+    return fetch(url, o).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, status: r.status, json: j || {} }; }); });
+  }
+  function loadScript(src) {
+    return new Promise(function (ok, ng) { var s = document.createElement('script'); s.src = src; s.async = true; s.onload = ok; s.onerror = function () { ng(new Error('load')); }; document.head.appendChild(s); });
+  }
+
+  /* ---- LINEとメールの記録を1つにまとめる：合図（10分だけ有効）をこのブラウザの sessionStorage に預ける ---- */
+  var validTok = function (t) { return typeof t === 'string' && /^[0-9a-f]{64}$/.test(t); };
+  function captureLink() {
+    var q = new URLSearchParams(location.search), f = new URLSearchParams(location.hash.slice(1));
+    if (!q.has('link') && !f.has('link')) { return; }
+    var toks = q.getAll('link').concat(f.getAll('link'));
+    var exp = q.has('link_expires') ? Number(q.get('link_expires')) : Date.now() + 600000;
+    var v = (toks.length === 1 && validTok(toks[0]) && isFinite(exp) && exp > Date.now()) ? { token: toks[0], expires: Math.min(exp, Date.now() + 600000) } : { invalid: true };
+    try { sessionStorage.setItem(SLOT, JSON.stringify(v)); } catch (_) {}
+    q.delete('link'); q.delete('link_expires'); f.delete('link');
+    history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + (f.toString() ? '#' + f : ''));
+  }
+  /* undefined=なし / {token,expires}=有効 / null=無効（別のアカウントは作らない） */
+  function pendingLink() {
+    var s; try { s = sessionStorage.getItem(SLOT); } catch (_) { return undefined; }
+    if (s === null) { return undefined; }
+    try { var v = JSON.parse(s); if (v && validTok(v.token) && v.expires > Date.now()) { return v; } } catch (_) {}
+    return null;
+  }
+  function clearLink() { try { sessionStorage.removeItem(SLOT); } catch (_) {} }
+
+  /* ---- 画面の状態 ---- */
+  var authFailed = false;
+  function showOut() {
+    $('vIn').hidden = true; $('vOut').hidden = false;
+    $('authErr').hidden = !authFailed;
+    $('lineBox').hidden = inLine; /* LINEの中では「LINEで開く」は要らない */
+  }
+  function showIn(providers) {
+    var hasL = providers.indexOf('line') >= 0, hasE = providers.indexOf('email') >= 0;
+    $('inState').textContent = hasL && hasE ? 'LINEとメールでログインしています' : (hasE ? 'メールでログインしています' : 'LINEでログインしています');
+    $('btnLink').hidden = !(hasE && !hasL);
+    $('vOut').hidden = true; $('vIn').hidden = false;
+  }
+  function paintSession() {
+    return api('/api/session', 'GET').then(function (r) {
+      if (!r.ok) { if (r.status === 401) { try { localStorage.removeItem(HINT); } catch (_) {} } showOut(); return; }
+      try { localStorage.setItem(HINT, '1'); } catch (_) {}
+      var p = Array.isArray(r.json.providers) ? r.json.providers : [];
+      showIn(p.length ? p : ['email']);
+    }, function () { showOut(); });
+  }
+
+  /* LINEの中（または、まとめる途中）：LIFF SDK を読み、LINEのIDトークンでログインする。
+     LINEの外で勝手にLINEのログイン画面へは飛ばさない（まとめる途中だけ例外）。 */
+  function viaLine(link) {
+    return loadScript('https://static.line-scdn.net/liff/edge/2/sdk.js').then(function () { return window.liff.init({ liffId: LIFF_ID }); }).then(function () {
+      var L = window.liff;
+      if (!L.isLoggedIn()) {
+        if (link) { L.login({ redirectUri: location.origin + '/login?link=' + link.token + '&link_expires=' + link.expires }); return 'redirect'; }
+        return 'none';
+      }
+      if (!link && !L.isInClient()) { return 'none'; }
+      var tok = L.getIDToken(); if (!tok) { return 'none'; }
+      return api('/api/session', 'POST', link ? { idToken: tok, linkToken: link.token } : { idToken: tok }).then(function (r) {
+        if (link) { clearLink(); return r.ok ? 'linked' : 'linkfail'; }
+        return r.ok ? 'ok' : 'none';
+      });
+    });
+  }
+
+  function start() {
+    captureLink();
+    var code = new URLSearchParams(location.search).get('auth');
+    authFailed = !!code && code !== 'ok';
+    var link = pendingLink();
+    if (link === null) { clearLink(); say('まとめられませんでした。もう一度、はじめからお試しください。', true); link = undefined; }
+    var step = link ? viaLine(link) : (inLine ? viaLine(null) : Promise.resolve(lget(HINT) ? 'ok' : 'none'));
+    step.catch(function () { return lget(HINT) ? 'ok' : 'none'; }).then(function (r) {
+      if (r === 'redirect') { return; }
+      if (r === 'linkfail') { say('まとめられませんでした。もう一度、はじめからお試しください。', true); }
+      if (r === 'linked') { say('LINEとメールの記録を、1つにまとめました。'); }
+      if (r === 'none') { showOut(); return; }
+      return paintSession();
+    });
+  }
+
+  /* ---- ボタン ---- */
+  $('btnMail').addEventListener('click', function () {
+    var inp = $('email'), b = $('btnMail'), fail = '送れませんでした。時間をおいて、もう一度お試しください。';
+    if (!inp.value || inp.validity.valid === false) { say('メールアドレスを確認してください。', true); return; }
+    b.disabled = true;
+    api('/api/email', 'POST', { email: inp.value, link: false }).then(function (r) {
+      if (r.ok) { say('メールを送りました。届いたリンクを押してください。'); } else { say(fail, true); }
+    }, function () { say(fail, true); }).then(function () { b.disabled = false; });
+  });
+  $('btnLink').addEventListener('click', function () {
+    var fail = 'まとめられませんでした。時間をおいて、もう一度お試しください。';
+    api('/api/link', 'POST', { provider: 'line' }).then(function (r) {
+      if (!r.ok || !validTok(r.json.linkToken)) { say(fail, true); return; }
+      try { sessionStorage.setItem(SLOT, JSON.stringify({ token: r.json.linkToken, expires: Date.now() + 600000 })); } catch (_) {}
+      location.href = 'https://liff.line.me/' + LIFF_ID + '/login#link=' + r.json.linkToken;
+    }, function () { say(fail, true); });
+  });
+  $('btnOut').addEventListener('click', function () {
+    api('/api/session', 'DELETE', {}).then(function () {}, function () {}).then(function () {
+      try { localStorage.removeItem(HINT); } catch (_) {}
+      clearLink();
+      location.replace('/login');
+    });
+  });
+  start();
+})();
+</script>
+</body>
+</html>

@@ -151,6 +151,7 @@
   .line-cta .head { font-size: 1.08rem; font-weight: 800; margin-top: 4px; }
   .line-cta .body { font-size: .95rem; color: var(--muted); margin: 4px 0 14px; }
   .nb { display: inline-block; }
+  .pg-note .pg-login { display: inline-block; color: #0A6477; text-decoration: underline; text-underline-offset: 2px; padding: 11px 6px; margin: -11px 0; white-space: nowrap; }
   .btn { display: inline-block; font-weight: 700; text-decoration: none; color: #fff; background: var(--cyan-dark); border-radius: 999px; padding: 10px 30px; }
   .faq { margin-top: 10px; border-top: 1px solid var(--line); padding-top: 20px; }
   .faq h2 { font-size: 1.12rem; font-weight: 800; margin-bottom: 8px; }
@@ -473,7 +474,7 @@
       </div>
     </div>
     <details class="pgd"><summary>分野別の進み具合</summary><div class="pgl" id="pgl"></div></details>
-    <p class="pg-note" id="pgNote"><span class="nb">いまは、この端末にだけ残ります。</span><span class="nb">LINEで記録を引き継げるように</span><span class="nb">準備しています。</span></p>
+    <p class="pg-note" id="pgNote"><span class="nb">いまは、この端末にだけ残ります。</span><span class="nb">LINEで開くと、</span><span class="nb">記録が残ります。</span> <a class="pg-login" href="/login" data-umami-event="roadmap-login">ログインする</a></p>
   </section>
 
   <div class="start-note" id="startNote">
@@ -757,6 +758,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     wr(K_L, o);
     b.setAttribute('data-st', nx); b.textContent = ST_LABEL[nx];
     var tr = b.closest('tr'); tr.classList.remove('s1','s2'); if (nx) tr.classList.add('s'+nx);
+    pgSet('listened', n, nx || null);
     updateRail();
     if (window.umami) { try { umami.track('roadmap_progress', { to: ST_LABEL[nx] }); } catch(_) {} }
     renderProgress();
@@ -776,6 +778,41 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   });
   window.addEventListener('scroll', updateGo, { passive: true });
   window.addEventListener('resize', updateGo);
+  // ===== ログインした人の記録をサーバーにも置く（ログインしていない人の動きは今までと同じ）=====
+  // 同期の部品は、画面が落ち着いたあとで読み込む。LINEの中のときだけ LIFF SDK も読む。例外はすべて握りつぶす。
+  var pgReady = false, pgQueue = [];
+  function pgSet(kind, key, val){
+    try {
+      if (pgReady && window.TakkenProgress) { TakkenProgress.set(kind, key, val); } else { pgQueue.push([kind, key, val]); }
+    } catch(_) {}
+  }
+  function nbs(a){ return a.map(function(s){ return '<span class="nb">'+s+'</span>'; }).join(''); }
+  function renderNote(){
+    var st = 'local', pv = null;
+    try { if (window.TakkenProgress) { st = TakkenProgress.state(); pv = TakkenProgress.provider(); } } catch(_) {}
+    var h = st==='synced'
+      ? nbs(pv==='email' ? ['メールアドレスに記録しています。','ほかの端末でも同じ記録が出ます。'] : ['LINEに記録しています。','機種を変えても残ります。'])
+      : nbs(['いまは、この端末にだけ残ります。','LINEで開くと、','記録が残ります。']) + ' <a class="pg-login" href="/login" data-umami-event="roadmap-login">ログインする</a>';
+    document.getElementById('pgNote').innerHTML = h;
+  }
+  function pgLoad(src){
+    return new Promise(function(ok, ng){
+      var sc = document.createElement('script'); sc.src = src; sc.async = true; sc.onload = ok; sc.onerror = ng; document.head.appendChild(sc);
+    });
+  }
+  function pgStart(){
+    var inLine = /\sLine\//i.test(navigator.userAgent || '');
+    (inLine ? pgLoad('https://static.line-scdn.net/liff/edge/2/sdk.js').catch(function(){}) : Promise.resolve())
+      .then(function(){ return pgLoad('/progress-sync.js'); })
+      .then(function(){
+        if (!window.TakkenProgress) { return; }
+        var p = TakkenProgress.init({ liffId: '2012583516-7vmvMorb', cookieHint: true, onChange: function(){ render(); renderNote(); } });
+        pgReady = true;
+        pgQueue.splice(0).forEach(function(q){ TakkenProgress.set(q[0], q[1], q[2]); });
+        return p;
+      }).catch(function(){});
+  }
+  if (document.readyState === 'complete') { setTimeout(pgStart, 0); } else { window.addEventListener('load', function(){ setTimeout(pgStart, 0); }); }
   renderCountdown();
   render();
   updateGo();

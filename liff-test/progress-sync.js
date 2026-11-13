@@ -4,7 +4,7 @@
    端末の記録は、これまでどおり画面側が書く。ここは「ログインの確認」「はじめての端末の合わせ込み」「変更の送信」「送れなかった変更の送り直し」だけ。
    例外はすべて握りつぶす（画面の動きを止めない）。 */
 (function (root) {
-  var K_L = 'takken2027-listened', K_D = 'takken2027-done', K_Q = 'takken2027-progress-queue', K_S = 'takken2027-synced-';
+  var K_L = 'takken2027-listened', K_D = 'takken2027-done', K_Q = 'takken2027-progress-queue', K_S = 'takken2027-synced-', K_H = 'takken2027-login-hint';
   var KEY = /^[A-Za-z0-9-]{1,40}$/;
   var state = 'local', provider = null, suffix = '', started = null, ready = false, onChange = null, early = [], chain = Promise.resolve();
 
@@ -75,9 +75,12 @@
     }), 8000).then(function (r) { return r ? { provider: 'line', storageKey: r.storageKey } : null; }, function () { return null; });
   }
   /* (b) メールでログインした人：セッションがあれば 200 */
-  function viaCookie() {
+  function viaCookie(opts) {
+    /* cookieHint を渡したページ（本番）：このブラウザでログインした印（auth-callback / LINE のログイン成功で付く）がなければ、問い合わせない。
+       ログインしていない人に 401 を出させない（ブラウザのコンソールに赤い行が出るため）。 */
+    if (opts && opts.cookieHint && !lget(K_H)) { return Promise.resolve(null); }
     return api('/api/session', 'GET').then(function (r) {
-      if (!r.ok) { return null; }
+      if (!r.ok) { if (opts && opts.cookieHint && r.status === 401) { try { localStorage.removeItem(K_H); } catch (_) {} } return null; }
       var p = r.json.providers;
       return { provider: (Array.isArray(p) && p.length === 1 && p[0] === 'line') ? 'line' : 'email', storageKey: r.json.storageKey };
     }, function () { return null; });
@@ -89,9 +92,10 @@
     });
   }
   function run(opts) {
-    return viaLiff(opts).then(function (who) { return who || viaCookie(); }).then(function (who) {
+    return viaLiff(opts).then(function (who) { return who || viaCookie(opts); }).then(function (who) {
       if (!who || typeof who.storageKey !== 'string' || !who.storageKey) { return; } /* (c) 端末だけのまま */
       provider = who.provider; suffix = who.storageKey.slice(-16);
+      if (opts.cookieHint) { lset(K_H, '1'); }
       var mark = K_S + suffix;
       var step = Promise.resolve(true);
       if (!lget(mark)) {

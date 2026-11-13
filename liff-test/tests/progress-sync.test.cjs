@@ -197,3 +197,22 @@ test('page wiring: roadmap-an2 and ep1-3dan load progress-sync.js, call set(), a
   // 記録の localStorage のキーは変えていない
   assert.ok(road.includes("'takken2027-listened'") && road.includes("'takken2027-done'") && ep.includes("'takken2027-done'"));
 });
+
+test('cookieHint: ログインの印がなければ /api/session を呼ばない（401を出さない）。印があれば同期し、401なら印を消す。同期できたら印が付く', async () => {
+  const w = world({ server: { loggedIn: null } });
+  await w.P.init({ cookieHint: true });
+  assert.equal(w.log.length, 0);
+  assert.equal(w.P.state(), 'local');
+  const w2 = world({ local: { 'takken2027-login-hint': '1' }, server: { loggedIn: null } });
+  await w2.P.init({ cookieHint: true });
+  assert.equal(w2.log.filter(l => l.url === '/api/session').length, 1);
+  assert.equal(w2.ls.getItem('takken2027-login-hint'), null);
+  const w3 = world({ local: { 'takken2027-login-hint': '1' }, server: { loggedIn: 'email' } });
+  await w3.P.init({ cookieHint: true });
+  assert.equal(w3.P.state(), 'synced');
+  assert.equal(w3.ls.getItem('takken2027-login-hint'), '1');
+  /* 指定しなければ今までどおり（印なしでも問い合わせる） */
+  const w4 = world({ server: { loggedIn: 'email' } });
+  await w4.P.init({});
+  assert.equal(w4.P.state(), 'synced');
+});
