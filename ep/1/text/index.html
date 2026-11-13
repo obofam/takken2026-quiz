@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--sky:#17C5E8;--ink:#0A6477;--soft:#E3F8FC;--bg:#F4FAFC;--text:#141B21;--sub:#6B6B76;--line:#DCEEF3;--sheet:#8E3B3B;--font:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--shadow:0 2px 8px rgba(20,27,33,.05);--navh:0px}
+:root{--sky:#17C5E8;--ink:#0A6477;--soft:#E3F8FC;--bg:#F4FAFC;--text:#141B21;--sub:#6B6B76;--line:#DCEEF3;--sheet:#8E3B3B;--lime:#D6F034;--lime-soft:#F4FBD2;--lime-dark:#4F6300;--font:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--shadow:0 2px 8px rgba(20,27,33,.05);--navh:0px}
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
 html,body{background:var(--bg)}
@@ -61,7 +61,80 @@ a{color:var(--ink);text-underline-offset:2px}
 .sb2:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
 .pdfrow{display:block;margin:4px 0 0;text-align:center}
 .pdfbtn{display:inline-block;box-sizing:border-box;min-height:44px;line-height:1.4;padding:10px 20px;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--ink);border-radius:999px;text-decoration:none}
-.to-quiz{font-size:15px;line-height:1.8;text-align:center}
+.sec-h{font-size:24px;font-weight:900;color:var(--ink);line-height:1.3;display:flex;align-items:center;gap:10px}
+.sec-h::before{content:"";width:6px;height:24px;border-radius:3px;background:var(--sky)}
+@media (max-width:600px){.sec-h{font-size:22px}}
+#text1,#text2,#point,#honban,.qset{scroll-margin-top:56px}
+.qres .zk,.kk-src,.line-inv p.lnote{font-size:14px;line-height:1.65}
+a.lbtn{text-decoration:none;cursor:pointer}
+.over{font-size:12px;line-height:1.5;letter-spacing:.15em;color:var(--sky);text-transform:uppercase;font-weight:700}
+.qset{margin:0 0 24px;scroll-margin-top:calc(var(--navh) + 8px)}
+.qset:last-child{margin-bottom:0}
+.qset-label{margin:2px 0 10px;font-size:18px;line-height:1.5;font-weight:700}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 14px 16px;margin-bottom:12px}
+.qhead{display:flex;gap:10px;align-items:flex-start}
+.qno{flex:none;font-weight:900;color:var(--ink);background:var(--soft);border-radius:999px;font-size:13px;line-height:1;padding:6px 10px;margin-top:5px}
+.qtext{margin:0;font-size:16px;line-height:1.8}
+.qbtns{display:flex;gap:10px;margin-top:12px}
+.pill{font:inherit;font-size:17px;font-weight:700;line-height:1.2;color:var(--ink);background:#fff;border:1px solid var(--sky);border-radius:999px;min-width:76px;padding:10px 22px;cursor:pointer}
+.pill:hover:not(:disabled){background:var(--soft)}
+.pill:disabled{cursor:default;color:var(--sub);border-color:var(--line);background:#fafafa}
+.pill.chosen:disabled{color:var(--ink);border-color:var(--sky);background:var(--soft)}
+.pill.ghost{font-size:15px;min-width:0;padding:8px 18px}
+.qres{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:15px;line-height:1.8}
+.qres p{margin:0}
+.qres .verdict{font-weight:900;font-size:17px}
+.qres .answer{font-weight:700}
+.qres.ok{background:var(--lime-soft);border:1px solid var(--lime);color:var(--text)}
+.qres.ok .verdict{color:var(--lime-dark)}
+.qres.ng{background:#f4f4f6;border:1px solid #e4e4e8;color:var(--text)}
+.qres.ng .verdict{color:var(--sub)}
+.qres .zk{margin-top:6px;font-size:12px;line-height:1.5}
+.qres .zk a{color:var(--ink);text-underline-offset:2px}
+.score{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:4px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.score-text{margin:0;font-weight:700;font-size:17px;color:var(--ink)}
+.kk{margin:0}
+.kk-lock{position:relative}
+.kk-gate{position:absolute;left:6px;right:6px;top:18px;z-index:2;background:#fff;border:1.5px solid var(--sky);border-radius:14px;padding:14px;box-shadow:0 6px 20px rgba(20,27,33,.10)}
+.kk-gate p{margin:0 0 10px;font-size:14px;line-height:1.7;color:var(--text)}
+.lbtn.gate-btn{appearance:none;-webkit-appearance:none;border:0;width:100%;font-family:inherit;font-size:15px;font-weight:900}
+.kk-src{display:inline-block;margin:0 0 8px;background:var(--soft);color:var(--ink);font-size:12px;font-weight:700;line-height:1.7;padding:1px 12px;border-radius:999px}
+.kk-stem{margin:0 0 10px;font-size:16px;line-height:1.8}
+.kk-memo{margin:0 0 8px;font-size:13px;line-height:1.6;color:var(--sub)}
+.kk-item{display:flex;gap:8px;align-items:flex-start;margin:0 0 8px;font-size:15px;line-height:1.75}
+.kk-mark{flex:none;min-width:1.4em;font-weight:700;color:var(--ink)}
+.kk-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.kk-btns.wide{grid-template-columns:repeat(2,1fr)}
+.kk-btns .pill{min-width:0;padding:10px 6px;text-align:center}
+.kk-lines{list-style:none;margin:8px 0 0;padding:0;font-size:14px;line-height:1.75}
+.kk-lines li{display:flex;gap:8px;align-items:flex-start;margin:0 0 6px}
+.qres .kk-tail{margin-top:6px;font-size:14px;font-weight:700}
+.qres .kk-onair-l{margin-top:10px;font-size:13px;font-weight:700;color:var(--sub)}
+.qres .kk-onair{font-size:14px;line-height:1.75}
+.kk-again{margin-top:10px}
+.line-inv,.line-card{background:#fff;border:1.5px solid var(--sky);border-radius:14px;padding:12px 14px}
+.line-inv{margin-top:10px}
+.line-inv p,.line-card p{margin:0 0 10px;font-size:14px;line-height:1.7}
+.line-inv p.lnote{margin:6px 0 0;text-align:center;font-size:12px;color:var(--sub);line-height:1.5}
+a.lbtn,.lbtn.gate-btn{cursor:pointer;text-decoration:none}
+.lbtn{display:block;text-align:center;font-weight:900;font-size:15px;line-height:1.4;color:var(--text);background:var(--sky);border-radius:999px;padding:8px 18px;cursor:default;user-select:none}
+.kk-smp{font-size:13px;color:#4F5963;line-height:1.7;margin-top:8px}
+.qno{font-size:14px}
+.over{font-size:13px}
+.nk{display:inline-block}
+.pill{min-height:48px}
+.pill.ghost{min-height:44px}
+.lbtn{min-height:44px;display:flex;align-items:center;justify-content:center;padding:8px 18px}
+.qres .zk a{display:inline-block;padding:12px 0;margin:-12px 0}
+.qres{line-height:1.75}
+.kk-item{font-size:16px}
+.kk-lines{font-size:15px}
+.kk-memo,.qres .kk-onair-l{font-size:14px}
+.qres .kk-onair{font-size:15px}
+.kk-src{display:block;background:none;border-radius:0;padding:0;margin:0 0 6px;font-size:13px;font-weight:400;color:#4F5963;line-height:1.6}
+.kk-over{margin-bottom:-6px}
+.lbtns{display:flex;gap:8px}
+.lbtns .lbtn{flex:1 1 0;min-width:0;padding:8px 6px;font-size:14px}
 .pdfthumb{display:block;width:120px;margin:10px auto 0;border:1px solid #ececec;border-radius:8px;overflow:hidden;background:#fff;line-height:0}
 .pdfthumb img{display:block;width:100%;height:auto}
 .links{display:flex;flex-direction:column;gap:8px;align-items:center}
@@ -89,6 +162,9 @@ a{color:var(--ink);text-underline-offset:2px}
   .page{max-width:680px;margin:28px auto 40px;padding:22px 32px 32px;border-radius:20px;box-shadow:0 2px 18px rgba(20,27,33,.06)}
   .smp-h{font-size:26px}
   .core p{font-size:19px}
+  .qtext,.kk-stem{font-size:17px}
+  .kk-item{font-size:16px}
+  .sec-h{font-size:26px}
 }
 @media (max-width:520px){html{scrollbar-width:none}html::-webkit-scrollbar{display:none}}
 </style>
@@ -131,8 +207,13 @@ a{color:var(--ink);text-underline-offset:2px}
         <div class="core"><h2>今日のポイント</h2><p>免許をもらえない人の名簿は「5年」で読む。ただし破産は復権すれば、執行猶予は期間が終われば、その日からすぐ免許を受けられる。</p></div>
       </section>
       <section class="sec" id="numbers"><div class="thost" data-tpl="tpl-3"></div></section>
+      <section class="sec" id="honban">
+        <div class="over kk-over">チャレンジ！</div>
+        <h2 class="sec-h">過去問1選</h2>
+        <div id="kkBox"></div>
+      </section>
     </div>
-    <p class="to-quiz"><span class="nb">○×3問と過去問は、</span><a href="/ep/1" data-umami-event="text-back" data-umami-event-to="ep1"><span class="nb">【図解と3問】のページで解けます。</span></a></p>
+    <div id="quizBox" hidden></div>
     <div class="pdfrow">
       <a class="pdfbtn" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く</a>
       <a class="pdfthumb" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1" tabindex="-1" aria-hidden="true"><img src="/ep/1/text/a4-p1.webp" width="800" height="1133" loading="lazy" alt=""></a>
@@ -141,7 +222,6 @@ a{color:var(--ink);text-underline-offset:2px}
   </div>
 
   <nav class="links" aria-label="ほかのページ">
-    <a href="/ep/1" data-umami-event="text-back" data-umami-event-to="ep1">【図解と3問】第1回へ</a>
     <a href="/roadmap" data-umami-event="text-back" data-umami-event-to="roadmap">学習ロードマップ（兼 進捗トラッカー）へ</a>
   </nav>
 
@@ -562,6 +642,224 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 <script>
 (function () {
   'use strict';
+  /* 3問のデータは build.py が data.json から差し込む（過去問1選はLINEで届けるため、このページには出さない） */
+  var QUIZ = [{"label": "前半　「宅建業と免許」の3問", "questions": [{"q": "自分が持っているマンション20戸を、不特定多数の人に、くり返し貸す場合、免許が必要である。", "a": false, "exp": "自ら貸借なので、何戸貸しても、宅建業に当たりません。"}, {"q": "知事の免許を受けた業者は、その県の中の物件しか取引できない。", "a": false, "exp": "区分を決めるのは事務所の場所だけで、物件はどこの県でもかまいません。"}, {"q": "更新の申請をしたのに、満了日までに処分がなかった場合、従前の免許は、満了日で切れる。", "a": false, "exp": "処分があるまでは、古い免許が有効です。更新されたあとの5年は、処分の日からではなく、前の免許が切れる日の翌日から数えます。"}]}, {"label": "後半　「免許の基準」の3問", "questions": [{"q": "破産手続開始の決定を受けた人は、復権を得てから5年たたないと、免許を受けられない。", "a": false, "exp": "復権を得れば、その日から、すぐ受けられます。"}, {"q": "道路交通法の違反で罰金を受けた人は、5年間、免許を受けられない。", "a": false, "exp": "罰金で欠格になる罪には、道路交通法の違反は入っていません。"}, {"q": "会社の非常勤の取締役が、傷害の罪で罰金を受けた場合、非常勤なので、その会社は免許を受けられる。", "a": false, "exp": "役員は、常勤か非常勤かを問いません。会社も、免許を受けられません。"}]}];
+  var esc = function (s) {
+    return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
+  };
+
+  /* 文末の「です／ます／ない」だけが次の行に落ちないよう、最後の文節（約5字）をひとかたまりにする */
+  var nbt = function (str) {
+    str = String(str);
+    var segs;
+    try { segs = Array.from(new Intl.Segmenter('ja', {granularity: 'word'}).segment(str), function (x) { return x.segment; }); }
+    catch (_) { segs = [str.slice(0, -5), str.slice(-5)]; }
+    var n = 0, i = segs.length;
+    while (i > 0 && n < 5) { i--; n += segs[i].length; }
+    if (i <= 0 || n > 9) { var k = Math.max(0, str.length - 5); return esc(str.slice(0, k)) + '<span class="nk">' + esc(str.slice(k)) + '</span>'; }
+    return esc(segs.slice(0, i).join('')) + '<span class="nk">' + esc(segs.slice(i).join('')) + '</span>';
+  };
+
+  /* ---------- 3問済の印：前半・後半の両方を解き終えたら、この端末の localStorage に残す（ログインしている人は、サーバーにも置く） ---------- */
+  var setsDone = {};
+  function markSetDone(idx) {
+    setsDone[idx] = true;
+    for (var i = 0; i < QUIZ.length; i++) { if (!setsDone[i]) { return; } }
+    var m = /\/ep\/(\d+)/.exec(location.pathname);
+    if (!m) { return; }
+    try {
+      var o = JSON.parse(localStorage.getItem('takken2027-done') || '{}');
+      if (!o || typeof o !== 'object') { o = {}; }
+      o[m[1]] = true;
+      localStorage.setItem('takken2027-done', JSON.stringify(o));
+    } catch (_) {}
+    /* ログインしている人は、サーバーにも置く（ログインしていない人は端末だけ）。同期の部品が動き出す前なら、動き出してから送る */
+    progDoneKey = m[1];
+    if (progReady) { try { window.TakkenProgress.set('done', progDoneKey, true); } catch (_) {} }
+  }
+  var progDoneKey = null, progReady = false;
+  /* 記録の同期。LINEの判定（liff.init）はこのページがすでに済ませているので、ここでは二重に init しない（liffId を渡さない）。
+     LINEの中でログイン済みなら ID トークンでサーバーのセッションに入り、メールのログインなどはクッキーのセッションがあるときだけ。なければ端末だけ。 */
+  function startProgress() {
+    new Promise(function (ok, ng) {
+      var sc = document.createElement('script'); sc.src = '/progress-sync.js'; sc.async = true; sc.onload = ok; sc.onerror = ng; document.head.appendChild(sc);
+    }).then(function () {
+      if (!window.TakkenProgress) { return; }
+      window.TakkenProgress.init({cookieHint: true});
+      progReady = true;
+      if (progDoneKey) { window.TakkenProgress.set('done', progDoneKey, true); }
+    }).catch(function () {});
+  }
+  window.__epProgressStart = startProgress; /* 下の判定のスクリプトが、判定のあとに呼ぶ */
+
+  /* ---------- 解き終えたその場に出すLINEの誘い ---------- */
+  /* 組の途中（前半）を解き終えたら次の組へ。過去問1選への誘いは最後の組（後半）のあとだけ */
+  function makeInv(next) {
+    var d = document.createElement('div');
+    d.className = 'line-inv';
+    d.hidden = true;
+    if (next) {
+      d.innerHTML = '<a class="lbtn" href="#' + next.id + '">' + esc(next.name) + 'の3問へ</a>';
+    } else {
+      d.innerHTML = '<a class="lbtn" href="#honban">過去問1選について</a>';
+    }
+    return d;
+  }
+
+  /* ---------- 節2：○×3問（確認ページと同じ） ---------- */
+  function buildSet(set, idx) {
+    var box = document.createElement('div');
+    box.className = 'qset';
+    box.innerHTML = '<div class="over">Quiz</div><h3 class="qset-label">' + esc(set.label) + '</h3>';
+    var total = set.questions.length, answered = 0, correct = 0, cards = [];
+    var score = document.createElement('div');
+    score.className = 'score';
+    score.hidden = true;
+    score.innerHTML = '<p class="score-text"></p><button type="button" class="pill ghost">もう一度</button>';
+    var scoreText = score.querySelector('.score-text');
+    var next = (idx + 1 < QUIZ.length) ? {id: 'q' + (idx + 2), name: String(QUIZ[idx + 1].label).split('　')[0]} : null;
+    var inv = makeInv(next);
+    set.questions.forEach(function (q, i) {
+      var card = document.createElement('div');
+      card.className = 'qcard';
+      card.innerHTML =
+        '<div class="qhead"><span class="qno">Q' + (i + 1) + '</span><p class="qtext">' + nbt(q.q) + '</p></div>' +
+        '<div class="qbtns">' +
+        '<button type="button" class="pill" data-v="1" aria-label="○（正しい）">○</button>' +
+        '<button type="button" class="pill" data-v="0" aria-label="×（誤り）">×</button>' +
+        '</div>' +
+        '<div class="qres" hidden aria-live="polite"></div>';
+      var btns = card.querySelectorAll('.pill');
+      var res = card.querySelector('.qres');
+      Array.prototype.forEach.call(btns, function (b) {
+        b.addEventListener('click', function () {
+          var ok = ((b.getAttribute('data-v') === '1') === q.a);
+          Array.prototype.forEach.call(btns, function (x) { x.disabled = true; });
+          b.classList.add('chosen');
+          res.className = 'qres ' + (ok ? 'ok' : 'ng');
+          res.innerHTML =
+            '<p class="verdict">' + (ok ? '正解' : '不正解') + '</p>' +
+            '<p class="answer">正しい答え　' + (q.a ? '○' : '×') + '</p>' +
+            '<p class="exp">' + nbt(q.exp) + '</p>' +
+            (ok ? '' : '<p class="zk"><a href="#zukai">図解で確かめる</a></p>');
+          res.hidden = false;
+          answered += 1;
+          if (ok) { correct += 1; }
+          if (answered === total) {
+            scoreText.textContent = total + '問中' + correct + '問正解';
+            score.hidden = false;
+            inv.hidden = false;
+            markSetDone(idx);
+          }
+        });
+      });
+      card._reset = function () {
+        Array.prototype.forEach.call(btns, function (x) { x.disabled = false; x.classList.remove('chosen'); });
+        res.hidden = true;
+        res.innerHTML = '';
+      };
+      cards.push(card);
+      box.appendChild(card);
+    });
+    score.querySelector('button').addEventListener('click', function () {
+      cards.forEach(function (c) { c._reset(); });
+      answered = 0; correct = 0; score.hidden = true; inv.hidden = true;
+      cards[0].scrollIntoView({block: 'nearest'});
+    });
+    box.appendChild(score);
+    box.appendChild(inv);
+    return box;
+  }
+  var quizBox = document.getElementById('quizBox');
+  QUIZ.forEach(function (s, i) { var b = buildSet(s, i); b.id = 'q' + (i + 1); quizBox.appendChild(b); });
+
+  /* やさしいテキストのリンク（#q1・#q2）から来たとき：3問の組はあとから作るので、作ったあとでその組まで送る */
+  if (/^#q\d+$/.test(location.hash)) {
+    var qt = document.getElementById(location.hash.slice(1));
+    if (qt) { setTimeout(function () { qt.scrollIntoView({block: 'start'}); }, 0); }
+  }
+})();
+/* 第1回 過去問1選（LINEの中で開いた人だけに、ep/1/index.html が読み込む） */
+(function () {
+  'use strict';
+  var esc = function (s) {
+    return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
+  };
+  var KK = {"year": "令和5年", "no": 29, "revised": true, "stem": "宅地建物取引業の免許（以下この問において「免許」という。）に関する次の記述のうち、宅地建物取引業法の規定によれば、正しいものはどれか。", "items": [{"m": "1", "t": "宅地建物取引業者Ａ社の使用人であって、Ａ社の宅地建物取引業を行う支店の代表者であるものが、道路交通法の規定に違反したことにより拘禁刑に処せられたとしても、Ａ社の免許は取り消されることはない。"}, {"m": "2", "t": "宅地建物取引業者Ｂ社の取締役が、所得税法の規定に違反したことにより罰金の刑に処せられたとしても、Ｂ社の免許は取り消されることはない。"}, {"m": "3", "t": "宅地建物取引業者である個人Ｃが、宅地建物取引業法の規定に違反したことにより罰金の刑に処せられたとしても、Ｃの免許は取り消されることはない。"}, {"m": "4", "t": "宅地建物取引業者Ｄ社の非常勤の取締役が、刑法第222条（脅迫）の罪を犯したことにより罰金の刑に処せられたとしても、Ｄ社の免許は取り消されることはない。"}], "buttons": ["1", "2", "3", "4"], "answer": 2, "lines": [{"m": "1", "t": "誤り。拘禁刑以上は罪の種類を問わず欠格で、使用人が該当すれば免許取消し（法5条1項5号、66条1項3号）。"}, {"m": "2", "t": "正しい。所得税法違反は、罰金で欠格になる罪（業法・暴対法・刑法の一部・暴力行為等処罰法）に入らない（法5条1項6号）。"}, {"m": "3", "t": "誤り。宅建業法違反の罰金は欠格で、個人が該当すれば取消し（法5条1項6号、66条1項1号）。"}, {"m": "4", "t": "誤り。脅迫（刑法222条）の罰金は欠格で、役員は常勤・非常勤を問わない（法5条1項6号・12号、66条1項3号）。"}], "onair": "第1回の後半「免許の基準」で解ける（拘禁刑以上は罪の種類を問わない、罰金で欠格になる罪、役員は常勤・非常勤を問わない）。"};
+  var STATES = ['', '○', '×', '？'];
+  var STATE_NAMES = ['空白', '○', '×', '？'];
+  function buildKakomon(k) {
+    var box = document.createElement('div');
+    box.className = 'kk';
+    var marks = k.items.map(function () { return 0; });
+    var items = k.items.map(function (it, i) {
+      return '<div class="kk-item">' +
+        '<span class="kk-mark">' + esc(it.m) + '</span><span>' + esc(it.t) + '</span></div>';
+    }).join('');
+    var wide = k.buttons.some(function (b) { return b.length > 1; });
+    var btnHtml = k.buttons.map(function (b, i) {
+      return '<button type="button" class="pill" data-n="' + (i + 1) + '">' + esc(b) + '</button>';
+    }).join('');
+    box.innerHTML =
+      '<div class="qcard">' +
+      '<span class="kk-src">' + esc(k.year + ' 問' + k.no + (k.revised ? '（改題）' : '')) + '</span>' +
+      '<p class="kk-stem">' + esc(k.stem) + '</p>' +
+      '<div>' +
+      items +
+      '<div class="kk-btns' + (wide ? ' wide' : '') + '">' + btnHtml + '</div>' +
+      '<div class="qres" hidden aria-live="polite"></div>' +
+      '<div class="kk-again" hidden><button type="button" class="pill ghost">もう一度</button></div>' +
+      '</div>' +
+      '</div>';
+    var dms = box.querySelectorAll('.kk-item .dm');
+    var btns = box.querySelectorAll('.kk-btns .pill');
+    var res = box.querySelector('.qres');
+    var again = box.querySelector('.kk-again');
+    function refresh() {
+      Array.prototype.forEach.call(dms, function (d, i) {
+        d.textContent = STATES[marks[i]];
+        d.setAttribute('aria-label', '選択肢' + k.items[i].m + 'の下書きの印。いまは' + STATE_NAMES[marks[i]]);
+      });
+    }
+    Array.prototype.forEach.call(dms, function (d, i) {
+      d.addEventListener('click', function () { marks[i] = (marks[i] + 1) % STATES.length; refresh(); });
+    });
+    Array.prototype.forEach.call(btns, function (b) {
+      b.addEventListener('click', function () {
+        var ok = (parseInt(b.getAttribute('data-n'), 10) === k.answer);
+        Array.prototype.forEach.call(btns, function (x) { x.disabled = true; });
+        b.classList.add('chosen');
+        var lines = k.lines.map(function (l) {
+          return '<li><span class="kk-mark">' + esc(l.m) + '</span><span>' + esc(l.t) + '</span></li>';
+        }).join('');
+        res.className = 'qres ' + (ok ? 'ok' : 'ng');
+        res.innerHTML =
+          '<p class="verdict">' + (ok ? '正解' : '不正解') + '</p>' +
+          '<p class="answer">正答　' + esc(k.buttons[k.answer - 1]) + '</p>' +
+          '<ul class="kk-lines">' + lines + '</ul>' +
+          (k.tail ? '<p class="kk-tail">' + esc(k.tail) + '</p>' : '') +
+          '<p class="kk-onair-l">今日の放送のどこで解けるか</p>' +
+          '<p class="kk-onair">' + esc(k.onair) + '</p>';
+        res.hidden = false;
+        again.hidden = false;
+        refresh();
+      });
+    });
+    again.querySelector('button').addEventListener('click', function () {
+      Array.prototype.forEach.call(btns, function (x) { x.disabled = false; x.classList.remove('chosen'); });
+      res.hidden = true; res.innerHTML = ''; again.hidden = true;
+      marks = marks.map(function () { return 0; });
+      refresh();
+      box.scrollIntoView({block: 'nearest'});
+    });
+    refresh();
+    return box;
+  }
+  var holder = document.getElementById('kkBox');
+  if (holder) { holder.appendChild(buildKakomon(KK)); }
+})();
+(function () {
+  'use strict';
   /* 赤シート：購入者の画面（ep1-3dan.html）と同じ関数。build-ep1-text.mjs が切り出して入れる */
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
 
@@ -613,6 +911,24 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   }
 
   var cssT = document.getElementById('tpl-css');
+  var inQ = document.getElementById('quizBox');
+  var q1 = document.getElementById('q1'), q2 = document.getElementById('q2');
+  /* 3問は前半・後半のテキストの直後へ。解き終えたあとの案内は、購入者の画面と同じく次のテキスト・今日のポイントへ */
+  document.getElementById('text1').appendChild(q1);
+  document.getElementById('text2').appendChild(q2);
+  var a1 = q1.querySelector('.line-inv a'), a2 = q2.querySelector('.line-inv a');
+  if (a1) { a1.setAttribute('href', '#text2'); a1.textContent = '後半のテキストへ'; }
+  if (a2) { a2.setAttribute('href', '#point'); a2.textContent = '今日のポイントへ'; }
+  /* 「図解で確かめる」は、その組のテキストへ */
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href="#zukai"]') : null;
+    if (!a) { return; }
+    e.preventDefault();
+    var t = document.getElementById(a.closest('#q2') ? 'text2' : 'text1');
+    if (t) { t.scrollIntoView({block: 'start'}); }
+  });
+  /* 3問済は takken2027-done に残し、ログインしている人はサーバーにも置く（本番の ep/1/index.html と同じつなぎ方・cookieHint:true） */
+  if (window.__epProgressStart) { window.__epProgressStart(); }
   var roots = [];
   Array.prototype.forEach.call(document.querySelectorAll('.thost[data-tpl]'), function (h) {
     var root = h.attachShadow({mode: 'open'});

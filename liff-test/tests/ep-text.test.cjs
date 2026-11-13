@@ -252,8 +252,8 @@ test('sample page (ep/1/text): the same text as the buyer screen, 30 red-sheet s
   assert.ok(html.includes(dan.match(/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/)[0]),'sheet css');
   assert.match(html,/赤シート<\/span>[\s\S]{0,200}かける[\s\S]{0,300}はずす[\s\S]{0,200}data-r="hid"/);
   assert.match(html,/赤い所を押すと答えが出ます。[\s\S]{0,60}もう一度押すと、またかくれます。/);
-  // 並び：前半、後半、今日のポイント、今回の数字、（3問の案内）、PDF
-  const order=['id="text1"','id="text2"','id="point"','id="numbers"','class="to-quiz"','class="pdfbtn"'].map(k=>html.indexOf(k));
+  // 並び：前半、後半、今日のポイント、今回の数字、過去問1選、PDF（3問は前半・後半の直後に script が移す）
+  const order=['id="text1"','id="text2"','id="point"','id="numbers"','id="honban"','class="pdfbtn"'].map(k=>html.indexOf(k));
   assert.ok(order.every((v,i)=>v>0&&(i===0||v>order[i-1])),order.join());
   assert.equal((html.match(/<div class="core"><h2>今日のポイント<\/h2>/g)||[]).length,2);
   // △は無い・API は呼ばない・絵の版の部品は無い
@@ -280,7 +280,6 @@ test('sample page (ep/1/text): wording rules - no 寄り道 as a selling point, 
   assert.match(html,/<title>やさしいテキスト 第1回（見本）｜耳で覚える宅建2027<\/title>/);
   assert.match(html,/cloud\.umami\.is\/script\.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"/);
   assert.match(html,/href="\/ep\/1\/text\/yasashii-text-01-a4\.pdf"[^>]*data-umami-event="text-a4-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く/);
-  assert.match(html,/href="\/ep\/1"[^>]*data-umami-event="text-back" data-umami-event-to="ep1">【図解と3問】第1回へ/);
   assert.match(html,/href="\/roadmap"[^>]*data-umami-event="text-back" data-umami-event-to="roadmap">学習ロードマップ（兼 進捗トラッカー）へ/);
   assert.match(html,/data-umami-event="text-line" data-umami-event-ep="1">LINEで受け取る/);
   assert.match(html,/mimiobo\.substack\.com\/subscribe" target="_blank" rel="noopener" data-umami-event="text-mail" data-umami-event-ep="1">メールで受け取る/);
@@ -330,7 +329,29 @@ test('sample page: the entrance note is back (13px, not lighter than #4E5B66) an
   const html=sample();
   assert.match(html,/<p class="about-t">このテキストは、宅建の全体をつかむための入り口です。概要をつかんだら、試験対策として、例外や細かい知識を過去問やお手持ちの参考書でご確認ください。<\/p>/);
   assert.match(html,/\.about-t\{font-size:13px;[^}]*color:#4E5B66/);
-  assert.ok(html.indexOf('id="numbers"')<html.indexOf('class="to-quiz"')&&html.indexOf('class="pdfbtn"')<html.indexOf('class="about-t"'));
+  assert.ok(html.indexOf('id="numbers"')<html.indexOf('id="honban"')&&html.indexOf('class="pdfbtn"')<html.indexOf('class="about-t"'));
   assert.ok(!fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8').includes('入り口です'));
   assert.ok(!require('../api/_ep-text/ep1').includes('入り口です'));
+});
+
+test('sample page: the 6 true/false questions and the past-exam question come from production (ep/1), no link to the 図解と3問 page, no memo buttons',()=>{
+  const html=sample(),prod=path.join(__dirname,'../../ep/1');
+  const idx=fs.readFileSync(path.join(prod,'index.html'),'utf8'),lf=fs.readFileSync(path.join(prod,'line-full.js'),'utf8').replace(/\r\n?/g,'\n').trim();
+  const quiz=src=>JSON.parse(src.match(/var QUIZ = (\[.*\]);/)[1]);
+  const Q=quiz(idx);
+  assert.deepEqual(Q.map(g=>g.questions.length),[3,3]);
+  assert.deepEqual(quiz(html),Q);// 問題文・解説・正答が本番と一字も違わない
+  assert.deepEqual(quiz(fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8')),Q);// 購入者の画面とも同じ
+  assert.ok(html.includes(lf),'line-full.js');// 過去問1選のデータと動きは本番のものがそのまま入っている
+  const kk=JSON.parse(lf.match(/var KK = (\{.*\});/)[1]);
+  assert.ok(kk.stem.length>0&&kk.items.length===4);
+  assert.match(html,/id="q1"|b\.id = 'q' \+ \(i \+ 1\)/);
+  assert.match(html,/<div class="over kk-over">チャレンジ！<\/div>\s*<h2 class="sec-h">過去問1選<\/h2>\s*<div id="kkBox">/);
+  assert.match(html,/localStorage\.setItem\('takken2027-done'/);assert.match(html,/cookieHint: true/);assert.match(html,/\/progress-sync\.js/);
+  // 図解と3問のページへ行かせる案内は無い（表の見出しは表の名前なので残る）
+  assert.doesNotMatch(html,/href="\/ep\/1[?#"]|href="https:\/\/takken\.mimiobo\.com\/ep\/1[?#"]|【図解と3問】第1回へ|のページで解けます/);
+  assert.equal((html.match(/【図解と3問】/g)||[]).length,1);
+  assert.doesNotMatch(html,/class="dm"|選択肢ごとに○×のメモ/);
+  // 並び（実行後）：前半テキスト→q1→後半テキスト→q2。script が3問を移す先
+  assert.match(html,/getElementById\('text1'\)\.appendChild\(q1\)/);assert.match(html,/getElementById\('text2'\)\.appendChild\(q2\)/);
 });

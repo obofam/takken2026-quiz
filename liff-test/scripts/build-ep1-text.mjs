@@ -295,8 +295,18 @@ const road = read('../../roadmap/index.html');
 const tiers = must(road.match(/<section class="tiers"[\s\S]*?<\/section>/), 'roadmap の表')[0].replace(/\s*<p class="tt-note">[\s\S]*?<\/p>/, '');
 if ((tiers.match(/<tbody>[\s\S]*<\/tbody>/)[0].match(/<tr>/g) || []).length !== 8) throw new Error('見本ページ：表の行は8つのはず');
 
+/* ○×3問・過去問1選：本番（ep/1/index.html・ep/1/line-full.js）のデータと動きとCSSをそのまま取り込む（手で二重に持たない） */
+const idxHtml = read('../../ep/1/index.html');
+const quizScript = must(idxHtml.match(/<script>\n(\(function \(\) \{\n  'use strict';\n  \/\* 3問のデータ[\s\S]*?\n\}\)\(\);)\n<\/script>/), 'ep/1/index.html の3問のスクリプト')[1];
+const lineFullJs = read('../../ep/1/line-full.js').replace(/\r\n?/g, '\n').trim();
+if (!/getElementById\('kkBox'\)/.test(lineFullJs) || /class="dm"/.test(lineFullJs)) throw new Error('見本ページ：line-full.js の形が想定と違う');
+const idxCss = must(idxHtml.match(/<style>([\s\S]*?)<\/style>/), 'ep/1/index.html のCSS')[1];
+const quizKeep = /^(\.over|\.qset|\.qcard|\.qhead|\.qno|\.qtext|\.qbtns|\.pill|\.qres|\.score|\.kk|\.line-inv|\.lbtn|a\.lbtn|\.nk\{)/;
+const quizCss = '.qres .zk,.kk-src,.line-inv p.lnote{font-size:14px;line-height:1.65}\n' + idxCss.replace(/\r\n?/g, '\n').split('\n').filter(l => quizKeep.test(l) && !/\.dm\b/.test(l)).join('\n');
+if ((quizCss.match(/\{/g) || []).length !== (quizCss.match(/\}/g) || []).length) throw new Error('見本ページ：取り込んだCSSの括弧が合わない');
+
 const pageCss = `
-:root{--sky:#17C5E8;--ink:#0A6477;--soft:#E3F8FC;--bg:#F4FAFC;--text:#141B21;--sub:#6B6B76;--line:#DCEEF3;--sheet:#8E3B3B;--font:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--shadow:0 2px 8px rgba(20,27,33,.05);--navh:0px}
+:root{--sky:#17C5E8;--ink:#0A6477;--soft:#E3F8FC;--bg:#F4FAFC;--text:#141B21;--sub:#6B6B76;--line:#DCEEF3;--sheet:#8E3B3B;--lime:#D6F034;--lime-soft:#F4FBD2;--lime-dark:#4F6300;--font:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--shadow:0 2px 8px rgba(20,27,33,.05);--navh:0px}
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
 html,body{background:var(--bg)}
@@ -334,7 +344,11 @@ a{color:var(--ink);text-underline-offset:2px}
 .core p{font-size:17px;font-weight:700;margin-top:3px;line-height:1.7}
 ${sheetCss}
 ${pdfCss}
-.to-quiz{font-size:15px;line-height:1.8;text-align:center}
+.sec-h{font-size:24px;font-weight:900;color:var(--ink);line-height:1.3;display:flex;align-items:center;gap:10px}
+.sec-h::before{content:"";width:6px;height:24px;border-radius:3px;background:var(--sky)}
+@media (max-width:600px){.sec-h{font-size:22px}}
+#text1,#text2,#point,#honban,.qset{scroll-margin-top:56px}
+${quizCss}
 .pdfthumb{display:block;width:120px;margin:10px auto 0;border:1px solid #ececec;border-radius:8px;overflow:hidden;background:#fff;line-height:0}
 .pdfthumb img{display:block;width:100%;height:auto}
 .links{display:flex;flex-direction:column;gap:8px;align-items:center}
@@ -362,16 +376,39 @@ ${pdfCss}
   .page{max-width:680px;margin:28px auto 40px;padding:22px 32px 32px;border-radius:20px;box-shadow:0 2px 18px rgba(20,27,33,.06)}
   .smp-h{font-size:26px}
   .core p{font-size:19px}
+  .qtext,.kk-stem{font-size:17px}
+  .kk-item{font-size:16px}
+  .sec-h{font-size:26px}
 }
 @media (max-width:520px){html{scrollbar-width:none}html::-webkit-scrollbar{display:none}}
 `;
 
 const sampleScript = `
+${quizScript}
+${lineFullJs}
 (function () {
   'use strict';
   /* 赤シート：購入者の画面（ep1-3dan.html）と同じ関数。build-ep1-text.mjs が切り出して入れる */
 ${sheetJs}
   var cssT = document.getElementById('tpl-css');
+  var inQ = document.getElementById('quizBox');
+  var q1 = document.getElementById('q1'), q2 = document.getElementById('q2');
+  /* 3問は前半・後半のテキストの直後へ。解き終えたあとの案内は、購入者の画面と同じく次のテキスト・今日のポイントへ */
+  document.getElementById('text1').appendChild(q1);
+  document.getElementById('text2').appendChild(q2);
+  var a1 = q1.querySelector('.line-inv a'), a2 = q2.querySelector('.line-inv a');
+  if (a1) { a1.setAttribute('href', '#text2'); a1.textContent = '後半のテキストへ'; }
+  if (a2) { a2.setAttribute('href', '#point'); a2.textContent = '今日のポイントへ'; }
+  /* 「図解で確かめる」は、その組のテキストへ */
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href="#zukai"]') : null;
+    if (!a) { return; }
+    e.preventDefault();
+    var t = document.getElementById(a.closest('#q2') ? 'text2' : 'text1');
+    if (t) { t.scrollIntoView({block: 'start'}); }
+  });
+  /* 3問済は takken2027-done に残し、ログインしている人はサーバーにも置く（本番の ep/1/index.html と同じつなぎ方・cookieHint:true） */
+  if (window.__epProgressStart) { window.__epProgressStart(); }
   var roots = [];
   Array.prototype.forEach.call(document.querySelectorAll('.thost[data-tpl]'), function (h) {
     var root = h.attachShadow({mode: 'open'});
@@ -426,8 +463,13 @@ const samplePage = `<!DOCTYPE html>
         ${cores.join('\n        ')}
       </section>
       <section class="sec" id="numbers"><div class="thost" data-tpl="tpl-3"></div></section>
+      <section class="sec" id="honban">
+        <div class="over kk-over">チャレンジ！</div>
+        <h2 class="sec-h">過去問1選</h2>
+        <div id="kkBox"></div>
+      </section>
     </div>
-    <p class="to-quiz"><span class="nb">○×3問と過去問は、</span><a href="/ep/1" data-umami-event="text-back" data-umami-event-to="ep1"><span class="nb">【図解と3問】のページで解けます。</span></a></p>
+    <div id="quizBox" hidden></div>
     <div class="pdfrow">
       <a class="pdfbtn" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く</a>
       <a class="pdfthumb" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1" tabindex="-1" aria-hidden="true"><img src="/ep/1/text/a4-p1.webp" width="800" height="1133" loading="lazy" alt=""></a>
@@ -436,7 +478,6 @@ const samplePage = `<!DOCTYPE html>
   </div>
 
   <nav class="links" aria-label="ほかのページ">
-    <a href="/ep/1" data-umami-event="text-back" data-umami-event-to="ep1">【図解と3問】第1回へ</a>
     <a href="/roadmap" data-umami-event="text-back" data-umami-event-to="roadmap">学習ロードマップ（兼 進捗トラッカー）へ</a>
   </nav>
 
