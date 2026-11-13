@@ -1,5 +1,17 @@
 # LIFF本人テスト・Sprint 1／2／3
 
+## 過去問1選の結果（kako）（2026-11-13）
+
+過去問1選を解いた結果を、回ごとに記録に残す（回が溜まったら、過去問だけ横ぐしで見られるようにするための元データ。見る画面はまだ無い）。
+
+- 3つ目の種類 `kako`：`{"1":1|2}`（キー＝回の番号、1＝正解、2＝不正解。その回の過去問を**最後に解いたとき**の結果。解き直したら上書き）。端末は `takken2027-kako`。表 `public.progress` に列 `kako jsonb not null default '{}'`（migration `202611130004_progress_kako.sql`。`202611130003_merge_users.sql` の次に1回だけ適用）。
+- DB：`progress_map_ok`（kind に kako・値は 1 か 2・キーと400件の上限は同じ）／`set_progress`（kind='kako'）／`merge_progress(user, listened, done, p_kako default '{}')`（古い3引数の版は消す。サーバーに無いキーだけ足す）／`resolve_identity`（2人をまとめるとき、kako は同じキーなら残す利用者＝古いほうの値、片方だけならそれ）。返す jsonb に `kako`。
+- API `/api/progress`：`GET` は `{listened, done, kako, updatedAt}`。`POST {kind:'kako', key, value}`。`POST {merge:true, listened, done, kako}`（kako は省略可）。kako の列がまだ無い表でも GET は動く（kako を外して読み直し、`kako:{}` を返す）。merge は kako が空なら `p_kako` を付けない。
+- `progress-sync.js`：kako を3つ目の種類として扱う（合わせ込み・置き換え・`set('kako', …)`・待ち行列）。サーバーが kako を返さないときは端末の kako にさわらない。kako の 400 は待ち行列に残す（migration 前に画面が先に出ても、あとで送れる）。
+- 解いたとき：`ep/1/line-full.js`（本番・見本ページに取り込まれる）と `ep1-full.js`（試し用・`ep1-3dan.html`）が、答えを選んだ時点で `saveKako(ok)`。
+- ロードマップ（`roadmap/index.html`・`roadmap-an2.html`）：解いた回の「図解と3問」の隣に札「過去問 ○」（ライムの地）／「過去問 ×」（グレーの枠・地なし）。上の数字・分野別は変えない。
+- 適用の順：migration を先に、そのあとデプロイ。テストは `tests/progress-kako-db.test.cjs` ほか。
+
 ## 記録の同期（progress）（2026-11-13）
 
 ロードマップの「聴いた・復習」と、第1回の「3問済」を、ログインした人はサーバーにも置く。ログインしていない人の動きは今までと同じ（端末の localStorage だけ）。

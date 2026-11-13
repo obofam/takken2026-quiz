@@ -1,17 +1,17 @@
 // 自動生成：liff-test/scripts/sync-prod.mjs。直さない（正本は liff-test 側）。
 'use strict';
-/* 記録の同期（聴いた・復習・3問済）。window.TakkenProgress。
+/* 記録の同期（聴いた・復習・3問済・過去問1選の結果）。window.TakkenProgress。
    ログインしている人だけ、記録をサーバー（/api/progress）にも置く。ログインしていない人の動きは、今までと同じ（端末の localStorage だけ）。
    端末の記録は、これまでどおり画面側が書く。ここは「ログインの確認」「はじめての端末の合わせ込み」「変更の送信」「送れなかった変更の送り直し」だけ。
    例外はすべて握りつぶす（画面の動きを止めない）。 */
 (function (root) {
-  var K_L = 'takken2027-listened', K_D = 'takken2027-done', K_Q = 'takken2027-progress-queue', K_S = 'takken2027-synced-', K_H = 'takken2027-login-hint';
+  var K_L = 'takken2027-listened', K_D = 'takken2027-done', K_K = 'takken2027-kako', K_Q = 'takken2027-progress-queue', K_S = 'takken2027-synced-', K_H = 'takken2027-login-hint';
   var KEY = /^[A-Za-z0-9-]{1,40}$/;
   var state = 'local', provider = null, suffix = '', started = null, ready = false, onChange = null, early = [], chain = Promise.resolve();
 
   function lget(k) { try { return localStorage.getItem(k); } catch (_) { return null; } }
   function lset(k, v) { try { localStorage.setItem(k, v); } catch (_) {} }
-  function valid(kind, v) { return kind === 'listened' ? (v === 1 || v === 2) : (kind === 'done' ? v === true : false); }
+  function valid(kind, v) { return (kind === 'listened' || kind === 'kako') ? (v === 1 || v === 2) : (kind === 'done' ? v === true : false); }
   /* 端末の記録を読む。古い形（配列）も受ける。サーバーの検査に落ちるキー・値は送らない（落ちると全部が止まるため）。 */
   function readMap(storageKey, kind) {
     var out = {}, n = 0, v;
@@ -53,6 +53,8 @@
       if (i >= mine.length) { return Promise.resolve(true); }
       var it = mine[i];
       return api('/api/progress', 'POST', { kind: it.kind, key: it.key, value: it.value }).then(function (r) {
+        /* kako の 400 は、サーバーがまだ kako を知らないとき（画面の更新が先に届いたとき）に出る。捨てずに残して、次の機会に送る。 */
+        if (r.status === 400 && it.kind === 'kako') { return next(i + 1); }
         if (r.ok || r.status === 400) {
           saveQueue(loadQueue().filter(function (q) { return !(q && q.u === it.u && q.kind === it.kind && q.key === it.key && JSON.stringify(q.value) === JSON.stringify(it.value)); }));
           return next(i + 1);
@@ -100,7 +102,7 @@
       var mark = K_S + suffix;
       var step = Promise.resolve(true);
       if (!lget(mark)) {
-        step = api('/api/progress', 'POST', { merge: true, listened: readMap(K_L, 'listened'), done: readMap(K_D, 'done') }).then(function (r) {
+        step = api('/api/progress', 'POST', { merge: true, listened: readMap(K_L, 'listened'), done: readMap(K_D, 'done'), kako: readMap(K_K, 'kako') }).then(function (r) {
           if (!r.ok) { return false; }
           lset(mark, '1'); return true;
         });
@@ -110,8 +112,11 @@
         return api('/api/progress', 'GET').then(function (r) {
           if (!r.ok) { state = 'error'; return; }
           var maps = { listened: r.json.listened || {}, done: r.json.done || {} };
+          /* 古いサーバー（kako を返さない）のときは、端末の kako にさわらない */
+          if (r.json.kako && typeof r.json.kako === 'object' && !Array.isArray(r.json.kako)) { maps.kako = r.json.kako; }
           applyEarly(maps);
           lset(K_L, JSON.stringify(maps.listened)); lset(K_D, JSON.stringify(maps.done));
+          if (maps.kako) { lset(K_K, JSON.stringify(maps.kako)); }
           state = 'synced';
           var pending = early; early = []; ready = true;
           pending.forEach(function (e) { enqueue(e.kind, e.key, e.value); });
@@ -134,7 +139,7 @@
   /* 画面が記録を変えたときに呼ぶ（端末の localStorage は画面側が先に書く）。value が null ならそのキーを消す。 */
   function set(kind, key, value) {
     try {
-      if (kind !== 'listened' && kind !== 'done') { return; }
+      if (kind !== 'listened' && kind !== 'done' && kind !== 'kako') { return; }
       key = String(key); if (value === undefined) { value = null; }
       if (!KEY.test(key) || (value !== null && !valid(kind, value))) { return; }
       if (!started) { return; }

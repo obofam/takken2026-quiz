@@ -139,6 +139,10 @@
   .tbd { font-size: .88rem; color: var(--muted); }
   .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 16px; margin-top: 5px; }
   .acts .ok { display: inline-block; margin-left: 5px; font-size: .72rem; line-height: 1.5; padding: 0 6px; border-radius: 999px; background: #E9F8C9; color: #3A6008; vertical-align: 1px; }
+  /* 過去問1選の札（解いた回だけ）。正解＝ライムの地、不正解＝グレーの枠・地の色なし（ライムは成功状態だけ） */
+  .acts .kk { display: inline-block; margin-left: 5px; font-size: .72rem; line-height: 1.5; padding: 0 6px; border-radius: 999px; vertical-align: 1px; white-space: nowrap; }
+  .acts .kk.kk-ok { background: #E9F8C9; color: #3A6008; }
+  .acts .kk.kk-ng { background: none; color: #56636E; border: 1px solid #B5BFC7; padding: 0 5px; }
   .acts a { font-size: .86rem; font-weight: 700; line-height: 1.6; text-decoration: none; color: var(--cyan-dark); border-bottom: 1px solid var(--cyan); white-space: nowrap; }
   /* LINE登録：表の下に1か所だけ。強く押さない */
   .cd-s { display: none; font-weight: 500; }
@@ -277,7 +281,7 @@
   .c-title { font-size: 1rem; line-height: 1.65; color: #3E4A54; }
   .c-date .hol { font-size: .9rem; }
   .badge, .now-badge { font-size: .82rem; }
-  .acts .ok { font-size: .82rem; }
+  .acts .ok, .acts .kk { font-size: .82rem; }
   .acts a { font-size: 1rem; }
   .sched tr.ep.fut > td, .sched tr.ep.fut .c-title, .sched tr.ep.fut .c-date .wd, .sched tr.ep.fut .c-part { color: #4E5B66; }
   .sched tr.ep.fut .badge { color: #4E5B66; border-color: #AEB8C0; }
@@ -377,7 +381,7 @@
     .sched tr.ep .now-badge { grid-column: 5; grid-row: 1; display: inline-block; margin: 0; width: auto; font-size: 12px; line-height: 1.5; padding: 0 8px; align-self: start; justify-self: start; }
     .acts { gap: 0 16px; margin-top: 1px; }
     .acts a { min-height: 40px; margin: -8px 0; font-size: 13px; line-height: 1.5; }
-    .acts .ok { font-size: 12px; margin-left: 5px; }
+    .acts .ok, .acts .kk { font-size: 12px; margin-left: 5px; }
     button.mk-l { width: 44px; height: 44px; min-width: 44px; font-size: 11.5px; border-width: 2px; }
     /* 駅 */
     .stn { display: flex; grid-column: 1; grid-row: 1 / -1; align-self: start; justify-self: center; width: 30px; height: 30px; border-radius: 50%; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; line-height: 1; background: var(--card); border: 2px solid var(--cyan); color: var(--cyan-dark); position: relative; z-index: 1; }
@@ -605,7 +609,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     return o;
   }
   function wr(key, o){ try { localStorage.setItem(key, JSON.stringify(o)); } catch(_) {} }
-  var K_L = 'takken2027-listened', K_D = 'takken2027-done';
+  var K_L = 'takken2027-listened', K_D = 'takken2027-done', K_K = 'takken2027-kako';
   var ST_LABEL = ['未聴', '聴いた', '復習']; // 復習も聴いた扱いで数える
   var HONPEN = EPS.filter(function(e){ return e.kind==='本編' && e.n; });
   var PG = [20,14,8,8];
@@ -684,7 +688,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   function render(){
     var cols = 6;
     var html = '<thead><tr><th class="c-date">日付</th><th class="c-kind">種別</th><th class="c-part">分野</th><th class="c-theme">テーマ</th><th class="c-title">タイトル</th><th class="c-rec">記録</th></tr></thead><tbody>';
-    var month = 0, phPart = 0, LS = rd(K_L), DN = rd(K_D);
+    var month = 0, phPart = 0, LS = rd(K_L), DN = rd(K_D), KK = rd(K_K);
     sorted.forEach(function(e){
       if (cur && !e.ms && e.part!==cur) return;
       var m = +e.d.split('-')[1];
@@ -706,7 +710,8 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
       if (num(e.d) <= t || e.sample) LINKS.forEach(function(a){
         if (!e[a[0]]) return;
         acts += '<a href="'+esc(e[a[0]])+'"'+(a[2]?' target="_blank" rel="noopener"':'')
-          + ' data-umami-event="roadmap-link" data-umami-event-type="'+a[0]+'" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+a[1]+((a[0]==='mondai' && DN[e.n])?'<span class="ok">済</span>':'')+'</a>';
+          + ' data-umami-event="roadmap-link" data-umami-event-type="'+a[0]+'" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+a[1]+((a[0]==='mondai' && DN[e.n])?'<span class="ok">済</span>':'')
+          + ((a[0]==='mondai' && (KK[e.n]===1 || KK[e.n]===2))?(KK[e.n]===1?'<span class="kk kk-ok">過去問 ○</span>':'<span class="kk kk-ng">過去問 ×</span>'):'')+'</a>';
       });
       var marks = '', stc = '';
       var fut = !e.sample && num(e.d) > t; // 配信前の行：グレー・記録ボタンなし

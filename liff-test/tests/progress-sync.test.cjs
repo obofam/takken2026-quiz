@@ -13,7 +13,7 @@ function storage(initial = {}) {
   const m = new Map(Object.entries(initial));
   return { getItem: k => (m.has(k) ? m.get(k) : null), setItem: (k, v) => { m.set(k, String(v)); }, removeItem: k => m.delete(k), m };
 }
-/* server: { loggedIn: 'email'|'line'|null, listened, done, failPost } */
+/* server: { loggedIn: 'email'|'line'|null, listened, done, kako, failPost }（kako を渡さない＝古いサーバー：kako を返さず、kako の変更は 400） */
 function world({ local = {}, server = {}, liff } = {}) {
   const st = Object.assign({ loggedIn: null, listened: {}, done: {}, failPost: false, failGet: false }, server);
   const log = [];
@@ -28,11 +28,12 @@ function world({ local = {}, server = {}, liff } = {}) {
     }
     if (url === '/api/progress') {
       if (!st.loggedIn) return reply(401, { error: 'login_required' });
-      if (method === 'GET') return st.failGet ? reply(503, { error: 'service_unavailable' }) : reply(200, { listened: st.listened, done: st.done, updatedAt: 'x' });
+      const out = () => (st.kako ? { listened: st.listened, done: st.done, kako: st.kako } : { listened: st.listened, done: st.done });
+      if (method === 'GET') return st.failGet ? reply(503, { error: 'service_unavailable' }) : reply(200, Object.assign(out(), { updatedAt: 'x' }));
       if (st.failPost) throw new Error('network');
-      if (body.merge) { st.listened = Object.assign({}, body.listened, st.listened); st.done = Object.assign({}, body.done, st.done); }
-      else { const m = st[body.kind]; if (body.value === null) delete m[body.key]; else m[body.key] = body.value; }
-      return reply(200, { listened: st.listened, done: st.done });
+      if (body.merge) { st.listened = Object.assign({}, body.listened, st.listened); st.done = Object.assign({}, body.done, st.done); if (st.kako) st.kako = Object.assign({}, body.kako, st.kako); }
+      else { if (body.kind === 'kako' && !st.kako) return reply(400, { error: 'invalid_progress' }); const m = st[body.kind]; if (body.value === null) delete m[body.key]; else m[body.key] = body.value; }
+      return reply(200, out());
     }
     throw new Error('unexpected ' + url);
   };
@@ -63,7 +64,7 @@ test('logged in by email session: merges the device once, replaces the two local
   let changed = 0;
   await w.P.init({ onChange: () => { changed++; } });
   const merge = w.posts()[0].body;
-  assert.deepEqual(merge, { merge: true, listened: { '1': 1, '2': 2 }, done: { '1': true } });
+  assert.deepEqual(merge, { merge: true, listened: { '1': 1, '2': 2 }, done: { '1': true }, kako: {} });
   assert.equal(w.st.listened['1'], 2); // サーバーの値が残る
   assert.deepEqual(parse(w.ls, 'takken2027-listened'), { '1': 2, '2': 2, '3': 1 });
   assert.deepEqual(parse(w.ls, 'takken2027-done'), { '1': true });
@@ -170,7 +171,7 @@ test('merge failure or GET failure: state error, the local record is kept as it 
 test('old array format and invalid entries are cleaned before the merge is sent; a broken localStorage never throws', async () => {
   const w = world({ local: { 'takken2027-listened': '[1,2]', 'takken2027-done': '{"3":true,"4":"x","a b":true}' }, server: { loggedIn: 'email' } });
   await w.P.init({});
-  assert.deepEqual(w.posts()[0].body, { merge: true, listened: { '1': 1, '2': 1 }, done: { '3': true } });
+  assert.deepEqual(w.posts()[0].body, { merge: true, listened: { '1': 1, '2': 1 }, done: { '3': true }, kako: {} });
   const broken = world({ local: { 'takken2027-listened': '{oops' }, server: { loggedIn: 'email' } });
   await broken.P.init({});
   assert.equal(broken.P.state(), 'synced');
@@ -215,4 +216,73 @@ test('cookieHint: ログインの印がなければ /api/session を呼ばない
   const w4 = world({ server: { loggedIn: 'email' } });
   await w4.P.init({});
   assert.equal(w4.P.state(), 'synced');
+});
+
+/* ---- 過去問1選の結果（kako）：3つ目の種類 ---- */
+test('kako: the device value is merged once, the server value wins on the same key, and the two sides are made equal', async () => {
+  const w = world({
+    local: { 'takken2027-kako': '{"1":1,"2":2,"a b":1,"3":3}' },
+    server: { loggedIn: 'email', kako: { '2': 1, '5': 2 } },
+  });
+  await w.P.init({});
+  assert.deepEqual(w.posts()[0].body.kako, { '1': 1, '2': 2 }); // 値が 1・2 でないものと、キーの決まりに合わないものは送らない
+  assert.deepEqual(w.st.kako, { '1': 1, '2': 1, '5': 2 });      // 同じキーはサーバーの値が残る
+  assert.deepEqual(parse(w.ls, 'takken2027-kako'), { '1': 1, '2': 1, '5': 2 });
+  assert.equal(w.P.state(), 'synced');
+});
+test('kako: set() sends kind kako (1 or 2 only, null removes), overwriting by the last value', async () => {
+  const w = world({ server: { loggedIn: 'email', kako: {} } });
+  await w.P.init({});
+  const before = w.posts().length;
+  w.P.set('kako', '1', 1);
+  w.P.set('kako', '1', 2);
+  w.P.set('kako', '2', 3);     // 無視
+  w.P.set('kako', '2', true);  // 無視
+  await new Promise(r => setTimeout(r, 20));
+  assert.deepEqual(w.posts().slice(before).map(p => p.body), [{ kind: 'kako', key: '1', value: 2 }]);
+  assert.deepEqual(w.st.kako, { '1': 2 });
+  assert.equal(w.ls.getItem('takken2027-progress-queue'), '[]');
+});
+test('kako: not logged in sends nothing and leaves the device value alone', async () => {
+  const w = world({ local: { 'takken2027-kako': '{"1":1}' } });
+  await w.P.init({});
+  w.P.set('kako', '1', 2);
+  assert.equal(w.log.filter(l => l.url === '/api/progress').length, 0);
+  assert.equal(w.ls.getItem('takken2027-kako'), '{"1":1}');
+});
+test('kako: an old server (no kako in the reply) does not break anything; the device value stays and the change waits in the queue', async () => {
+  const w = world({ local: { 'takken2027-kako': '{"1":1}', 'takken2027-listened': '{"1":1}' }, server: { loggedIn: 'email', listened: { '2': 1 } } });
+  await w.P.init({});
+  assert.equal(w.P.state(), 'synced');
+  assert.deepEqual(parse(w.ls, 'takken2027-kako'), { '1': 1 });          // 端末の値は消えない
+  assert.deepEqual(parse(w.ls, 'takken2027-listened'), { '1': 1, '2': 1 }); // 聴いたは今までどおり
+  w.P.set('kako', '3', 2);
+  w.P.set('listened', '4', 1);
+  await new Promise(r => setTimeout(r, 20));
+  assert.deepEqual(w.st.listened, { '1': 1, '2': 1, '4': 1 });           // ほかの種類は通る
+  const q = parse(w.ls, 'takken2027-progress-queue');
+  assert.deepEqual(q.map(i => [i.kind, i.key, i.value]), [['kako', '3', 2]]); // kako の 400 は捨てずに残す
+});
+test('kako: a kako change made before the login check ends is sent afterwards, and the server value reaches the device', async () => {
+  const w = world({ server: { loggedIn: 'email', kako: { '1': 2 } } });
+  const p = w.P.init({});
+  w.P.set('kako', '1', 1); // 確認の途中
+  await p; await new Promise(r => setTimeout(r, 20));
+  assert.deepEqual(w.st.kako, { '1': 1 });
+  assert.deepEqual(parse(w.ls, 'takken2027-kako'), { '1': 1 });
+});
+test('kako: the solving code (line-full.js / ep1-full.js) writes takken2027-kako and calls TakkenProgress.set("kako", ...); the roadmap shows the tag', () => {
+  const root = path.join(__dirname, '..');
+  for (const f of ['ep1-full.js', '../ep/1/line-full.js']) {
+    const js = fs.readFileSync(path.join(root, f), 'utf8');
+    assert.match(js, /localStorage\.setItem\('takken2027-kako'/, f);
+    assert.match(js, /TakkenProgress\.set\('kako', KAKO_EP, v\)/, f);
+    assert.match(js, /var v = ok \? 1 : 2;/, f);
+    assert.ok(js.indexOf('saveKako(ok);') > js.indexOf('var ok = '), f);
+  }
+  for (const f of ['roadmap-an2.html', '../roadmap/index.html']) {
+    const h = fs.readFileSync(path.join(root, f), 'utf8');
+    assert.ok(h.includes("K_K = 'takken2027-kako'") && h.includes('過去問 ○') && h.includes('過去問 ×'), f);
+    assert.match(h, /\.acts \.kk\.kk-ng \{ background: none;/, f);
+  }
 });
