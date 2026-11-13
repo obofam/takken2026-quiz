@@ -40,7 +40,7 @@
   .tiers { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 12px 16px 6px; margin-bottom: 22px; }
   .tiers h2 { font-size: .9rem; font-weight: 700; margin-bottom: 4px; line-height: 1.5; }
   .hero h1 .h1-top { display: block; font-size: .8em; font-weight: 700; }
-  .hero h1 .h1-main { display: inline-block; font-size: 1.35em; line-height: 1.4; }
+  .hero h1 .h1-main { display: inline-block; font-size: 1.35em; line-height: 1.4; padding: 0 4px; background: linear-gradient(transparent 58%, var(--cyan-mid) 58%, var(--cyan-mid) 92%, transparent 92%); }
   .hero h1 .h1-sub { display: inline-block; font-size: .8em; font-weight: 700; color: var(--muted); }
   .tt { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 6px; }
   .tt th, .tt td { border-top: 1px solid var(--line); padding: 9px 4px; text-align: center; vertical-align: middle; font-size: .9375rem; line-height: 1.45; }
@@ -139,6 +139,11 @@
   .acts .ok { display: inline-block; margin-left: 5px; font-size: .72rem; line-height: 1.5; padding: 0 6px; border-radius: 999px; background: #E9F8C9; color: #3A6008; vertical-align: 1px; }
   .acts a { font-size: .86rem; font-weight: 700; line-height: 1.6; text-decoration: none; color: var(--cyan-dark); border-bottom: 1px solid var(--cyan); white-space: nowrap; }
   /* LINE登録：表の下に1か所だけ。強く押さない */
+  .cd-s { display: none; font-weight: 500; }
+  @media (max-width: 767px) { .cd-s { display: inline; } }
+  .core-foot { text-align: center; font-size: 1rem; font-weight: 700; line-height: 1.8; color: var(--text); margin: 26px 0 0; }
+  .line-cta .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 420px; margin: 0 auto; }
+  .line-cta .btns .btn { display: flex; align-items: center; justify-content: center; padding-left: 8px; padding-right: 8px; }
   .line-cta { background: var(--card); border: 1px solid var(--cyan); border-radius: 12px; box-shadow: var(--shadow); padding: 20px 18px; text-align: center; margin: 0 0 34px; }
   .line-cta .over { font-size: .75rem; font-weight: 700; letter-spacing: .15em; color: var(--cyan-dark); }
   .line-cta .head { font-size: 1.08rem; font-weight: 800; margin-top: 4px; }
@@ -306,7 +311,7 @@
     .hero { text-align: left; padding: 0 0 8px; }
     .hero h1 { font-size: 12px; line-height: 1.4; }
     .hero h1 .h1-top { font-size: 12px; font-weight: 700; color: var(--muted); }
-    .hero h1 .h1-main { font-size: 20px; line-height: 1.4; }
+    .hero h1 .h1-main { font-size: 24px; line-height: 1.4; font-weight: 900; }
     .hero h1 .h1-sub { font-size: 12px; margin-left: 4px; }
     .hero p { font-size: 13px; line-height: 1.5; margin-top: 6px; }
     .hero p.core { font-size: 14px; line-height: 1.5; margin-top: 6px; }
@@ -404,13 +409,12 @@
 <div class="container">
   <header class="hero">
     <h1><span class="h1-top">耳で覚える宅建2027</span><span class="h1-main">学習ロードマップ</span><span class="h1-sub">（兼 進捗トラッカー）</span></h1>
-    <p class="core"><span><span style="display:inline-block;white-space:nowrap">忙しい社会人の勉強は、</span><span style="display:inline-block;white-space:nowrap">止まりがちです。</span></span><br><span><span style="display:inline-block;white-space:nowrap">ここなら、静かに、</span><span style="display:inline-block;white-space:nowrap">淡々と続けられます。</span></span></p>
-    <p><span class="nb">2027年1月4日から、</span><span class="nb">毎週月曜に本編を1本（予定）。</span><br>本試験（2027年10月17日・予定）まで全41回</p>
+    <p><span class="nb">2027年1月4日から、</span><span class="nb">毎週月曜に本編を1本（予定）。</span></p>
   </header>
 
   <section class="pcard" aria-label="本試験までと進み具合">
     <div class="cd">
-      <div><div class="cd-l">本試験まで</div><div class="cd-n"><span id="daysLeft">-</span><small>日</small></div></div>
+      <div><div class="cd-l">本試験まで<span class="cd-s">（10月17日・予定）</span></div><div class="cd-n"><span id="daysLeft">-</span><small>日</small></div></div>
       <div class="cd-d">2027年10月17日<br>予定</div>
     </div>
     <div class="pg-wrap" id="pgWrap">
@@ -462,7 +466,7 @@
   <section class="tiers" aria-label="図解と3問で見られるもの">
     <h2>「図解と3問」で見られるもの</h2>
     <table class="tt">
-      <thead><tr><th></th><th><span class="nb">登録</span><span class="nb">なし</span></th><th><span class="nb">LINE</span><span class="nb">登録</span><small>無料</small></th><th><span class="nb">やさしい</span><span class="nb">テキスト</span><small><span class="nb">有料・</span><span class="nb">準備中</span></small></th></tr></thead>
+      <thead><tr><th></th><th><span class="nb">登録</span><span class="nb">なし</span></th><th><span class="nb">LINE・</span><span class="nb">メール</span><small><span class="nb">登録・</span><span class="nb">無料</span></small></th><th><span class="nb">やさしい</span><span class="nb">テキスト</span><small><span class="nb">有料・</span><span class="nb">準備中</span></small></th></tr></thead>
       <tbody>
         <tr><th>○×3問</th><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
         <tr><th><span class="nb">図解の</span><span class="nb">最初の1枚</span></th><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
@@ -484,10 +488,10 @@
   <main class="sched"><table id="sched"></table></main>
 
   <section class="line-cta">
-    <div class="over">LINE</div>
-    <p class="head" id="lineHead">図解の続きと過去問1選は、LINEで</p>
+    <div class="over">LINE・メール</div>
+    <p class="head" id="lineHead"><span class="nb">図解の続きと過去問1選は、</span><span class="nb">LINEかメールで</span></p>
     <p class="body" id="lineBody"><span class="nb">毎週月曜に、こちらからお届けします。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録は無料です。</span></p>
-    <a class="btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="roadmap-line">LINEで受け取る</a>
+    <div class="btns"><a class="btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="roadmap-line">LINEで受け取る</a><a class="btn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="roadmap-mail">メールで受け取る</a></div>
   </section>
 
   <section class="faq">
@@ -496,9 +500,10 @@
       <dt>途中からでも大丈夫？</dt>
       <dd><span class="nb">どの回からでも聴けます。</span><span class="nb">迷ったら業法から。</span></dd>
       <dt>去年の回は？</dt>
-      <dd>2026年の回も<a href="https://takken.mimiobo.com/archive.html" data-umami-event="roadmap-archive">聴けます</a>。</dd>
+      <dd><span class="nb">2026年の回は、</span><span class="nb"><a href="https://takken.mimiobo.com/tracker.html" data-umami-event="roadmap-tracker2026">2026年の進捗トラッカー</a>から</span><span class="nb">聴けます。</span></dd>
     </dl>
   </section>
+  <p class="core-foot"><span><span style="display:inline-block;white-space:nowrap">忙しい社会人の勉強は、</span><span style="display:inline-block;white-space:nowrap">止まりがちです。</span></span><br><span><span style="display:inline-block;white-space:nowrap">ここなら、静かに、</span><span style="display:inline-block;white-space:nowrap">淡々と続けられます。</span></span></p>
 </div>
 <script>
 // 各回の spotify / youtube に URL を入れる。zukai（図解）/ mondai（問題）は本編なら回のページから自動で作る（下の EP_URL）。
@@ -516,7 +521,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   if (t < 20270104) {
     document.getElementById('startNote').style.display = 'block';
     document.getElementById('newBox').style.display = 'block';
-    document.getElementById('lineHead').textContent = '始まったら、LINEでお知らせします';
+    document.getElementById('lineHead').innerHTML = '<span class="nb">始まったら、</span><span class="nb">LINEかメールでお知らせします</span>';
     document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">止まっても、月曜にまた届きます。</span><span class="nb">登録は無料です。</span>';
   }
   function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
