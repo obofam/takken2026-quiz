@@ -283,6 +283,7 @@ const must = (m, what) => { if (!m) throw new Error('見本ページ：' + what 
 const dan = read('../ep1-3dan.html');
 const sheetJs = must(dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function showBuyer\(html\))/), 'ep1-3dan.html の setupSheet')[0];
 const sheetCss = must(dan.match(/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/), 'ep1-3dan.html の赤シートの帯のCSS')[0];
+const jumpCss = must(dan.match(/\.jump\{[^}]*\}\n\.jb\{[^}]*\}\n\.jb:active\{[^}]*\}/), 'ep1-3dan.html の上の近道のCSS')[0];
 const pdfCss = must(dan.match(/\.pdfrow\{[^}]*\}\n\.pdfbtn\{[^}]*\}/), 'ep1-3dan.html のPDFボタンのCSS')[0];
 const full = read('../ep1-full.html');
 const cores = [...full.matchAll(/<div class="core"><h2>今日のポイント<\/h2><p>[^<]*<\/p><\/div>/g)].map(m => m[0]);
@@ -306,7 +307,7 @@ const quizCss = '.qres .zk,.kk-src,.line-inv p.lnote{font-size:14px;line-height:
 if ((quizCss.match(/\{/g) || []).length !== (quizCss.match(/\}/g) || []).length) throw new Error('見本ページ：取り込んだCSSの括弧が合わない');
 
 const pageCss = `
-:root{--sky:#17C5E8;--ink:#0A6477;--soft:#E3F8FC;--bg:#F4FAFC;--text:#141B21;--sub:#6B6B76;--line:#DCEEF3;--sheet:#8E3B3B;--lime:#D6F034;--lime-soft:#F4FBD2;--lime-dark:#4F6300;--font:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--shadow:0 2px 8px rgba(20,27,33,.05);--navh:0px}
+:root{--sky:#17C5E8;--ink:#0A6477;--soft:#E3F8FC;--bg:#F4FAFC;--text:#141B21;--sub:#6B6B76;--line:#DCEEF3;--sheet:#8E3B3B;--lime:#D6F034;--lime-soft:#F4FBD2;--lime-dark:#4F6300;--font:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--shadow:0 2px 8px rgba(20,27,33,.05);--navh:48px}
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
 html,body{background:var(--bg)}
@@ -342,12 +343,16 @@ a{color:var(--ink);text-underline-offset:2px}
 .core::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--sky)}
 .core h2{font-size:14px;font-weight:900;color:var(--ink);line-height:1.3;letter-spacing:.04em}
 .core p{font-size:17px;font-weight:700;margin-top:3px;line-height:1.7}
+${jumpCss}
+.jb:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+@media (min-width:820px){.jump{margin-left:-32px;margin-right:-32px;padding:4px 32px}}
 ${sheetCss}
 ${pdfCss}
 .sec-h{font-size:24px;font-weight:900;color:var(--ink);line-height:1.3;display:flex;align-items:center;gap:10px}
 .sec-h::before{content:"";width:6px;height:24px;border-radius:3px;background:var(--sky)}
 @media (max-width:600px){.sec-h{font-size:22px}}
-#text1,#text2,#point,#honban,.qset{scroll-margin-top:56px}
+/* 上に貼りつく近道（48px）と赤シートの帯（44px）の下に、節の頭が来る位置 */
+#text1,#text2,#point,#numbers,#honban,.qset{scroll-margin-top:calc(var(--navh) + 52px)}
 ${quizCss}
 .pdfthumb{display:block;width:120px;margin:10px auto 0;border:1px solid #ececec;border-radius:8px;overflow:hidden;background:#fff;line-height:0}
 .pdfthumb img{display:block;width:100%;height:auto}
@@ -454,6 +459,7 @@ const samplePage = `<!DOCTYPE html>
   ${tiers}
 
   <div class="reader" id="reader">
+    <nav class="jump" id="jump" aria-label="このページの節"><a class="jb" href="#text1">前半</a><a class="jb" href="#text2">後半</a><a class="jb" href="#honban">過去問1選</a></nav>
     <div class="sbar2" id="sbar"><span class="sb2-lab">赤シート</span><span class="seg"><button type="button" class="sb2" data-r="on" aria-pressed="true" aria-label="赤シートをかける（全部の語をかくす）">かける</button><button type="button" class="sb2" data-r="off" aria-pressed="false" aria-label="赤シートをはずす（全部の語を見せる）">はずす</button></span><span class="sb2-cnt" data-r="hid"></span></div>
     <p class="shint"><span class="nb">赤い所を押すと答えが出ます。</span><span class="nb">もう一度押すと、またかくれます。</span></p>
     <div class="textwrap">
