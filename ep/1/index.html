@@ -1047,8 +1047,40 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
       openView('続きを表示できなかった（' + why(e) + '）');
     });
   }
+  /* メール用の入口：メルマガのリンク（?m=合言葉）から開いた人には、LINE登録者と同じ続きを出す。
+     合言葉は照合用の値（SHA-256）だけを持つ。合った端末は覚えておき、次からは合言葉なしでも同じ表示。 */
+  var MAIL_HASH = '9c2e406fb93d733f23f2febad03a14b64b236f2fae72c765510e0b3314ddbd10';
+  var MAIL_FLAG = 'takken2027-mail';
+  function mailCheck() {
+    var stored = false;
+    try { stored = (localStorage.getItem(MAIL_FLAG) === '1'); } catch (_) {}
+    var m = qs.get('m');
+    if (!m || !(window.crypto && window.crypto.subtle && window.TextEncoder)) { return Promise.resolve(stored); }
+    return window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(m)).then(function (buf) {
+      var hex = Array.prototype.map.call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+      if (hex !== MAIL_HASH) { return stored; }
+      try { localStorage.setItem(MAIL_FLAG, '1'); } catch (_) {}
+      /* 住所の欄から合言葉を消す（コピーして広まりにくくする）。ほかの印（src など）は残す */
+      try { var u = new URL(location.href); u.searchParams.delete('m'); history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (_) {}
+      return true;
+    }, function () { return stored; });
+  }
+  function mailView() {
+    judgeNote = '判定：メールのリンクから開いた端末のため、続きを表示';
+    return showFull().then(function () {
+      prog.full = 'ok'; tier = 'メール登録者';
+      say('メールのリンクから');
+      track('mail');
+    }, function (e) {
+      warn(e); prog.full = 'ng'; lastErr = e;
+      openView('続きを表示できなかった（' + why(e) + '）');
+    });
+  }
   function judge() {
     if (mihon === 'touroku') { return lineView('見本の表示（判定なし）'); }
+    return mailCheck().then(function (ok) { return ok ? mailView() : lineJudge(); });
+  }
+  function lineJudge() {
     return loadScript('https://static.line-scdn.net/liff/edge/2/sdk.js').then(function () {
       prog.sdk = 'ok';
       return window.liff.init({liffId: LIFF_ID});
