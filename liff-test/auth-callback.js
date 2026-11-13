@@ -13,7 +13,8 @@
     }
   }catch{result='unavailable';}
   // account.html?next=karte left a note in this browser: go there after a successful email login. Otherwise the usual landing.
-  let target='/ep10-preview.html?server=1&auth='+result;
+  // 既定の行き先は、学習ロードマップ（兼 進捗トラッカー）。失敗したときはログインの画面へ戻す。
+  let target=result==='ok'?'/roadmap-an2.html':'/account.html?auth='+result;
   try{
     const next=JSON.parse(localStorage.getItem('mimiobo-next'));
     if(next&&typeof next.page==='string'&&next.expires>Date.now()){

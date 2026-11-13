@@ -64,6 +64,7 @@ footer p{margin:0 0 8px}
 <p id="status" class="small muted" role="status" aria-live="polite"></p>
 <div id="accountLoggedOut" hidden>
   <h1>ログイン</h1>
+  <p id="accountAuthError" class="small" role="alert" hidden>ログインできませんでした。もう一度、メールアドレスを入れてください。</p>
   <p>記録を別の端末でも見られるようになります。</p>
   <button id="accountLine" class="primary" type="button">LINEでログイン</button>
   <p class="small muted divider">または、メールで</p>
@@ -138,7 +139,13 @@ function wire(){
   $('accountLinkLine').onclick=async()=>{try{location.href=await MimioboAuth.linkLine();}catch(e){$('accountMessage').textContent=msg(e.message);}};
   $('accountLogout').onclick=async()=>{try{localStorage.removeItem('mimiobo-karte-last-user');for(let i=localStorage.length;i-->0;){const k=localStorage.key(i);if(k&&k.startsWith('mimiobo-karte-cache-v1:'))localStorage.removeItem(k);}}catch{}try{await MimioboAuth.logout();}catch{}location.reload();};
 }
+// auth-callback.js sends a failed email login back here as ?auth=<code>; anything other than ok gets the one-line notice.
+function showAuthError(){
+  const code=new URLSearchParams(location.search).get('auth');
+  if(code&&code!=='ok')$('accountAuthError').hidden=false;
+}
 async function initialize(){
+  showAuthError();
   try{await loadClient('/ui-messages.js');}catch{}
   try{
     await loadClient('/auth-client.js');wire();

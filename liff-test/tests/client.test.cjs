@@ -46,7 +46,7 @@ test('new LINE link is stored before navigation and uses only the opaque ticket 
 test('email callback removes token fragment before verification and redirects without credentials',async()=>{
   const c=context('#token_hash=test-token-hash');c.ctx.location.pathname='/auth-callback.html';
   await vm.runInNewContext(source('auth-callback.js'),c.ctx);
-  assert.deepEqual(c.replacements,['/auth-callback.html','/ep10-preview.html?server=1&auth=ok']);
+  assert.deepEqual(c.replacements,['/auth-callback.html','/roadmap-an2.html']);
   assert.equal(c.requests[0].url,'/api/email-verify');assert.equal(JSON.parse(c.requests[0].options.body).tokenHash,'test-token-hash');
 });
 
@@ -65,7 +65,7 @@ test('default email callback sends only access token after clearing the entire f
   await vm.runInNewContext(source('auth-callback.js'),c.ctx);
   assert.equal(c.requests.length,1);assert.equal(c.requests[0].url,'/api/email-verify');
   assert.equal(c.values.size,0);
-  assert.deepEqual(c.replacements,['/auth-callback.html','/ep10-preview.html?server=1&auth=ok']);
+  assert.deepEqual(c.replacements,['/auth-callback.html','/roadmap-an2.html']);
   assert.ok(!JSON.stringify(c.requests).includes('test-refresh-token'));
 });
 
@@ -76,7 +76,7 @@ test('rejected access token and network failure leave no tokens in the callback 
     c.ctx.fetch=async()=>{assert.equal(c.ctx.location.hash,'');if(failure==='network')throw Error('offline');return {ok:false,status:401};};
     await vm.runInNewContext(source('auth-callback.js'),c.ctx);
     assert.equal(c.values.size,0);assert.equal(c.ctx.location.hash,'');
-    assert.equal(c.replacements.at(-1),'/ep10-preview.html?server=1&auth='+(failure==='network'?'unavailable':'failed'));
+    assert.equal(c.replacements.at(-1),'/account.html?auth='+(failure==='network'?'unavailable':'failed'));
   }
 });
 
@@ -85,6 +85,6 @@ test('refresh-only and ambiguous callback credentials are discarded without veri
     const c=context(fragment);c.ctx.location.pathname='/auth-callback.html';
     await vm.runInNewContext(source('auth-callback.js'),c.ctx);
     assert.equal(c.requests.length,0);assert.equal(c.values.size,0);assert.equal(c.ctx.location.hash,'');
-    assert.equal(c.replacements.at(-1),'/ep10-preview.html?server=1&auth=invalid_token');
+    assert.equal(c.replacements.at(-1),'/account.html?auth=invalid_token');
   }
 });

@@ -337,14 +337,14 @@ async function callback(note,ok=true){
   const ctx={location:{hash:'#token_hash=test-token-hash',pathname:'/auth-callback.html',replace:v=>replacements.push(v)},history:{replaceState(){}},URLSearchParams,AbortSignal,localStorage:local,fetch:async()=>({ok})};
   await vm.runInNewContext(read('auth-callback.js'),ctx);return {replacements,local};
 }
-test('email login lands on the requested page: karte, checks or that episode; anything else keeps the old landing',async()=>{
+test('email login lands on the requested page: karte, checks or that episode; anything else lands on the roadmap',async()=>{
   const soon=Date.now()+60000;
   assert.deepEqual((await callback({page:'checks',expires:soon})).replacements,['/checks.html']);
   assert.deepEqual((await callback({page:'ep3',expires:soon})).replacements,['/ep10-preview.html?ep=3&server=1&auth=ok']);
   assert.deepEqual((await callback({page:'ep3',expires:soon},false)).replacements,['/ep10-preview.html?ep=3&server=1&auth=failed'],'a failed login still shows the error message');
-  assert.deepEqual((await callback({page:'checks',expires:soon},false)).replacements,['/ep10-preview.html?server=1&auth=failed']);
+  assert.deepEqual((await callback({page:'checks',expires:soon},false)).replacements,['/account.html?auth=failed']);
   for(const note of [{page:'ep10',expires:soon},{page:'ep3',expires:Date.now()-1},{page:'ep3/../x',expires:soon},{page:'ep1234',expires:soon},{page:'https://evil.example',expires:soon},{page:3,expires:soon}])
-    assert.deepEqual((await callback(note)).replacements,['/ep10-preview.html?server=1&auth=ok'],JSON.stringify(note));
+    assert.deepEqual((await callback(note)).replacements,['/roadmap-an2.html'],JSON.stringify(note));
 });
 test('after a LINE login on the episode page, ?next sends the visitor on; a name that is not in the catalog or is the current page stays put',()=>{
   const go=search=>{const h=pageHarness(search);h.run('goNext()');return h.replaced;};

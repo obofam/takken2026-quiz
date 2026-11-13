@@ -152,14 +152,25 @@ async function callback(note){
     fetch:async()=>({ok:callback.ok!==false})};
   await vm.runInNewContext(read('auth-callback.js'),ctx);return {replacements,local};
 }
-test('email login with a "karte" note goes to karte.html and clears the note; every other case keeps the old landing',async()=>{
+test('email login with a "karte" note goes to karte.html and clears the note; every other case lands on the roadmap',async()=>{
   const soon=Date.now()+60000;
   let r=await callback({page:'karte',expires:soon});assert.deepEqual(r.replacements,['/karte.html']);assert.equal(r.local.getItem('mimiobo-next'),null);
   for(const note of [{page:'ep10',expires:soon},{page:'karte',expires:Date.now()-1},{page:'https://evil.example',expires:soon},'not json',undefined]){
-    r=await callback(note);assert.deepEqual(r.replacements,['/ep10-preview.html?server=1&auth=ok'],JSON.stringify(note));assert.equal(r.local.getItem('mimiobo-next'),null);
+    r=await callback(note);assert.deepEqual(r.replacements,['/roadmap-an2.html'],JSON.stringify(note));assert.equal(r.local.getItem('mimiobo-next'),null);
   }
   callback.ok=false;try{r=await callback({page:'karte',expires:soon});}finally{callback.ok=undefined;}
-  assert.deepEqual(r.replacements,['/ep10-preview.html?server=1&auth=failed'],'a failed login never skips the error message');
+  assert.deepEqual(r.replacements,['/account.html?auth=failed'],'a failed login goes back to the login page with the error code');
+});
+
+test('account.html shows one short notice above the login form when it is sent back with ?auth=failed / invalid_token / unavailable',()=>{
+  const html=read('account.html'),script=html.match(/<script>\s*([\s\S]*?)<\/script>\s*<\/body>/)[1].replace(/initialize\(\);\s*$/,'');
+  const notice='ログインできませんでした。もう一度、メールアドレスを入れてください。';
+  assert.ok(html.indexOf('id="accountAuthError"')>html.indexOf('<h1>ログイン</h1>')&&html.indexOf('id="accountAuthError"')<html.indexOf('id="accountLine"'));
+  assert.ok(html.includes('hidden>'+notice+'</p>'));
+  for(const [search,shown] of [['?auth=failed',true],['?auth=invalid_token',true],['?auth=unavailable',true],['?auth=ok',false],['',false],['?next=karte',false]]){
+    const el={hidden:true},ctx={document:{getElementById:id=>id==='accountAuthError'?el:{}},location:{search},URLSearchParams};
+    vm.runInNewContext(script+';showAuthError();',ctx);assert.equal(el.hidden,!shown,search);
+  }
 });
 
 // ---------- ep10-preview.html（3問チェック） ----------
