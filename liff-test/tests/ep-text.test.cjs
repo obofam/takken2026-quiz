@@ -231,3 +231,91 @@ test('production ep/1: tsuzuki.html is the free excerpt (same as ep1-nukigaki.ht
   const top=fs.readFileSync(path.join(__dirname,'../../index.html'),'utf8');
   assert.match(top,/liff\.state/);assert.match(top,/2012583516-7vmvMorb/);
 });
+
+// ---- 見本ページ ep/1/text/index.html：有料の中身を公開側に出してよいのはここだけ。購入者の画面と同じ中身・赤シート30か所 ----
+const sampleDir=path.join(__dirname,'../../ep/1/text');
+const sample=()=>fs.readFileSync(path.join(sampleDir,'index.html'),'utf8');
+const plainText=h=>h.replace(/<[^>]+>/g,'').replace(/\s+/g,'');
+test('sample page (ep/1/text): the same text as the buyer screen, 30 red-sheet spots, nothing the paid text lacks',()=>{
+  const html=sample(),built=require('../api/_ep-text/ep1');
+  assert.equal((html.match(/class="[^"]*\brs\b/g)||[]).length,30);
+  // 購入者の画面と同じ部品：前半・後半・今回の数字の中身と、CSSが、そのまま入っている
+  for(const n of [1,2,3]){
+    const from=built.indexOf('<div class="tx" data-part="'+n+'">'),next=built.indexOf('<div class="tx" data-part="'+(n+1)+'">');
+    const part=next<0?built.slice(from):built.slice(from,next);
+    assert.ok(html.includes(part),'part '+n);
+  }
+  assert.ok(html.includes(built.match(/^<style>[\s\S]*?<\/style>/)[0]),'css');
+  // 赤シートの動きと帯・ヒントのCSSは、購入者の画面（ep1-3dan.html）と同じもの
+  const dan=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8');
+  assert.ok(html.includes(dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function showBuyer\(html\))/)[0]),'setupSheet');
+  assert.ok(html.includes(dan.match(/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/)[0]),'sheet css');
+  assert.match(html,/赤シート<\/span>[\s\S]{0,200}かける[\s\S]{0,300}はずす[\s\S]{0,200}data-r="hid"/);
+  assert.match(html,/赤い所を押すと答えが出ます。[\s\S]{0,60}もう一度押すと、またかくれます。/);
+  // 並び：前半、後半、今日のポイント、今回の数字、（3問の案内）、PDF
+  const order=['id="text1"','id="text2"','id="point"','id="numbers"','class="to-quiz"','class="pdfbtn"'].map(k=>html.indexOf(k));
+  assert.ok(order.every((v,i)=>v>0&&(i===0||v>order[i-1])),order.join());
+  assert.equal((html.match(/<div class="core"><h2>今日のポイント<\/h2>/g)||[]).length,2);
+  // △は無い・API は呼ばない・絵の版の部品は無い
+  assert.doesNotMatch(html,/△|doubt|s-flag|s-hint|takken2027-sheet/);
+  assert.doesNotMatch(html,/fetch\(|api\/ep-text|api\/session|_ep-text/);
+  assert.doesNotMatch(html,/class="mk"|class="rvq"|rvData|id="sbDoubt"|放送の寄り道から」|罰金で欠格になるのは|復習の1問|\/ep\/1\/img\//);
+  assert.doesNotMatch(html,/[→←↑↓]|[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u);
+});
+test('sample page (ep/1/text): wording rules - no 寄り道 as a selling point, no price, 登録無料です。, 準備中 stays',()=>{
+  const html=sample();
+  // 「寄り道」は、中身の中の囲みの見出しにだけ出る
+  const shown=html.replace(/<style>[\s\S]*?<\/style>/g,'').replace(/<!--[\s\S]*?-->/g,'');// 見えない部分（CSSの注釈）は数えない
+  assert.equal((shown.match(/寄り道/g)||[]).length,1);
+  assert.equal((html.match(/今日のワンポイント（放送の寄り道から）/g)||[]).length,1);
+  assert.doesNotMatch(html,/[0-9０-９,，]+\s*円|[¥￥]|税込|値段|価格|料金/);
+  assert.doesNotMatch(html,/登録は無料です/);
+  assert.match(html,/登録無料です。/);
+  assert.match(html,/有料版の見本/);assert.match(html,/やさしいテキスト　第1回　<span class="nb">宅建業と免許<\/span><\/h1>/);
+  assert.match(html,/これを見ながら放送を聴くと、より理解が深まるように作っています。無料の図解は、このテキストからの抜粋です。/);
+  assert.match(html,/このテキストは準備中です。第1回を、見本として公開しています。/);
+  assert.match(html,/テキスト<\/span><small><span class="nb">有料・<\/span><span class="nb">準備中/);
+  // 検索に出さない・計測は残す（名前は今までどおり）
+  assert.match(html,/<meta name="robots" content="noindex, nofollow">/);
+  assert.match(html,/<title>やさしいテキスト 第1回（見本）｜耳で覚える宅建2027<\/title>/);
+  assert.match(html,/cloud\.umami\.is\/script\.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"/);
+  assert.match(html,/href="\/ep\/1\/text\/yasashii-text-01-a4\.pdf"[^>]*data-umami-event="text-a4-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く/);
+  assert.match(html,/href="\/ep\/1"[^>]*data-umami-event="text-back" data-umami-event-to="ep1">【図解と3問】第1回へ/);
+  assert.match(html,/href="\/roadmap"[^>]*data-umami-event="text-back" data-umami-event-to="roadmap">学習ロードマップ（兼 進捗トラッカー）へ/);
+  assert.match(html,/data-umami-event="text-line" data-umami-event-ep="1">LINEで受け取る/);
+  assert.match(html,/mimiobo\.substack\.com\/subscribe" target="_blank" rel="noopener" data-umami-event="text-mail" data-umami-event-ep="1">メールで受け取る/);
+  assert.ok(fs.existsSync(path.join(sampleDir,'yasashii-text-01-a4.pdf')));
+});
+test('sample page (ep/1/text): the table has the 8 rows and the same marks as roadmap; the LINE/mail box has the same words',()=>{
+  const html=sample(),road=fs.readFileSync(path.join(__dirname,'../../roadmap/index.html'),'utf8');
+  const table=h=>h.match(/<section class="tiers"[\s\S]*?<\/section>/)[0].replace(/\s*<p class="tt-note">[\s\S]*?<\/p>/,'');
+  assert.equal(table(html),table(road));
+  const body=table(html).match(/<tbody>[\s\S]*<\/tbody>/)[0];
+  const rows=[...body.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(m=>m[1]);
+  assert.deepEqual(rows.map(r=>plainText(r.match(/<th>([\s\S]*?)<\/th>/)[1])),['図解の最初の1枚','○×3問','図解の続き','過去問1選','図解ぜんぶ','今回の数字','赤シート','印刷用のA4版']);
+  assert.deepEqual(rows.map(r=>[...r.matchAll(/<td class="([yn])">/g)].map(m=>m[1]).join('')),['yyy','yyy','nyy','nyy','nny','nny','nny','nny']);
+  assert.doesNotMatch(table(html),/復習|使い方|まとめ|寄り道/);
+  assert.match(plainText(table(html).match(/<thead>[\s\S]*?<\/thead>/)[0]),/^登録なしLINE・メール登録・無料やさしいテキスト有料・準備中$/);
+  const cta=h=>h.match(/<section class="line-cta">[\s\S]*?<\/section>/)[0];
+  const w=h=>plainText(cta(h).replace(/ data-umami[^>]*/g,''));
+  assert.equal(w(html),w(road));
+  assert.deepEqual([...cta(html).matchAll(/class="btn" href="([^"]+)"/g)].map(m=>m[1]),[...cta(road).matchAll(/class="btn" href="([^"]+)"/g)].map(m=>m[1]));
+  assert.match(html,/t < 20270104[\s\S]{0,400}始まったら、[\s\S]{0,200}LINEかメールでお知らせします[\s\S]{0,300}毎週月曜にお届けします（予定）。[\s\S]{0,100}登録無料です。/);
+});
+test('the paid text is public only in ep/1/text/: no other public file carries it, and the other 4 ep/1 files stay clean',()=>{
+  const prod=path.join(__dirname,'../..');
+  const skip=new Set(['node_modules','.git','.vercel','api','liff-test','scripts','__pycache__']);
+  const marker='なぜ、駆け込み廃業も取消しと同じ扱いなの';
+  const hits=[];
+  (function walk(dir){for(const f of fs.readdirSync(dir,{withFileTypes:true})){
+    if(skip.has(f.name))continue;
+    const p=path.join(dir,f.name);
+    if(f.isDirectory())walk(p);else if(/\.(html|js|json|css|svg|md|txt)$/.test(f.name)&&fs.readFileSync(p,'utf8').includes(marker))hits.push(path.relative(prod,p).split(path.sep).join('/'));
+  }})(prod);
+  assert.deepEqual(hits,['ep/1/text/index.html']);
+  for(const f of ['index.html','tsuzuki.html','line-full.html','line-full.js']){
+    const h=fs.readFileSync(path.join(prod,'ep/1',f),'utf8');
+    assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|data-hint|data-part=|ワンポイント|setupSheet|tpl-css/,f);
+    assert.ok(!h.includes(marker),f);
+  }
+});

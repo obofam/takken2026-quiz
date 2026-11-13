@@ -124,14 +124,9 @@ const glue = h => h.replace(/([「『（]?)(<(span|b) class="[^"]*\brs\b[^"]*"[^
 if (withRs) { p1 = glue(hintAll(narrowAll(p1))); p2 = glue(hintAll(narrowAll(p2))); }
 return [p1, p2];
 };
-/* --- 今回の数字（有料だけ。無料の抜粋・1段目・2段目には入れない）。元は data.json。公開中の見本ページの節と一字も違わないことを照合する --- */
+/* --- 今回の数字（有料だけ。無料の抜粋・1段目・2段目には入れない）。元は data.json。見本ページ（ep/1/text/index.html）も、この p3 から書き出す --- */
 const NUM_DIR = '../../../6_有料PDF/やさしいテキスト_2027/直感図解/第01回_宅建業と免許/';
 const numData = JSON.parse(fs.readFileSync(new URL(NUM_DIR + 'data.json', import.meta.url), 'utf8')).numbers;
-const sample = fs.readFileSync(new URL('../../ep/1/text/index.html', import.meta.url), 'utf8');
-const sampleSec = sample.match(/<!-- ========== 今回の数字 ========== -->[\s\S]*?<div class="nl">([\s\S]*?)<\/div>\s*<div class="rvq"/);
-if (!sampleSec) throw new Error('見本ページに今回の数字の節がない');
-const sampleNums = [...sampleSec[1].matchAll(/<button class="mk nv" type="button">([^<]*)<\/button><span class="nk">([^<]*)<\/span>/g)].map(m => ({ n: m[1], k: m[2] }));
-if (JSON.stringify(sampleNums) !== JSON.stringify(numData.map(x => ({ n: x.n, k: x.k })))) throw new Error('今回の数字：data.json と見本ページが食い違う');
 if (numData.length !== 6) throw new Error('今回の数字は6組のはず');
 const p3 = '<h2 class="numh">今回の数字</h2><div class="nl">' + numData.map(x => `<div class="nr"><span class="nv rs"${RS} data-hint="${esc(hintOf(x.n))}">${x.n}</span><span class="nk">${x.k}</span></div>`).join('') + '</div>';
 const [p1, p2] = make(true);
@@ -276,3 +271,194 @@ for (const w of ['転貸', '又貸し', '適用されない', '事務所に数�
 }
 fs.writeFileSync(PROD_OUT, nukiHtml);
 console.log('production copy written: ep/1/tsuzuki.html', nukiHtml.length, 'chars');
+
+/* ============================================================
+   見本ページ（ep/1/text/index.html）：購入者の画面と同じ中身を、そのまま見本として見せる。
+   中身は上で組んだ p1・p2・p3（購入者の画面と同じ文字列）をページに直接入れる（API は呼ばない・第1回だけ）。
+   赤シートの動き（setupSheet）と帯・ヒントのCSSは、購入者の画面 ep1-3dan.html から切り出して同じものを使う。
+   表と下の枠は roadmap/index.html の同じ部分に合わせる。公開してよい有料の中身は、この見本ページ（ep/1/text/）だけ。
+   ============================================================ */
+const read = rel => fs.readFileSync(new URL(rel, import.meta.url), 'utf8');
+const must = (m, what) => { if (!m) throw new Error('見本ページ：' + what + ' が見つからない'); return m; };
+const dan = read('../ep1-3dan.html');
+const sheetJs = must(dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function showBuyer\(html\))/), 'ep1-3dan.html の setupSheet')[0];
+const sheetCss = must(dan.match(/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/), 'ep1-3dan.html の赤シートの帯のCSS')[0];
+const pdfCss = must(dan.match(/\.pdfrow\{[^}]*\}\n\.pdfbtn\{[^}]*\}/), 'ep1-3dan.html のPDFボタンのCSS')[0];
+const full = read('../ep1-full.html');
+const cores = [...full.matchAll(/<div class="core"><h2>今日のポイント<\/h2><p>[^<]*<\/p><\/div>/g)].map(m => m[0]);
+if (cores.length !== 2) throw new Error('見本ページ：今日のポイントが2つ見つからない');
+/* 今日のポイントは、各半分の「芯」と同じ文であること（タグを除いた文字列で照合） */
+const keyText = h => must(h.match(/<div class="key">[\s\S]*?<span class="t">([\s\S]*?)<\/span><\/div>/), '芯')[1];
+const plainOf = h => h.replace(/<[^>]+>/g, '').replace(/\s+/g, '');
+[p1, p2].forEach((p, i) => { if (plainOf(keyText(p)) !== plainOf(cores[i].replace(/<h2>[^<]*<\/h2>/, ''))) { throw new Error('見本ページ：今日のポイントが芯と違う ' + (i + 1)); } });
+const road = read('../../roadmap/index.html');
+const tiers = must(road.match(/<section class="tiers"[\s\S]*?<\/section>/), 'roadmap の表')[0].replace(/\s*<p class="tt-note">[\s\S]*?<\/p>/, '');
+if ((tiers.match(/<tbody>[\s\S]*<\/tbody>/)[0].match(/<tr>/g) || []).length !== 8) throw new Error('見本ページ：表の行は8つのはず');
+
+const pageCss = `
+:root{--sky:#17C5E8;--ink:#0A6477;--soft:#E3F8FC;--bg:#F4FAFC;--text:#141B21;--sub:#6B6B76;--line:#DCEEF3;--sheet:#8E3B3B;--font:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;--shadow:0 2px 8px rgba(20,27,33,.05);--navh:0px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+html,body{background:var(--bg)}
+body{font-family:var(--font);word-break:auto-phrase;overflow-wrap:anywhere;color:var(--text);line-height:1.5;font-size:16px;overflow-x:hidden}
+[hidden]{display:none !important}
+.page{max-width:430px;margin:0 auto;background:var(--bg);padding:14px 16px 24px}
+.page>*+*{margin-top:14px}
+.nb{display:inline-block}
+a{color:var(--ink);text-underline-offset:2px}
+/* 上：札・題・説明 */
+.smp-head{text-align:center;padding-top:6px}
+.smp-tag{display:inline-block;font-size:13px;font-weight:700;color:var(--ink);background:var(--soft);border:1px solid var(--sky);border-radius:999px;padding:1px 14px;line-height:1.6}
+.smp-h{font-size:22px;font-weight:900;line-height:1.4;margin-top:8px;color:var(--text)}
+.smp-lead{font-size:15px;line-height:1.8;margin-top:8px;text-align:left}
+.smp-prep{font-size:13px;line-height:1.7;color:#4F5963;margin-top:6px;text-align:left}
+/* 違いの表（roadmap/index.html と同じ） */
+.tiers{--card:#fff;--line:#D9E0E6;--muted:#56636E;--cyan-dark:#0EA2C2;--text:#2B3A46;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px rgba(43,58,70,.08);padding:12px 16px 6px;color:var(--text);line-height:1.75}
+.tiers h2{font-size:1rem;font-weight:700;margin-bottom:4px;line-height:1.5}
+.tt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:6px}
+.tt th,.tt td{border-top:1px solid var(--line);padding:9px 4px;text-align:center;vertical-align:middle;font-size:.9375rem;line-height:1.45}
+.tt thead th{border-top:0;font-weight:700;font-size:.875rem;vertical-align:bottom}
+.tt thead th small{display:block;font-size:.875rem;font-weight:500;color:var(--muted)}
+.tt thead th:first-child{width:31%}
+.tt tbody th{text-align:left;font-weight:700;padding-left:0}
+.tt td.y{color:var(--cyan-dark);font-weight:900;font-size:1.15rem}
+.tt td.n{color:#8A949C}
+/* 読む画面（購入者の画面と同じ部品） */
+.reader{display:flex;flex-direction:column;gap:12px}
+.thost{display:block}
+.textwrap{display:flex;flex-direction:column;gap:12px}
+.sec{display:flex;flex-direction:column;gap:12px;padding-top:6px}
+.core{position:relative;overflow:hidden;background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:10px 14px 12px 20px}
+.core::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--sky)}
+.core h2{font-size:14px;font-weight:900;color:var(--ink);line-height:1.3;letter-spacing:.04em}
+.core p{font-size:17px;font-weight:700;margin-top:3px;line-height:1.7}
+${sheetCss}
+${pdfCss}
+.to-quiz{font-size:15px;line-height:1.8;text-align:center}
+.pdfthumb{display:block;width:120px;margin:10px auto 0;border:1px solid #ececec;border-radius:8px;overflow:hidden;background:#fff;line-height:0}
+.pdfthumb img{display:block;width:100%;height:auto}
+.links{display:flex;flex-direction:column;gap:8px;align-items:center}
+.links a{display:flex;align-items:center;justify-content:center;width:100%;max-width:360px;min-height:44px;padding:9px 18px;font-size:15px;font-weight:700;line-height:1.4;color:var(--ink);background:#fff;border:1.5px solid var(--sky);border-radius:999px;text-decoration:none;text-align:center}
+.foot{font-size:13px;line-height:1.4;color:#4F5963}
+/* LINE・メールの枠（roadmap/index.html の .line-cta と同じ） */
+.line-cta{--cyan-dark:#0EA2C2;--muted:#56636E;background:#fff;border:1px solid var(--sky);border-radius:12px;box-shadow:0 2px 8px rgba(43,58,70,.08);padding:14px;text-align:center;color:#2B3A46;line-height:1.75;margin-top:20px}
+.line-cta .over{font-size:12px;font-weight:700;letter-spacing:.15em;color:var(--cyan-dark)}
+.line-cta .head{font-size:16px;line-height:1.5;font-weight:800;margin-top:4px}
+.line-cta .body{font-size:14px;line-height:1.5;color:var(--muted);margin:4px 0 10px}
+.line-cta .btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:420px;margin:0 auto}
+.line-cta .btn{display:flex;align-items:center;justify-content:center;font-weight:700;text-decoration:none;color:#fff;background:var(--cyan-dark);border-radius:999px;min-height:44px;padding:8px 8px;font-size:14px}
+@media (min-width:768px){
+  .line-cta{padding:20px 18px}
+  .line-cta .over{font-size:.85rem}
+  .line-cta .head{font-size:1.08rem}
+  .line-cta .body{font-size:1rem;margin:4px 0 14px}
+  .line-cta .btn{min-height:48px;padding:11px 8px;font-size:1rem}
+}
+/* PCで開いたとき：同じページを1列のまま広げ、字を一回り大きく（購入者の画面と同じ考え方） */
+@media (min-width:820px){
+  html,body{background:#E6F0F3}
+  body{font-size:17px}
+  .page{max-width:680px;margin:28px auto 40px;padding:22px 32px 32px;border-radius:20px;box-shadow:0 2px 18px rgba(20,27,33,.06)}
+  .smp-h{font-size:26px}
+  .core p{font-size:19px}
+}
+@media (max-width:520px){html{scrollbar-width:none}html::-webkit-scrollbar{display:none}}
+`;
+
+const sampleScript = `
+(function () {
+  'use strict';
+  /* 赤シート：購入者の画面（ep1-3dan.html）と同じ関数。build-ep1-text.mjs が切り出して入れる */
+${sheetJs}
+  var cssT = document.getElementById('tpl-css');
+  var roots = [];
+  Array.prototype.forEach.call(document.querySelectorAll('.thost[data-tpl]'), function (h) {
+    var root = h.attachShadow({mode: 'open'});
+    root.appendChild(cssT.content.cloneNode(true));
+    root.appendChild(document.getElementById(h.getAttribute('data-tpl')).content.cloneNode(true));
+    roots.push(root);
+  });
+  try { setupSheet(roots, document.getElementById('sbar')); } catch (e) { console.warn(e); }
+  /* LINE・メールの枠：配信前（2027-01-04より前）の文言（roadmap/index.html と同じ） */
+  var d = new Date(), t = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  if (t < 20270104) {
+    document.getElementById('lineHead').innerHTML = '<span class="nb">始まったら、</span><span class="nb">LINEかメールでお知らせします</span>';
+    document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">登録無料です。</span>';
+  }
+})();
+`;
+
+const tpl = (id, inner) => '<template id="' + id + '">' + inner + '</template>';
+const styleOnly = html.match(/^<style>[\s\S]*?<\/style>/)[0];
+const samplePage = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>やさしいテキスト 第1回（見本）｜耳で覚える宅建2027</title>
+<!-- Umami analytics (page: ep1 やさしいテキスト見本) -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>${pageCss}</style>
+</head>
+<body>
+<!-- このページは liff-test/scripts/build-ep1-text.mjs が作る。手で直さない。購入者の画面と同じ中身を、見本としてそのまま載せている（有料の中身を公開側に出してよいのは ep/1/text/ だけ）。 -->
+<div class="page">
+  <header class="smp-head">
+    <span class="smp-tag">有料版の見本</span>
+    <h1 class="smp-h">やさしいテキスト　第1回　<span class="nb">宅建業と免許</span></h1>
+    <p class="smp-lead">これを見ながら放送を聴くと、より理解が深まるように作っています。無料の図解は、このテキストからの抜粋です。</p>
+    <p class="smp-prep">このテキストは準備中です。第1回を、見本として公開しています。</p>
+  </header>
+
+  ${tiers}
+
+  <div class="reader" id="reader">
+    <div class="sbar2" id="sbar"><span class="sb2-lab">赤シート</span><span class="seg"><button type="button" class="sb2" data-r="on" aria-pressed="true" aria-label="赤シートをかける（全部の語をかくす）">かける</button><button type="button" class="sb2" data-r="off" aria-pressed="false" aria-label="赤シートをはずす（全部の語を見せる）">はずす</button></span><span class="sb2-cnt" data-r="hid"></span></div>
+    <p class="shint"><span class="nb">赤い所を押すと答えが出ます。</span><span class="nb">もう一度押すと、またかくれます。</span></p>
+    <div class="textwrap">
+      <section class="sec" id="text1"><div class="thost" data-tpl="tpl-1"></div></section>
+      <section class="sec" id="text2"><div class="thost" data-tpl="tpl-2"></div></section>
+      <section class="sec" id="point">
+        ${cores.join('\n        ')}
+      </section>
+      <section class="sec" id="numbers"><div class="thost" data-tpl="tpl-3"></div></section>
+    </div>
+    <p class="to-quiz"><span class="nb">○×3問と過去問は、</span><a href="/ep/1" data-umami-event="text-back" data-umami-event-to="ep1"><span class="nb">【図解と3問】のページで解けます。</span></a></p>
+    <div class="pdfrow">
+      <a class="pdfbtn" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く</a>
+      <a class="pdfthumb" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1" tabindex="-1" aria-hidden="true"><img src="/ep/1/text/a4-p1.webp" width="800" height="1133" loading="lazy" alt=""></a>
+    </div>
+  </div>
+
+  <nav class="links" aria-label="ほかのページ">
+    <a href="/ep/1" data-umami-event="text-back" data-umami-event-to="ep1">【図解と3問】第1回へ</a>
+    <a href="/roadmap" data-umami-event="text-back" data-umami-event-to="roadmap">学習ロードマップ（兼 進捗トラッカー）へ</a>
+  </nav>
+
+  <section class="line-cta">
+    <div class="over">LINE・メール</div>
+    <p class="head" id="lineHead"><span class="nb">図解の続きと過去問1選は、</span><span class="nb">LINEかメールで</span></p>
+    <p class="body" id="lineBody"><span class="nb">毎週月曜に、こちらからお届けします。</span><br><span class="nb">登録無料です。</span></p>
+    <div class="btns"><a class="btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="text-line" data-umami-event-ep="1">LINEで受け取る</a><a class="btn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="text-mail" data-umami-event-ep="1">メールで受け取る</a></div>
+  </section>
+
+  <div class="foot">条文は2026年4月1日施行版で照合</div>
+</div>
+${tpl('tpl-css', styleOnly)}
+${tpl('tpl-1', '<div class="tx" data-part="1">' + p1 + '</div>')}
+${tpl('tpl-2', '<div class="tx" data-part="2">' + p2 + '</div>')}
+${tpl('tpl-3', '<div class="tx" data-part="3">' + p3 + '</div>')}
+<script>${sampleScript}</script>
+</body>
+</html>
+`;
+const SAMPLE_OUT = new URL('../../ep/1/text/index.html', import.meta.url);
+if (!/\/ep\/1\/text\/index\.html$/.test(SAMPLE_OUT.pathname)) throw new Error('見本ページの書き出し先が想定と違う: ' + SAMPLE_OUT.pathname);
+const sampleRs = (samplePage.match(/class="[^"]*\brs\b/g) || []).length;
+if (sampleRs !== 30) throw new Error('見本ページ：赤シートが30か所でない ' + sampleRs);
+if (/△/.test(samplePage)) throw new Error('見本ページに△がある');
+fs.writeFileSync(SAMPLE_OUT, samplePage);
+console.log('sample page written: ep/1/text/index.html', samplePage.length, 'chars; rs=' + sampleRs);
