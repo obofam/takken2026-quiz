@@ -650,7 +650,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 (function () {
   'use strict';
   /* 3問のデータは build.py が data.json から差し込む（過去問1選はLINEで届けるため、このページには出さない） */
-  var QUIZ = [{"label": "前半　「宅建業と免許」の3問", "questions": [{"q": "自分が持っているマンション20戸を、不特定多数の人に、くり返し貸す場合、免許が必要である。", "a": false, "exp": "自ら貸借なので、何戸貸しても、宅建業に当たりません。"}, {"q": "知事の免許を受けた業者は、その県の中の物件しか取引できない。", "a": false, "exp": "区分を決めるのは事務所の場所だけで、物件はどこの県でもかまいません。"}, {"q": "更新の申請をしたのに、満了日までに処分がなかった場合、従前の免許は、満了日で切れる。", "a": false, "exp": "処分があるまでは、古い免許が有効です。更新されたあとの5年は、処分の日からではなく、前の免許が切れる日の翌日から数えます。"}]}, {"label": "後半　「免許の基準」の3問", "questions": [{"q": "破産手続開始の決定を受けた人は、復権を得てから5年たたないと、免許を受けられない。", "a": false, "exp": "復権を得れば、その日から、すぐ受けられます。"}, {"q": "道路交通法の違反で罰金を受けた人は、5年間、免許を受けられない。", "a": false, "exp": "罰金で欠格になる罪には、道路交通法の違反は入っていません。"}, {"q": "会社の非常勤の取締役が、傷害の罪で罰金を受けた場合、非常勤なので、その会社は免許を受けられる。", "a": false, "exp": "役員は、常勤か非常勤かを問いません。会社も、免許を受けられません。"}]}];
+  var QUIZ = [{"label": "前半　「宅建業と免許」の3問", "questions": [{"q": "自分が持っているマンション20戸を、不特定多数の人に、くり返し貸す場合、免許は要らない。", "a": true, "exp": "自ら貸借なので、何戸貸しても、宅建業に当たりません。"}, {"q": "知事の免許を受けた業者は、その県の中の物件しか取引できない。", "a": false, "exp": "区分を決めるのは事務所の場所だけで、物件はどこの県でもかまいません。"}, {"q": "更新の申請をしたのに、満了日までに処分がなかった場合、従前の免許は、処分があるまで有効である。", "a": true, "exp": "満了日を過ぎても、処分があるまでは、古い免許が有効です。更新されたあとの5年は、処分の日からではなく、前の免許が切れる日の翌日から数えます。"}]}, {"label": "後半　「免許の基準」の3問", "questions": [{"q": "破産手続開始の決定を受けた人は、復権を得てから5年たたないと、免許を受けられない。", "a": false, "exp": "復権を得れば、その日から、すぐ受けられます。"}, {"q": "道路交通法の違反で罰金を受けた人でも、ほかに欠格事由がなければ、免許を受けられる。", "a": true, "exp": "罰金で欠格になる罪には、道路交通法の違反は入っていません。"}, {"q": "会社の非常勤の取締役が、傷害の罪で罰金を受けた場合、非常勤なので、その会社は免許を受けられる。", "a": false, "exp": "役員は、常勤か非常勤かを問いません。会社も、免許を受けられません。"}]}];
   var esc = function (s) {
     return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
   };
@@ -688,13 +688,14 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   /* 記録の同期。LINEの判定（liff.init）はこのページがすでに済ませているので、ここでは二重に init しない（liffId を渡さない）。
      LINEの中でログイン済みなら ID トークンでサーバーのセッションに入り、メールのログインなどはクッキーのセッションがあるときだけ。なければ端末だけ。 */
   function startProgress() {
-    new Promise(function (ok, ng) {
+    return new Promise(function (ok, ng) {
       var sc = document.createElement('script'); sc.src = '/progress-sync.js'; sc.async = true; sc.onload = ok; sc.onerror = ng; document.head.appendChild(sc);
     }).then(function () {
       if (!window.TakkenProgress) { return; }
-      window.TakkenProgress.init({cookieHint: true});
+      var started = window.TakkenProgress.init({cookieHint: true});
       progReady = true;
       if (progDoneKey) { window.TakkenProgress.set('done', progDoneKey, true); }
+      return started; /* ログインの確認が済むまで待てるよう返す（下の判定のスクリプトが、済んだあとにテキストの確認をする） */
     }).catch(function () {});
   }
   window.__epProgressStart = startProgress; /* 下の判定のスクリプトが、判定のあとに呼ぶ */
