@@ -29,8 +29,8 @@
   .or { font-size: 14px; color: var(--muted); margin-top: 18px; line-height: 1.6; }
   label { display: block; font-size: 14px; font-weight: 700; margin-top: 8px; line-height: 1.6; }
   input[type=email] { display: block; width: 100%; min-height: 48px; margin-top: 4px; padding: 10px 12px; font: inherit; font-size: 16px; color: var(--text); background: #fff; border: 1.5px solid #B8C4CC; border-radius: 10px; }
-  .msg { font-size: 15px; line-height: 1.7; margin-top: 12px; }
-  .msg.err { color: #8A3A2E; }
+  .msg { font-size: 15px; font-weight: 700; line-height: 1.7; margin: 0 0 14px; padding: 10px 14px; border-radius: 10px; background: #E9F8C9; color: #3A6008; }
+  .msg.err { color: #8A3A2E; background: #FBEDEA; }
   .foot { margin-top: 22px; font-size: 14px; line-height: 1.7; color: var(--muted); }
   .foot a { color: var(--ink); display: inline-block; min-height: 44px; padding: 10px 0; }
   .foot p { margin: 0; }
@@ -43,6 +43,9 @@
   <main class="card">
     <h1>ログイン</h1>
     <p class="lead">ログインすると、聴いた回と3問の記録が残ります。機種を変えても、ほかの端末でも、同じ記録が出ます。</p>
+
+    <!-- 知らせ（まとめた・送った・失敗）。見落とさないよう、いちばん上に出す -->
+    <p class="msg" id="msg" role="status" aria-live="polite" hidden></p>
 
     <!-- 確認が終わるまで、どちらも出さない（点滅を避ける） -->
     <div id="vIn" class="sec" hidden>
@@ -63,7 +66,6 @@
       <button type="button" class="btn o" id="btnMail" data-umami-event="login-mail">ログインのリンクを送る</button>
     </div>
 
-    <p class="msg" id="msg" role="status" aria-live="polite" hidden></p>
   </main>
   <div class="foot">
     <p><a href="https://www.mimiobo.com/privacy">プライバシーポリシー</a></p>
