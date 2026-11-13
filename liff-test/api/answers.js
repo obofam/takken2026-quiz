@@ -16,7 +16,7 @@ module.exports=s.endpoint(['GET','POST'],async(req,res)=>{
   const current=await s.session(req);
   if(req.method==='POST'){
     if(req.headers?.['x-mimiobo-user']!==current.userId)s.fail(401,'user_changed');
-    await s.supabase('/rest/v1/rpc/save_answer',{method:'POST',body:{...validate(req.body),p_user_id:current.userId}});
+    await s.supabase('/rest/v1/rpc/save_answer',{method:'POST',body:{...validate(req.body),p_user_id:current.userId,...(s.openLogin()?{p_open:true}:{})}});
     return res.status(200).json({ok:true});
   }
   const quiz=req.query?.quiz??new URL(req.url,'http://localhost').searchParams.get('quiz');

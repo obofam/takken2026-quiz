@@ -1,5 +1,5 @@
 // やさしいテキスト第1回（A4縦2ページの印刷用HTML）から、スマホで読む1列版を作る。
-// 出力：api/_ep-text/ep1.js（HTMLの文字列をexport。api/ の _ 始まりは公開されず、URLでは取れない）。
+// 出力：api/_ep-text/ep1.js と、本番用に ../api/_ep-text/（同じ2ファイル。ep1.pdf も）（HTMLの文字列をexport。api/ の _ 始まりは公開されず、URLでは取れない）。
 // 使い方：node scripts/build-ep1-text.mjs
 // 元の文言は変えない：タグを除いた文字列が元と一致しなければ失敗する。赤シートの対象は class="rs" を付けるだけ。
 import fs from 'node:fs';
@@ -225,6 +225,10 @@ fs.writeFileSync(OUT, "'use strict';\n// build-ep1-text.mjs が作る。手で�
 const PDF_SRC = new URL('../../../6_有料PDF/やさしいテキスト_2027/第01回_宅建業と免許.pdf', import.meta.url);
 if (!fs.existsSync(PDF_SRC)) throw new Error('PDF の元がない: 第01回_宅建業と免許.pdf');
 fs.copyFileSync(PDF_SRC, new URL('../api/_ep-text/ep1.pdf', import.meta.url));
+/* 本番（リポジトリ直下の api/_ep-text/）にも同じ2ファイルを書く。直下の .gitignore で公開リポジトリには入らず、.vercelignore では除外されないのでデプロイには載る */
+fs.mkdirSync(new URL('../../api/_ep-text/', import.meta.url), { recursive: true });
+fs.copyFileSync(OUT, new URL('../../api/_ep-text/ep1.js', import.meta.url));
+fs.copyFileSync(PDF_SRC, new URL('../../api/_ep-text/ep1.pdf', import.meta.url));
 console.log('written', html.length, 'chars; rs part1=' + rsCount(p1), 'part2=' + rsCount(p2), 'part3=' + rsCount(p3));
 
 /* ============================================================

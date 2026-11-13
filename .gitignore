@@ -11,3 +11,6 @@ node_modules/
 # audio/ もデプロイ対象（限定音声が404だったため除外解除）
 
 __pycache__/
+
+# 有料テキストの中身（liff-test/scripts/build-ep1-text.mjs が書き出す。公開リポジトリに入れない。Vercel は .vercelignore で除外していないので載る）
+api/_ep-text/

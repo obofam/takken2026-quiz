@@ -1,0 +1,9 @@
+{
+  "name": "takken2026-quiz",
+  "private": true,
+  "version": "1.0.0",
+  "description": "静的サイト＋api/（サーバーの仕組み）。コードの正本は liff-test/。ビルドはなし。",
+  "dependencies": {
+    "stripe": "^23.0.0"
+  }
+}

@@ -22,8 +22,10 @@ module.exports=s.endpoint(['POST'],async(req,res)=>{
     if(!product)s.fail(400,'invalid_product');
     price=await stripe.priceByLookupKey(product.lookupKey);
     metadata={userId:current.userId,plan:product.plan,product:product.code};
-    success_url=origin+'/kounyu-test.html?checkout=ok&product='+product.code;
-    cancel_url=origin+'/kounyu-test.html?checkout=cancel';
+    // 戻り先のページ。本番の購入ページを作ったら環境変数 CHECKOUT_RETURN_PATH（例 /kounyu.html）で指す。未設定は試し用のページ。
+    const back=/^\/[A-Za-z0-9._\/-]*$/.test(process.env.CHECKOUT_RETURN_PATH||'')&&!process.env.CHECKOUT_RETURN_PATH.includes('//')?process.env.CHECKOUT_RETURN_PATH:'/kounyu-test.html';
+    success_url=origin+back+'?checkout=ok&product='+product.code;
+    cancel_url=origin+back+'?checkout=cancel';
   }
   const checkout=await stripe.client().checkout.sessions.create({
     mode:'payment',

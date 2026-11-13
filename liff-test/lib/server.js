@@ -19,7 +19,9 @@ function origin(req){
   const host=req.headers?.host;
   if(typeof host!=='string'||!/^([a-z0-9.-]+)(:\d+)?$/i.test(host))fail(400,'invalid_host');
   const local=/^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host);
-  if(!local&&host!=='mimiobo-liff-test.vercel.app'&&host!==process.env.VERCEL_URL&&host!==process.env.VERCEL_BRANCH_URL)fail(403,'host_not_allowed');
+  // ALLOWED_HOSTS（カンマ区切り。例 takken.mimiobo.com）にある住所も通す。未設定なら今までどおり。
+  const extra=(process.env.ALLOWED_HOSTS||'').split(',').map(v=>v.trim().toLowerCase()).filter(Boolean);
+  if(!local&&host!=='mimiobo-liff-test.vercel.app'&&host!==process.env.VERCEL_URL&&host!==process.env.VERCEL_BRANCH_URL&&!extra.includes(host.toLowerCase()))fail(403,'host_not_allowed');
   return (local?'http://':'https://')+host;
 }
 function mutation(req){
@@ -59,7 +61,9 @@ async function supabase(path,{method='GET',body,accessToken,headers:extra}={}){
   }
   return data;
 }
-async function allowed(provider,subject){const q=new URLSearchParams({select:'provider',provider:'eq.'+provider,subject:'eq.'+subject,limit:'1'});return (await supabase('/rest/v1/allowlist?'+q)).length===1;}
+// OPEN_LOGIN=1（本番）：許可リストを見ない＝LINE・メールでログインした人はだれでも使える。未設定なら許可リストを見る。
+const openLogin=()=>process.env.OPEN_LOGIN==='1';
+async function allowed(provider,subject){if(openLogin())return true;const q=new URLSearchParams({select:'provider',provider:'eq.'+provider,subject:'eq.'+subject,limit:'1'});return (await supabase('/rest/v1/allowlist?'+q)).length===1;}
 async function session(req){
   const s=verify(cookies(req)[COOKIE],'session');if(!s||!UUID.test(s.userId)||!['email','line'].includes(s.provider)||typeof s.subject!=='string')fail(401,'login_required');
   const q=new URLSearchParams({select:'user_id',user_id:'eq.'+s.userId,provider:'eq.'+s.provider,subject:'eq.'+s.subject,limit:'1'});
@@ -72,7 +76,7 @@ async function session(req){
   if(req.headers?.['x-mimiobo-user']&&req.headers['x-mimiobo-user']!==s.userId)fail(401,'user_changed');
   return s;
 }
-function sessionData(userId){return {userId,storageKey:'mimiobo-test-v1-'+hash(userId)};}
+function sessionData(userId){return {userId,storageKey:(process.env.STORAGE_PREFIX||'mimiobo-test-v1-')+hash(userId)};}
 // Live entitlements only (not expired). The server decides; the browser never infers access.
 async function entitlements(userId,now=Date.now()){
   const q=new URLSearchParams({select:'plan,valid_until',user_id:'eq.'+userId,or:'(valid_until.is.null,valid_until.gt.'+new Date(now).toISOString()+')',order:'valid_until.asc.nullsfirst'});
@@ -92,7 +96,7 @@ async function linkedSessionData(userId){
 }
 async function login(req,res,provider,subject,linkToken){
   if(linkToken!==undefined&&(typeof linkToken!=='string'||!/^[0-9a-f]{64}$/.test(linkToken)))fail(400,'invalid_link');
-  const userId=await supabase('/rest/v1/rpc/resolve_identity',{method:'POST',body:{p_provider:provider,p_subject:subject,p_link_token_hash:linkToken?hash(linkToken):null}});
+  const userId=await supabase('/rest/v1/rpc/resolve_identity',{method:'POST',body:{p_provider:provider,p_subject:subject,p_link_token_hash:linkToken?hash(linkToken):null,...(openLogin()?{p_open:true}:{})}});
   if(!UUID.test(userId))fail(503,'invalid_identity');
   setCookie(req,res,COOKIE,sign({purpose:'session',userId,provider,subject,exp:Math.floor(Date.now()/1000)+604800}),604800);
   return sessionData(userId);
@@ -107,4 +111,4 @@ function endpoint(methods,run){return async(req,res)=>{res.setHeader('Cache-Cont
   }
   return res.status(e instanceof HttpError?e.status:503).json({error:e instanceof HttpError?e.message:'service_unavailable'});
 }};}
-module.exports={UUID,COOKIE,HttpError,fail,hash,sign,verify,cookies,origin,mutation,setCookie,supabase,allowed,session,sessionData,entitlements,linkedSessionData,login,ticket,email,endpoint};
+module.exports={openLogin,UUID,COOKIE,HttpError,fail,hash,sign,verify,cookies,origin,mutation,setCookie,supabase,allowed,session,sessionData,entitlements,linkedSessionData,login,ticket,email,endpoint};
