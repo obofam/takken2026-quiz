@@ -72,9 +72,16 @@ async function session(req){
   if(isAllowed.status==='rejected')throw isAllowed.reason;
   if(!isAllowed.value)fail(403,'not_allowed');
   if(identity.status==='rejected')throw identity.reason;
-  if(identity.value.length!==1)fail(401,'login_required');
-  if(req.headers?.['x-mimiobo-user']&&req.headers['x-mimiobo-user']!==s.userId)fail(401,'user_changed');
-  return s;
+  let userId=s.userId;
+  if(identity.value.length!==1){
+    // 記録をまとめた（merge）あと、クッキーの利用者 id が消えた側でも、同じ provider・subject の識別が残った利用者に移っていれば、その利用者として通す。
+    // クッキーは署名つきで、識別の主キーは (provider, subject)。持ち主が変わっただけなので同じ人。識別が無ければ従来どおり 401。
+    const moved=await supabase('/rest/v1/identities?'+new URLSearchParams({select:'user_id',provider:'eq.'+s.provider,subject:'eq.'+s.subject,limit:'1'}));
+    if(!Array.isArray(moved)||moved.length!==1||!UUID.test(moved[0]?.user_id))fail(401,'login_required');
+    userId=moved[0].user_id;
+  }
+  if(req.headers?.['x-mimiobo-user']&&req.headers['x-mimiobo-user']!==userId)fail(401,'user_changed');
+  return userId===s.userId?s:{...s,userId};
 }
 function sessionData(userId){return {userId,storageKey:(process.env.STORAGE_PREFIX||'mimiobo-test-v1-')+hash(userId)};}
 // Live entitlements only (not expired). The server decides; the browser never infers access.
