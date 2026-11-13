@@ -66,6 +66,7 @@ a{color:var(--ink);text-underline-offset:2px}
 .pdfthumb img{display:block;width:100%;height:auto}
 .links{display:flex;flex-direction:column;gap:8px;align-items:center}
 .links a{display:flex;align-items:center;justify-content:center;width:100%;max-width:360px;min-height:44px;padding:9px 18px;font-size:15px;font-weight:700;line-height:1.4;color:var(--ink);background:#fff;border:1.5px solid var(--sky);border-radius:999px;text-decoration:none;text-align:center}
+.about-t{font-size:13px;line-height:1.7;color:#4E5B66;text-align:left}
 .foot{font-size:13px;line-height:1.4;color:#4F5963}
 /* LINE・メールの枠（roadmap/index.html の .line-cta と同じ） */
 .line-cta{--cyan-dark:#0EA2C2;--muted:#56636E;background:#fff;border:1px solid var(--sky);border-radius:12px;box-shadow:0 2px 8px rgba(43,58,70,.08);padding:14px;text-align:center;color:#2B3A46;line-height:1.75;margin-top:20px}
@@ -136,6 +137,7 @@ a{color:var(--ink);text-underline-offset:2px}
       <a class="pdfbtn" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く</a>
       <a class="pdfthumb" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1" tabindex="-1" aria-hidden="true"><img src="/ep/1/text/a4-p1.webp" width="800" height="1133" loading="lazy" alt=""></a>
     </div>
+    <p class="about-t">このテキストは、宅建の全体をつかむための入り口です。概要をつかんだら、試験対策として、例外や細かい知識を過去問やお手持ちの参考書でご確認ください。</p>
   </div>
 
   <nav class="links" aria-label="ほかのページ">
@@ -310,14 +312,7 @@ a{color:var(--ink);text-underline-offset:2px}
   .colophon{display:block;font-size:11px;font-weight:400;color:var(--sub);margin-top:2px}
 
   
-  @media print{
-    body{background:#fff}
-    .intro{display:none}
-    .spread{display:block;padding:0}
-    .page{box-shadow:none;border-radius:0;break-after:page;margin:0}
-    .page:last-child{break-after:auto}
-  }
-
+  
 /* ===== スマホ1列（ここから追記） ===== */
 :host{display:block;font-family:var(--font);color:var(--text);font-size:15px;line-height:1.6;letter-spacing:.02em;word-break:auto-phrase;overflow-wrap:anywhere;--sheet:#8E3B3B}
 .tx{display:flex;flex-direction:column;gap:12px}
@@ -383,14 +378,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 .nv{font-size:24px;font-weight:900;color:var(--ink);line-height:1.3}
 .nr .nk{font-size:16px;line-height:1.5}
 </style></template>
-<template id="tpl-1"><div class="tx" data-part="1"><div class="pbar"><span>耳で覚える宅建2027　やさしいテキスト</span><span class="pg">第1回　宅建業法　放送 2027年1月4日（月）予定　1／2</span></div>
-
-  <div class="ttl">
-    <h1><span class="no-h">第1回</span><span class="nw">100部屋貸しても、</span><span class="nw">免許はいらない</span></h1>
-    <p class="sub">宅建業と免許</p>
-  </div>
-
-  <div class="sec"><span class="sn">前半</span>宅建業と免許</div>
+<template id="tpl-1"><div class="tx" data-part="1"><div class="sec"><span class="sn">前半</span>宅建業と免許</div>
   <div class="key"><span class="l">芯</span><span class="t"><span class="nw">「自分の物件を自分で貸す」</span>以外の取引を、<span class="nw">不特定多数にくり返し行うなら<span class="nb"><span class="rs" role="button" tabindex="0" data-hint="いる／いらない">免許がいる</span>。</span></span><span class="nw">事務所が1つの県だけなら<span class="nb"><span class="rs" role="button" tabindex="0" data-hint="知事／大臣">知事</span>、</span></span><span class="nw">2つ以上の県なら<span class="nb"><span class="rs" role="button" tabindex="0" data-hint="知事／大臣">大臣</span>。</span></span></span></div>
 
   
@@ -483,9 +471,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
       <text x="490" y="115" font-size="13" font-weight="700" fill="#5A626B" text-anchor="middle">処分の日からではない</text>
     </svg></div>
   </figure></div></template>
-<template id="tpl-2"><div class="tx" data-part="2"><div class="pbar"><span>耳で覚える宅建2027　やさしいテキスト</span><span class="pg">第1回　宅建業法　2／2</span></div>
-
-  <div class="sec"><span class="sn">後半</span>免許の基準</div>
+<template id="tpl-2"><div class="tx" data-part="2"><div class="sec"><span class="sn">後半</span>免許の基準</div>
   <div class="key"><span class="l">芯</span><span class="t"><span class="nw">免許をもらえない人の名簿は<span class="nb">「<span class="rs" role="button" tabindex="0" data-hint="○年">5年</span>」</span>で読む。</span><span class="nw">ただし破産は復権すれば、</span><span class="nw">執行猶予は期間が終われば、</span><span class="nw">その日から<span class="rs" role="button" tabindex="0" data-hint="すぐ／5年">すぐ</span>免許を受けられる。</span></span></div>
 
   

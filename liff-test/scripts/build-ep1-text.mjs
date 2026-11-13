@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 const SRC = new URL('../../../6_有料PDF/やさしいテキスト_2027/第01回_宅建業と免許.html', import.meta.url);
 const OUT = new URL('../api/_ep-text/ep1.js', import.meta.url);
-const src = fs.readFileSync(SRC, 'utf8');
+const src = fs.readFileSync(SRC, 'utf8').replace(/\r\n?/g, '\n'); /* 改行コードに左右されない（元がCRLFでも正規表現が効く） */
 
 /* --- 部品を取り出す --- */
 const symbols = {};
@@ -339,6 +339,7 @@ ${pdfCss}
 .pdfthumb img{display:block;width:100%;height:auto}
 .links{display:flex;flex-direction:column;gap:8px;align-items:center}
 .links a{display:flex;align-items:center;justify-content:center;width:100%;max-width:360px;min-height:44px;padding:9px 18px;font-size:15px;font-weight:700;line-height:1.4;color:var(--ink);background:#fff;border:1.5px solid var(--sky);border-radius:999px;text-decoration:none;text-align:center}
+.about-t{font-size:13px;line-height:1.7;color:#4E5B66;text-align:left}
 .foot{font-size:13px;line-height:1.4;color:#4F5963}
 /* LINE・メールの枠（roadmap/index.html の .line-cta と同じ） */
 .line-cta{--cyan-dark:#0EA2C2;--muted:#56636E;background:#fff;border:1px solid var(--sky);border-radius:12px;box-shadow:0 2px 8px rgba(43,58,70,.08);padding:14px;text-align:center;color:#2B3A46;line-height:1.75;margin-top:20px}
@@ -431,6 +432,7 @@ const samplePage = `<!DOCTYPE html>
       <a class="pdfbtn" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く</a>
       <a class="pdfthumb" href="/ep/1/text/yasashii-text-01-a4.pdf" target="_blank" rel="noopener" data-umami-event="text-a4-pdf" data-umami-event-ep="1" tabindex="-1" aria-hidden="true"><img src="/ep/1/text/a4-p1.webp" width="800" height="1133" loading="lazy" alt=""></a>
     </div>
+    <p class="about-t">このテキストは、宅建の全体をつかむための入り口です。概要をつかんだら、試験対策として、例外や細かい知識を過去問やお手持ちの参考書でご確認ください。</p>
   </div>
 
   <nav class="links" aria-label="ほかのページ">

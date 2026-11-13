@@ -319,3 +319,18 @@ test('the paid text is public only in ep/1/text/: no other public file carries i
     assert.ok(!h.includes(marker),f);
   }
 });
+
+test('print-only bands (page bar 1／2・2／2, print title, next/problem bands) are not in any build output',()=>{
+  const outs={buyer:require('../api/_ep-text/ep1').replace(/<style>[\s\S]*?<\/style>/,''),prod:require('../../api/_ep-text/ep1').replace(/<style>[\s\S]*?<\/style>/,''),
+    sample:sample().replace(/<style>[\s\S]*?<\/style>/g,''),nukigaki:fs.readFileSync(path.join(__dirname,'../ep1-nukigaki.html'),'utf8'),tsuzuki:fs.readFileSync(path.join(__dirname,'../../ep/1/tsuzuki.html'),'utf8')};
+  for(const [k,h] of Object.entries(outs))assert.doesNotMatch(h,/1／2|2／2|class="pbar"|class="ttl"|class="next"|耳で覚える宅建2027　やさしいテキスト|この回の問題を解く|@media print/,k);
+  const b=outs.buyer;assert.equal((b.match(/<figure/g)||[]).length,8);assert.equal((b.match(/class="[^"]*\brs\b/g)||[]).length,30);assert.equal((b.match(/class="nr"/g)||[]).length,6);
+});
+test('sample page: the entrance note is back (13px, not lighter than #4E5B66) and the buyer screen does not have it',()=>{
+  const html=sample();
+  assert.match(html,/<p class="about-t">このテキストは、宅建の全体をつかむための入り口です。概要をつかんだら、試験対策として、例外や細かい知識を過去問やお手持ちの参考書でご確認ください。<\/p>/);
+  assert.match(html,/\.about-t\{font-size:13px;[^}]*color:#4E5B66/);
+  assert.ok(html.indexOf('id="numbers"')<html.indexOf('class="to-quiz"')&&html.indexOf('class="pdfbtn"')<html.indexOf('class="about-t"'));
+  assert.ok(!fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8').includes('入り口です'));
+  assert.ok(!require('../api/_ep-text/ep1').includes('入り口です'));
+});
