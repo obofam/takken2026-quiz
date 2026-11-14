@@ -423,9 +423,16 @@ body.member .line-card{display:block}
 .dk{font-weight:700}
 .dv{white-space:pre-wrap}
 .dcopy{margin-top:14px;cursor:pointer}
+/* 登録済の方の入口（登録なしの見え方だけ。.only-a） */
+.top-login{margin-left:auto;text-align:right}
+.top-login2{flex:0 0 100%}
+.top-login a,.login-line a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.top-login a{display:inline-block;padding:11px 0;margin:-11px 0}
+.next-box .login-line{margin-top:4px;font-size:14px;line-height:1.7;color:#4F5963}
 /* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */
 .closed-box{display:none}
 .ep-closed .closed-box{display:block}
+.ep-closed .top-login{display:none}
 .ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}
 .next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}
 </style>
@@ -433,7 +440,7 @@ body.member .line-card{display:block}
 <body>
 <div class="page">
 
-  <div class="top"><span>第9回　2027年3月1日（月）予定</span></div>
+  <div class="top"><span>第9回　2027年3月1日（月）予定</span><span class="top-login only-a">無料ページ（<a href="/login?next=/ep/9" data-umami-event="ep-login" data-umami-event-ep="9">登録済の方はこちら</a>）</span></div>
   <div class="title">
     <div class="row"><span class="no">第9回</span><h1>テントで申し込んだら、<br>白紙に戻せる？</h1></div>
     <div class="side">クーリングオフと手付</div>
@@ -830,7 +837,7 @@ figure.fig{min-width:0}
   </div>
 </div>
 <div class="slot" id="slot-half2"></div>
-<div class="next-box only-a" id="zukai-next"><p><span class="nk">図解の続きは、</span><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">か</span><a href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="9" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">メール</a><span class="nk">でお届けします。</span></p></div>
+<div class="next-box only-a" id="zukai-next"><p><span class="nk">図解の続きは、</span><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">か</span><a href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="9" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">メール</a><span class="nk">でお届けします。</span></p><p class="login-line"><a href="/login?next=/ep/9" data-umami-event="ep-login" data-umami-event-ep="9">登録済の方はこちら</a></p></div>
   </section>
 
   <!-- 節2：○×3問 -->
@@ -843,7 +850,7 @@ figure.fig{min-width:0}
   <section class="sec" id="honban">
     <div class="over kk-over">チャレンジ！</div>
     <h2 class="sec-h">過去問1選</h2>
-    <div class="next-box only-a"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">か</span><a href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="9" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">メール</a><span class="nk">に登録すると、</span><span class="nk">この回のテーマに沿った過去問を</span><span class="nk">解いていただけます。</span></p></div>
+    <div class="next-box only-a"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">か</span><a href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="9" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">メール</a><span class="nk">に登録すると、</span><span class="nk">この回のテーマに沿った過去問を</span><span class="nk">解いていただけます。</span></p><p class="login-line"><a href="/login?next=/ep/9" data-umami-event="ep-login" data-umami-event-ep="9">登録済の方はこちら</a></p></div>
     <div class="slot" id="slot-kk"></div>
     <a class="tcard" href="/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="9">
       <span class="tlab">有料版の見本</span>

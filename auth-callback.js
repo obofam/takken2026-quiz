@@ -15,5 +15,12 @@
   }catch{result='unavailable';}
   // ログインできたら、このブラウザに印を残す（記録の同期が、ログインしていない人に問い合わせないための印。中身は入れない）
   try{if(result==='ok')localStorage.setItem('takken2027-login-hint','1');}catch{}
-  location.replace(result==='ok'?'/roadmap':'/login?auth='+encodeURIComponent(result));
+  // ログインの画面で戻り先（/ep/数字 か /roadmap だけ）を預けていたら、そこへ。無ければ学習ロードマップ（既定）。別の端末・ブラウザで開いたときは預けた印が無いので既定
+  let target='/roadmap';
+  try{
+    const n=JSON.parse(localStorage.getItem('takken2027-login-next'));
+    if(n&&typeof n.path==='string'&&n.expires>Date.now()&&/^(\/ep\/\d{1,3}|\/roadmap)$/.test(n.path))target=n.path;
+  }catch{}
+  try{localStorage.removeItem('takken2027-login-next');}catch{}
+  location.replace(result==='ok'?target:'/login?auth='+encodeURIComponent(result));
 })();

@@ -410,9 +410,21 @@ function gateVals(ep, iso, dateLabel, test) {
     : 'var n=new Date(),t=n.getFullYear()*10000+(n.getMonth()+1)*100+n.getDate();';
   return {
     GATE_SCRIPT: '\n<script>(function(){var k=' + k + ';' + now + "if(t<k){document.documentElement.className+=' ep-closed';}})();</script>",
-    CLOSED_CSS: '\n/* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */\n.closed-box{display:none}\n.ep-closed .closed-box{display:block}\n.ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}\n.next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}',
+    CLOSED_CSS: '\n/* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */\n.closed-box{display:none}\n.ep-closed .closed-box{display:block}\n.ep-closed .top-login{display:none}\n.ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}\n.next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}',
     CLOSED_BOX: '\n  <div class="next-box closed-box"><p>この回は、' + dateLabel + 'からです。</p><a class="lbtn" href="/roadmap">学習ロードマップへ</a></div>',
     GUARD: " if (document.documentElement.classList.contains('ep-closed')) { return; }",
+  };
+}
+
+/* 登録なしの見え方に出す「登録済の方はこちら」の入口（上の行の右・図の下の囲み・過去問1選の囲み）。LINE・メール・購入者の見え方では .only-a ごと出ない。配信前で閉じているときも出さない。
+   リンク先：本番は /login?next=/ep/N。試し用には /login が無いので、試し用のログインの画面 /account.html（next は付けない）。 */
+function loginVals(ep, sample, test) {
+  const href = test ? '/account.html' : `/login?next=/ep/${ep}`;
+  const a = `<a href="${href}" data-umami-event="ep-login" data-umami-event-ep="${ep}">登録済の方はこちら</a>`;
+  return {
+    TOP_LOGIN: `<span class="top-login only-a${sample ? ' top-login2' : ''}">無料ページ（${a}）</span>`,
+    LOGIN_LINE: `<p class="login-line">${a}</p>`,
+    LOGIN_CSS: '\n/* 登録済の方の入口（登録なしの見え方だけ。.only-a） */\n.top-login{margin-left:auto;text-align:right}\n.top-login2{flex:0 0 100%}\n.top-login a,.login-line a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}\n.top-login a{display:inline-block;padding:11px 0;margin:-11px 0}\n.next-box .login-line{margin-top:4px;font-size:14px;line-height:1.7;color:#4F5963}',
   };
 }
 
@@ -447,6 +459,7 @@ export function buildPages(m, text, ex, mode) {
     MIHON_EXPORT: test ? ' window.__epMihon = mihon;' : '',
     NO_WHO: test ? "!who && mihon !== 'kounyu'" : '!who',
     ...gateVals(ep, json.date, date, test),
+    ...loginVals(ep, sample, test),
     MIHON_QS: test ? " + (mihon === 'kounyu' ? '&mihon=1' : '')" : '',
   });
   const corePoint = h => json.points.find(p => p.half === h);
