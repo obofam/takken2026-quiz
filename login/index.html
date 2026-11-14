@@ -50,6 +50,8 @@
     <!-- 確認が終わるまで、どちらも出さない（点滅を避ける） -->
     <div id="vIn" class="sec" hidden>
       <p class="state" id="inState">LINEでログインしています</p>
+      <a class="btn" id="lineIn" href="https://liff.line.me/2012583516-7vmvMorb/roadmap" hidden data-umami-event="login-line">LINEで開く</a>
+      <p class="or" id="mailNoteIn" hidden>メールで受け取っている方は、メールの中のリンクから開くと、続きが出ます。</p>
       <a class="btn" id="toRoad" href="/roadmap" data-umami-event="login-to-roadmap">学習ロードマップへ</a>
       <button type="button" class="btn o" id="btnLink" hidden data-umami-event="login-link">LINEとメールの記録を1つにまとめる</button>
       <button type="button" class="btn o" id="btnOut" data-umami-event="login-logout">ログアウト</button>
@@ -127,6 +129,8 @@
     var hasL = providers.indexOf('line') >= 0, hasE = providers.indexOf('email') >= 0;
     $('inState').textContent = hasL && hasE ? 'LINEとメールでログインしています' : (hasE ? 'メールでログインしています' : 'LINEでログインしています');
     $('btnLink').hidden = !(hasE && !hasL);
+    $('lineIn').hidden = !(NEXT && !inLine);
+    $('mailNoteIn').hidden = !(NEXT && !inLine && /^\/ep\//.test(NEXT));
     $('vOut').hidden = true; $('vIn').hidden = false;
   }
   function paintSession() {
@@ -134,7 +138,9 @@
       if (!r.ok) { if (r.status === 401) { try { localStorage.removeItem(HINT); } catch (_) {} } showOut(); return; }
       try { localStorage.setItem(HINT, '1'); } catch (_) {}
       var p = Array.isArray(r.json.providers) ? r.json.providers : [];
-      if (NEXT) { location.replace(NEXT); return; } /* ログイン済みで、戻り先つきで来たときは、そのまま戻る */
+      /* ログイン済みで、戻り先つきで来たとき：LINEの中ならそのまま戻る。LINEの外では戻さない
+         （回のページで登録なしと見えている人が来る所。戻すと同じ画面に帰るだけなので、「LINEで開く」を出す） */
+      if (NEXT && inLine) { location.replace(NEXT); return; }
       showIn(p.length ? p : ['email']);
     }, function () { showOut(); });
   }
@@ -161,6 +167,7 @@
     captureLink();
     if (NEXT) {
       $('lineLink').href = 'https://liff.line.me/' + LIFF_ID + NEXT;
+      $('lineIn').href = 'https://liff.line.me/' + LIFF_ID + NEXT;
       $('mailNote').hidden = !/^\/ep\//.test(NEXT);
     }
     var code = new URLSearchParams(location.search).get('auth');
