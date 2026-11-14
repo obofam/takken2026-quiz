@@ -4,7 +4,8 @@
 (function () {
   'use strict';
   var body = document.body;
-  var mihon = null;
+  var mihon = window.__epMihon || null; /* 試し用だけ、?mihon=kounyu のとき ep/N/index.html が入れる（PDF も見本の入口になる）。本番では常に null */
+  var epNo = (/\/ep\/(\d+)(?:\/|$)/.exec(location.pathname) || [0, '1'])[1]; /* 回の番号は住所（/ep/N）から読む。build-ep.mjs が作る */
   var buyerShown = false;
   function setTier() {}
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
@@ -63,7 +64,7 @@
     tpl.innerHTML = html;
     var style = tpl.content.querySelector('style');
     var t1 = tpl.content.querySelector('[data-part="1"]'), t2 = tpl.content.querySelector('[data-part="2"]'), t3 = tpl.content.querySelector('[data-part="3"]');
-    if (!style || !t1 || !t2 || !t3) { throw new Error('テキストの形が想定と違う'); }
+    if (!style || !t1 || !t2) { throw new Error('テキストの形が想定と違う'); }
     var q1 = document.getElementById('q1'), q2 = document.getElementById('q2'), honban = document.getElementById('honban');
     if (!q1 || !q2 || !honban) { throw new Error('3問の組が見つからない'); }
     function host(part) {
@@ -74,8 +75,8 @@
       root.appendChild(part);
       return {el: h, root: root};
     }
-    var h1 = host(t1), h2 = host(t2), h3 = host(t3);
-    var sec3 = document.createElement('section'); sec3.className = 'sec'; sec3.id = 'numbers'; sec3.appendChild(h3.el);
+    var h1 = host(t1), h2 = host(t2), h3 = t3 ? host(t3) : null;
+    var sec3 = document.createElement('section'); sec3.className = 'sec'; sec3.id = 'numbers'; if (h3) { sec3.appendChild(h3.el); }
     var sec1 = document.createElement('section'); sec1.className = 'sec'; sec1.id = 'text1';
     var sec2 = document.createElement('section'); sec2.className = 'sec'; sec2.id = 'text2';
     var bar = document.createElement('div');
@@ -91,8 +92,8 @@
     var hint = document.createElement('p'); hint.className = 'shint';
     hint.innerHTML = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと、またかくれます。</span>';
     var pdfRow = document.createElement('div'); pdfRow.className = 'pdfrow';
-    var pdfUrl = '/api/ep-pdf?ep=1' + (mihon === 'kounyu' ? '&mihon=1' : '');
-    pdfRow.innerHTML = '<a class="pdfbtn" id="pdfbtn" href="' + pdfUrl + '" target="_blank" rel="noopener" data-umami-event="ep-pdf" data-umami-event-ep="1">印刷用のA4版（PDF）を開く</a>';
+    var pdfUrl = '/api/ep-pdf?ep=' + epNo + (mihon === 'kounyu' ? '&mihon=1' : '');
+    pdfRow.innerHTML = '<a class="pdfbtn" id="pdfbtn" href="' + pdfUrl + '" target="_blank" rel="noopener" data-umami-event="ep-pdf" data-umami-event-ep="' + epNo + '">印刷用のA4版（PDF）を開く</a>';
     /* LINEの中ではPDFが開きにくいことがある。試作は同じ画面内で開く。将来は liff.openWindow({url, external:true}) で外のブラウザに出す（外にはログインのクッキーが無いので、別の仕組みが要る） */
     pdfRow.firstChild.addEventListener('click', function (e) {
       var inClient = false;
@@ -103,7 +104,7 @@
     var zukai = document.getElementById('zukai');
     zukai.parentNode.insertBefore(tw, zukai);
     if (point.children.length) { zukai.parentNode.insertBefore(point, honban); }
-    zukai.parentNode.insertBefore(sec3, honban);
+    if (h3) { zukai.parentNode.insertBefore(sec3, honban); }
     body.classList.add('is-buyer');
     var jump = document.getElementById('jump');
     if (jump) { jump.innerHTML = '<a class="jb" href="#text1">前半</a><a class="jb" href="#text2">後半</a><a class="jb" href="#honban">過去問1選</a>'; }
@@ -111,7 +112,7 @@
     if (a1) { a1.setAttribute('href', '#text2'); a1.textContent = '後半のテキストへ'; }
     if (a2) { a2.setAttribute('href', point.children.length ? '#point' : '#honban'); a2.textContent = point.children.length ? '今日のポイントへ' : '過去問1選について'; }
     var n = 0;
-    try { n = setupSheet([h1.root, h2.root, h3.root], bar); } catch (e) { console.warn(e); }
+    try { n = setupSheet(h3 ? [h1.root, h2.root, h3.root] : [h1.root, h2.root], bar); } catch (e) { console.warn(e); }
     buyerShown = true;
     setTier('3段目（やさしいテキスト購入者）');
     return n;

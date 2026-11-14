@@ -41,7 +41,7 @@ test('直下の vercel.json：公開ページのヘッダーなどは足さず�
   const v=JSON.parse(fs.readFileSync(path.join(prod,'vercel.json'),'utf8'));
   assert.equal(v.headers,undefined);assert.equal(v.rewrites,undefined);
   assert.equal(v.crons[0].path,'/api/products?keepalive=1');
-  assert.equal(v.functions['api/ep-pdf.js'].includeFiles,'api/_ep-text/ep1.pdf');
+  assert.equal(v.functions['api/ep-pdf.js'].includeFiles,'api/_ep-text/**');assert.equal(v.functions['api/ep-text.js'].includeFiles,'api/_ep-text/**');
   assert.ok(!/noindex/.test(JSON.stringify(v)));
   const ign=fs.readFileSync(path.join(prod,'.vercelignore'),'utf8').split(/\r?\n/);
   assert.ok(!ign.some(l=>/^\/?api\b/.test(l)||/_ep-text/.test(l)),'.vercelignore が api を除外している');

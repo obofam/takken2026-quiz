@@ -10,3 +10,5 @@ SPRINT3_*.md
 img/icons/preview.html
 SPRINT4_*.md
 content/
+templates/
+ep-release.json

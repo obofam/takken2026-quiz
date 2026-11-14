@@ -1,5 +1,8 @@
 {
   "regions": ["hnd1"],
   "crons": [{ "path": "/api/products?keepalive=1", "schedule": "30 21 * * *" }],
-  "functions": { "api/ep-pdf.js": { "includeFiles": "api/_ep-text/ep1.pdf" } }
+  "functions": {
+    "api/ep-text.js": { "includeFiles": "api/_ep-text/**" },
+    "api/ep-pdf.js": { "includeFiles": "api/_ep-text/**" }
+  }
 }

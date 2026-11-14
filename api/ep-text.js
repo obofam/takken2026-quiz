@@ -1,17 +1,21 @@
 // 自動生成：liff-test/scripts/sync-prod.mjs。直さない（正本は liff-test 側）。
 'use strict';
+const fs=require('node:fs'),path=require('node:path');
 const s=require('./_lib/server');
 const products=require('./_lib/products');
 // やさしいテキスト（有料）。ログインと権利（plan text・期限内）の判定はここ（サーバー）で行い、中身は権利があるときだけ返す。
-// 中身は api/_ep-text/ 以下（URLでは取れない場所）。mihon=1 は環境変数 ALLOW_TEXT_PREVIEW が '1' のときだけ、ログインなしで返す（見本の確認用）。
-const TEXTS={1:()=>require('./_ep-text/ep1')};
+// 中身は api/_ep-text/ep<N>.js（URLでは取れない場所。scripts/build-ep.mjs が書く）。置いてある回ならどれでも返す（回の番号は 1〜999 の数字だけ）。
+// 本番に置くのは ep-release.json の prod に入っている回だけ。vercel.json の includeFiles で api/_ep-text/ を関数に載せる。
+// mihon=1 は環境変数 ALLOW_TEXT_PREVIEW が '1' のときだけ、ログインなしで返す（見本の確認用）。
+const DIR=path.join(__dirname,'_ep-text');
+const exists=ep=>fs.existsSync(path.join(DIR,'ep'+ep+'.js'));
 module.exports=s.endpoint(['GET'],async(req,res)=>{
   const url=new URL(req.url||'/','http://localhost'),ep=url.searchParams.get('ep');
-  if(!/^[1-9]\d{0,2}$/.test(ep||'')||!TEXTS[Number(ep)])s.fail(404,'not_found');
+  if(!/^[1-9]\d{0,2}$/.test(ep||'')||!exists(Number(ep)))s.fail(404,'not_found');
   const preview=url.searchParams.get('mihon')==='1'&&process.env.ALLOW_TEXT_PREVIEW==='1';
   if(!preview){
     const current=await s.session(req);
     if(!products.has(await s.entitlements(current.userId),'text'))s.fail(403,'text_not_entitled');
   }
-  return res.status(200).json({html:TEXTS[Number(ep)]()});
+  return res.status(200).json({html:require('./_ep-text/ep'+Number(ep))});
 });

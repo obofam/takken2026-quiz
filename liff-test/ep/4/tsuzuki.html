@@ -1,0 +1,434 @@
+<!-- 第4回 図解：やさしいテキストからの抜粋（無料・LINE登録者向け）。scripts/build-ep.mjs が作る。手で直さない。赤シートなし。 -->
+<style data-nk="css">
+  :host{
+    --accent:#17C5E8; --ink:#0A6477; --soft:#E3F8FC; --mark:#B8EEF8; --pale:#F6FCFE;
+    --text:#111820; --sub:#3D444C; --line:#D5DBE0; --gray:#F1F2F4; --gray-ink:#5A626B;
+    --font:"Noto Sans JP",system-ui,"Hiragino Sans","Yu Gothic",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:#e9ecef;font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiased;letter-spacing:.02em;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .intro{max-width:1640px;margin:20px auto 0;padding:0 16px;font-size:14px;line-height:1.8;color:var(--sub)}
+  .intro b{color:var(--text)}
+  .spread{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;padding:16px 16px 48px}
+
+  
+  .page{width:210mm;height:297mm;background:#fff;box-shadow:0 2px 12px rgba(17,24,32,.08);border-radius:4px;
+    padding:22px 38px 20px;display:flex;flex-direction:column;gap:8px;overflow:hidden;font-size:15px;line-height:1.6}
+  
+
+  .pbar{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:var(--ink);
+    border-bottom:1px solid var(--line);padding-bottom:7px;margin:0 0 2px}
+  .pbar .pg{color:var(--sub)}
+
+  
+  .ttl .no-h{display:inline-block;vertical-align:5px;font-size:14px;background:var(--ink);color:#fff;border-radius:999px;padding:1px 12px;font-weight:900;margin-right:10px}
+  .ttl h1{font-size:27px;font-weight:900;line-height:1.3;margin:0}
+  .ttl .sub{font-size:16px;font-weight:900;color:var(--ink);margin:2px 0 0}
+  .nw{display:inline-block;white-space:nowrap}
+
+  
+  .key{border:3px solid var(--ink);border-radius:12px;padding:8px 16px 8px 14px;display:flex;gap:12px;align-items:flex-start}
+  .key .l{flex:0 0 auto;font-size:12px;font-weight:900;color:var(--ink);background:var(--soft);border-radius:6px;padding:2px 8px;margin-top:4px}
+  .key .t{font-size:19px;font-weight:900;line-height:1.55}
+  .mk{box-shadow:inset 0 -0.42em 0 var(--mark);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+  
+  .page.p1,.page.p2{padding:12px 38px 20px;gap:2px}
+  .page.p1 .fig,.page.p2 .fig{padding-top:3px;padding-bottom:3px}
+  .page.p1 .fig > .cap,.page.p2 .fig > .cap{margin-bottom:2px}
+  
+  .nband{flex:0 0 auto;display:flex;align-items:stretch;gap:0;border:1px solid var(--line);border-radius:12px;background:var(--pale);overflow:hidden}
+  .nband .nh{flex:0 0 52px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:900;color:#fff;background:var(--ink);line-height:1.3;padding:0 4px}
+  .nband .nrows{flex:1;min-width:0;display:flex;flex-direction:column}
+  .nband .nrow{display:flex;align-items:stretch}
+  .nband .nrow + .nrow{border-top:1px solid var(--line)}
+  .nband .ni{flex:1 1 auto;min-width:0;padding:1px 8px 2px;border-left:1px solid var(--line)}
+  .nband .ni:first-of-type{border-left:0}
+  .nband .nv{display:block;font-size:16px;font-weight:900;color:var(--ink);line-height:1.3}
+  .nband .nk{display:block;font-size:11px;font-weight:700;line-height:1.35;color:var(--sub)}
+
+  
+  .fig{margin:0;border:1px solid var(--line);border-radius:12px;padding:7px 14px 9px}
+  .fig > .cap{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:900;margin:0 0 6px}
+  .capsub{font-size:13px;font-weight:700;color:var(--sub);margin-left:4px}
+  .n{flex:0 0 24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:900;
+    display:inline-flex;align-items:center;justify-content:center}
+  .row{display:flex;gap:12px}
+  .row > *{flex:1;min-width:0}
+  svg.ic{width:34px;height:34px;flex:0 0 34px}
+  .chips{display:flex;gap:8px;margin-top:7px}
+  .chip{flex:1;background:var(--gray);border-radius:8px;padding:5px 10px;font-size:13px;line-height:1.55;font-weight:700}
+  .chip b{color:var(--ink);font-weight:900}
+  .pill{font-size:14px;font-weight:900;border-radius:999px;padding:2px 14px;text-align:center;white-space:nowrap;display:inline-block;line-height:1.5}
+  .pill.ok{background:var(--ink);color:#fff}
+  .pill.ng{background:#fff;color:var(--gray-ink);border:2px solid var(--gray-ink);padding:0 14px}
+
+  
+  .stairs{display:flex;align-items:flex-end}
+  .st{flex:1;padding:6px 8px 8px;font-size:14px;font-weight:900;line-height:1.4}
+  .st small{display:block;font-size:13px;font-weight:700;line-height:1.45}
+  .st.s1{height:46px;background:var(--gray);color:var(--gray-ink);border:2px solid var(--gray-ink);border-bottom:0;border-radius:8px 0 0 0}
+  .st.s2{height:82px;background:var(--soft);color:var(--ink);border:2px solid var(--ink);border-bottom:0;border-left:0}
+  .st.s2 small{color:var(--text)}
+  .st.s3{height:112px;background:var(--ink);color:#fff;border-radius:0 8px 0 0}
+  .st.s3 small{color:#fff}
+  .idc{border:2.5px solid var(--ink);border-radius:10px;overflow:hidden;background:#fff}
+  .idc .t{background:var(--ink);color:#fff;font-size:13px;font-weight:900;padding:1px 12px}
+  .idc .b{display:flex;gap:10px;padding:6px 12px 7px;align-items:center}
+  .idc .ph{flex:0 0 44px;height:56px;background:var(--soft);border:1.5px solid var(--ink);border-radius:5px;display:flex;align-items:center;justify-content:center}
+  .idc .ph svg{width:32px;height:32px}
+  .idc ul{list-style:none;margin:0;padding:0;font-size:13px;font-weight:700;line-height:1.5}
+  .nt{margin-top:6px;font-size:13px;font-weight:900;color:var(--gray-ink);background:var(--gray);border-radius:8px;padding:2px 10px;text-align:center}
+
+  
+  .tr{display:grid;grid-template-columns:1.7fr .62fr 1.25fr;gap:10px;align-items:center;padding:3px 10px;border-radius:8px}
+  .tr + .tr{margin-top:3px}
+  .tr.hd{padding:0 10px 2px;font-size:13px;font-weight:900;color:var(--sub)}
+  .tr.ex{background:var(--pale);border:1.5px solid var(--accent)}
+  .tr .q{font-size:14px;font-weight:900;line-height:1.4}
+  .tr small{display:block;font-size:13px;font-weight:700;color:var(--sub);line-height:1.45}
+  .tr .v{font-size:15px;font-weight:900;color:var(--ink);line-height:1.4}
+  .tr .v small{color:var(--sub)}
+
+  
+  .sh{border-radius:10px;padding:6px 12px 8px}
+  .sh.a{background:var(--gray)}
+  .sh.b{background:var(--pale);border:2px solid var(--ink)}
+  .sh .h{font-size:14px;font-weight:900}
+  .sh.b .h{color:var(--ink)}
+  .sh .sc{display:flex;align-items:center;gap:8px;margin:4px 0 3px;min-height:56px}
+  .who2{display:flex;flex-direction:column;align-items:center;font-size:13px;font-weight:700;color:var(--sub);line-height:1.3;flex:0 0 auto}
+  .who2 svg{width:34px;height:34px}
+  .who2.cd{flex-direction:row;gap:4px;align-items:flex-end}
+  .who2.cd .pp{display:flex;flex-direction:column;align-items:center}
+  .who2.cd .cc{width:30px;height:30px;margin-bottom:16px}
+  .bub{position:relative;background:#fff;border:2px solid var(--gray-ink);border-radius:10px;padding:2px 10px;font-size:13px;font-weight:900;white-space:nowrap;margin-bottom:16px}
+  .bub::after{content:"";position:absolute;left:-9px;bottom:5px;border-right:9px solid var(--gray-ink);border-top:6px solid transparent;border-bottom:6px solid transparent}
+  .bub::before{content:"";position:absolute;left:-5px;bottom:7px;border-right:7px solid #fff;border-top:4px solid transparent;border-bottom:4px solid transparent;z-index:1}
+  .sh .m{font-size:14px;font-weight:900;line-height:1.45}
+
+  
+  .aside{border:2px dashed var(--accent);background:var(--pale);border-radius:12px;padding:8px 16px 10px;display:flex;gap:14px}
+  .aside svg{width:56px;height:56px;flex:0 0 56px;margin-top:4px}
+  .aside .l{display:block;font-size:12px;font-weight:900;color:var(--ink)}
+  .aside h3{font-size:17px;font-weight:900;margin:0 0 2px}
+  .aside p{font-size:14px;line-height:1.62;margin:0 0 2px;text-wrap:pretty}
+  .aside p.land{font-weight:900;margin-top:4px}
+
+  
+  .bx{border-radius:10px;padding:6px 12px 8px;font-size:13px;font-weight:700;line-height:1.55}
+  .bx .h{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:900;margin-bottom:3px}
+  .bx .h svg{width:28px;height:28px;flex:0 0 28px}
+  .bx .when{font-weight:900;color:var(--ink)}
+  .bx p{margin:0 0 3px}
+  .bx p.do{font-weight:900}
+  .bx.re{background:var(--gray);display:flex;gap:16px;align-items:center;padding:6px 14px}
+  .bx.re .h{margin:0;flex:0 0 auto}
+  .bx.re .when{color:var(--text)}
+  .bx.re p{margin:0}
+  .bx.rt,.bx.sb{background:var(--pale);border:2px solid var(--ink)}
+  .bx.pn{background:#fff;border:1.5px solid var(--line);margin-top:8px}
+  .bx.pn .h{margin-bottom:5px}
+  .pr{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+  .pr .pill{font-size:13px;padding:1px 12px}
+  .pr .pill.ng{padding:0 10px}
+  .pr .lb{flex:0 0 52px;font-size:13px;font-weight:900;color:var(--gray-ink)}
+  
+  .chg .r{display:grid;grid-template-columns:1.75fr 1fr 1.35fr;gap:8px;align-items:center;padding:2px 10px;border-radius:8px}
+  .chg .r + .r{margin-top:3px}
+  .chg .r.hd{padding:0 10px 3px;font-size:13px;font-weight:900;color:var(--ink);line-height:1.35}
+  .chg .r.hd small{display:block;font-size:13px;font-weight:700;color:var(--sub)}
+  .chg .r.cd{background:var(--pale)}
+  .chg .q{font-size:14px;font-weight:900;line-height:1.4}
+  .chg .q small{display:block;font-size:13px;font-weight:700;color:var(--sub);line-height:1.4}
+  .chg .c{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--sub);line-height:1.3}
+  .chg .pill{font-size:13px;padding:0 12px}
+  .chg .pill.ng{padding:0 10px}
+
+  
+  .du{flex:1;border-radius:10px;background:var(--pale);border:2px solid var(--accent);padding:6px 10px 8px;font-size:14px;font-weight:700;line-height:1.55;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+  .du .h{font-size:15px;font-weight:900;color:var(--ink);line-height:1.4}
+  .du .pill{font-size:13px;padding:0 12px}
+
+  
+  .grow{flex:1}
+  .foot{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:10px}
+  .foot .next{flex:1;font-size:13px;font-weight:700;line-height:1.6;color:var(--sub)}
+  .foot .next b{color:var(--text);font-weight:900}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:999px;padding:8px 18px;font-size:14px;font-weight:900;text-decoration:none;line-height:1.35}
+  .btn small{display:block;font-size:12px;font-weight:700;opacity:.9}
+  .chev{width:8px;height:8px;border-right:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(-45deg);margin-left:2px}
+  .colophon{display:block;font-size:11px;font-weight:400;color:var(--sub);margin-top:2px}
+
+  
+  
+
+  
+  .key{position:relative}
+  .key .l{position:absolute;top:-10px;right:14px;margin:0;font-size:12px;line-height:1.5;padding:0 10px;border-radius:999px;background:var(--ink);color:#fff}
+
+
+
+
+:host{--sheet:#8E3B3B;display:block;font-family:var(--font);color:var(--text);font-size:15px;line-height:1.6;letter-spacing:.02em;word-break:auto-phrase;overflow-wrap:anywhere}
+.tx{display:flex;flex-direction:column;gap:12px}
+.sec{font-size:19px}
+.fig{padding:10px 12px 12px}
+.fig > .cap{display:block;position:relative;padding-left:32px;min-height:24px;font-size:16px;line-height:1.45}
+.fig > .cap > .n{position:absolute;left:0;top:-1px;width:24px;height:24px}
+.fig > .cap > .capsub,.fig > .cap > span[style*="margin-left:auto"]{display:block;margin-left:0 !important;padding-left:0;width:auto}
+.row{flex-direction:column;gap:10px !important;align-items:stretch !important}
+.row > *{flex:none !important}
+.tbl{grid-template-columns:44px 1fr 1fr}
+.side{gap:8px}
+.pc .top{align-items:flex-start}
+.pc .res{flex-wrap:wrap}
+.way svg{width:100px}
+.tl{flex-direction:column;align-items:stretch;gap:8px}
+.tl ul{flex:none}
+.rk{grid-template-columns:1fr;gap:4px 0}
+.rk .lb{margin-top:6px}
+.bars{height:auto;min-height:30px}
+.bars .g,.bars .go{white-space:normal;text-align:center;padding:4px 8px;line-height:1.4}
+.team{flex-wrap:wrap;gap:8px}
+.pnl{flex:none !important}
+svg.tm,.tl svg{width:100%;height:auto}
+.aside{gap:10px;padding:8px 12px 10px}
+.aside svg{width:44px;height:44px;flex:0 0 44px}
+.key{padding:8px 12px}
+.key .t{font-size:17px}
+.pill{white-space:nowrap;flex:0 0 auto;max-width:100%}
+.chip{font-size:14px}
+.tk{font-size:14px}
+.rs{box-shadow:inset 0 -0.42em 0 var(--mark);-webkit-box-decoration-break:clone;box-decoration-break:clone;border-radius:3px;-webkit-tap-highlight-color:transparent}
+.pill.rs,.tag.rs,.bars .go.rs{box-shadow:0 0 0 3px var(--mark)}
+.nw{display:inline;white-space:normal}
+.tx p br,.key br,.chip br,.aside br,.tk br,.pnl .m br{display:none}
+.rs{white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+span.rs:not(.pill):not(.go):not(.tag),b.rs{padding:.1em 2px;margin:0 -1px}
+.tx .key .t{text-wrap:pretty}
+.tx p,.chip,.tk,.aside p{text-wrap:pretty}
+.tl svg text{font-size:15px}
+.xs{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;margin:0 -13px;padding:0 13px;overscroll-behavior-x:contain}
+.xs.xs-fit{padding:0 1px}
+.xs svg.tm{width:560px;max-width:none;height:auto}
+.tx.sheet .rs{cursor:pointer;user-select:none;-webkit-user-select:none}
+.tx.sheet .rs:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tx.sheet .rs{position:relative;display:inline-grid;justify-items:start;align-items:center}
+.tx.sheet .rs.pill,.tx.sheet .rs.go{justify-items:center}
+.tx.sheet .rs::before{content:"";position:absolute;left:-2px;right:-2px;top:-9px;bottom:-9px}
+.tx.sheet .rs .av,.tx.sheet .rs .hv{grid-area:1/1;white-space:nowrap}
+.nb{white-space:nowrap}
+.tx.sheet .rs .hv{padding:0 2px;color:#fff !important;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;pointer-events:none}
+.tx.sheet .rs.s-hide{background:var(--sheet) !important;color:transparent !important;border-color:var(--sheet) !important;box-shadow:none}
+.tx.sheet .rs.s-hide .av{visibility:hidden}
+.tx.sheet .rs.s-open .hv{visibility:hidden}
+.go .rs{box-shadow:none}
+
+
+.steps,.fl{flex-direction:column;align-items:stretch;gap:4px}
+.steps > *,.fl > *{flex:none !important}
+.steps .tri,.fl .tri{align-self:center;transform:rotate(90deg);margin:3px 0}
+.st .hd{justify-content:center}
+.st.mini{justify-content:flex-start}
+.chips{flex-direction:column;gap:6px}
+.chips .chip{flex:none !important}
+.cmp{grid-template-columns:1fr !important;gap:3px 0 !important}
+.cmp .k{margin-top:8px;font-size:14px}
+.cmp .k:first-child{margin-top:0}
+.cmp .full{grid-column:auto}
+.cmp > span:empty{display:none}
+.cmp .c{flex-wrap:wrap;padding:4px 8px;gap:4px 6px;align-content:center}
+.cmp .c .pill{white-space:nowrap;flex:0 0 auto;max-width:100%}
+.cmp .num{font-size:16px}
+.jl{align-items:flex-start}
+.jl .pill{margin-top:1px}
+.pl .it,.way,.st{min-width:0}
+.fig svg[role="img"]{max-width:100%;height:auto}
+.fig .xs svg[role="img"]{max-width:none}
+.small,ul.dots li,.lab{font-size:14px}
+figure.fig{min-width:0}
+
+
+
+.stairs{flex-direction:column;align-items:stretch;gap:5px}
+.stairs .st{flex:none;height:auto !important;border:2px solid var(--ink) !important;border-radius:8px !important}
+.stairs .st.s1{border-color:var(--gray-ink) !important}
+.stairs .st.s2{margin-left:14px}
+.stairs .st.s3{margin-left:28px;border-color:var(--ink) !important}
+
+.tr,.chg .r,.tm,.mx{grid-template-columns:104px minmax(0,1fr) !important;gap:3px 12px !important}
+.jd{grid-template-columns:minmax(0,1fr) auto !important;gap:3px 12px !important}
+.jd .q,.jd hr{grid-column:1/-1}
+.tr > :first-child,.chg .r > :first-child,.jd > :first-child,.tm > .k,.tm > .ban,.mx > .rl{grid-column:1/-1}
+.tm,.mx{grid-template-columns:repeat(2,minmax(0,1fr)) !important;justify-content:stretch}
+.tm > div:empty,.mx > span:empty,.mx > div:empty{display:none}
+.mx{grid-template-columns:repeat(3,auto) !important;justify-content:space-between;column-gap:6px !important}
+.mx .mc{min-width:0}
+.mx .rl{margin-top:4px}
+.c{flex-wrap:wrap}
+.pr{flex-wrap:wrap}
+
+.exs{grid-template-columns:1fr !important}
+
+.mt{grid-template-columns:20px 70px repeat(3,minmax(75px,1fr)) !important;gap:3px 4px !important;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.mt > .vb{position:sticky;left:0;z-index:1}
+.mt .hh{flex-direction:column;gap:2px;padding:3px 0;font-size:12px;letter-spacing:0}
+.mt .c{padding-left:2px;padding-right:2px;min-width:0}
+.mt .pill{padding-left:6px;padding-right:6px}
+.mt .vb{letter-spacing:0}
+
+.fm,.two,.reg{flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:8px}
+.fm > *,.two > *,.reg > *{flex:none !important;max-width:100%}
+.fm .plus{align-self:center}
+.alt{flex:none !important}
+.reg .lc{max-width:100%}
+
+.vio{flex-direction:column;gap:8px}
+.vio > *{flex:none !important}
+.and{flex-direction:column;align-items:stretch;align-self:stretch;flex:none;gap:4px}
+.and > .b{flex:none}
+.and .plus,.and .eq{align-self:center}
+
+.fig div[style*="grid-template-columns"]{grid-template-columns:1fr !important}
+
+.roles{flex-wrap:wrap}
+.roles > .role{flex:1 1 calc(50% - 4px) !important;min-width:0}
+
+.who:has(> .wh){grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 8px}
+.who:has(> .wh) > .wh{grid-column:1/-1}
+.who:has(> .wh) > :nth-child(1){order:0}
+.who:has(> .wh) > :nth-child(3){order:1}
+.who:has(> .wh) > :nth-child(4){order:2}
+.who:has(> .wh) > :nth-child(2){order:3;margin-top:4px}
+.who:has(> .wh) > :nth-child(5){order:4;grid-column:1/-1}
+.nums{flex-direction:column;gap:6px}
+.nums .nm{flex:none;white-space:normal;min-width:0}
+
+.conds{flex-direction:column;align-items:stretch;gap:4px}
+.conds .cd{flex:none;border-radius:10px}
+.nums .nm > *{align-self:flex-start}
+
+.tb .th{padding-left:0}
+.grp,.lr{flex-direction:column;gap:3px}
+.gl,.lt{flex:none !important;padding-right:0}
+.lt{padding:3px 8px}
+.lb .g2{grid-template-columns:1fr}
+.lb .one{flex-wrap:wrap}
+
+.way svg[role="img"]{width:100%;max-width:240px;height:auto;margin:2px auto 0}
+
+.fig > .cap > .lg{display:flex;flex-wrap:wrap;gap:4px 6px;margin:4px 0 0 !important;padding-left:0}
+
+.cal{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.cal .days{grid-template-columns:repeat(9,52px);width:max-content}
+.cal{padding-top:36px}
+.cal .br{width:444px;top:16px}
+.cal .br span{width:max-content;white-space:nowrap;left:10px;transform:none}
+.cal{margin:0 -13px;padding-left:1px;padding-right:1px}
+
+.way{display:block;text-align:center}
+.way svg{display:block;margin:2px auto}
+.way .who{display:block}
+.scene{flex-direction:column;gap:6px}
+
+.cup{flex-direction:column;align-items:stretch;gap:8px}
+.cup svg{flex:none;width:100%;height:auto}
+.cup ul{flex:none}
+
+.cal .br span span{position:static;transform:none;background:none;padding:0;top:auto;left:auto;width:auto}
+
+.mt .c .num{font-size:14px}
+.mt .c{font-size:13px;padding-left:2px;padding-right:2px}
+.tx.sheet .mt .rs .hv{white-space:normal;text-align:center;font-size:11px;line-height:1.25}
+
+.fig .cmp:has(> .h){grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:3px 8px !important}
+.fig .cmp:has(> .h) > .k{grid-column:1/-1}
+</style>
+<div data-slot="fig1">
+<div class="tx" data-fig="1"><figure class="fig">
+    <div class="cap"><span class="n">1</span>3段の階段<span class="capsub">宅建士＝宅建士証の交付を受けた人</span></div>
+    <div class="row" style="gap:18px;align-items:flex-end">
+      <div class="stairs" style="flex:1 1 0">
+        <div class="st s1">試験に合格</div>
+        <div class="st s2">登録<small>役所の名簿に載る</small><small>まだ仕事はできない</small></div>
+        <div class="st s3">宅建士証の交付<small>今、仕事ができる</small></div>
+      </div>
+      <div style="flex:0 0 254px">
+        <div class="idc">
+          <div class="t">宅建士証（写真つきのカード）</div>
+          <div class="b">
+            <div class="ph"><svg viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></svg></div>
+            <ul>
+              <li>氏名・生年月日・住所</li>
+              <li>登録番号・登録年月日</li>
+              <li>交付年月日</li>
+              <li>有効期間の満了する日</li>
+            </ul>
+          </div>
+        </div>
+        <div class="nt">本籍・勤め先は載っていない</div>
+      </div>
+    </div>
+  </figure></div>
+</div>
+<div data-slot="cards1">
+<div class="tx" data-fig="2"><figure class="fig">
+    <div class="cap"><span class="n">2</span>法定講習と有効期間<span class="capsub">講習は、登録をしている知事が指定。交付の申請前6か月以内に受ける。免除は2つ</span></div>
+    <div class="tr hd"><span>カードを受け取る場面</span><span>法定講習</span><span>有効期間</span></div>
+    <div class="tr ex">
+      <span class="q">合格から1年以内に交付を受ける</span>
+      <span><span class="pill ok">免除</span></span>
+      <span class="v">5年</span>
+    </div>
+    <div class="tr ex">
+      <span class="q">登録の移転とともに交付を受ける<small>移転すると、今のカードは効力を失う</small></span>
+      <span><span class="pill ok">免除</span></span>
+      <span class="v">古いカードの残りの期間<small>新しく5年にはならない</small></span>
+    </div>
+    <div class="tr">
+      <span class="q">合格から1年を過ぎて交付を受ける</span>
+      <span><span class="pill ng">受ける</span></span>
+      <span class="v">5年</span>
+    </div>
+    <div class="tr">
+      <span class="q">更新（申請して、5年ごと）<small>合格から1年以内でも、免除はない</small></span>
+      <span><span class="pill ng">受ける</span></span>
+      <span class="v">5年</span>
+    </div>
+  </figure></div>
+<div class="gcard"><span class="gno">3</span><span class="gm"><span class="gt">宅建士証を見せる場面は2つ</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="4">やさしいテキスト（有料）</a>に</span></span></div>
+</div>
+<div data-slot="cards2">
+<div class="tx" data-fig="4"><figure class="fig">
+    <div class="cap"><span class="n">4</span>なくしたとき、手放すとき<span class="capsub">返納＝返す　提出＝預ける</span></div>
+    <div class="bx re">
+      <div class="h"><svg viewBox="0 0 48 48"><rect x="4" y="11" width="40" height="27" rx="4" fill="#fff" stroke="#5A626B" stroke-width="2.5"/><circle cx="15" cy="21.5" r="4" fill="#fff" stroke="#5A626B" stroke-width="2"/><path d="M8.5 33 C8.5 27.5 21.5 27.5 21.5 33" fill="#fff" stroke="#5A626B" stroke-width="2" stroke-linejoin="round"/><path d="M27 20 H38 M27 26 H38 M27 32 H34" stroke="#5A626B" stroke-width="2.5" stroke-linecap="round"/></svg>再交付</div>
+      <div>
+        <p class="when">亡失・滅失・汚損・破損などのときは、再交付を申請できる</p>
+        <p>なくして再交付を受けたあと、古いカードが見つかったら、速やかに、見つけたほうを返納</p>
+      </div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="bx rt">
+        <div class="h"><svg viewBox="0 0 48 48"><rect x="4" y="11" width="40" height="27" rx="4" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><circle cx="15" cy="21.5" r="4" fill="#fff" stroke="#0A6477" stroke-width="2"/><path d="M8.5 33 C8.5 27.5 21.5 27.5 21.5 33" fill="#fff" stroke="#0A6477" stroke-width="2" stroke-linejoin="round"/><path d="M27 20 H38 M27 26 H38 M27 32 H34" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg>返納</div>
+        <p class="when">登録が消除されたとき<br>カードが失効したとき（有効期間の満了など）</p>
+        <p class="do">速やかに、交付を受けた知事に返す</p>
+      </div>
+      <div class="bx sb">
+        <div class="h"><svg viewBox="0 0 48 48"><rect x="4" y="11" width="40" height="27" rx="4" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><circle cx="15" cy="21.5" r="4" fill="#fff" stroke="#0A6477" stroke-width="2"/><path d="M8.5 33 C8.5 27.5 21.5 27.5 21.5 33" fill="#fff" stroke="#0A6477" stroke-width="2" stroke-linejoin="round"/><path d="M27 20 H38 M27 26 H38 M27 32 H34" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg>提出</div>
+        <p class="when">事務禁止処分を受けたとき</p>
+        <p class="do">速やかに、交付を受けた知事に預ける</p>
+        <p>期間が終わり、本人が返還を請求すれば、すぐ返る。請求しなければ、返らない</p>
+      </div>
+    </div>
+    <div class="bx pn">
+      <div class="h">10万円以下の過料</div>
+      <div class="pr"><span class="lb">対象</span><span class="pill ok">返納</span><span class="pill ok">提出</span><span class="pill ok">重要事項の説明のときの提示</span></div>
+      <div class="pr" style="margin-top:5px"><span class="lb">対象外</span><span class="pill ng">請求があったときの提示</span></div>
+    </div>
+  </figure></div>
+<div class="gcard"><span class="gno">5</span><span class="gm"><span class="gt">名簿の中身が変わったら</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="4">やさしいテキスト（有料）</a>に</span></span></div>
+<div class="gcard"><span class="gno">6</span><span class="gm"><span class="gt">宅建士の3つの義務</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="4">やさしいテキスト（有料）</a>に</span></span></div>
+</div>

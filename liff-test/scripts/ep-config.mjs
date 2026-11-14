@@ -1,0 +1,32 @@
+// 回のページ（図解と3問）の build の設定。build-ep.mjs が読む。
+// 材料（やさしいテキスト・流し込み材料 json）には置かない値と、第1回だけの手作りの所を、ここに集める。
+
+// LIFF ID：本番（takken.mimiobo.com）と試し用（liff-test の Vercel プロジェクト）で違う
+export const LIFF_ID = { prod: '2012583516-7vmvMorb', test: '2011606963-hH0DzETc' };
+
+// Spotify：回ごとの住所がまだ無いので、全回とも番組の住所。
+// 回ごとの住所ができたら、ここに { 2: 'https://open.spotify.com/episode/…' } と足す（材料側には書かない）。
+// 足すと、その回の「聴く」ボタンは「この回を聴く（Spotify）」になり、「いまは番組のページが開きます」の注記は出なくなる。
+export const SPOTIFY_SHOW = 'https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1';
+export const SPOTIFY_EPISODE = {};
+
+// 有料版の見本（/ep/1/text）。見本ページを作るのは第1回だけ。第2回以降の「有料版の見本」の札も、この第1回の見本を指す。
+export const SITE = 'https://takken.mimiobo.com';
+export const TEXT_SAMPLE_PATH = '/ep/1/text';
+export const TEXT_SAMPLE_IMG = '/ep/1/text/a4-p1.webp';
+export const ART_PATH = '/ep/1/img/artwork2027.webp';
+
+// Umami（本番だけ。試し用のページには入れない）
+export const UMAMI_SCRIPT = '<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>\n';
+
+// 第1回にしかない言い方（見本の回）。第2回以降は出さない
+export const SAMPLE_EPS = [1];
+
+// 第1回は、手で作った版が本番に出ていて確認ずみ。見た目・動きを変えないため、第1回だけ昔のスマホ幅の手当て（CSS・図7の位置・図5の横スクロール箱）を使う。
+// 第2回以降は、材料の _tools/sp_overrides.css と、図の幅の計算（plan_svgs と同じ）を使う。
+export const LEGACY_EPS = [1];
+
+// 「対象」の札（.target）の折り返しの区切り。第1回の前半だけ手で決めてある（それ以外は build が区切る）
+export const TARGET_CHUNKS = {
+  1: { 1: ['自ら売買・交換、', 'または他人の売買・交換・貸借の', '代理・媒介'] },
+};

@@ -56,9 +56,9 @@ test('with the text plan: 200 and {html} only, not cached',async()=>{
   assert.equal(res.headers['Cache-Control'],'no-store');
   assert.equal(log.find(u=>u.pathname==='/rest/v1/entitlements').searchParams.get('user_id'),'eq.'+user);
 });
-test('only ep=1 exists: other values are 404 (also without a login)',async()=>{
+test('only built episodes exist (api/_ep-text/ep<N>.js): other values are 404 (also without a login)',async()=>{
   database();
-  for(const q of ['ep=2','ep=0','ep=','ep=1abc','ep=01x','']){
+  for(const q of ['ep=10','ep=999','ep=0','ep=','ep=1abc','ep=01x','ep=../ep1','']){
     const res=response();await textApi(request(q),res);
     assert.equal(res.code,404,q);assert.equal(res.data.html,undefined);
     const anon=response();await textApi(request(q,{cookie:undefined}),anon);assert.equal(anon.code,404,q);
@@ -82,7 +82,7 @@ test('mihon=1 with ALLOW_TEXT_PREVIEW=1 returns the text without a login; withou
   const res=response();await textApi(request('ep=1&mihon=1',{cookie:undefined}),res);
   assert.equal(res.code,200);assert.match(res.data.html,/data-part="1"/);
   const plain=response();await textApi(request('ep=1',{cookie:undefined}),plain);assert.equal(plain.code,401);
-  const bad=response();await textApi(request('ep=2&mihon=1',{cookie:undefined}),bad);assert.equal(bad.code,404);
+  const bad=response();await textApi(request('ep=10&mihon=1',{cookie:undefined}),bad);assert.equal(bad.code,404);
 });
 test('a user with only the text plan cannot read the karte (and the answers table is not read)',async()=>{
   const log=database();
@@ -172,7 +172,7 @@ test('ep-pdf: 401 / 403 / 404 / 405, and the file is never read before the check
     database({entitlements:[{plan:'ume',valid_until:null}]});
     const b=pdfResponse();await pdfApi(request('ep=1',{},'/api/ep-pdf'),b);assert.equal(b.code,403);assert.deepEqual(b.data,{error:'text_not_entitled'});
     database();
-    for(const q of ['ep=2','ep=0','ep=','ep=1abc']){const c=pdfResponse();await pdfApi(request(q,{},'/api/ep-pdf'),c);assert.equal(c.code,404,q);}
+    for(const q of ['ep=10','ep=0','ep=','ep=1abc']){const c=pdfResponse();await pdfApi(request(q,{},'/api/ep-pdf'),c);assert.equal(c.code,404,q);}
     const d=pdfResponse();await pdfApi({...request('ep=1',{},'/api/ep-pdf'),method:'POST'},d);assert.equal(d.code,405);
     assert.deepEqual(calls,[]);
   }finally{pdfApi.source.read=orig;}
@@ -200,16 +200,16 @@ test('ep-pdf: mihon=1 works without a login only when ALLOW_TEXT_PREVIEW=1',asyn
     process.env.ALLOW_TEXT_PREVIEW='1';
     const ok=pdfResponse();await pdfApi(request('ep=1&mihon=1',{cookie:undefined},'/api/ep-pdf'),ok);assert.equal(ok.code,200);
     const plain=pdfResponse();await pdfApi(request('ep=1',{cookie:undefined},'/api/ep-pdf'),plain);assert.equal(plain.code,401);
-    const bad=pdfResponse();await pdfApi(request('ep=2&mihon=1',{cookie:undefined},'/api/ep-pdf'),bad);assert.equal(bad.code,404);
+    const bad=pdfResponse();await pdfApi(request('ep=10&mihon=1',{cookie:undefined},'/api/ep-pdf'),bad);assert.equal(bad.code,404);
   }finally{pdfApi.source.read=orig;}
 });
 test('ep-pdf: the PDF lives only under api/_ep-text (git-ignored), and vercel.json ships it with the function',()=>{
   const root=path.join(__dirname,'..');
   const v=JSON.parse(fs.readFileSync(path.join(root,'vercel.json'),'utf8'));
-  assert.deepEqual(v.functions['api/ep-pdf.js'],{includeFiles:'api/_ep-text/ep1.pdf'});
+  assert.deepEqual(v.functions['api/ep-pdf.js'],{includeFiles:'api/_ep-text/**'});assert.deepEqual(v.functions['api/ep-text.js'],{includeFiles:'api/_ep-text/**'});
   assert.ok(v.headers&&v.regions&&v.crons);
   assert.match(fs.readFileSync(path.join(root,'.gitignore'),'utf8'),/^api\/_ep-text\/$/m);
-  assert.match(fs.readFileSync(path.join(root,'scripts/build-ep1-text.mjs'),'utf8'),/ep1\.pdf/);
+  assert.match(fs.readFileSync(path.join(root,'scripts/build-ep.mjs'),'utf8'),/api\/_ep-text\/ep\$\{ep\}\.pdf/);
 });
 
 // ---- 本番（公開サイトの ep/1/）に置く LINE登録者向けの続き：無料の抜粋だけ。有料の中身を入れない ----
@@ -339,7 +339,10 @@ test('production buyer view: ep/_shared parts carry no paid content (no text sen
 test('production buyer view: the shared js/css are the same parts as the trial page and the sample page (no second copy of the red sheet)',()=>{
   const {js,css}=shared(),dan=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8'),sampleHtml=sample();
   const view=dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function getText\(preview\))/)[0];
-  assert.ok(js.includes(view),'showBuyer + setupSheet');
+  // 共通の部品は、回の番号を住所（/ep/N）から読み、今回の数字が0組の回も出せるよう、試し用のコードに数か所だけ手を入れてある（build-ep.mjs）
+  const lines=s=>s.split('\n').map(l=>l.trim()).filter(Boolean);
+  const jsLines=new Set(lines(js));
+  assert.ok(lines(view).filter(l=>!jsLines.has(l)).length<=12,'showBuyer + setupSheet（手を入れた所は12行まで）');
   const sheetJs=dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function showBuyer\(html\))/)[0];
   assert.ok(js.includes(sheetJs)&&sampleHtml.includes(sheetJs),'setupSheet is the same in trial, shared and sample');
   for(const re of [/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/,/\.jump\{[^}]*\}\n\.jb\{[^}]*\}\n\.jb:active\{[^}]*\}/,/\.is-buyer \.tcard[^\n]*\n\.thost\{[^\n]*\n\.textwrap\{[^\n]*\n\.is-buyer #text1[^\n]*\n/]){
@@ -348,7 +351,7 @@ test('production buyer view: the shared js/css are the same parts as the trial p
   assert.ok(sampleHtml.includes(dan.match(/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/)[0]));
   assert.match(css,/:root\{--navh:48px\}/);
   assert.match(js,/window\.TakkenTextView = \{ show: showBuyer \}/);
-  assert.match(js,/\/api\/ep-pdf\?ep=1/);
+  assert.match(js,/'\/api\/ep-pdf\?ep=' \+ epNo/);assert.match(js,/var epNo = \(\/\\\/ep\\\/\(\\d\+\)/);
 });
 test('production ep/1/index.html: ep-text is called only after the login check, only with a session; 401/403/failure leave the page as it is; ep-view gets tier text',()=>{
   const h=fs.readFileSync(path.join(__dirname,'../../ep/1/index.html'),'utf8');
