@@ -23,10 +23,10 @@ test('build-ep: ep-release.json lists 1-9; production has ep/1-9 (4 files each, 
     assert.ok(fs.existsSync(path.join(prod,'api/_ep-text','ep'+n+'.js')));
   }
 });
-test('build-ep: episode 1 rebuilt = what is committed (ep/1 line-full, tsuzuki, nukigaki, sample page, api ep1.js/pdf, shared css)',{skip},async()=>{
+test('build-ep: episode 1 rebuilt = what is committed (ep/1 line-full, tsuzuki, sample page, api ep1.js/pdf, shared css)',{skip},async()=>{
   const b=await lib();
   const r=b.buildEp(1,{prod:[1]},shared);
-  const same=['ep/1/line-full.html','ep/1/line-full.js','ep/1/tsuzuki.html','ep/1/text/index.html','liff-test/ep1-nukigaki.html','liff-test/api/_ep-text/ep1.js','api/_ep-text/ep1.js','api/_ep-text/ep1.pdf','ep/_shared/text-view.css'];
+  const same=['ep/1/line-full.html','ep/1/line-full.js','ep/1/tsuzuki.html','ep/1/text/index.html','liff-test/api/_ep-text/ep1.js','api/_ep-text/ep1.js','api/_ep-text/ep1.pdf','ep/_shared/text-view.css'];
   for(const rel of same){
     const f=r.files.find(x=>x.rel===rel)||b.sharedFiles(shared).find(x=>x.rel===rel);
     assert.ok(f,rel);

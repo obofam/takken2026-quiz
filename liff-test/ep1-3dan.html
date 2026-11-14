@@ -600,7 +600,7 @@ body.member .line-card{display:block}
 </script>
 <script>
 /* 3段の出し分け。
-   1段目（通常）：LINEの外・未登録。2段目（LINE登録者）：LINEの中でログイン済み ／ ep1-full.html / ep1-full.js ・ ep1-nukigaki.html（やさしいテキストからの図の抜粋）を読み込んで全部を表示。
+   1段目（通常）：LINEの外・未登録。2段目（LINE登録者）：LINEの中でログイン済み ／ ep1-full.html / ep1-full.js ・ ep/1/tsuzuki.html（やさしいテキストからの図の抜粋）を読み込んで全部を表示。
    3段目（やさしいテキスト購入者）：2段目の表示のあとで、IDトークンを /api/session に送ってセッションを作り、/api/ep-text?ep=1 を GET。
    200 なら「テキストを見ながら聴く」形に切り替える。403・401・失敗なら2段目のまま（壊さない）。
    ?mihon=mitouroku（1段目）／touroku（2段目）／kounyu（3段目。/api/ep-text?ep=1&mihon=1 を呼ぶ）。?mihon_text=0 で2段目の「やさしいテキスト」の枠を消す（1段目は消さない）。 */
@@ -694,13 +694,13 @@ body.member .line-card{display:block}
       document.head.appendChild(s);
     });
   }
-  /* 図：やさしいテキストからの抜粋（ep1-nukigaki.html）。1段目は図1だけ、2段目は図1・3・5・6・8（図2・4・7は札）。
+  /* 図：やさしいテキストからの抜粋（ep/1/tsuzuki.html）。1段目は図1だけ、2段目は図1・3・5・6・8（図2・4・7は札）。
      図ごとに Shadow DOM に入れ、3段目のテキストと同じCSSで出す。赤シートなし */
   var nukiP = null;
   function loadNuki() {
     if (!nukiP) {
-      nukiP = fetch('ep1-nukigaki.html', {cache: 'no-store'}).then(function (r) {
-        if (!r.ok) { throw new Error('ep1-nukigaki.html ' + r.status); }
+      nukiP = fetch('ep/1/tsuzuki.html', {cache: 'no-store'}).then(function (r) {
+        if (!r.ok) { throw new Error('ep/1/tsuzuki.html ' + r.status); }
         return r.text();
       }).then(function (html) {
         var doc = new DOMParser().parseFromString(html, 'text/html');

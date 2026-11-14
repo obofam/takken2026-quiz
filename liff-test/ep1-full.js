@@ -1,4 +1,4 @@
-/* 第1回 過去問1選（登録している人だけに、ep1-dashiwake.html が読み込む） */
+/* 第1回 過去問1選（登録している人だけに、ep1-3dan.html が読み込む） */
 (function () {
   'use strict';
   var esc = function (s) {

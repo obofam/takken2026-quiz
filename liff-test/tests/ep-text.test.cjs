@@ -112,8 +112,8 @@ test('the 3-step page has no arrows, no emoji, no name, and the sample frame can
   assert.match(html,/mihon_text/);assert.match(html,/id="tsample"[\s\S]{0,600}takken\.mimiobo\.com\/ep\/1\/text/);assert.match(html,/mihon=1/);
   assert.doesNotMatch(html,/narabi|まとめて解く/);
 });
-test('the free excerpt (ep1-nukigaki.html): figures 1,3,5,6,8 only, no red-sheet marks, nothing paid-only',()=>{
-  const html=fs.readFileSync(path.join(__dirname,'../ep1-nukigaki.html'),'utf8');
+test('the free excerpt (ep/1/tsuzuki.html): figures 1,3,5,6,8 only, no red-sheet marks, nothing paid-only',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../ep/1/tsuzuki.html'),'utf8');
   assert.deepEqual([...html.matchAll(/data-fig="(\d+)"/g)].map(m=>Number(m[1])),[1,3,5,6,8]);
   assert.deepEqual([...html.matchAll(/class="cap"><span class="n">(\d+)</g)].map(m=>Number(m[1])),[1,3,5,6,8]);
   assert.deepEqual([...html.matchAll(/<span class="gno">(\d+)</g)].map(m=>Number(m[1])),[2,4,7]);
@@ -131,7 +131,7 @@ test('the 3-step page: no picture-illustration cards or img/*.webp for figures; 
   const html=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8');
   assert.doesNotMatch(html,/ep\/1\/img\/(?!artwork2027)/);
   assert.doesNotMatch(html,/class="card t-/);
-  assert.match(html,/ep1-nukigaki\.html/);assert.match(html,/id="slot-fig1"/);
+  assert.match(html,/ep\/1\/tsuzuki\.html/);assert.match(html,/id="slot-fig1"/);
   assert.match(html,/class="tcard" id="tsample"[\s\S]{0,300}有料版の見本[\s\S]{0,700}見本を見る/);
   assert.doesNotMatch(html,/ul class="past txt/);assert.match(html,/学習ロードマップ（兼 進捗トラッカー）[\s\S]{0,80}全41回の予定を見る・聴いた回を記録する/);
   assert.doesNotMatch(html,/s-hint|ヒント。/);assert.match(html,/かける[\s\S]{0,200}はずす/);assert.match(html,/かくれている/);
@@ -155,7 +155,7 @@ test('the 3-step page: no picture-illustration cards or img/*.webp for figures; 
   assert.match(built,/data-part="3"/);
   const nums=[...built.matchAll(/<span class="nv rs"[^>]*>([^<]*)<\/span><span class="nk">([^<]*)</g)].map(m=>m[1]+'|'+m[2]);
   assert.deepEqual(nums,['1つ|知事免許になる事務所の県数','2つ以上|大臣免許になる事務所の県数','5年|免許の有効期間','90日前〜30日前|更新の申請期間（満了日の）','5年|免許を受けられない期間','60日以内|聴聞の公示前に役員だった期間']);
-  const nk=fs.readFileSync(path.join(__dirname,'../ep1-nukigaki.html'),'utf8');
+  const nk=fs.readFileSync(path.join(__dirname,'../ep/1/tsuzuki.html'),'utf8');
   assert.ok(!nk.includes('今回の数字')&&!nk.includes('data-part="3"'));
   const pg=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8');
   assert.match(pg,/insertBefore\(sec3, honban\)/);assert.match(pg,/setupSheet\(\[h1\.root, h2\.root, h3\.root\]/);
@@ -213,10 +213,10 @@ test('ep-pdf: the PDF lives only under api/_ep-text (git-ignored), and vercel.js
 });
 
 // ---- 本番（公開サイトの ep/1/）に置く LINE登録者向けの続き：無料の抜粋だけ。有料の中身を入れない ----
-test('production ep/1: tsuzuki.html is the free excerpt (same as ep1-nukigaki.html) and the LINE parts carry nothing paid',()=>{
+test('production ep/1: tsuzuki.html is the free excerpt (same as liff-test/ep/1/tsuzuki.html) and the LINE parts carry nothing paid',()=>{
   const prod=path.join(__dirname,'../../ep/1');
   const tz=fs.readFileSync(path.join(prod,'tsuzuki.html'),'utf8');
-  assert.equal(tz,fs.readFileSync(path.join(__dirname,'../ep1-nukigaki.html'),'utf8'));
+  assert.equal(tz,fs.readFileSync(path.join(__dirname,'../ep/1/tsuzuki.html'),'utf8'));
   const files=['tsuzuki.html','line-full.html','line-full.js','index.html'].map(f=>[f,fs.readFileSync(path.join(prod,f),'utf8')]);
   for(const [f,h] of files){
     assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|data-hint|data-part=|class="[^"]*(?:key|aside)/,f);
@@ -370,7 +370,7 @@ test('production ep/1/index.html: ep-text is called only after the login check, 
 
 test('print-only bands (page bar 1／2・2／2, print title, next/problem bands) are not in any build output',()=>{
   const outs={buyer:require('../api/_ep-text/ep1').replace(/<style>[\s\S]*?<\/style>/,''),prod:require('../../api/_ep-text/ep1').replace(/<style>[\s\S]*?<\/style>/,''),
-    sample:sample().replace(/<style>[\s\S]*?<\/style>/g,''),nukigaki:fs.readFileSync(path.join(__dirname,'../ep1-nukigaki.html'),'utf8'),tsuzuki:fs.readFileSync(path.join(__dirname,'../../ep/1/tsuzuki.html'),'utf8')};
+    sample:sample().replace(/<style>[\s\S]*?<\/style>/g,''),nukigaki:fs.readFileSync(path.join(__dirname,'../ep/1/tsuzuki.html'),'utf8'),tsuzuki:fs.readFileSync(path.join(__dirname,'../../ep/1/tsuzuki.html'),'utf8')};
   for(const [k,h] of Object.entries(outs))assert.doesNotMatch(h,/1／2|2／2|class="pbar"|class="ttl"|class="next"|耳で覚える宅建2027　やさしいテキスト|この回の問題を解く|@media print/,k);
   const b=outs.buyer;assert.equal((b.match(/<figure/g)||[]).length,8);assert.equal((b.match(/class="[^"]*\brs\b/g)||[]).length,30);assert.equal((b.match(/class="nr"/g)||[]).length,6);
 });

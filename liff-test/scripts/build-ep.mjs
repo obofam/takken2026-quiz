@@ -818,7 +818,6 @@ export function buildEp(ep, release, shared) {
     );
   }
   if (ep === 1) {
-    files.push({ rel: 'liff-test/ep1-nukigaki.html', data: ex.html });
     if (inProd) files.push({ rel: 'ep/1/text/index.html', data: buildSample(m, text, byMode.prod, shared).samplePage });
   }
   const report = {

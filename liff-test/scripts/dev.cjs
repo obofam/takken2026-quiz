@@ -2,7 +2,7 @@
 // Small local harness for the Vercel handlers; serves only listed public assets.
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const root=path.join(__dirname,'..');
-const files=new Set(['index.html','ep10-preview.html','account.html','site-header.js','plans-preview.html','privacy.html','auth-callback.html','app.js','config.js','progress-sync.js','style.css','sync.js','auth-client.js','auth-callback.js','ui-messages.js','karte.html','kounyu-test.html','ep1-3dan.html','ep1-nukigaki.html','ep1-full.html','ep1-full.js','checks.html','quiz-catalog.js','karte-core.js','navi-core.js',...['free','karte','navi','bansou'].map(n=>'img/icons/plan-'+n+'.svg')]);
+const files=new Set(['index.html','ep10-preview.html','account.html','site-header.js','plans-preview.html','privacy.html','auth-callback.html','app.js','config.js','progress-sync.js','style.css','sync.js','auth-client.js','auth-callback.js','ui-messages.js','karte.html','kounyu-test.html','ep1-3dan.html','ep1-full.html','ep1-full.js','checks.html','quiz-catalog.js','karte-core.js','navi-core.js',...['free','karte','navi','bansou'].map(n=>'img/icons/plan-'+n+'.svg')]);
 const handlers=Object.fromEntries(['session','answers','email','email-verify','link','checkout','stripe-webhook','karte','ep-text','ep-pdf','products','progress'].map(name=>['/api/'+name,require('../api/'+name)]));
 const server=http.createServer(async(req,res)=>{
   res.setHeader('Cache-Control','no-store');res.setHeader('Referrer-Policy','no-referrer');res.setHeader('X-Content-Type-Options','nosniff');
