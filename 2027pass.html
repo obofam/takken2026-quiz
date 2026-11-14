@@ -117,6 +117,11 @@
   .mini .card .label{margin:0 0 4px}
   .mini .card p{margin:0;font-size:15px;line-height:1.8}
   .mini .card .t{font-weight:700;font-size:16px}
+  .peek{display:grid;grid-template-columns:1fr;gap:14px;margin:0 0 12px}
+  .peek figure{margin:0;background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px}
+  .peek figcaption{font-size:14px;font-weight:700;color:#0A6477;margin:0 0 8px}
+  .peek img{display:block;width:100%;height:auto;border-radius:6px}
+  @media(min-width:640px){.peek{grid-template-columns:1fr 1fr;align-items:start}}
   .sub-head{text-align:center;font-weight:700;margin:0 0 12px}
   .pills{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
   .pills li{background:#fff;border:1px solid var(--accent);color:#0A6477;font-size:14px;font-weight:700;border-radius:999px;padding:6px 14px;line-height:1.5}
@@ -180,12 +185,17 @@
         </div>
       </div>
       <p class="note">半額は12月31日までです。</p>
-      <p class="sub-head" style="margin-top:28px">2027年度版で変わるところ（予定）</p>
-      <ul class="pills">
-        <li>放送の回の順に並べ直す</li>
-        <li>回ごとに本試験の過去問</li>
-        <li>字を大きく、文を短く</li>
-      </ul>
+      <p class="sub-head" style="margin-top:32px">2027年度版は、こう良くなります（予定）</p>
+      <div class="mini" style="margin-bottom:16px">
+        <div class="card"><p class="t">聴いた回を、すぐ開ける</p><p>放送と同じ順、同じ回の番号に並べ直します。</p></div>
+        <div class="card"><p class="t">スマホで読みやすい</p><p>字を大きく、文を短く。表で整理します。</p></div>
+        <div class="card"><p class="t">本試験の形で確かめられる</p><p>回ごとに、本試験の過去問がつきます。</p></div>
+      </div>
+      <div class="peek">
+        <figure><figcaption>いまの版</figcaption><img src="img/2027pass-ima.png" alt="いまの版の紙面。有効期間と更新が文章で書かれている" loading="lazy" width="780" height="872"></figure>
+        <figure><figcaption>2027年度版（準備中）</figcaption><img src="img/2027pass-2027.png" alt="2027年度版の紙面。有効期間と更新が表で整理されている" loading="lazy" width="718" height="553"></figure>
+      </div>
+      <p class="pills-note">準備中の画面です。仕上がりは変わることがあります。</p>
     </div>
   </section>
 
