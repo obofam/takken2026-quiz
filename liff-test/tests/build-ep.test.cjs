@@ -10,12 +10,18 @@ const mat=path.join(prod,'..','6_有料PDF','やさしいテキスト_2027');
 const skip=fs.existsSync(mat)?false:'材料が無い';
 let B,shared;
 const lib=async()=>{if(!B){B=await import(require('node:url').pathToFileURL(path.join(root,'scripts/build-ep.mjs')).href);shared=B.buildShared();}return B;};
+const norm=b=>b;
 const bytes=d=>Buffer.isBuffer(d)?d:Buffer.from(d);
 
-test('build-ep: ep-release.json is {"prod":[1]} and ep/2..9 are not in production',{skip},()=>{
+test('build-ep: ep-release.json lists 1-9; production has ep/1-9 (4 files each, no text/ except ep 1) and api/_ep-text/ep1-9',{skip},()=>{
   const r=JSON.parse(fs.readFileSync(path.join(root,'ep-release.json'),'utf8'));
-  assert.deepEqual(r,{prod:[1]});
-  for(let n=2;n<=9;n++){assert.ok(!fs.existsSync(path.join(prod,'ep',String(n))),'ep/'+n);assert.ok(!fs.existsSync(path.join(prod,'api/_ep-text','ep'+n+'.js')),'api ep'+n);}
+  assert.deepEqual(r,{prod:[1,2,3,4,5,6,7,8,9]});
+  for(let n=1;n<=9;n++){
+    const d=path.join(prod,'ep',String(n));
+    for(const f of ['index.html','line-full.html','line-full.js','tsuzuki.html'])assert.ok(fs.existsSync(path.join(d,f)),n+'/'+f);
+    assert.equal(fs.existsSync(path.join(d,'text')),n===1,'text/ は第1回だけ');
+    assert.ok(fs.existsSync(path.join(prod,'api/_ep-text','ep'+n+'.js')));
+  }
 });
 test('build-ep: episode 1 rebuilt = what is committed (ep/1 line-full, tsuzuki, nukigaki, sample page, api ep1.js/pdf, shared css)',{skip},async()=>{
   const b=await lib();
@@ -24,10 +30,10 @@ test('build-ep: episode 1 rebuilt = what is committed (ep/1 line-full, tsuzuki, 
   for(const rel of same){
     const f=r.files.find(x=>x.rel===rel)||b.sharedFiles(shared).find(x=>x.rel===rel);
     assert.ok(f,rel);
-    assert.ok(fs.readFileSync(path.join(prod,rel)).equals(bytes(f.data)),rel);
+    assert.ok(norm(fs.readFileSync(path.join(prod,rel))).equals(norm(bytes(f.data))),rel);
   }
   // index.html と text-view.js は、書き出してコミットしたものと同じ（回の番号まわりを差し込む型に変えたため、手作りだった版との差は報告済み）
-  for(const rel of ['ep/1/index.html']){const f=r.files.find(x=>x.rel===rel);assert.ok(fs.readFileSync(path.join(prod,rel)).equals(bytes(f.data)),rel);}
+  for(const rel of ['ep/1/index.html']){const f=r.files.find(x=>x.rel===rel);assert.ok(norm(fs.readFileSync(path.join(prod,rel))).equals(norm(bytes(f.data))),rel);}
   assert.ok(fs.readFileSync(path.join(prod,'ep/_shared/text-view.js')).equals(bytes(b.sharedFiles(shared).find(x=>x.rel==='ep/_shared/text-view.js').data)));
   assert.deepEqual(r.report.rs,[12,12,6]);
 });
@@ -77,4 +83,49 @@ test('build-ep: trial pages carry the trial LIFF id and a buyer preview entrance
   const p=fs.readFileSync(path.join(prod,'ep/1/index.html'),'utf8');
   assert.match(p,/2012583516-7vmvMorb/);assert.doesNotMatch(p,/2011606963|kounyu|__epMihon/);
   assert.doesNotMatch(fs.readFileSync(path.join(root,'ep/2/index.html'),'utf8'),/2027年版の見本/);
+});
+
+const gateOf=h=>{const m=h.match(/<script>(\(function\(\)\{var k=[\s\S]*?)<\/script>/);return m?m[1]:null;};
+const closedAt=(code,y,mo,d)=>{const html={className:''};const FD=function(){return {getFullYear:()=>y,getMonth:()=>mo-1,getDate:()=>d};};new Function('document','Date','location',code)({documentElement:html},FD,{search:''});return /ep-closed/.test(html.className);};
+test('build-ep: production ep/2-9 are closed until the delivery date (the same rule as roadmap: device date >= date), ep/1 has no gate, no today override',{skip},()=>{
+  const dates={2:[2027,1,12],3:[2027,1,18],4:[2027,1,25],5:[2027,2,1],6:[2027,2,8],7:[2027,2,15],8:[2027,2,22],9:[2027,3,1]};
+  for(let n=2;n<=9;n++){
+    const h=fs.readFileSync(path.join(prod,'ep',String(n),'index.html'),'utf8');
+    const code=gateOf(h);assert.ok(code,'ep'+n);
+    const [y,m,d]=dates[n];
+    assert.equal(closedAt(code,y,m,d-1<1?1:d-1),d-1<1?false:true,'前日は閉');
+    const prev=new Date(Date.UTC(y,m-1,d-1));
+    assert.equal(closedAt(code,prev.getUTCFullYear(),prev.getUTCMonth()+1,prev.getUTCDate()),true,'前日は閉');
+    assert.equal(closedAt(code,y,m,d),false,'当日は開');assert.equal(closedAt(code,y,m,d+1>28?d:d+1),false);
+    assert.doesNotMatch(h,/today|__epMihon|kounyu/);
+    assert.match(h,/2012583516-7vmvMorb/);assert.match(h,/cloud\.umami\.is/);
+    assert.match(h,/<div class="next-box closed-box"><p>この回は、\d+年\d+月\d+日（.）からです。<\/p><a class="lbtn" href="\/roadmap">学習ロードマップへ<\/a><\/div>/);
+    assert.equal((h.match(/ep-closed'\)\) \{ return; \}/g)||[]).length,2,'判定の script は閉じているとき動かない');
+    assert.doesNotMatch(h,/class="[^"]*rs[^"]*"|role="button"|data-hint|data-part=|_ep-text/);
+    for(const f of ['line-full.html','tsuzuki.html'])assert.doesNotMatch(fs.readFileSync(path.join(prod,'ep',String(n),f),'utf8'),/class="[^"]*rs[^"]*"|role="button"|data-hint|data-part=|今回の数字|ワンポイント/,n+f);
+  }
+  const p1=fs.readFileSync(path.join(prod,'ep/1/index.html'),'utf8');
+  assert.equal(gateOf(p1),null);assert.doesNotMatch(p1,/ep-closed|closed-box/);
+  // 試し用：ふだんは開いたまま。?today= を付けたときだけ判定
+  const t2=fs.readFileSync(path.join(root,'ep/2/index.html'),'utf8');
+  const code=gateOf(t2);
+  const run=search=>{const html={className:''};new Function('document','location',code)({documentElement:html},{search});return /ep-closed/.test(html.className);};
+  assert.equal(run(''),false);assert.equal(run('?today=2027-01-11'),true);assert.equal(run('?today=2027-01-12'),false);
+});
+
+test('build-ep: the leak guard looks at classes (.key / .aside / .rs / numbers), not at label words, and does fail on a deliberate leak',{skip},async()=>{
+  const b=await lib();
+  const m=b.loadMaterial(2),text=b.buildText(m),ex=b.buildExcerpt(m,text);
+  const pages=b.buildPages(m,text,ex,'prod');
+  assert.ok(b.checkPublic(m,text,ex,pages)>0);
+  for(const leak of ['<div class="key"><span class="l">label</span></div>','<div class="aside"><span class="l">label</span></div>','<span class="rs" role="button" tabindex="0">x</span>','<div class="nl"></div>','<div class="tx" data-part="3"></div>']){
+    assert.throws(()=>b.checkPublic(m,text,ex,{...pages,lineFullHtml:pages.lineFullHtml+leak}),/公開側/,leak);
+    assert.throws(()=>b.checkPublic(m,text,{...ex,html:ex.html+leak},pages),/公開側/,leak);
+  }
+  // 札の字だけ（class なし）では落ちない＝字では見ていない
+  assert.doesNotThrow(()=>b.checkPublic(m,text,ex,{...pages,lineFullHtml:pages.lineFullHtml+'<p>芯 今日のワンポイント</p>'}));
+  // テキストだけの図の字が公開側に出たら落ちる
+  const paidNo=Object.keys(ex.tier).find(n=>ex.tier[n]==='paid');
+  const phrase=ex.orig[paidNo].split(/<[^>]+>/).map(x=>x.trim()).filter(x=>Array.from(x).length>=8).pop();
+  assert.throws(()=>b.checkPublic(m,text,ex,{...pages,lineFullHtml:pages.lineFullHtml+'<p>'+phrase+'</p>'}),/図\d+の字が公開側/);
 });

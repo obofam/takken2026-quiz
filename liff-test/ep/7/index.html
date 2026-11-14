@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
+<script>(function(){var k=20270215;var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):k;if(t<k){document.documentElement.className+=' ep-closed';}})();</script>
 <title>第7回 重要事項説明の分かれ目｜耳で覚える宅建2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
@@ -420,6 +421,11 @@ body.member .line-card{display:block}
 .dk{font-weight:700}
 .dv{white-space:pre-wrap}
 .dcopy{margin-top:14px;cursor:pointer}
+/* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */
+.closed-box{display:none}
+.ep-closed .closed-box{display:block}
+.ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}
+.next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}
 </style>
 </head>
 <body>
@@ -430,6 +436,7 @@ body.member .line-card{display:block}
     <div class="row"><span class="no">第7回</span><h1>マンションを<br>借りる人に、修繕積立金は<br>説明しなくていい</h1></div>
     <div class="side">重要事項説明の分かれ目</div>
   </div>
+  <div class="next-box closed-box"><p>この回は、2027年2月15日（月）からです。</p><a class="lbtn" href="/roadmap">学習ロードマップへ</a></div>
   <a class="listen" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="7">音声番組を聴く（Spotify）</a>
   <p class="oapps">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm">stand.fm</a></p>
   <!-- 配信が始まったら（2027年2月15日以降）この注記は要らない。外す -->
@@ -858,7 +865,7 @@ figure.fig{min-width:0}
 </div>
 <script>
 (function () {
-  'use strict';
+  'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }
   /* 3問のデータは build.py が data.json から差し込む（過去問1選はLINEで届けるため、このページには出さない） */
   var QUIZ = [{"label": "前半　「区分所有建物」の3問", "questions": [{"q": "区分所有建物の貸借の媒介では、修繕積立金についての規約の定めがあっても、説明しなくてよい。", "a": true, "exp": "修繕積立金は、売買の説明事項です。"}, {"q": "区分所有建物の貸借の媒介で、管理が委託されていても、その委託先を説明する必要はない。", "a": false, "exp": "管理の委託先は、区分所有建物に特有の事項として、貸借でも説明する2つのうちの1つです。"}, {"q": "区分所有建物の貸借の媒介で、専有部分の用途その他の利用の制限に関する規約の定めがあるときは、その内容を説明しなければならない。", "a": true, "exp": "ペットやピアノの規約は、借りる人にも関わります。"}]}, {"label": "後半　「貸借と割賦販売」の3問", "questions": [{"q": "建物の貸借の媒介では、台所・浴室・便所その他の設備の整備の状況を説明しなければならない。", "a": true, "exp": "設備の整備状況は、建物の貸借だけの説明事項です。"}, {"q": "建物の貸借の媒介で、敷金の精算に関する事項が契約で定まっていないときは、説明する必要はない。", "a": false, "exp": "定まっていない旨を説明します。"}, {"q": "定期建物賃貸借で、貸主が借地借家法38条の書面で説明したときは、宅建業者は定期建物賃貸借である旨の説明を省略できる。", "a": false, "exp": "業者の説明は、貸主の説明とは別です。省略できません。"}]}];
   var esc = function (s) {
@@ -1009,7 +1016,7 @@ figure.fig{min-width:0}
    401・403・失敗は、いまの見え方のまま（何も出さない）。ログインの印が無い人は呼ばない。
    ?joutai=1 で「表示の状態（確認用）」を出す。?mihon=touroku は localhost／127.0.0.1 のときだけ効く（手元の確認用）。 */
 (function () {
-  'use strict';
+  'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }
   var LIFF_ID = '2011606963-hH0DzETc';
   var body = document.body;
   var qs = new URLSearchParams(location.search);

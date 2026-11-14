@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="noindex, nofollow">{{GATE_SCRIPT}}
 <title>第{{EP}}回 {{SUB}}｜耳で覚える宅建2027</title>
 {{UMAMI}}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
@@ -419,7 +419,7 @@ body.member .line-card{display:block}
 .drow{margin-top:8px}
 .dk{font-weight:700}
 .dv{white-space:pre-wrap}
-.dcopy{margin-top:14px;cursor:pointer}
+.dcopy{margin-top:14px;cursor:pointer}{{CLOSED_CSS}}
 </style>
 </head>
 <body>
@@ -429,7 +429,7 @@ body.member .line-card{display:block}
   <div class="title">
     <div class="row"><span class="no">第{{EP}}回</span><h1>{{TITLE_HTML}}</h1></div>
     <div class="side">{{SUB}}</div>
-  </div>
+  </div>{{CLOSED_BOX}}
   {{LISTEN}}
   <p class="oapps">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm">stand.fm</a></p>
   <!-- 配信が始まったら（{{DATE_YMD}}以降）この注記は要らない。外す -->
@@ -499,7 +499,7 @@ body.member .line-card{display:block}
 </div>
 <script>
 (function () {
-  'use strict';
+  'use strict';{{GUARD}}
   /* 3問のデータは build.py が data.json から差し込む（過去問1選はLINEで届けるため、このページには出さない） */
   var QUIZ = {{QUIZ_JSON}};
   var esc = function (s) {
@@ -650,7 +650,7 @@ body.member .line-card{display:block}
    401・403・失敗は、いまの見え方のまま（何も出さない）。ログインの印が無い人は呼ばない。
    ?joutai=1 で「表示の状態（確認用）」を出す。?mihon=touroku は localhost／127.0.0.1 のときだけ効く（手元の確認用）。 */
 (function () {
-  'use strict';
+  'use strict';{{GUARD}}
   var LIFF_ID = '{{LIFF_ID}}';
   var body = document.body;
   var qs = new URLSearchParams(location.search);

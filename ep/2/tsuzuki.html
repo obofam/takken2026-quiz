@@ -1,0 +1,443 @@
+<!-- 第2回 図解：やさしいテキストからの抜粋（無料・LINE登録者向け）。scripts/build-ep.mjs が作る。手で直さない。赤シートなし。 -->
+<style data-nk="css">
+  :host{
+    --accent:#17C5E8; --ink:#0A6477; --soft:#E3F8FC; --mark:#B8EEF8; --pale:#F6FCFE;
+    --text:#111820; --sub:#3D444C; --line:#D5DBE0; --gray:#F1F2F4; --gray-ink:#5A626B;
+    --font:"Noto Sans JP",system-ui,"Hiragino Sans","Yu Gothic",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:#e9ecef;font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiased;letter-spacing:.02em;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .intro{max-width:1640px;margin:20px auto 0;padding:0 16px;font-size:14px;line-height:1.8;color:var(--sub)}
+  .intro b{color:var(--text)}
+  .spread{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;padding:16px 16px 48px}
+
+  
+  .page{width:210mm;height:297mm;background:#fff;box-shadow:0 2px 12px rgba(17,24,32,.08);border-radius:4px;
+    padding:20px 38px 16px;display:flex;flex-direction:column;gap:5px;overflow:hidden;font-size:15px;line-height:1.6}
+  
+
+  .pbar{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:var(--ink);
+    border-bottom:1px solid var(--line);padding-bottom:7px;margin:0 0 2px}
+  .pbar .pg{color:var(--sub)}
+
+  
+  .ttl .no-h{display:inline-block;vertical-align:5px;font-size:14px;background:var(--ink);color:#fff;border-radius:999px;padding:1px 12px;font-weight:900;margin-right:10px}
+  .ttl h1{font-size:27px;font-weight:900;line-height:1.3;margin:0}
+  .ttl .sub{font-size:16px;font-weight:900;color:var(--ink);margin:2px 0 0}
+  .nw{display:inline-block;white-space:nowrap}
+
+  
+  .sec{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900}
+  .sec .sn{font-size:13px;color:#fff;background:var(--accent);border-radius:6px;padding:1px 10px}
+  .key{border:3px solid var(--ink);border-radius:12px;padding:6px 16px 6px 14px;display:flex;gap:12px;align-items:flex-start}
+  .key .l{flex:0 0 auto;font-size:12px;font-weight:900;color:var(--ink);background:var(--soft);border-radius:6px;padding:2px 8px;margin-top:4px}
+  .key .t{font-size:19px;font-weight:900;line-height:1.55}
+  .mk{box-shadow:inset 0 -0.42em 0 var(--mark);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+  
+  .page.p1,.page.p2{padding:12px 38px 20px;gap:2px}
+  .page.p2{padding-top:8px}
+  .page.p2 .foot{padding-top:3px}
+  .page.p2 .aside p.land{margin-top:1px}
+  .page.p2 .aside h3{margin-bottom:0}
+  .page.p1 .fig,.page.p2 .fig{padding-top:3px;padding-bottom:3px}
+  .page.p1 .fig > .cap,.page.p2 .fig > .cap{margin-bottom:2px}
+  
+  .nband{flex:0 0 auto;display:flex;align-items:stretch;gap:0;border:1px solid var(--line);border-radius:12px;background:var(--pale);overflow:hidden}
+  .nband .nh{flex:0 0 52px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:900;color:#fff;background:var(--ink);line-height:1.3;padding:0 4px}
+  .nband .nrows{flex:1;min-width:0;display:flex;flex-direction:column}
+  .nband .nrow{display:flex;align-items:stretch}
+  .nband .nrow + .nrow{border-top:1px solid var(--line)}
+  .nband .ni{flex:1 1 auto;min-width:0;padding:1px 8px 2px;border-left:1px solid var(--line)}
+  .nband .ni:first-of-type{border-left:0}
+  .nband .nv{display:block;font-size:16px;font-weight:900;color:var(--ink);line-height:1.3}
+  .nband .nk{display:block;font-size:11px;font-weight:700;line-height:1.35;color:var(--sub)}
+
+  
+  .fig{margin:0;border:1px solid var(--line);border-radius:12px;padding:5px 14px 6px}
+  .fig > .cap{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:900;margin:0 0 4px}
+  .capsub{font-size:13px;font-weight:700;color:var(--sub);margin-left:4px}
+  .n{flex:0 0 22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:900;
+    display:inline-flex;align-items:center;justify-content:center}
+  .row{display:flex;gap:12px}
+  .row > *{flex:1;min-width:0}
+  svg.ic{width:30px;height:30px;flex:0 0 30px}
+  .chips{display:flex;gap:8px;margin-top:5px}
+  .chip{flex:1;background:var(--gray);border-radius:8px;padding:3px 10px;font-size:13px;line-height:1.5;font-weight:700}
+  .chip b{color:var(--ink);font-weight:900}
+  .small{font-size:13px;font-weight:700;margin:5px 0 0;line-height:1.55}
+  .small b{color:var(--ink);font-weight:900}
+  .lab{font-size:14px;font-weight:900;color:var(--ink);margin:0 0 3px;line-height:1.4}
+  ul.dots{list-style:none;margin:0;padding:0}
+  ul.dots li{position:relative;padding-left:16px;font-size:13px;font-weight:700;line-height:1.5;margin:0 0 3px}
+  ul.dots li::before{content:"";position:absolute;left:2px;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--ink)}
+  ul.dots li b{color:var(--ink);font-weight:900}
+  .tag{display:inline-block;font-size:13px;font-weight:900;border-radius:999px;padding:0 9px;vertical-align:2px;line-height:1.6}
+  .tag.on{background:var(--ink);color:#fff;border:1px solid var(--ink)}
+  .tag.off{background:#fff;color:var(--gray-ink);border:1px solid var(--gray-ink)}
+  .pill{font-size:13px;font-weight:900;border-radius:999px;padding:0 10px;text-align:center;white-space:nowrap;line-height:1.55;flex:0 0 auto}
+  .pill.ok{background:var(--ink);color:#fff}
+  .pill.ng{background:#fff;color:var(--gray-ink);border:1.5px solid var(--gray-ink)}
+
+  
+  .steps{display:flex;align-items:stretch;gap:6px}
+  .st{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px;border-radius:10px;padding:4px 6px 5px;background:var(--pale);border:2px solid var(--accent);font-size:13px;font-weight:700;line-height:1.4}
+  .st .hd{display:flex;align-items:center;gap:8px}
+  .st b{font-size:16px;font-weight:900;line-height:1.35}
+  .st.go{border-color:var(--ink);background:var(--soft)}
+  .st.go b{color:var(--ink)}
+  .tri{align-self:center;flex:0 0 auto;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:12px solid var(--ink)}
+  .st.mini{flex-direction:row;gap:8px;padding:2px 8px;text-align:left;font-size:13px;font-weight:900;line-height:1.4}
+
+  
+  .way{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--pale);border:2px solid var(--accent);border-radius:10px;padding:4px 6px 6px;font-size:13px;font-weight:900;line-height:1.4}
+  .way .who{font-size:13px;color:var(--ink)}
+  .way svg{width:84px;height:34px;margin:1px 0}
+  .way small{display:block;font-size:13px;font-weight:700;color:var(--sub);margin-top:2px}
+
+  
+  .jl{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;line-height:1.45;margin:0 0 3px}
+
+  
+  .lg{margin-left:auto;display:flex;gap:6px}
+  .lg span{font-size:13px;font-weight:900;color:#fff;border-radius:999px;padding:0 12px;line-height:1.6}
+  .lg .a{background:var(--accent)}
+  .lg .b{background:var(--ink)}
+  .cmp{display:grid;grid-template-columns:112px 1fr 1fr;gap:2px 8px}
+  .cmp > *{min-width:0}
+  .cmp .k{font-size:13px;font-weight:900;color:var(--ink);display:flex;align-items:center;line-height:1.35}
+  .cmp .c{border-radius:8px;padding:1px 10px;font-size:13px;font-weight:700;line-height:1.45;display:flex;align-items:center;gap:8px}
+  .cmp .c.a{background:var(--soft);border-left:5px solid var(--accent)}
+  .cmp .c.b{background:var(--pale);border:1.5px solid var(--line);border-left:5px solid var(--ink)}
+  .cmp .num{font-size:17px;font-weight:900;color:var(--ink);white-space:nowrap}
+  .cmp .c b{font-weight:900;color:var(--ink)}
+  .cmp .full{grid-column:2/-1}
+  .fl{display:flex;align-items:stretch;gap:6px}
+  .fb{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:8px;padding:1px 8px;font-size:13px;font-weight:700;line-height:1.4;background:var(--pale);border:1.5px solid var(--ink)}
+  .fb b{font-weight:900;color:var(--ink)}
+  .fb.end{background:var(--soft);border-width:2px}
+
+  
+  .aside{border:2px dashed var(--accent);background:var(--pale);border-radius:12px;padding:4px 12px 5px;display:flex;gap:12px}
+  .aside svg{width:52px;height:52px;flex:0 0 52px;margin-top:4px}
+  .aside .l{display:block;font-size:12px;font-weight:900;color:var(--ink)}
+  .aside h3{font-size:17px;font-weight:900;margin:0 0 2px}
+  .aside p{letter-spacing:0;font-size:14px;line-height:1.48;margin:0 0 2px}
+  .aside p.land{font-weight:900;margin-top:3px}
+
+  
+  .grow{flex:1}
+  .foot{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:6px}
+  .foot .next{flex:1;font-size:13px;font-weight:700;line-height:1.6;color:var(--sub)}
+  .foot .next b{color:var(--text);font-weight:900}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:999px;padding:6px 18px;font-size:14px;font-weight:900;text-decoration:none;line-height:1.35}
+  .btn small{display:block;font-size:12px;font-weight:700;opacity:.9}
+  .chev{width:8px;height:8px;border-right:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(-45deg);margin-left:2px}
+  .colophon{display:block;font-size:11px;font-weight:400;color:var(--sub);margin-top:2px}
+
+  
+  
+
+  
+  .key{position:relative}
+  .key .l{position:absolute;top:-10px;right:14px;margin:0;font-size:12px;line-height:1.5;padding:0 10px;border-radius:999px;background:var(--ink);color:#fff}
+
+
+
+
+:host{--sheet:#8E3B3B;display:block;font-family:var(--font);color:var(--text);font-size:15px;line-height:1.6;letter-spacing:.02em;word-break:auto-phrase;overflow-wrap:anywhere}
+.tx{display:flex;flex-direction:column;gap:12px}
+.sec{font-size:19px}
+.fig{padding:10px 12px 12px}
+.fig > .cap{display:block;position:relative;padding-left:32px;min-height:24px;font-size:16px;line-height:1.45}
+.fig > .cap > .n{position:absolute;left:0;top:-1px;width:24px;height:24px}
+.fig > .cap > .capsub,.fig > .cap > span[style*="margin-left:auto"]{display:block;margin-left:0 !important;padding-left:0;width:auto}
+.row{flex-direction:column;gap:10px !important;align-items:stretch !important}
+.row > *{flex:none !important}
+.tbl{grid-template-columns:44px 1fr 1fr}
+.side{gap:8px}
+.pc .top{align-items:flex-start}
+.pc .res{flex-wrap:wrap}
+.way svg{width:100px}
+.tl{flex-direction:column;align-items:stretch;gap:8px}
+.tl ul{flex:none}
+.rk{grid-template-columns:1fr;gap:4px 0}
+.rk .lb{margin-top:6px}
+.bars{height:auto;min-height:30px}
+.bars .g,.bars .go{white-space:normal;text-align:center;padding:4px 8px;line-height:1.4}
+.team{flex-wrap:wrap;gap:8px}
+.pnl{flex:none !important}
+svg.tm,.tl svg{width:100%;height:auto}
+.aside{gap:10px;padding:8px 12px 10px}
+.aside svg{width:44px;height:44px;flex:0 0 44px}
+.key{padding:8px 12px}
+.key .t{font-size:17px}
+.pill{white-space:nowrap;flex:0 0 auto;max-width:100%}
+.chip{font-size:14px}
+.tk{font-size:14px}
+.rs{box-shadow:inset 0 -0.42em 0 var(--mark);-webkit-box-decoration-break:clone;box-decoration-break:clone;border-radius:3px;-webkit-tap-highlight-color:transparent}
+.pill.rs,.tag.rs,.bars .go.rs{box-shadow:0 0 0 3px var(--mark)}
+.nw{display:inline;white-space:normal}
+.tx p br,.key br,.chip br,.aside br,.tk br,.pnl .m br{display:none}
+.rs{white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+span.rs:not(.pill):not(.go):not(.tag),b.rs{padding:.1em 2px;margin:0 -1px}
+.tx .key .t{text-wrap:pretty}
+.tx p,.chip,.tk,.aside p{text-wrap:pretty}
+.tl svg text{font-size:15px}
+.xs{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;margin:0 -13px;padding:0 13px;overscroll-behavior-x:contain}
+.xs.xs-fit{padding:0 1px}
+.xs svg.tm{width:560px;max-width:none;height:auto}
+.tx.sheet .rs{cursor:pointer;user-select:none;-webkit-user-select:none}
+.tx.sheet .rs:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tx.sheet .rs{position:relative;display:inline-grid;justify-items:start;align-items:center}
+.tx.sheet .rs.pill,.tx.sheet .rs.go{justify-items:center}
+.tx.sheet .rs::before{content:"";position:absolute;left:-2px;right:-2px;top:-9px;bottom:-9px}
+.tx.sheet .rs .av,.tx.sheet .rs .hv{grid-area:1/1;white-space:nowrap}
+.nb{white-space:nowrap}
+.tx.sheet .rs .hv{padding:0 2px;color:#fff !important;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;pointer-events:none}
+.tx.sheet .rs.s-hide{background:var(--sheet) !important;color:transparent !important;border-color:var(--sheet) !important;box-shadow:none}
+.tx.sheet .rs.s-hide .av{visibility:hidden}
+.tx.sheet .rs.s-open .hv{visibility:hidden}
+.go .rs{box-shadow:none}
+
+
+.steps,.fl{flex-direction:column;align-items:stretch;gap:4px}
+.steps > *,.fl > *{flex:none !important}
+.steps .tri,.fl .tri{align-self:center;transform:rotate(90deg);margin:3px 0}
+.st .hd{justify-content:center}
+.st.mini{justify-content:flex-start}
+.chips{flex-direction:column;gap:6px}
+.chips .chip{flex:none !important}
+.cmp{grid-template-columns:1fr !important;gap:3px 0 !important}
+.cmp .k{margin-top:8px;font-size:14px}
+.cmp .k:first-child{margin-top:0}
+.cmp .full{grid-column:auto}
+.cmp > span:empty{display:none}
+.cmp .c{flex-wrap:wrap;padding:4px 8px;gap:4px 6px;align-content:center}
+.cmp .c .pill{white-space:nowrap;flex:0 0 auto;max-width:100%}
+.cmp .num{font-size:16px}
+.jl{align-items:flex-start}
+.jl .pill{margin-top:1px}
+.pl .it,.way,.st{min-width:0}
+.fig svg[role="img"]{max-width:100%;height:auto}
+.fig .xs svg[role="img"]{max-width:none}
+.small,ul.dots li,.lab{font-size:14px}
+figure.fig{min-width:0}
+
+
+
+.stairs{flex-direction:column;align-items:stretch;gap:5px}
+.stairs .st{flex:none;height:auto !important;border:2px solid var(--ink) !important;border-radius:8px !important}
+.stairs .st.s1{border-color:var(--gray-ink) !important}
+.stairs .st.s2{margin-left:14px}
+.stairs .st.s3{margin-left:28px;border-color:var(--ink) !important}
+
+.tr,.chg .r,.tm,.mx{grid-template-columns:104px minmax(0,1fr) !important;gap:3px 12px !important}
+.jd{grid-template-columns:minmax(0,1fr) auto !important;gap:3px 12px !important}
+.jd .q,.jd hr{grid-column:1/-1}
+.tr > :first-child,.chg .r > :first-child,.jd > :first-child,.tm > .k,.tm > .ban,.mx > .rl{grid-column:1/-1}
+.tm,.mx{grid-template-columns:repeat(2,minmax(0,1fr)) !important;justify-content:stretch}
+.tm > div:empty,.mx > span:empty,.mx > div:empty{display:none}
+.mx{grid-template-columns:repeat(3,auto) !important;justify-content:space-between;column-gap:6px !important}
+.mx .mc{min-width:0}
+.mx .rl{margin-top:4px}
+.c{flex-wrap:wrap}
+.pr{flex-wrap:wrap}
+
+.exs{grid-template-columns:1fr !important}
+
+.mt{grid-template-columns:20px 70px repeat(3,minmax(75px,1fr)) !important;gap:3px 4px !important;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.mt > .vb{position:sticky;left:0;z-index:1}
+.mt .hh{flex-direction:column;gap:2px;padding:3px 0;font-size:12px;letter-spacing:0}
+.mt .c{padding-left:2px;padding-right:2px;min-width:0}
+.mt .pill{padding-left:6px;padding-right:6px}
+.mt .vb{letter-spacing:0}
+
+.fm,.two,.reg{flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:8px}
+.fm > *,.two > *,.reg > *{flex:none !important;max-width:100%}
+.fm .plus{align-self:center}
+.alt{flex:none !important}
+.reg .lc{max-width:100%}
+
+.vio{flex-direction:column;gap:8px}
+.vio > *{flex:none !important}
+.and{flex-direction:column;align-items:stretch;align-self:stretch;flex:none;gap:4px}
+.and > .b{flex:none}
+.and .plus,.and .eq{align-self:center}
+
+.fig div[style*="grid-template-columns"]{grid-template-columns:1fr !important}
+
+.roles{flex-wrap:wrap}
+.roles > .role{flex:1 1 calc(50% - 4px) !important;min-width:0}
+
+.who:has(> .wh){grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 8px}
+.who:has(> .wh) > .wh{grid-column:1/-1}
+.who:has(> .wh) > :nth-child(1){order:0}
+.who:has(> .wh) > :nth-child(3){order:1}
+.who:has(> .wh) > :nth-child(4){order:2}
+.who:has(> .wh) > :nth-child(2){order:3;margin-top:4px}
+.who:has(> .wh) > :nth-child(5){order:4;grid-column:1/-1}
+.nums{flex-direction:column;gap:6px}
+.nums .nm{flex:none;white-space:normal;min-width:0}
+
+.conds{flex-direction:column;align-items:stretch;gap:4px}
+.conds .cd{flex:none;border-radius:10px}
+.nums .nm > *{align-self:flex-start}
+
+.tb .th{padding-left:0}
+.grp,.lr{flex-direction:column;gap:3px}
+.gl,.lt{flex:none !important;padding-right:0}
+.lt{padding:3px 8px}
+.lb .g2{grid-template-columns:1fr}
+.lb .one{flex-wrap:wrap}
+
+.way svg[role="img"]{width:100%;max-width:240px;height:auto;margin:2px auto 0}
+
+.fig > .cap > .lg{display:flex;flex-wrap:wrap;gap:4px 6px;margin:4px 0 0 !important;padding-left:0}
+
+.cal{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.cal .days{grid-template-columns:repeat(9,52px);width:max-content}
+.cal{padding-top:36px}
+.cal .br{width:444px;top:16px}
+.cal .br span{width:max-content;white-space:nowrap;left:10px;transform:none}
+.cal{margin:0 -13px;padding-left:1px;padding-right:1px}
+
+.way{display:block;text-align:center}
+.way svg{display:block;margin:2px auto}
+.way .who{display:block}
+.scene{flex-direction:column;gap:6px}
+
+.cup{flex-direction:column;align-items:stretch;gap:8px}
+.cup svg{flex:none;width:100%;height:auto}
+.cup ul{flex:none}
+
+.cal .br span span{position:static;transform:none;background:none;padding:0;top:auto;left:auto;width:auto}
+
+.mt .c .num{font-size:14px}
+.mt .c{font-size:13px;padding-left:2px;padding-right:2px}
+.tx.sheet .mt .rs .hv{white-space:normal;text-align:center;font-size:11px;line-height:1.25}
+
+.fig .cmp:has(> .h){grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:3px 8px !important}
+.fig .cmp:has(> .h) > .k{grid-column:1/-1}
+</style>
+<div data-slot="fig1">
+<div class="tx" data-fig="1"><figure class="fig">
+    <div class="cap"><span class="n">1</span>開業までの順番<span class="capsub">免許を受けても、すぐには店を開けられない</span></div>
+    <div class="steps">
+      <div class="st"><div class="hd"><svg class="ic" viewBox="0 0 48 48"><rect x="5" y="11" width="38" height="26" rx="3" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><circle cx="16" cy="21" r="4.5" fill="#fff" stroke="#0A6477" stroke-width="2"/><path d="M9 33 C9 27 23 27 23 33" fill="#fff" stroke="#0A6477" stroke-width="2" stroke-linejoin="round"/><path d="M28 19 H38 M28 25 H38 M28 31 H34" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg><b>免許</b></div><span>役所から免許を受ける</span></div>
+      <span class="tri"></span>
+      <div class="st"><div class="hd"><svg class="ic" viewBox="0 0 48 48"><path d="M5 20 L24 7 L43 20 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M11 25 V37 M20 25 V37 M28 25 V37 M37 25 V37" stroke="#0A6477" stroke-width="3"/><path d="M5 42 H43" stroke="#0A6477" stroke-width="3" stroke-linecap="round"/></svg><b>供託</b></div><span>本店のもよりの<br>供託所に預ける</span></div>
+      <span class="tri"></span>
+      <div class="st"><div class="hd"><svg class="ic" viewBox="0 0 48 48"><path d="M11 5 H30 L38 13 V43 H11 Z" fill="#fff" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M30 5 V13 H38" fill="none" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M16 21 H32 M16 27 H32" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/><circle cx="29" cy="36" r="4" fill="#E3F8FC" stroke="#0A6477" stroke-width="2"/></svg><b>届出</b></div><span>供託書の写しを添えて<br>免許権者に届け出る</span></div>
+      <span class="tri"></span>
+      <div class="st go"><div class="hd"><svg class="ic" viewBox="0 0 48 48"><path d="M6 18 H42 L39 8 H9 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M9 18 V41 H39 V18" fill="#fff" stroke="#0A6477" stroke-width="2.5"/><rect x="14" y="26" width="9" height="15" fill="#0A6477"/><rect x="27" y="25" width="8" height="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2"/><path d="M4 41 H44" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg><b>事業開始</b></div><span>届け出た後でなければ<br>始められない</span></div>
+    </div>
+    <div class="chips">
+      <div class="chip" style="flex:1.45">営業開始後に<b>支店を出したとき</b>も同じ。<br>その分500万円を預け、届け出てからその支店で営業</div>
+      <div class="chip" style="flex:1.4">免許から<b class="nw">3か月</b>以内に届出がなければ催告。催告が届いて<b class="nw">1か月</b>以内になければ、取消しが<b>できる</b>（義務ではない）</div>
+    </div>
+  </figure></div>
+</div>
+<div data-slot="cards1">
+<div class="tx" data-fig="2"><figure class="fig">
+    <div class="cap"><span class="n">2</span>いくら預ける？　どこへ預ける？</div>
+    <div class="xs" tabindex="0"><svg style="width:584px;max-width:none;height:auto" viewBox="0 0 690 96" width="100%" role="img" aria-label="本店1,000万円、支店ごとに500万円。支店の分も、本店のもよりの供託所にまとめて預ける。本店と支店2つなら2,000万円">
+      <svg x="0" y="2" width="28" height="28" viewBox="0 0 48 48"><rect x="10" y="7" width="28" height="34" rx="2" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><g fill="#0A6477"><rect x="15" y="12" width="5" height="5"/><rect x="28" y="12" width="5" height="5"/><rect x="15" y="21" width="5" height="5"/><rect x="28" y="21" width="5" height="5"/></g><rect x="20" y="31" width="8" height="10" fill="#0A6477"/><path d="M4 41 H44" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <text x="36" y="21" font-size="14" font-weight="900" fill="#111820">本店</text>
+      <text x="86" y="23" font-size="18" font-weight="900" fill="#0A6477">1,000万円</text>
+      <svg x="0" y="33" width="28" height="28" viewBox="0 0 48 48"><path d="M6 18 H42 L39 8 H9 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M9 18 V41 H39 V18" fill="#fff" stroke="#0A6477" stroke-width="2.5"/><rect x="14" y="26" width="9" height="15" fill="#0A6477"/><rect x="27" y="25" width="8" height="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2"/><path d="M4 41 H44" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <text x="36" y="52" font-size="14" font-weight="900" fill="#111820">支店</text>
+      <text x="86" y="54" font-size="18" font-weight="900" fill="#0A6477">500万円</text>
+      <svg x="0" y="64" width="28" height="28" viewBox="0 0 48 48"><path d="M6 18 H42 L39 8 H9 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M9 18 V41 H39 V18" fill="#fff" stroke="#0A6477" stroke-width="2.5"/><rect x="14" y="26" width="9" height="15" fill="#0A6477"/><rect x="27" y="25" width="8" height="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2"/><path d="M4 41 H44" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <text x="36" y="83" font-size="14" font-weight="900" fill="#111820">支店</text>
+      <text x="86" y="85" font-size="18" font-weight="900" fill="#0A6477">500万円</text>
+      <path d="M196 16 L282 47 M196 47 H282 M196 78 L282 47" fill="none" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M278 40 L289 47 L278 54 Z" fill="#0A6477"/>
+      <svg x="296" y="15" width="62" height="62" viewBox="0 0 48 48"><path d="M5 20 L24 7 L43 20 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M11 25 V37 M20 25 V37 M28 25 V37 M37 25 V37" stroke="#0A6477" stroke-width="3"/><path d="M5 42 H43" stroke="#0A6477" stroke-width="3" stroke-linecap="round"/></svg>
+      <text x="372" y="41" font-size="14" font-weight="900" fill="#111820">本店のもよりの</text>
+      <text x="372" y="60" font-size="14" font-weight="900" fill="#111820">供託所に、まとめて</text>
+      <text x="520" y="14" font-size="13" font-weight="700" fill="#3D444C">本店と支店2つなら</text>
+      <text x="520" y="31" font-size="14" font-weight="700" fill="#3D444C">1,000＋500×2</text>
+      <text x="520" y="51" font-size="18" font-weight="900" fill="#0A6477">＝2,000万円</text>
+      <rect x="520" y="58" width="168" height="36" rx="8" fill="#F1F2F4" stroke="#5A626B" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <svg x="526" y="64" width="24" height="24" viewBox="0 0 48 48"><path d="M5 20 L24 7 L43 20 Z" fill="#fff" stroke="#5A626B" stroke-width="2.5" stroke-linejoin="round"/><path d="M11 25 V37 M20 25 V37 M28 25 V37 M37 25 V37" stroke="#5A626B" stroke-width="3"/><path d="M5 42 H43" stroke="#5A626B" stroke-width="3" stroke-linecap="round"/></svg>
+      <text x="558" y="74" font-size="13" font-weight="900" fill="#5A626B">支店のもよりには</text>
+      <text x="558" y="89" font-size="13" font-weight="900" fill="#5A626B">預けない</text>
+    </svg></div>
+  </figure></div>
+<div class="gcard"><span class="gno">3</span><span class="gm"><span class="gt">何で預ける？</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="2">やさしいテキスト（有料）</a>に</span></span></div>
+<div class="tx" data-fig="4"><figure class="fig">
+    <div class="cap"><span class="n">4</span>使われたら、補充する</div>
+    <div class="row" style="gap:18px">
+      <div>
+        <div class="lab">使われる（還付）</div>
+        <div class="steps" style="margin-bottom:4px">
+          <div class="st mini"><svg class="ic" viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></svg><span>取引で損を<br>したお客さん</span></div>
+          <span class="tri"></span>
+          <div class="st mini go"><svg class="ic" viewBox="0 0 48 48"><path d="M5 20 L24 7 L43 20 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M11 25 V37 M20 25 V37 M28 25 V37 M37 25 V37" stroke="#0A6477" stroke-width="3"/><path d="M5 42 H43" stroke="#0A6477" stroke-width="3" stroke-linecap="round"/></svg><span>供託所から<br>直接払われる</span></div>
+        </div>
+        <div class="jl"><span class="pill ok">対象</span>宅建業に関して取引をした人</div>
+        <div class="jl"><span class="pill ng">対象外</span>宅建業者。広告代金・給料のような債権</div>
+        <p class="small" style="margin-top:2px">上限は、その業者が供託した<b>営業保証金の額</b></p>
+      </div>
+      <div>
+        <div class="lab">補充する（不足額の供託）</div>
+        <svg viewBox="0 0 330 92" width="100%" role="img" aria-label="免許権者の通知書が届いた日から2週間以内に不足額を供託し、供託した日から2週間以内に免許権者に届け出る">
+          <path d="M68 30 H150 M180 30 H266" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M142 23 L153 30 L142 37 Z M258 23 L269 30 L258 37 Z" fill="#0A6477"/>
+          <circle cx="56" cy="30" r="12" fill="#fff" stroke="#0A6477" stroke-width="3"/>
+          <circle cx="165" cy="30" r="12" fill="#E3F8FC" stroke="#0A6477" stroke-width="3"/>
+          <circle cx="282" cy="30" r="12" fill="#0A6477" stroke="#0A6477" stroke-width="3"/>
+          <text x="110" y="19" font-size="14" font-weight="900" fill="#0A6477" text-anchor="middle">2週間以内</text>
+          <text x="223" y="19" font-size="14" font-weight="900" fill="#0A6477" text-anchor="middle">2週間以内</text>
+          <text x="56" y="65" font-size="13" font-weight="900" fill="#111820" text-anchor="middle">免許権者の</text>
+          <text x="56" y="82" font-size="13" font-weight="900" fill="#111820" text-anchor="middle">通知書が届いた日</text>
+          <text x="165" y="65" font-size="13" font-weight="900" fill="#111820" text-anchor="middle">不足額を</text>
+          <text x="165" y="82" font-size="13" font-weight="900" fill="#111820" text-anchor="middle">供託する</text>
+          <text x="282" y="65" font-size="13" font-weight="900" fill="#111820" text-anchor="middle">免許権者に</text>
+          <text x="282" y="82" font-size="13" font-weight="900" fill="#111820" text-anchor="middle">届け出る</text>
+        </svg>
+      </div>
+    </div>
+  </figure></div>
+<div class="gcard"><span class="gno">5</span><span class="gm"><span class="gt">本店を移転したら</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="2">やさしいテキスト（有料）</a>に</span></span></div>
+<div class="gcard"><span class="gno">6</span><span class="gm"><span class="gt">取り戻すとき</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="2">やさしいテキスト（有料）</a>に</span></span></div>
+</div>
+<div data-slot="cards2">
+<div class="tx" data-fig="7"><figure class="fig">
+    <div class="cap"><span class="n">7</span>同じ日に開業した2社<span class="capsub">どちらも本店だけ</span></div>
+    <div class="xs" tabindex="0"><svg style="width:584px;max-width:none;height:auto" viewBox="0 0 690 82" width="100%" role="img" aria-label="A社は供託所に1,000万円、B社は保証協会に60万円を納めた。お客さんが800万円の損をしても、どちらも還付を受けられる範囲に入っている">
+      <text x="0" y="19" font-size="14" font-weight="900" fill="#111820">A社　供託所に預けた</text>
+      <text x="416" y="19" font-size="14" font-weight="900" fill="#111820" text-anchor="middle">お客さんの損　800万円　<tspan fill="#0A6477">どちらも還付を受けられる範囲</tspan></text>
+      <rect x="0" y="25" width="520" height="17" rx="4" fill="#17C5E8"/>
+      <text x="528" y="39" font-size="16" font-weight="900" fill="#0A6477">1,000万円</text>
+      <text x="0" y="58" font-size="14" font-weight="900" fill="#111820">B社　保証協会に納めた</text>
+      <rect x="1" y="63.5" width="518" height="16" rx="4" fill="#fff" stroke="#0A6477" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <rect x="1" y="63.5" width="31.2" height="16" rx="4" fill="#0A6477" stroke="#0A6477" stroke-width="1.5"/>
+      <text x="100" y="76" font-size="13" font-weight="900" fill="#0A6477">お客さんが受けられる範囲は、営業保証金と同じ1,000万円</text>
+      <text x="38" y="77" font-size="16" font-weight="900" fill="#0A6477">60万円</text>
+      <path d="M416 24 V63" stroke="#111820" stroke-width="2.5"/>
+      <circle cx="416" cy="24" r="4.5" fill="#111820"/>
+    </svg></div>
+    <div class="chips">
+      <div class="chip"><b>保証協会</b>＝宅建業者だけが社員の一般社団法人（国土交通大臣が指定）。入るのは自由で、1つにしか入れない。行わなければならない業務は<b>苦情の解決・研修・弁済業務</b></div>
+    </div>
+  </figure></div>
+<div class="tx" data-fig="8"><figure class="fig">
+    <div class="cap"><span class="n">8</span>預けるとき<span class="lg"><span class="a">営業保証金</span><span class="b">保証協会</span></span></div>
+    <div class="cmp">
+      <span class="k">額</span>
+      <span class="c a"><span class="ct">本店 <span class="num">1,000万円</span>　支店ごと <span class="num">500万円</span><br>本店と支店2つなら <span class="num">2,000万円</span></span></span>
+      <span class="c b"><span class="ct">本店 <span class="num">60万円</span>　支店ごと <span class="num">30万円</span><br>本店と支店2つなら <span class="num">120万円</span></span></span>
+      <span class="k">預け方</span>
+      <span class="c a"><span class="ct">本店のもよりの供託所へ<br>金銭でも有価証券でもよい</span></span>
+      <span class="c b"><span class="ct">加入しようとする日までに、協会へ<b>金銭</b>で納める<br>協会が<b>1週間以内</b>に同額を供託</span></span>
+      <span class="k">支店を増やしたら</span>
+      <span class="c a"><span class="ct">その分を預けて、届け出てから営業</span></span>
+      <span class="c b"><span class="ct"><b>2週間以内</b>に納める。遅れると地位を失う</span></span>
+    </div>
+  </figure></div>
+<div class="gcard"><span class="gno">9</span><span class="gm"><span class="gt">使われたとき、補充するとき</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="2">やさしいテキスト（有料）</a>に</span></span></div>
+<div class="gcard"><span class="gno">10</span><span class="gm"><span class="gt">取り戻すとき</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="2">やさしいテキスト（有料）</a>に</span></span></div>
+</div>

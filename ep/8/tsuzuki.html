@@ -1,0 +1,486 @@
+<!-- 第8回 図解：やさしいテキストからの抜粋（無料・LINE登録者向け）。scripts/build-ep.mjs が作る。手で直さない。赤シートなし。 -->
+<style data-nk="css">
+  :host{
+    --accent:#17C5E8; --ink:#0A6477; --soft:#E3F8FC; --mark:#B8EEF8; --pale:#F6FCFE;
+    --text:#111820; --sub:#3D444C; --line:#D5DBE0; --gray:#F1F2F4; --gray-ink:#5A626B;
+    --font:"Noto Sans JP",system-ui,"Hiragino Sans","Yu Gothic",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:#e9ecef;font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiased;letter-spacing:.02em;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .intro{max-width:1640px;margin:20px auto 0;padding:0 16px;font-size:14px;line-height:1.8;color:var(--sub)}
+  .intro b{color:var(--text)}
+  .spread{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;padding:16px 16px 48px}
+
+  
+  .page{width:210mm;height:297mm;background:#fff;box-shadow:0 2px 12px rgba(17,24,32,.08);border-radius:4px;
+    padding:20px 38px 24px;display:flex;flex-direction:column;gap:7px;overflow:hidden;font-size:15px;line-height:1.6}
+  
+
+  .pbar{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:var(--ink);
+    border-bottom:1px solid var(--line);padding-bottom:6px;margin:0 0 2px}
+  .pbar .pg{color:var(--sub)}
+
+  
+  .ttl .no-h{display:inline-block;vertical-align:5px;font-size:14px;background:var(--ink);color:#fff;border-radius:999px;padding:1px 12px;font-weight:900;margin-right:10px}
+  .ttl h1{font-size:27px;font-weight:900;line-height:1.3;margin:0}
+  .ttl .sub{font-size:16px;font-weight:900;color:var(--ink);margin:2px 0 0}
+  .nw{display:inline-block;white-space:nowrap}
+
+  
+  .key{border:3px solid var(--ink);border-radius:12px;padding:8px 16px 8px 14px;display:flex;gap:12px;align-items:flex-start}
+  .key .l{flex:0 0 auto;font-size:12px;font-weight:900;color:var(--ink);background:var(--soft);border-radius:6px;padding:2px 8px;margin-top:4px}
+  .key .t{font-size:19px;font-weight:900;line-height:1.55}
+  .mk{box-shadow:inset 0 -0.42em 0 var(--mark);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+  .p1{gap:11px}
+  .p1 .fig{padding:8px 14px 9px}
+  .p1 .fig > .cap{margin-bottom:7px}
+
+  
+  .fig{margin:0;border:1px solid var(--line);border-radius:12px;padding:6px 14px 7px}
+  .fig > .cap{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:900;margin:0 0 5px}
+  .capsub{font-size:13px;font-weight:700;color:var(--sub);margin-left:4px}
+  .n{flex:0 0 24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:900;
+    display:inline-flex;align-items:center;justify-content:center}
+  .row{display:flex;gap:12px}
+  .row > *{flex:1;min-width:0}
+  svg.ic{width:30px;height:30px;flex:0 0 30px}
+  .chips{display:flex;gap:8px;margin-top:6px}
+  .chip{flex:1;background:var(--gray);border-radius:8px;padding:4px 10px;font-size:13px;line-height:1.55;font-weight:700}
+  .chip b{color:var(--ink);font-weight:900}
+  .small{font-size:13px;font-weight:700;margin:5px 0 0;line-height:1.55}
+  .small b{color:var(--ink);font-weight:900}
+  .big{font-size:15px;font-weight:900;text-align:center;margin:5px 0 0}
+  ul.dots{list-style:none;margin:0;padding:0}
+  ul.dots li{position:relative;padding-left:16px;font-size:14px;font-weight:700;line-height:1.5;margin:0 0 3px}
+  ul.dots li::before{content:"";position:absolute;left:2px;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--ink)}
+  ul.dots li b{color:var(--ink);font-weight:900}
+  .tag{display:inline-block;font-size:13px;font-weight:900;border-radius:999px;padding:0 10px;vertical-align:1px;line-height:1.6}
+  .tag.on{background:var(--ink);color:#fff}
+  .tag.off{background:#fff;color:var(--gray-ink);border:1px solid var(--gray-ink)}
+  .pill{font-size:13px;font-weight:900;border-radius:999px;padding:1px 12px;text-align:center;white-space:nowrap;line-height:1.55;flex:0 0 auto}
+  .pill.ok{background:var(--ink);color:#fff}
+  .pill.ng{background:#fff;color:var(--gray-ink);border:2px solid var(--gray-ink);padding:0 10px}
+
+  
+  .lg{margin-left:auto;display:flex;gap:6px}
+  .lg span{font-size:13px;font-weight:900;color:#fff;border-radius:999px;padding:0 12px;line-height:1.6}
+  .lg .a{background:var(--accent)}
+  .lg .b{background:var(--ink)}
+
+  
+  .cmp{display:grid;grid-template-columns:50px 1.2fr .8fr;gap:4px 8px}
+  .cmp > *{min-width:0}
+  .cmp .k{font-size:15px;font-weight:900;color:var(--ink);display:flex;align-items:center;line-height:1.35}
+  .cmp .c{border-radius:8px;padding:3px 10px;font-size:14px;font-weight:700;line-height:1.45;display:flex;align-items:center;gap:10px}
+  .cmp .c.a{background:var(--soft);border-left:5px solid var(--accent)}
+  .cmp .c.b{background:var(--pale);border:1.5px solid var(--line);border-left:5px solid var(--ink)}
+  .cmp .c b{font-weight:900;color:var(--ink);font-size:15px}
+  .cmp .c small{display:block;font-size:13px;font-weight:700;color:var(--sub)}
+  .cmp .full{grid-column:2/-1}
+  .cmp .h{font-size:13px;font-weight:900;color:var(--sub);text-align:center}
+  .cmp .gray{font-size:13px;font-weight:700;color:var(--gray-ink)}
+  .cmp .c.n1{background:var(--gray);border-left:5px solid var(--gray-ink);border-top:0;border-right:0;border-bottom:0}
+
+  
+  .way{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--pale);border:2px solid var(--accent);border-radius:10px;padding:4px 6px 6px;font-size:14px;font-weight:900;line-height:1.4}
+  .way .who{font-size:14px;color:var(--ink)}
+  .way .who small{font-size:13px;font-weight:700;color:var(--sub);margin-left:4px}
+  .way svg{width:100%;height:auto;margin:2px 0 0}
+
+  
+  .role{display:flex;gap:10px;align-items:center;background:var(--pale);border:2px solid var(--accent);border-radius:10px;padding:6px 12px}
+  .role svg.ic{width:40px;height:40px;flex:0 0 40px}
+  .role .rh{font-size:15px;font-weight:900;margin:0 0 3px}
+
+  
+  .jd{display:grid;grid-template-columns:78px 1fr 1fr;align-items:center;gap:6px 10px;font-size:14px;font-weight:700}
+  .jd .h{font-size:13px;font-weight:900;color:var(--sub);text-align:center}
+  .jd .q{font-weight:900}
+  .jd .none{color:var(--gray-ink);text-align:center;font-size:13px}
+  .jd .pill{justify-self:center}
+
+  
+  .steps{display:flex;align-items:stretch;gap:6px}
+  .st{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0;border-radius:10px;padding:4px 8px 5px;background:var(--pale);border:2px solid var(--accent);font-size:13px;font-weight:700;line-height:1.4}
+  .st b{font-size:15px;font-weight:900;line-height:1.35}
+  .st.go{border-color:var(--ink);background:var(--soft)}
+  .st.go b{color:var(--ink)}
+  .tri{align-self:center;flex:0 0 auto;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:12px solid var(--ink)}
+
+  
+  .pl{border-radius:10px;overflow:hidden}
+  .pl .h{font-size:15px;font-weight:900;color:#fff;padding:3px 12px}
+  .pl .h small{font-size:13px;font-weight:700;margin-left:8px;opacity:.95}
+  .pl .h small.bl{display:block;margin:0}
+  .pl.ok{background:var(--pale);border:2px solid var(--ink)}
+  .pl.ok .h{background:var(--ink)}
+  .pl.ng{background:var(--gray);border:2px solid var(--gray-ink)}
+  .pl.ng .h{background:var(--gray-ink)}
+  .pl .bd{padding:5px 12px 4px}
+  .pl ul.dots li{margin:0 0 2px}
+  .pl .sep{font-size:13px;font-weight:900;color:var(--gray-ink);border-top:1px dashed var(--gray-ink);margin:4px 0 3px;padding-top:3px}
+  .pl .sep.ink{color:var(--ink);border-top-color:var(--ink)}
+
+  
+  .aside{border:2px dashed var(--accent);background:var(--pale);border-radius:12px;padding:8px 16px 10px;display:flex;gap:14px}
+  .aside svg{width:56px;height:56px;flex:0 0 56px;margin-top:4px}
+  .aside .l{display:block;font-size:12px;font-weight:900;color:var(--ink)}
+  .aside h3{font-size:17px;font-weight:900;margin:0 0 2px}
+  .aside p{font-size:14px;line-height:1.62;margin:0 0 2px}
+  .aside p.land{font-weight:900;margin-top:4px}
+
+  
+  .grow{flex:1}
+  .foot{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:8px}
+  .foot .next{flex:1;font-size:13px;font-weight:700;line-height:1.6;color:var(--sub)}
+  .foot .next b{color:var(--text);font-weight:900}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:999px;padding:7px 18px;font-size:14px;font-weight:900;text-decoration:none;line-height:1.35}
+  .btn small{display:block;font-size:12px;font-weight:700;opacity:.9}
+  .chev{width:8px;height:8px;border-right:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(-45deg);margin-left:2px}
+  .colophon{display:block;font-size:11px;font-weight:400;color:var(--sub);margin-top:2px}
+
+  
+  
+
+  
+  .key{position:relative}
+  .key .l{position:absolute;top:-10px;right:14px;margin:0;font-size:12px;line-height:1.5;padding:0 10px;border-radius:999px;background:var(--ink);color:#fff}
+
+
+
+
+:host{--sheet:#8E3B3B;display:block;font-family:var(--font);color:var(--text);font-size:15px;line-height:1.6;letter-spacing:.02em;word-break:auto-phrase;overflow-wrap:anywhere}
+.tx{display:flex;flex-direction:column;gap:12px}
+.sec{font-size:19px}
+.fig{padding:10px 12px 12px}
+.fig > .cap{display:block;position:relative;padding-left:32px;min-height:24px;font-size:16px;line-height:1.45}
+.fig > .cap > .n{position:absolute;left:0;top:-1px;width:24px;height:24px}
+.fig > .cap > .capsub,.fig > .cap > span[style*="margin-left:auto"]{display:block;margin-left:0 !important;padding-left:0;width:auto}
+.row{flex-direction:column;gap:10px !important;align-items:stretch !important}
+.row > *{flex:none !important}
+.tbl{grid-template-columns:44px 1fr 1fr}
+.side{gap:8px}
+.pc .top{align-items:flex-start}
+.pc .res{flex-wrap:wrap}
+.way svg{width:100px}
+.tl{flex-direction:column;align-items:stretch;gap:8px}
+.tl ul{flex:none}
+.rk{grid-template-columns:1fr;gap:4px 0}
+.rk .lb{margin-top:6px}
+.bars{height:auto;min-height:30px}
+.bars .g,.bars .go{white-space:normal;text-align:center;padding:4px 8px;line-height:1.4}
+.team{flex-wrap:wrap;gap:8px}
+.pnl{flex:none !important}
+svg.tm,.tl svg{width:100%;height:auto}
+.aside{gap:10px;padding:8px 12px 10px}
+.aside svg{width:44px;height:44px;flex:0 0 44px}
+.key{padding:8px 12px}
+.key .t{font-size:17px}
+.pill{white-space:nowrap;flex:0 0 auto;max-width:100%}
+.chip{font-size:14px}
+.tk{font-size:14px}
+.rs{box-shadow:inset 0 -0.42em 0 var(--mark);-webkit-box-decoration-break:clone;box-decoration-break:clone;border-radius:3px;-webkit-tap-highlight-color:transparent}
+.pill.rs,.tag.rs,.bars .go.rs{box-shadow:0 0 0 3px var(--mark)}
+.nw{display:inline;white-space:normal}
+.tx p br,.key br,.chip br,.aside br,.tk br,.pnl .m br{display:none}
+.rs{white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+span.rs:not(.pill):not(.go):not(.tag),b.rs{padding:.1em 2px;margin:0 -1px}
+.tx .key .t{text-wrap:pretty}
+.tx p,.chip,.tk,.aside p{text-wrap:pretty}
+.tl svg text{font-size:15px}
+.xs{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;margin:0 -13px;padding:0 13px;overscroll-behavior-x:contain}
+.xs.xs-fit{padding:0 1px}
+.xs svg.tm{width:560px;max-width:none;height:auto}
+.tx.sheet .rs{cursor:pointer;user-select:none;-webkit-user-select:none}
+.tx.sheet .rs:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tx.sheet .rs{position:relative;display:inline-grid;justify-items:start;align-items:center}
+.tx.sheet .rs.pill,.tx.sheet .rs.go{justify-items:center}
+.tx.sheet .rs::before{content:"";position:absolute;left:-2px;right:-2px;top:-9px;bottom:-9px}
+.tx.sheet .rs .av,.tx.sheet .rs .hv{grid-area:1/1;white-space:nowrap}
+.nb{white-space:nowrap}
+.tx.sheet .rs .hv{padding:0 2px;color:#fff !important;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;pointer-events:none}
+.tx.sheet .rs.s-hide{background:var(--sheet) !important;color:transparent !important;border-color:var(--sheet) !important;box-shadow:none}
+.tx.sheet .rs.s-hide .av{visibility:hidden}
+.tx.sheet .rs.s-open .hv{visibility:hidden}
+.go .rs{box-shadow:none}
+
+
+.steps,.fl{flex-direction:column;align-items:stretch;gap:4px}
+.steps > *,.fl > *{flex:none !important}
+.steps .tri,.fl .tri{align-self:center;transform:rotate(90deg);margin:3px 0}
+.st .hd{justify-content:center}
+.st.mini{justify-content:flex-start}
+.chips{flex-direction:column;gap:6px}
+.chips .chip{flex:none !important}
+.cmp{grid-template-columns:1fr !important;gap:3px 0 !important}
+.cmp .k{margin-top:8px;font-size:14px}
+.cmp .k:first-child{margin-top:0}
+.cmp .full{grid-column:auto}
+.cmp > span:empty{display:none}
+.cmp .c{flex-wrap:wrap;padding:4px 8px;gap:4px 6px;align-content:center}
+.cmp .c .pill{white-space:nowrap;flex:0 0 auto;max-width:100%}
+.cmp .num{font-size:16px}
+.jl{align-items:flex-start}
+.jl .pill{margin-top:1px}
+.pl .it,.way,.st{min-width:0}
+.fig svg[role="img"]{max-width:100%;height:auto}
+.fig .xs svg[role="img"]{max-width:none}
+.small,ul.dots li,.lab{font-size:14px}
+figure.fig{min-width:0}
+
+
+
+.stairs{flex-direction:column;align-items:stretch;gap:5px}
+.stairs .st{flex:none;height:auto !important;border:2px solid var(--ink) !important;border-radius:8px !important}
+.stairs .st.s1{border-color:var(--gray-ink) !important}
+.stairs .st.s2{margin-left:14px}
+.stairs .st.s3{margin-left:28px;border-color:var(--ink) !important}
+
+.tr,.chg .r,.tm,.mx{grid-template-columns:104px minmax(0,1fr) !important;gap:3px 12px !important}
+.jd{grid-template-columns:minmax(0,1fr) auto !important;gap:3px 12px !important}
+.jd .q,.jd hr{grid-column:1/-1}
+.tr > :first-child,.chg .r > :first-child,.jd > :first-child,.tm > .k,.tm > .ban,.mx > .rl{grid-column:1/-1}
+.tm,.mx{grid-template-columns:repeat(2,minmax(0,1fr)) !important;justify-content:stretch}
+.tm > div:empty,.mx > span:empty,.mx > div:empty{display:none}
+.mx{grid-template-columns:repeat(3,auto) !important;justify-content:space-between;column-gap:6px !important}
+.mx .mc{min-width:0}
+.mx .rl{margin-top:4px}
+.c{flex-wrap:wrap}
+.pr{flex-wrap:wrap}
+
+.exs{grid-template-columns:1fr !important}
+
+.mt{grid-template-columns:20px 70px repeat(3,minmax(75px,1fr)) !important;gap:3px 4px !important;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.mt > .vb{position:sticky;left:0;z-index:1}
+.mt .hh{flex-direction:column;gap:2px;padding:3px 0;font-size:12px;letter-spacing:0}
+.mt .c{padding-left:2px;padding-right:2px;min-width:0}
+.mt .pill{padding-left:6px;padding-right:6px}
+.mt .vb{letter-spacing:0}
+
+.fm,.two,.reg{flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:8px}
+.fm > *,.two > *,.reg > *{flex:none !important;max-width:100%}
+.fm .plus{align-self:center}
+.alt{flex:none !important}
+.reg .lc{max-width:100%}
+
+.vio{flex-direction:column;gap:8px}
+.vio > *{flex:none !important}
+.and{flex-direction:column;align-items:stretch;align-self:stretch;flex:none;gap:4px}
+.and > .b{flex:none}
+.and .plus,.and .eq{align-self:center}
+
+.fig div[style*="grid-template-columns"]{grid-template-columns:1fr !important}
+
+.roles{flex-wrap:wrap}
+.roles > .role{flex:1 1 calc(50% - 4px) !important;min-width:0}
+
+.who:has(> .wh){grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 8px}
+.who:has(> .wh) > .wh{grid-column:1/-1}
+.who:has(> .wh) > :nth-child(1){order:0}
+.who:has(> .wh) > :nth-child(3){order:1}
+.who:has(> .wh) > :nth-child(4){order:2}
+.who:has(> .wh) > :nth-child(2){order:3;margin-top:4px}
+.who:has(> .wh) > :nth-child(5){order:4;grid-column:1/-1}
+.nums{flex-direction:column;gap:6px}
+.nums .nm{flex:none;white-space:normal;min-width:0}
+
+.conds{flex-direction:column;align-items:stretch;gap:4px}
+.conds .cd{flex:none;border-radius:10px}
+.nums .nm > *{align-self:flex-start}
+
+.tb .th{padding-left:0}
+.grp,.lr{flex-direction:column;gap:3px}
+.gl,.lt{flex:none !important;padding-right:0}
+.lt{padding:3px 8px}
+.lb .g2{grid-template-columns:1fr}
+.lb .one{flex-wrap:wrap}
+
+.way svg[role="img"]{width:100%;max-width:240px;height:auto;margin:2px auto 0}
+
+.fig > .cap > .lg{display:flex;flex-wrap:wrap;gap:4px 6px;margin:4px 0 0 !important;padding-left:0}
+
+.cal{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.cal .days{grid-template-columns:repeat(9,52px);width:max-content}
+.cal{padding-top:36px}
+.cal .br{width:444px;top:16px}
+.cal .br span{width:max-content;white-space:nowrap;left:10px;transform:none}
+.cal{margin:0 -13px;padding-left:1px;padding-right:1px}
+
+.way{display:block;text-align:center}
+.way svg{display:block;margin:2px auto}
+.way .who{display:block}
+.scene{flex-direction:column;gap:6px}
+
+.cup{flex-direction:column;align-items:stretch;gap:8px}
+.cup svg{flex:none;width:100%;height:auto}
+.cup ul{flex:none}
+
+.cal .br span span{position:static;transform:none;background:none;padding:0;top:auto;left:auto;width:auto}
+
+.mt .c .num{font-size:14px}
+.mt .c{font-size:13px;padding-left:2px;padding-right:2px}
+.tx.sheet .mt .rs .hv{white-space:normal;text-align:center;font-size:11px;line-height:1.25}
+
+.fig .cmp:has(> .h){grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:3px 8px !important}
+.fig .cmp:has(> .h) > .k{grid-column:1/-1}
+</style>
+<div data-slot="fig1">
+<div class="tx" data-fig="1"><figure class="fig">
+    <div class="cap"><span class="n">1</span>違いは3行<span class="capsub">いつ・誰に・説明するか</span><span class="lg"><span class="a">35条書面（重要事項説明）</span><span class="b">37条書面（契約書面）</span></span></div>
+    <div class="cmp">
+      <span class="k">いつ</span>
+      <div class="full">
+        <div class="xs" tabindex="0"><svg style="width:518px;max-width:none;height:auto" viewBox="0 0 612 56" width="100%" role="img" aria-label="35条書面は契約が成立するまで、37条書面は契約が成立した後、遅滞なく">
+          <text x="312" y="12" font-size="13" font-weight="900" fill="#0A6477" text-anchor="middle">契約成立</text>
+          <path d="M10 20 H282 L302 36 L282 52 H10 a10 10 0 0 1 -10 -10 V30 a10 10 0 0 1 10 -10 Z" fill="#E3F8FC" stroke="#17C5E8" stroke-width="2"/>
+          <text x="146" y="42" font-size="15" font-weight="900" fill="#111820" text-anchor="middle">契約が成立するまで</text>
+          <circle cx="312" cy="36" r="8" fill="#0A6477" stroke="#fff" stroke-width="2"/>
+          <path d="M326 20 H602 a10 10 0 0 1 10 10 V42 a10 10 0 0 1 -10 10 H326 Z" fill="#0A6477"/>
+          <text x="469" y="42" font-size="15" font-weight="900" fill="#fff" text-anchor="middle">契約が成立した後、遅滞なく</text>
+        </svg></div>
+      </div>
+      <span class="k">誰に</span>
+      <span class="c a"><svg class="ic" viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></svg><span><b>買う人・借りる人になろうとする人</b><small>交換なら、物件を手に入れる双方</small></span></span>
+      <span class="c b"><svg class="ic" style="width:40px;flex-basis:40px"><svg  viewBox="0 0 64 48"><circle cx="19" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M4 43 C4 30 34 30 34 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><circle cx="45" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M30 43 C30 30 60 30 60 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></svg></svg><span><b>契約の両方の当事者</b><small>売主と買主、貸主と借主</small></span></span>
+      <span class="k">説明</span>
+      <span class="c a"><svg class="ic" viewBox="0 0 48 48"><path d="M8 9 H40 a3 3 0 0 1 3 3 V29 a3 3 0 0 1 -3 3 H25 L15 41 V32 H8 a3 3 0 0 1 -3 -3 V12 a3 3 0 0 1 3 -3 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M12 17 H36 M12 24 H30" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg><span><b>宅建士が説明する</b></span></span>
+      <span class="c b"><svg class="ic" viewBox="0 0 48 48"><path d="M8 9 H40 a3 3 0 0 1 3 3 V29 a3 3 0 0 1 -3 3 H25 L15 41 V32 H8 a3 3 0 0 1 -3 -3 V12 a3 3 0 0 1 3 -3 Z" fill="#fff" stroke="#5A626B" stroke-width="2.5" stroke-linejoin="round"/><path d="M12 17 H36 M12 24 H30" stroke="#5A626B" stroke-width="2.5" stroke-linecap="round"/><path d="M6 43 L42 5" stroke="#5A626B" stroke-width="3" stroke-linecap="round"/></svg><span><b>説明はしない</b></span></span>
+      <span class="k">共通</span>
+      <span class="c n1 full"><svg class="ic" viewBox="0 0 48 48"><path d="M9 37 L11 29 L32 8 L40 16 L19 37 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M11 29 L19 37" stroke="#0A6477" stroke-width="2.5"/><path d="M6 44 H30" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg><span><b style="color:var(--text)">宅建士の記名は、どちらも必要</b></span></span>
+    </div>
+  </figure></div>
+</div>
+<div data-slot="cards1">
+<div class="tx" data-fig="2"><figure class="fig">
+    <div class="cap"><span class="n">2</span>37条書面は、誰に渡る？<span class="capsub">業者の立場ごとに</span></div>
+    <div class="row" style="gap:8px">
+      <div class="way"><span class="who">自ら当事者<small>売買・交換だけ</small></span>
+        <svg viewBox="0 0 200 62" role="img" aria-label="自ら当事者のとき、業者から契約の相手方に渡る">
+          <svg x="18" y="2" width="34" height="34" viewBox="0 0 48 48"><rect x="10" y="7" width="28" height="34" rx="2" fill="#fff" stroke="#3D444C" stroke-width="2.5"/><g fill="#3D444C"><rect x="15" y="12" width="5" height="5"/><rect x="28" y="12" width="5" height="5"/><rect x="15" y="21" width="5" height="5"/><rect x="28" y="21" width="5" height="5"/></g><rect x="20" y="31" width="8" height="10" fill="#3D444C"/><path d="M4 41 H44" stroke="#3D444C" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <text x="35" y="54" font-size="13" font-weight="900" fill="#5A626B" text-anchor="middle">業者</text>
+          <path d="M60 19 H126" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M120 12 L132 19 L120 26 Z" fill="#0A6477"/>
+          <svg x="142" y="2" width="34" height="34" viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></svg>
+          <text x="159" y="54" font-size="13" font-weight="900" fill="#0A6477" text-anchor="middle">相手方</text>
+        </svg>
+        契約の相手方に</div>
+      <div class="way"><span class="who">代理</span>
+        <svg viewBox="0 0 200 62" role="img" aria-label="代理のとき、業者から契約の相手方と、代理を依頼した人に渡る">
+          <svg x="6" y="2" width="34" height="34" viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></svg>
+          <text x="23" y="54" font-size="13" font-weight="900" fill="#0A6477" text-anchor="middle">依頼者</text>
+          <svg x="83" y="2" width="34" height="34" viewBox="0 0 48 48"><rect x="10" y="7" width="28" height="34" rx="2" fill="#fff" stroke="#3D444C" stroke-width="2.5"/><g fill="#3D444C"><rect x="15" y="12" width="5" height="5"/><rect x="28" y="12" width="5" height="5"/><rect x="15" y="21" width="5" height="5"/><rect x="28" y="21" width="5" height="5"/></g><rect x="20" y="31" width="8" height="10" fill="#3D444C"/><path d="M4 41 H44" stroke="#3D444C" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <text x="100" y="54" font-size="13" font-weight="900" fill="#5A626B" text-anchor="middle">業者</text>
+          <path d="M80 19 H54" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M60 12 L48 19 L60 26 Z" fill="#0A6477"/>
+          <path d="M120 19 H146" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M140 12 L152 19 L140 26 Z" fill="#0A6477"/>
+          <svg x="160" y="2" width="34" height="34" viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></svg>
+          <text x="177" y="54" font-size="13" font-weight="900" fill="#0A6477" text-anchor="middle">相手方</text>
+        </svg>
+        相手方と、依頼した人に</div>
+      <div class="way"><span class="who">媒介</span>
+        <svg viewBox="0 0 200 62" role="img" aria-label="媒介のとき、業者から契約の各当事者に渡る">
+          <svg x="6" y="2" width="34" height="34" viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></svg>
+          <text x="23" y="54" font-size="13" font-weight="900" fill="#0A6477" text-anchor="middle">当事者</text>
+          <svg x="83" y="2" width="34" height="34" viewBox="0 0 48 48"><rect x="10" y="7" width="28" height="34" rx="2" fill="#fff" stroke="#3D444C" stroke-width="2.5"/><g fill="#3D444C"><rect x="15" y="12" width="5" height="5"/><rect x="28" y="12" width="5" height="5"/><rect x="15" y="21" width="5" height="5"/><rect x="28" y="21" width="5" height="5"/></g><rect x="20" y="31" width="8" height="10" fill="#3D444C"/><path d="M4 41 H44" stroke="#3D444C" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <text x="100" y="54" font-size="13" font-weight="900" fill="#5A626B" text-anchor="middle">業者</text>
+          <path d="M80 19 H54" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M60 12 L48 19 L60 26 Z" fill="#0A6477"/>
+          <path d="M120 19 H146" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M140 12 L152 19 L140 26 Z" fill="#0A6477"/>
+          <svg x="160" y="2" width="34" height="34" viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></svg>
+          <text x="177" y="54" font-size="13" font-weight="900" fill="#0A6477" text-anchor="middle">当事者</text>
+        </svg>
+        契約の各当事者に</div>
+    </div>
+    <div class="chips">
+      <div class="chip" style="flex:.8"><b>売主と買主の両方</b>、<br><b>貸主と借主の両方</b>に渡る</div>
+      <div class="chip" style="flex:1.2">自分が貸主になって貸すのは、宅建業の取引ではない。<br><b>37条書面の義務もない</b></div>
+    </div>
+  </figure></div>
+<div class="tx" data-fig="3"><figure class="fig">
+    <div class="cap"><span class="n">3</span>37条書面：記名するのは宅建士、交付するのは業者</div>
+    <div class="row" style="gap:10px">
+      <div class="role" style="flex:1.45">
+        <svg class="ic" viewBox="0 0 48 48"><circle cx="24" cy="14" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M8 44 C8 29 40 29 40 44 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><rect x="19" y="33" width="10" height="7" rx="1.5" fill="#fff" stroke="#0A6477" stroke-width="2"/></svg>
+        <div>
+          <p class="rh">宅建士　<span class="tag on">記名する</span></p>
+          <ul class="dots">
+            <li>専任でなくてよい</li>
+            <li>35条書面に記名した人と、同じでなくてよい</li>
+            <li>業者が複数なら、各業者の宅建士が記名</li>
+          </ul>
+        </div>
+      </div>
+      <div class="role" style="flex:1">
+        <svg class="ic" viewBox="0 0 48 48"><rect x="10" y="7" width="28" height="34" rx="2" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><g fill="#0A6477"><rect x="15" y="12" width="5" height="5"/><rect x="28" y="12" width="5" height="5"/><rect x="15" y="21" width="5" height="5"/><rect x="28" y="21" width="5" height="5"/></g><rect x="20" y="31" width="8" height="10" fill="#0A6477"/><path d="M4 41 H44" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <div>
+          <p class="rh">宅建業者　<span class="tag on">交付する</span></p>
+          <ul class="dots">
+            <li>宅建士が自分で手渡すことまでは、求められない</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </figure></div>
+</div>
+<div data-slot="cards2">
+<div class="gcard"><span class="gno">4</span><span class="gm"><span class="gt">相手が宅建業者のとき</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="8">やさしいテキスト（有料）</a>に</span></span></div>
+<div class="gcard"><span class="gno">5</span><span class="gm"><span class="gt">電磁的方法でもよい</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="8">やさしいテキスト（有料）</a>に</span></span></div>
+<div class="tx" data-fig="6"><figure class="fig">
+    <div class="cap"><span class="n">6</span>書く欄は2種類<span class="capsub">旅行の申込書の「全員が書く欄」と「該当する方のみ記入」の欄</span></div>
+    <div class="row" style="gap:10px">
+      <div class="pl ok">
+        <div class="h">書かなければならない<small class="bl">取引に、どれにもあるもの</small></div>
+        <div class="bd">
+          <ul class="dots">
+            <li>当事者の氏名・住所</li>
+            <li>物件を特定する表示</li>
+            <li>引渡しの時期</li>
+            <li>代金の額と、支払の時期・方法（貸借は借賃）</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pl ng">
+        <div class="h">定めがあるときだけ書く<small class="bl">決めたかどうかが、取引ごとに違うもの</small></div>
+        <div class="bd">
+          <ul class="dots">
+            <li>代金・借賃以外の金銭</li>
+            <li>契約の解除</li>
+            <li>損害賠償額の予定・違約金</li>
+            <li>天災などの不可抗力による損害の負担</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="small">ここまでは、売買・交換も貸借も同じ。決めていなければ、書かなくてよい。</p>
+  </figure></div>
+<div class="tx" data-fig="7"><figure class="fig">
+    <div class="cap"><span class="n">7</span>売買・交換だけの5つ<span class="capsub">貸借の37条書面には出てこない</span></div>
+    <div class="row" style="gap:10px">
+      <div class="pl ok">
+        <div class="h">書かなければならない</div>
+        <div class="bd">
+          <ul class="dots">
+            <li>移転登記の申請の時期</li>
+            <li>既存の建物なら、構造耐力上主要な部分等の状況を双方が確認した事項<br><span style="color:var(--gray-ink)">新築の建物には、この欄はない</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pl ng">
+        <div class="h">定めがあるときだけ書く</div>
+        <div class="bd">
+          <ul class="dots">
+            <li>ローンが成立しないときの措置</li>
+            <li>契約不適合責任と、その履行の措置</li>
+            <li>租税などの公課の負担</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="big">建物の貸借で「租税公課の負担を書く」とあれば誤り。</p>
+  </figure></div>
+<div class="gcard"><span class="gno">8</span><span class="gm"><span class="gt">35条と37条の入れ替え</span><span class="gn">この図は、<a href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="8">やさしいテキスト（有料）</a>に</span></span></div>
+</div>

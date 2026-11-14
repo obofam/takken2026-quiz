@@ -400,6 +400,22 @@ const y2026Section = prev => {
     `    <ul class="past">${rows}</ul>\n  </section>\n`;
 };
 
+/* 配信日まで閉じる（第1回＝見本の回は閉じない）。条件は roadmap/index.html と同じ：端末の日付（new Date() の年月日）が配信日以上なら開く。
+   試し用は、ふだんは開いたまま。?today=YYYY-MM-DD を付けたときだけ、その日として判定する（roadmap-an2.html と同じ言い方）。本番の型には today の上書きを入れない。 */
+function gateVals(ep, iso, dateLabel, test) {
+  if (CFG.SAMPLE_EPS.includes(ep)) return { GATE_SCRIPT: '', CLOSED_CSS: '', CLOSED_BOX: '', GUARD: '' };
+  const k = Number(iso.replace(/-/g, ''));
+  const now = test
+    ? 'var m=/[?&]today=(\\d{4})-(\\d\\d)-(\\d\\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):k;'
+    : 'var n=new Date(),t=n.getFullYear()*10000+(n.getMonth()+1)*100+n.getDate();';
+  return {
+    GATE_SCRIPT: '\n<script>(function(){var k=' + k + ';' + now + "if(t<k){document.documentElement.className+=' ep-closed';}})();</script>",
+    CLOSED_CSS: '\n/* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */\n.closed-box{display:none}\n.ep-closed .closed-box{display:block}\n.ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}\n.next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}',
+    CLOSED_BOX: '\n  <div class="next-box closed-box"><p>この回は、' + dateLabel + 'からです。</p><a class="lbtn" href="/roadmap">学習ロードマップへ</a></div>',
+    GUARD: " if (document.documentElement.classList.contains('ep-closed')) { return; }",
+  };
+}
+
 /* 回のページ一式（index.html・line-full.html・line-full.js）。mode は 'prod'（本番）か 'test'（試し用） */
 export function buildPages(m, text, ex, mode) {
   const { ep, json, data } = m;
@@ -430,6 +446,7 @@ export function buildPages(m, text, ex, mode) {
     MIHON_EXPR: test ? "qs.get('mihon')" : "isLocal ? qs.get('mihon') : null",
     MIHON_EXPORT: test ? ' window.__epMihon = mihon;' : '',
     NO_WHO: test ? "!who && mihon !== 'kounyu'" : '!who',
+    ...gateVals(ep, json.date, date, test),
     MIHON_QS: test ? " + (mihon === 'kounyu' ? '&mihon=1' : '')" : '',
   });
   const corePoint = h => json.points.find(p => p.half === h);
@@ -446,14 +463,15 @@ export function buildPages(m, text, ex, mode) {
 }
 
 /* ============================================================ 公開側に有料の中身が出ていないか */
+/* 有料の節の印：赤シート・芯の囲み（.key）・寄り道の囲み（.aside）・今回の数字の節。札の字（「芯」「ワンポイント」など）でなく class で見る（札の字は材料が変える） */
+export const PAID_MARKUP = /class="[^"]*\b(?:rs|key|aside|numh|nl|nr|nv)\b[^"]*"|role="button"|data-hint|data-part=/;
 export function checkPublic(m, text, ex, pages) {
   const { ep } = m;
   const ctx = `第${ep}回`;
-  const bad = /class="[^"]*\brs\b[^"]*"|role="button"|data-hint|data-part=/;
+  const bad = PAID_MARKUP;
   for (const [name, h] of [['index.html', pages.index], ['line-full.html', pages.lineFullHtml], ['tsuzuki.html', ex.html]]) {
     if (bad.test(h)) throw new Error(`${ctx}：公開側の ${name} に赤シートの印・今回の数字の節が入っている`);
   }
-  if (/今回の数字|ワンポイント/.test(ex.html + pages.lineFullHtml)) throw new Error(`${ctx}：公開側の抜粋に、有料だけの節（今回の数字・ワンポイント）が入っている`);
   /* テキストだけ（paid）の図の字が、公開側（無料の図・今日のポイント・ページの字）に出ていないこと。無料・登録者の図や芯にも同じ文があるものは除く */
   const strip = h => h.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, '').replace(/<template\b[\s\S]*?<\/template>/g, t => t);
   const publicPlain = plain(strip(pages.index) + strip(pages.lineFullHtml) + strip(ex.html));
@@ -519,7 +537,7 @@ ${jumpBlock}
 ${buyerBaseCss}${sheetCss}
 .is-buyer .only-a,.is-buyer .line-card{display:none !important}
 `;
-  if (/class="[^"]*\brs\b|role="button"|今回の数字|ワンポイント|_ep-text|api\/ep-text/.test(viewJsOut + viewCssOut)) throw new Error('共通の部品に有料の中身が入っている');
+  if (/class="[^"]*\brs\b|role="button"|今回の数字|_ep-text|api\/ep-text/.test(viewJsOut + viewCssOut) || /class="[^"]*\b(?:key|aside)\b/.test(viewJsOut + viewCssOut)) throw new Error('共通の部品に有料の中身が入っている');
   return { viewJsOut, viewCssOut, sheetJs, sheetCss, jumpBlock, pdfCss, dan };
 }
 
@@ -766,7 +784,8 @@ export function buildEp(ep, release, shared) {
   const files = [];
   const inProd = release.prod.includes(ep);
   const pdf = fs.readFileSync(m.pdfPath);
-  const meta = JSON.stringify({ name: `やさしいテキスト_第${ep}回_${m.json.sub}.pdf` }) + '\n';
+  /* open＝配信日（日本時間のその日の 0:00 から API が返す）。第1回（見本の回）は open を入れない＝閉じない */
+  const meta = JSON.stringify(CFG.SAMPLE_EPS.includes(ep) ? { name: `やさしいテキスト_第${ep}回_${m.json.sub}.pdf` } : { name: `やさしいテキスト_第${ep}回_${m.json.sub}.pdf`, open: m.json.date }) + '\n';
   const modes = inProd ? ['test', 'prod'] : ['test'];
   let checked = 0;
   const byMode = {};

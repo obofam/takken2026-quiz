@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
+<script>(function(){var k=20270125;var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):k;if(t<k){document.documentElement.className+=' ep-closed';}})();</script>
 <title>第4回 宅建士証と変更の登録｜耳で覚える宅建2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
@@ -420,6 +421,11 @@ body.member .line-card{display:block}
 .dk{font-weight:700}
 .dv{white-space:pre-wrap}
 .dcopy{margin-top:14px;cursor:pointer}
+/* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */
+.closed-box{display:none}
+.ep-closed .closed-box{display:block}
+.ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}
+.next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}
 </style>
 </head>
 <body>
@@ -430,6 +436,7 @@ body.member .line-card{display:block}
     <div class="row"><span class="no">第4回</span><h1>引っ越したのに<br>名簿は古いまま？</h1></div>
     <div class="side">宅建士証と変更の登録</div>
   </div>
+  <div class="next-box closed-box"><p>この回は、2027年1月25日（月）からです。</p><a class="lbtn" href="/roadmap">学習ロードマップへ</a></div>
   <a class="listen" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="4">音声番組を聴く（Spotify）</a>
   <p class="oapps">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm">stand.fm</a></p>
   <!-- 配信が始まったら（2027年1月25日以降）この注記は要らない。外す -->
@@ -873,7 +880,7 @@ figure.fig{min-width:0}
 </div>
 <script>
 (function () {
-  'use strict';
+  'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }
   /* 3問のデータは build.py が data.json から差し込む（過去問1選はLINEで届けるため、このページには出さない） */
   var QUIZ = [{"label": "前半　「宅建士証」の3問", "questions": [{"q": "宅建士証の更新を受けるときも、試験に合格した日から1年以内であれば、法定講習は免除される。", "a": false, "exp": "合格から1年以内の免除は、更新にはありません。"}, {"q": "登録の移転とともに交付を受けた宅建士証の有効期間は、交付の日から5年である。", "a": false, "exp": "古い宅建士証の残りの期間です。"}, {"q": "事務禁止処分を受けた宅建士は、速やかに、宅建士証を、その交付を受けた知事に提出しなければならない。", "a": true, "exp": "返納ではなく、提出です。"}]}, {"label": "後半　「変更の登録」の3問", "questions": [{"q": "宅建士は、本籍を変更したときは、変更の登録とあわせて、宅建士証の書換え交付を申請しなければならない。", "a": false, "exp": "本籍はカードに載っていないので、変更の登録だけです。"}, {"q": "宅建士証の交付を受けていない登録者でも、勤め先の宅建業者の商号が変わったときは、変更の登録を申請しなければならない。", "a": true, "exp": "変更の登録は、登録を受けている人全員の義務です。"}, {"q": "宅建士の信用失墜行為の禁止は、職務として行う行為に限られる。", "a": false, "exp": "私的な行為も含まれます。"}]}];
   var esc = function (s) {
@@ -1024,7 +1031,7 @@ figure.fig{min-width:0}
    401・403・失敗は、いまの見え方のまま（何も出さない）。ログインの印が無い人は呼ばない。
    ?joutai=1 で「表示の状態（確認用）」を出す。?mihon=touroku は localhost／127.0.0.1 のときだけ効く（手元の確認用）。 */
 (function () {
-  'use strict';
+  'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }
   var LIFF_ID = '2011606963-hH0DzETc';
   var body = document.body;
   var qs = new URLSearchParams(location.search);

@@ -219,7 +219,7 @@ test('production ep/1: tsuzuki.html is the free excerpt (same as ep1-nukigaki.ht
   assert.equal(tz,fs.readFileSync(path.join(__dirname,'../ep1-nukigaki.html'),'utf8'));
   const files=['tsuzuki.html','line-full.html','line-full.js','index.html'].map(f=>[f,fs.readFileSync(path.join(prod,f),'utf8')]);
   for(const [f,h] of files){
-    assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|data-hint|data-part=|ワンポイント/,f);
+    assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|data-hint|data-part=|class="[^"]*(?:key|aside)/,f);
     if(f!=='index.html')assert.ok(!h.includes('今回の数字'),f);// index.html にあるのは見本カードの説明文「今回の数字」だけ（既存の文言）
     // 本番の第1回（index.html）だけは、購入の確認（GET /api/ep-text）を呼ぶ。テキストの中身はAPIが返すので、ここには無い
     assert.doesNotMatch(h,f==='index.html'?/_ep-text|api\/session/:/_ep-text|api\/ep-text|api\/session/,f);
@@ -267,8 +267,8 @@ test('sample page (ep/1/text): wording rules - no 寄り道 as a selling point, 
   const html=sample();
   // 「寄り道」は、中身の中の囲みの見出しにだけ出る
   const shown=html.replace(/<style>[\s\S]*?<\/style>/g,'').replace(/<!--[\s\S]*?-->/g,'');// 見えない部分（CSSの注釈）は数えない
-  assert.equal((shown.match(/寄り道/g)||[]).length,1);
-  assert.equal((html.match(/今日のワンポイント（放送の寄り道から）/g)||[]).length,1);
+  assert.equal((shown.match(/寄り道/g)||[]).length,0);// 2026-11-14 材料の札の文言が「このルールができたわけ」に変わった
+  assert.equal((html.match(/このルールができたわけ/g)||[]).length,1);
   assert.doesNotMatch(html,/[0-9０-９,，]+\s*円|[¥￥]|税込|値段|価格|料金/);
   assert.doesNotMatch(html,/登録は無料です/);
   assert.match(html,/登録無料です。/);
@@ -315,7 +315,7 @@ test('the paid text is public only in ep/1/text/: no other public file carries i
   assert.deepEqual(hits,['ep/1/text/index.html']);
   for(const f of ['index.html','tsuzuki.html','line-full.html','line-full.js']){
     const h=fs.readFileSync(path.join(prod,'ep/1',f),'utf8');
-    assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|data-hint|data-part=|ワンポイント|setupSheet|tpl-css/,f);
+    assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|data-hint|data-part=|class="[^"]*(?:key|aside)|setupSheet|tpl-css/,f);
     assert.ok(!h.includes(marker),f);
   }
 });
@@ -326,7 +326,7 @@ const shared=()=>({js:fs.readFileSync(path.join(sharedDir,'text-view.js'),'utf8'
 test('production buyer view: ep/_shared parts carry no paid content (no text sentence, no hint table, no marker, no red-sheet marks)',()=>{
   const {js,css}=shared(),built=require('../api/_ep-text/ep1');
   for(const [f,h] of [['text-view.js',js],['text-view.css',css]]){
-    assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|role="button"|今回の数字|ワンポイント|_ep-text|api\/ep-text|api\/session|tpl-css/,f);
+    assert.doesNotMatch(h,/class="[^"]*\brs\b[^"]*"|role="button"|今回の数字|class="[^"]*(?:key|aside)|_ep-text|api\/ep-text|api\/session|tpl-css/,f);
     for(const w of ['転貸','又貸し','適用されない','事務所に数える','継続して業務ができる施設','取消しの理由','聴聞の公示','駆け込み廃業も取消し','いる／いらない','知事／大臣','欠格になる／欠格にならない'])assert.ok(!h.includes(w),f+':'+w);
     assert.ok(!h.includes('なぜ、駆け込み廃業も取消しと同じ扱いなの'),f);
     assert.doesNotMatch(h,/[→←↑↓]|[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u,f);
@@ -403,4 +403,31 @@ test('sample page: the 6 true/false questions and the past-exam question come fr
   assert.doesNotMatch(html,/class="dm"|選択肢ごとに○×のメモ/);
   // 並び（実行後）：前半テキスト→q1→後半テキスト→q2。script が3問を移す先
   assert.match(html,/getElementById\('text1'\)\.appendChild\(q1\)/);assert.match(html,/getElementById\('text2'\)\.appendChild\(q2\)/);
+});
+
+// ---- 配信日まで閉じる：ep<N>.meta.json の open（日本時間のその日の 0:00 から）。第1回は閉じない。mihon=1（ALLOW_TEXT_PREVIEW=1）は日付に関係なく返す ----
+async function atTime(iso,fn){const real=Date.now;Date.now=()=>Date.parse(iso);try{return await fn();}finally{Date.now=real;}}
+test('ep-text / ep-pdf: before the delivery date (JST) 404 even with the right; from 0:00 JST 200; ep1 is never closed',async()=>{
+  const meta=JSON.parse(fs.readFileSync(path.join(__dirname,'../api/_ep-text/ep2.meta.json'),'utf8'));
+  assert.equal(meta.open,'2027-01-12');
+  assert.equal(JSON.parse(fs.readFileSync(path.join(__dirname,'../api/_ep-text/ep1.meta.json'),'utf8')).open,undefined);
+  const orig=pdfApi.source.read;pdfApi.source.read=()=>Buffer.from('%PDF-test');
+  try{
+    await atTime('2027-01-11T14:59:59Z',async()=>{// 2027-01-11 23:59:59 JST
+      database();
+      const a=response();await textApi(request('ep=2'),a);assert.equal(a.code,404);assert.deepEqual(a.data,{error:'not_found'});
+      const b=pdfResponse();await pdfApi(request('ep=2',{},'/api/ep-pdf'),b);assert.equal(b.code,404);
+      const c=response();await textApi(request('ep=1'),c);assert.equal(c.code,200);
+      process.env.ALLOW_TEXT_PREVIEW='1';
+      const d=response();await textApi(request('ep=2&mihon=1',{cookie:undefined}),d);assert.equal(d.code,200);
+      delete process.env.ALLOW_TEXT_PREVIEW;
+    });
+    await atTime('2027-01-11T15:00:00Z',async()=>{// 2027-01-12 0:00:00 JST
+      database();
+      const a=response();await textApi(request('ep=2'),a);assert.equal(a.code,200);
+      const b=pdfResponse();await pdfApi(request('ep=2',{},'/api/ep-pdf'),b);assert.equal(b.code,200);
+      database({entitlements:[]});
+      const c=response();await textApi(request('ep=2'),c);assert.equal(c.code,403);
+    });
+  }finally{pdfApi.source.read=orig;}
 });

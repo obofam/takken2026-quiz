@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
+<script>(function(){var k=20270301;var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):k;if(t<k){document.documentElement.className+=' ep-closed';}})();</script>
 <title>第9回 クーリングオフと手付｜耳で覚える宅建2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
@@ -420,6 +421,11 @@ body.member .line-card{display:block}
 .dk{font-weight:700}
 .dv{white-space:pre-wrap}
 .dcopy{margin-top:14px;cursor:pointer}
+/* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */
+.closed-box{display:none}
+.ep-closed .closed-box{display:block}
+.ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}
+.next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}
 </style>
 </head>
 <body>
@@ -430,6 +436,7 @@ body.member .line-card{display:block}
     <div class="row"><span class="no">第9回</span><h1>テントで申し込んだら、<br>白紙に戻せる？</h1></div>
     <div class="side">クーリングオフと手付</div>
   </div>
+  <div class="next-box closed-box"><p>この回は、2027年3月1日（月）からです。</p><a class="lbtn" href="/roadmap">学習ロードマップへ</a></div>
   <a class="listen" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="9">音声番組を聴く（Spotify）</a>
   <p class="oapps">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm">stand.fm</a></p>
   <!-- 配信が始まったら（2027年3月1日以降）この注記は要らない。外す -->
@@ -869,7 +876,7 @@ figure.fig{min-width:0}
 </div>
 <script>
 (function () {
-  'use strict';
+  'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }
   /* 3問のデータは build.py が data.json から差し込む（過去問1選はLINEで届けるため、このページには出さない） */
   var QUIZ = [{"label": "前半　「クーリングオフ」の3問", "questions": [{"q": "クーリングオフの8日間は、書面で告げられた日の翌日から数える。", "a": false, "exp": "告げられた日を含めて8日以内です。"}, {"q": "業者が売主で、買主が業者でない場合、テント張りの案内所で買受けの申込みをした買主は、クーリングオフができる。", "a": true, "exp": "土地に定着していないので、事務所等にあたりません。"}, {"q": "解除の書面が8日以内に業者に届かなければ、クーリングオフの効力は生じない。", "a": false, "exp": "効力は発信した時に生じます。8日以内に出せばいい。"}]}, {"label": "後半　「手付金」の3問", "questions": [{"q": "業者が売主の契約で、契約書に「この手付は違約手付とする」と書けば、買主は手付を放棄して解除できない。", "a": false, "exp": "名目にかかわらず、解約手付の性質を持ちます。"}, {"q": "買主が中間金を払って履行に着手した後は、業者が着手していなくても、買主は手付を放棄して解除できない。", "a": false, "exp": "基準は相手方の着手です。業者が未着手なら、買主は解除できます。"}, {"q": "業者は手付の3倍を現実に提供しなければ解除できない、とする特約は有効である。", "a": true, "exp": "買主に有利な特約なので、有効です。"}]}];
   var esc = function (s) {
@@ -1020,7 +1027,7 @@ figure.fig{min-width:0}
    401・403・失敗は、いまの見え方のまま（何も出さない）。ログインの印が無い人は呼ばない。
    ?joutai=1 で「表示の状態（確認用）」を出す。?mihon=touroku は localhost／127.0.0.1 のときだけ効く（手元の確認用）。 */
 (function () {
-  'use strict';
+  'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }
   var LIFF_ID = '2011606963-hH0DzETc';
   var body = document.body;
   var qs = new URLSearchParams(location.search);
