@@ -268,7 +268,8 @@ test('sample page (ep/1/text): wording rules - no 寄り道 as a selling point, 
   // 「寄り道」は、中身の中の囲みの見出しにだけ出る
   const shown=html.replace(/<style>[\s\S]*?<\/style>/g,'').replace(/<!--[\s\S]*?-->/g,'');// 見えない部分（CSSの注釈）は数えない
   assert.equal((shown.match(/寄り道/g)||[]).length,0);// 2026-11-14 材料の札の文言が「このルールができたわけ」に変わった
-  assert.equal((html.match(/このルールができたわけ/g)||[]).length,1);
+  assert.equal((html.match(/このルールができたわけ/g)||[]).length,0);// 2026-11-15 札の字は「ルールのわけ」に（Kei）
+  assert.equal((html.match(/ルールのわけ/g)||[]).length,1);
   assert.doesNotMatch(html,/[0-9０-９,，]+\s*円|[¥￥]|税込|値段|価格|料金/);
   assert.doesNotMatch(html,/登録は無料です/);
   assert.match(html,/登録無料です。/);
