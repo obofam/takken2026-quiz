@@ -258,6 +258,8 @@
   /* 押せると伝える：押す前は水色の枠。押したあとはチェックの形（CSS）と字。押した瞬間に軽く動く */
   button.mk-l[data-st="1"], button.mk-l[data-st="2"] { font-size: .8rem; }
   button.mk-l[data-st="1"]::before, button.mk-l[data-st="2"]::before { content: ""; display: block; width: 13px; height: 7px; margin: 0 auto 5px; border-left: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(-45deg); }
+  /* まだ配信していない回：同じ場所にグレーの丸（押せない・ボタンではない） */
+  .mk-off { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: var(--gray-pill); color: #4E5B66; font-size: .8rem; font-weight: 700; line-height: 1; white-space: nowrap; }
   @media (hover: hover) { button.mk-l[data-st="0"]:hover { background: var(--cyan-soft); } }
   button.mk-l:active { transform: scale(.94); }
   button.mk-l:focus-visible { outline: 3px solid var(--cyan-mid); outline-offset: 2px; }
@@ -392,6 +394,9 @@
     .acts a { min-height: 40px; margin: -8px 0; font-size: 13px; line-height: 1.5; }
     .acts .ok, .acts .kk { font-size: 12px; margin-left: 5px; }
     button.mk-l { width: 44px; height: 44px; min-width: 44px; font-size: 11.5px; border-width: 2px; }
+    button.mk-l[data-st="1"], button.mk-l[data-st="2"] { font-size: 11px; }
+    button.mk-l[data-st="1"]::before, button.mk-l[data-st="2"]::before { width: 11px; height: 6px; margin-bottom: 3px; border-width: 2.5px; }
+    .mk-off { width: 44px; height: 44px; font-size: 11px; }
     /* 駅 */
     .stn { display: flex; grid-column: 1; grid-row: 1 / -1; align-self: start; justify-self: center; width: 30px; height: 30px; border-radius: 50%; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; line-height: 1; background: var(--card); border: 2px solid var(--cyan); color: var(--cyan-dark); position: relative; z-index: 1; }
     .stn.sd { width: 12px; height: 12px; margin-top: 9px; border-width: 2px; }
@@ -730,13 +735,13 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
         marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-pressed="'+(st?'true':'false')+'" aria-label="第'+e.n+'回の記録 '+ST_LABEL[st]+'">'+ST_LABEL[st]+'</button>'
           ;
       }
-      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(marks?'':' nrc')+stc+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
+      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+((marks || (e.kind==='本編' && e.n && fut))?'':' nrc')+stc+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
         + '<td class="c-date">'+md(e)+'<span class="wd">('+esc(e.wd)+')</span>'+(e.note?'<span class="hol">'+esc(e.note)+'</span>':'')+'</td>'
         + '<td class="c-kind">'+(e.kind==='本編' ? '<span class="stn">'+e.n+'</span>' : '<span class="stn sd"></span>')+'<span class="badge'+k[1]+(e.kind==='本編'?' bd-main':'')+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
         + '<td class="c-part">'+esc(partName(e.part))+'</td>'
         + '<td class="c-theme">'+nbt(s.theme)+'</td>'
         + '<td class="c-title">'+(titleHtml?'<span class="t1">'+titleHtml+'</span>':'')+(acts?'<div class="acts">'+acts+'</div>':'')+'</td>'
-        + '<td class="c-rec">'+marks+'</td>'
+        + '<td class="c-rec">'+(marks || ((e.kind==='本編' && e.n && fut) ? '<span class="mk-off">未配信</span>' : ''))+'</td>'
         + '</tr>';
     });
     document.getElementById('sched').innerHTML = html + '</tbody>';
