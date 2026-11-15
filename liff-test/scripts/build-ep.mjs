@@ -2,6 +2,8 @@
 // 使い方：node scripts/build-ep.mjs 2   ／   node scripts/build-ep.mjs 1-9   ／   node scripts/build-ep.mjs 2,3,5   ／   node scripts/build-ep.mjs all
 // 材料：6_有料PDF/やさしいテキスト_2027/ の 第NN回_*.html・第NN回_流し込み材料.json・直感図解/第NN回_*/data.json（読むだけ）。
 //
+// 試し用だけに書く：--shisaku を付ける（例：node scripts/build-ep.mjs 1-9 --shisaku）。本番（リポジトリ直下）には1バイトも書かない。
+//
 // 出し先（大事）
 //   試し用（liff-test が公開ルート）：liff-test/ep/N/（index.html・line-full.html・line-full.js・tsuzuki.html）と、有料の中身 liff-test/api/_ep-text/epN.js・epN.pdf。
 //   本番（リポジトリ直下）：ep-release.json の prod に入っている回だけ。ep/N/ と api/_ep-text/。入っていない回は本番へ書かない。
@@ -374,8 +376,88 @@ const targetDiv = (ep, halfNo, scope) => {
 };
 const pointCore = text => `<div class="core"><h2>今日のポイント</h2><p>${T(text)}</p></div>`;
 
-const kakomonJs = k => {
-  const items = k.items.map(it => ({ m: it.m, t: it.t }));
+/* ---- 過去問の朱入れ（試し用だけ）。データは liff-test/ep-kakomon-shuire.json（回→選択肢の記号→[{mark}|{del,to}]）。
+   mark・del の語は、その選択肢の本文（材料の kakomon.items[].t）にちょうど1回。del は ok:false の選択肢だけ。語どうしは重ならない。 */
+export const SHUIRE_FILE = path.join(TEST_ROOT, 'ep-kakomon-shuire.json');
+export const SHUIRE_STYLE = 'after'; /* 'ruby'（取り消した字の上）／'after'（すぐ後ろ）。375px幅で確かめて決めた */
+export const loadShuire = () => (fs.existsSync(SHUIRE_FILE) ? readJson(SHUIRE_FILE) : {});
+export function shuireFor(ep, k, data = loadShuire()) {
+  const d = data[String(ep)];
+  if (!d) return null;
+  const ctx = `第${ep}回の朱入れ`;
+  if (typeof d !== 'object' || Array.isArray(d)) throw new Error(ctx + '：回の中身は {記号: [..]} のはず');
+  const out = {};
+  for (const [no, arr] of Object.entries(d)) {
+    const it = k.items.find(x => x.m === no);
+    if (!it) throw new Error(`${ctx}：選択肢 ${no} が材料に無い`);
+    if (!Array.isArray(arr) || !arr.length) throw new Error(`${ctx}：選択肢 ${no} は空でない配列のはず`);
+    const spans = [];
+    for (const a of arr) {
+      const keys = Object.keys(a).sort().join();
+      const isMark = keys === 'mark', isDel = keys === 'del,to';
+      if (!isMark && !isDel) throw new Error(`${ctx}：選択肢 ${no} の項目は {mark} か {del,to} のはず：${JSON.stringify(a)}`);
+      const w = isMark ? a.mark : a.del;
+      if (typeof w !== 'string' || !w) throw new Error(`${ctx}：選択肢 ${no} の語が空`);
+      if (isDel && (typeof a.to !== 'string' || !a.to)) throw new Error(`${ctx}：選択肢 ${no} の to が空`);
+      if (isDel && it.ok) throw new Error(`${ctx}：選択肢 ${no} は正しい選択肢（ok:true）なので del は置けない`);
+      const n = count(it.t, w);
+      if (n !== 1) throw new Error(`${ctx}：選択肢 ${no} の本文に「${w}」が ${n} 回（ちょうど1回のはず）`);
+      const i = it.t.indexOf(w);
+      spans.push([i, i + w.length, w]);
+    }
+    spans.sort((x, y) => x[0] - y[0]);
+    for (let i = 1; i < spans.length; i++) if (spans[i][0] < spans[i - 1][1]) throw new Error(`${ctx}：選択肢 ${no} の「${spans[i - 1][2]}」と「${spans[i][2]}」が重なる`);
+    out[no] = arr;
+  }
+  return out;
+}
+const shuireVals = shuire => {
+  if (!shuire) return { SHUIRE_FN: '', SHUIRE_REF: '', SHUIRE_ON: '', SHUIRE_OFF: '', SHUIRE_CSS: '' };
+  const ruby = SHUIRE_STYLE === 'ruby';
+  const delHtml = ruby
+    ? `'<span class="sh-g" role="group" aria-label="' + esc('誤り「' + a.del + '」。正しくは「' + a.to + '」') + '"><ruby><del>' + esc(a.del) + '</del><rt><ins aria-hidden="true">' + esc(a.to) + '</ins></rt></ruby></span>'`
+    : `'<span class="sh-g" role="group" aria-label="' + esc('誤り「' + a.del + '」。正しくは「' + a.to + '」') + '"><del>' + esc(a.del) + '</del><ins aria-hidden="true">' + esc(a.to) + '</ins></span>'`;
+  const css = '\n/* 過去問の朱入れ（答えたあと。色は赤シートと同じ --sheet。字は足さず、本文の字は DOM に残す） */\n' +
+    '.kk-item .sh-mk{text-decoration:underline;text-decoration-color:var(--sheet);text-decoration-thickness:2px;text-underline-offset:4px}\n' +
+    '.kk-item del{text-decoration:line-through;text-decoration-color:var(--sheet);text-decoration-thickness:2px}\n' +
+    (ruby
+      ? '.kk-item ins{text-decoration:none;color:var(--sheet);font-weight:700}\n.kk-item rt{font-size:11px;line-height:1;color:var(--sheet)}'
+      : '.kk-item ins{text-decoration:none;color:var(--sheet);font-weight:700;font-size:12px;margin-left:3px}');
+  return {
+    SHUIRE_FN: `
+  /* 朱入れ（試し用）：答えたあと、選択肢の本文に赤を重ねる（mark＝決め手の語に赤い下線／del＝誤りの語に赤い取り消し線＋正しい言い方を小さい赤字で）。本文の字は変えない */
+  function shuireHtml(it) {
+    var t = it.t, list = [];
+    it.r.forEach(function (a) {
+      var w = a.mark || a.del, i = t.indexOf(w);
+      if (i >= 0) { list.push({i: i, w: w, a: a}); }
+    });
+    list.sort(function (x, y) { return x.i - y.i; });
+    var out = '', pos = 0;
+    list.forEach(function (x) {
+      var a = x.a;
+      out += esc(t.slice(pos, x.i));
+      out += a.mark ? '<span class="sh-mk">' + esc(a.mark) + '</span>' : ${delHtml};
+      pos = x.i + x.w.length;
+    });
+    return out + esc(t.slice(pos));
+  }`,
+    SHUIRE_REF: `
+    var tspans = box.querySelectorAll('.kk-item > span:last-child');
+    function shuire(on) {
+      Array.prototype.forEach.call(tspans, function (s, i) {
+        var it = k.items[i];
+        if (it.r) { s.innerHTML = on ? shuireHtml(it) : esc(it.t); }
+      });
+    }`,
+    SHUIRE_ON: ' shuire(true);',
+    SHUIRE_OFF: ' shuire(false);',
+    SHUIRE_CSS: css,
+  };
+};
+
+const kakomonJs = (k, shuire) => {
+  const items = k.items.map(it => (shuire && shuire[it.m] ? { m: it.m, t: it.t, r: shuire[it.m] } : { m: it.m, t: it.t }));
   const lines = k.items.map(it => ({ m: it.m, t: (it.ok ? '正しい。' : '誤り。') + it.why }));
   const buttons = k.buttons || (k.kosu ? ['1 一つ', '2 二つ', '3 三つ', '4 四つ'] : ['1', '2', '3', '4']);
   const out = { year: k.year, no: k.no, revised: !!k.revised, stem: k.stem, items, buttons, answer: k.answer, lines, onair: k.onair };
@@ -455,6 +537,7 @@ export function buildPages(m, text, ex, mode) {
     TEXT_SAMPLE_URL: abs(CFG.TEXT_SAMPLE_PATH), TEXT_SAMPLE_IMG: abs(CFG.TEXT_SAMPLE_IMG), ART: abs(CFG.ART_PATH),
     Y2026: y2026Section(data.prev2026),
     LIFF_ID: CFG.LIFF_ID[mode],
+    SHUIRE_CSS: shuireVals(test ? shuireFor(ep, json.kakomon) : null).SHUIRE_CSS,
     MIHON_EXPR: test ? "qs.get('mihon')" : "isLocal ? qs.get('mihon') : null",
     MIHON_EXPORT: test ? ' window.__epMihon = mihon;' : '',
     NO_WHO: test ? "!who && mihon !== 'kounyu'" : '!who',
@@ -471,7 +554,9 @@ export function buildPages(m, text, ex, mode) {
     CORE2: c2 ? '  ' + pointCore(c2.text) + '\n' : '',
     TARGET2: sec[1].scope ? '  ' + targetDiv(ep, 2, sec[1].scope) + '\n' : '',
   });
-  const lineFullJs = fill(template('ep-line-full.js'), { EP: String(ep), KK_JSON: jsJson(kakomonJs(json.kakomon)) });
+  /* 朱入れは試し用だけ（本番の出力は変えない） */
+  const shuire = test ? shuireFor(ep, json.kakomon) : null;
+  const lineFullJs = fill(template('ep-line-full.js'), { EP: String(ep), KK_JSON: jsJson(kakomonJs(json.kakomon, shuire)), ...(({ SHUIRE_CSS, ...js }) => js)(shuireVals(shuire)) });
   return { index, lineFullHtml, lineFullJs, points: { c1, c2 } };
 }
 
@@ -528,7 +613,7 @@ export function buildShared() {
   viewJs = once(viewJs, 'h3 = host(t3);', 'h3 = t3 ? host(t3) : null;');
   viewJs = once(viewJs, 'sec3.appendChild(h3.el);', 'if (h3) { sec3.appendChild(h3.el); }');
   viewJs = once(viewJs, 'zukai.parentNode.insertBefore(sec3, honban);', 'if (h3) { zukai.parentNode.insertBefore(sec3, honban); }');
-  viewJs = once(viewJs, 'setupSheet([h1.root, h2.root, h3.root], bar)', 'setupSheet(h3 ? [h1.root, h2.root, h3.root] : [h1.root, h2.root], bar)');
+  viewJs = once(viewJs, 'setupSheet([h1.root, h2.root, h3.root], bar, {hint: hint, end: sheetEnd})', 'setupSheet(h3 ? [h1.root, h2.root, h3.root] : [h1.root, h2.root], bar, {hint: hint, end: sheetEnd})');
   const viewJsOut = `/* 自動生成：liff-test/scripts/build-ep1-text.mjs（正本は liff-test/ep1-3dan.html）。直さない。
    やさしいテキスト購入者の見え方の動き（赤シート・テキストの差し込み・近道）。ep/1/index.html が、購入の確認（テキストのAPI）で 200 が返った人にだけ読み込む。
    有料の中身は入れない（テキストの HTML は引数で受け取る）。 */
@@ -789,7 +874,8 @@ const ensureIgnored = rel => {
 };
 
 /* 1回ぶんを全部組む（書かない）。{ files: [{rel（リポジトリ直下からの道）, data, secret?}], report } */
-export function buildEp(ep, release, shared) {
+/* shisaku＝試し用だけ（本番の分は作らない）。 */
+export function buildEp(ep, release, shared, opts = {}) {
   const m = loadMaterial(ep);
   validateMaterial(m);
   const text = buildText(m);
@@ -799,7 +885,7 @@ export function buildEp(ep, release, shared) {
   const pdf = fs.readFileSync(m.pdfPath);
   /* open＝配信日（日本時間のその日の 0:00 から API が返す）。第1回（見本の回）は open を入れない＝閉じない */
   const meta = JSON.stringify(CFG.SAMPLE_EPS.includes(ep) ? { name: `やさしいテキスト_第${ep}回_${m.json.sub}.pdf` } : { name: `やさしいテキスト_第${ep}回_${m.json.sub}.pdf`, open: m.json.date }) + '\n';
-  const modes = inProd ? ['test', 'prod'] : ['test'];
+  const modes = inProd && !opts.shisaku ? ['test', 'prod'] : ['test'];
   let checked = 0;
   const byMode = {};
   for (const mode of modes) {
@@ -818,7 +904,7 @@ export function buildEp(ep, release, shared) {
     );
   }
   if (ep === 1) {
-    if (inProd) files.push({ rel: 'ep/1/text/index.html', data: buildSample(m, text, byMode.prod, shared).samplePage });
+    if (inProd && !opts.shisaku) files.push({ rel: 'ep/1/text/index.html', data: buildSample(m, text, byMode.prod, shared).samplePage });
   }
   const report = {
     ep, sub: m.json.sub, prod: inProd,
@@ -829,13 +915,13 @@ export function buildEp(ep, release, shared) {
   return { files, report, m, text, ex };
 }
 
-export function sharedFiles(shared) {
+export function sharedFiles(shared, opts = {}) {
   return [
     { rel: 'ep/_shared/text-view.js', data: shared.viewJsOut, prodOnly: true },
     { rel: 'ep/_shared/text-view.css', data: shared.viewCssOut, prodOnly: true },
     { rel: 'liff-test/ep/_shared/text-view.js', data: shared.viewJsOut },
     { rel: 'liff-test/ep/_shared/text-view.css', data: shared.viewCssOut },
-  ];
+  ].filter(f => !(opts.shisaku && f.prodOnly));
 }
 
 export function parseEps(arg) {
@@ -854,8 +940,9 @@ export function parseEps(arg) {
 }
 
 export function main(argv) {
-  const arg = argv[0];
-  if (!arg) { console.error('使い方: node scripts/build-ep.mjs <回の番号 | 1-9 | 2,3 | all>'); process.exit(2); }
+  const shisaku = argv.includes('--shisaku');
+  const arg = argv.find(a => !a.startsWith('--'));
+  if (!arg) { console.error('使い方: node scripts/build-ep.mjs <回の番号 | 1-9 | 2,3 | all> [--shisaku（試し用だけに書く）]'); process.exit(2); }
   const eps = parseEps(arg);
   const release = readRelease();
   for (const n of release.prod) if (!fs.existsSync(path.join(MATERIAL, `第${String(n).padStart(2, '0')}回_流し込み材料.json`))) throw new Error(`ep-release.json の prod に、材料の無い回 ${n} がある`);
@@ -865,15 +952,16 @@ export function main(argv) {
   const reports = [];
   const writes = new Map();
   for (const ep of eps) {
-    const r = buildEp(ep, release, shared);
+    const r = buildEp(ep, release, shared, { shisaku });
     reports.push(r.report);
     for (const f of r.files) writes.set(f.rel, f);
   }
   /* 共通の部品：第1回の本番、または試し用に回を出すとき */
-  for (const f of sharedFiles(shared)) writes.set(f.rel, f);
+  for (const f of sharedFiles(shared, { shisaku })) writes.set(f.rel, f);
   const prodDirs = new Set(release.prod.map(n => `ep/${n}/`));
   for (const [rel, f] of writes) {
     /* 本番（リポジトリ直下）へ書くのは、prod に入っている回だけ */
+    if (shisaku && !rel.startsWith('liff-test/')) throw new Error('--shisaku なのに本番へ書こうとした: ' + rel);
     if (!rel.startsWith('liff-test/')) {
       const mm = /^(?:ep|api\/_ep-text)\/(?:ep)?(\d+)[/.]/.exec(rel);
       if (mm && !release.prod.includes(Number(mm[1]))) throw new Error('prod に入っていない回を本番へ書こうとした: ' + rel);
@@ -886,7 +974,7 @@ export function main(argv) {
   console.log(`written ${writes.size} files; prod=[${release.prod}]`);
   console.log('ep  sub                       図(無料/続き/テキストだけ)  赤シート(前/後/数字)  今回の数字  本番');
   for (const r of reports) {
-    console.log(`${String(r.ep).padStart(2)}  ${r.sub.padEnd(16, '　')}  ${r.figs.free}/${r.figs.line}/${r.figs.paid} (計${r.figTotal})  ${r.rs.join('/')} (計${r.rsTotal})  ${r.numbers}組  ${r.prod ? '本番に書いた' : '試し用だけ'}`);
+    console.log(`${String(r.ep).padStart(2)}  ${r.sub.padEnd(16, '　')}  ${r.figs.free}/${r.figs.line}/${r.figs.paid} (計${r.figTotal})  ${r.rs.join('/')} (計${r.rsTotal})  ${r.numbers}組  ${r.prod && !shisaku ? '本番に書いた' : '試し用だけ'}`);
   }
   return reports;
 }
