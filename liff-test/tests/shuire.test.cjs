@@ -157,3 +157,48 @@ test('sample page (ep/1/text): red sheet starts off and auto-on at the end marke
   assert.ok(h.includes('最後まで読むと、</span><span class="nk">自動でかかります。')&&h.includes('.sb2-cnt.is-note{')&&h.includes('IntersectionObserver'));
   assert.ok(h.includes('.kk-item .sh-mk{'));
 });
+
+// ---- 答えたあと、選択肢の番号の上に赤い○×（記述そのものの正誤・全部の回） ----
+test('kk ○×: every episode (trial and production) carries ok from the material on each choice and the ○× CSS; shapes are CSS (ring / two lines with an open centre so the number stays readable), sheet red, with spoken 正しい/誤り',{skip},async()=>{
+  const b=await lib();
+  for(let n=1;n<=9;n++){
+    const m=b.loadMaterial(n);
+    for(const base of [root,prod]){
+      const js=read(path.join(base,'ep',String(n),'line-full.js'));
+      const kk=JSON.parse(js.match(/var KK = (\{[\s\S]*?\});\n/)[1]);
+      assert.equal(kk.items.length,m.json.kakomon.items.length);
+      kk.items.forEach((it,i)=>assert.equal(it.ok,!!m.json.kakomon.items[i].ok,'第'+n+'回 '+it.m+' の正誤は材料と同じ'));
+      const idx=read(path.join(base,'ep',String(n),'index.html'));
+      assert.match(idx,/\.kk-jg-o\{border:2\.5px solid var\(--sheet\);border-radius:50%\}/);
+      assert.match(idx,/\.kk-jg-x::before,\.kk-jg-x::after\{[^}]*linear-gradient\([^}]*var\(--sheet\)/);
+      assert.match(idx,/\.kk-sr\{position:absolute;/);
+    }
+  }
+});
+test('kk ○×: nothing before answering; shown on answer for every choice by its own ok (kosu/誤っているもの too); gone on もう一度; not on the explanation rows',{skip},()=>{
+  const js=read(path.join(root,'ep/3/line-full.js')); // 個数問題（ア〜エ）
+  // 答える前：選択肢の組み立てには○×を入れない／呼び出しは答えたあと・もう一度の2か所だけ
+  assert.match(js,/'<span class="kk-mark">' \+ esc\(it\.m\) \+ '<\/span><span>' \+ esc\(it\.t\) \+ '<\/span><\/div>'/);
+  assert.equal((js.match(/shuire\(true\)/g)||[]).length,1);assert.equal((js.match(/shuire\(false\)/g)||[]).length,1);
+  assert.match(js,/res\.hidden = false; shuire\(true\);/);
+  // 解説の行（.kk-lines）には付けない
+  const lines=js.match(/var lines = k\.lines\.map[\s\S]*?\.join\(''\);/)[0];
+  assert.doesNotMatch(lines,/kk-jg|kk-no/);
+  assert.match(js,/box\.querySelectorAll\('\.kk-item > \.kk-mark'\)/);
+  // 動き：on で ok=true は○・false は×＋見えない字、off で番号だけに戻る
+  const fn=js.match(/ {4}function shuire\(on\) \{[\s\S]*?\n {4}\}/)[0];
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const mk=()=>({innerHTML:'ア'});
+  const k={items:[{m:'ア',t:'a',ok:false},{m:'イ',t:'b',ok:true},{m:'ウ',t:'c',ok:false},{m:'エ',t:'d',ok:true}]};
+  const ts=k.items.map(()=>({innerHTML:''})),ns=k.items.map(it=>({innerHTML:it.m}));
+  const ctx={esc,k,tspans:ts,kkNums:ns,shuireHtml:()=>'' };vm.createContext(ctx);vm.runInContext(fn+';this.f=shuire;',ctx);
+  ctx.f(true);
+  k.items.forEach((it,i)=>{
+    const h=ns[i].innerHTML;
+    assert.ok(h.includes(esc(it.m)));
+    assert.equal(h.includes('kk-jg-o'),it.ok);assert.equal(h.includes('kk-jg-x'),!it.ok);
+    assert.ok(h.includes(it.ok?'（正しい）':'（誤り）'));assert.ok(h.includes('aria-hidden="true"'));
+  });
+  ctx.f(false);
+  k.items.forEach((it,i)=>assert.equal(ns[i].innerHTML,it.m,'もう一度で消える'));
+});

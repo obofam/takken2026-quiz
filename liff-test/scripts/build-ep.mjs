@@ -412,7 +412,7 @@ export function shuireFor(ep, k, data = loadShuire()) {
   return out;
 }
 const shuireVals = shuire => {
-  if (!shuire) return { SHUIRE_FN: '', SHUIRE_REF: '', SHUIRE_ON: '', SHUIRE_OFF: '', SHUIRE_CSS: '' };
+  /* 朱入れのデータが無い回でも、答えたあとの○×（選択肢の番号の上）は全部の回で出す。正誤は材料の ok から */
   const ruby = SHUIRE_STYLE === 'ruby';
   const delHtml = ruby
     ? `'<span class="sh-g" role="group" aria-label="' + esc('誤り「' + a.del + '」。正しくは「' + a.to + '」') + '"><ruby><del>' + esc(a.del) + '</del><rt><ins aria-hidden="true">' + esc(a.to) + '</ins></rt></ruby></span>'`
@@ -422,7 +422,16 @@ const shuireVals = shuire => {
     '.kk-item del{text-decoration:line-through;text-decoration-color:var(--sheet);text-decoration-thickness:2px}\n' +
     (ruby
       ? '.kk-item ins{text-decoration:none;color:var(--sheet);font-weight:700}\n.kk-item rt{font-size:11px;line-height:1;color:var(--sheet)}'
-      : '.kk-item ins{text-decoration:none;color:var(--sheet);font-weight:700;font-size:12px;margin-left:3px}');
+      : '.kk-item ins{text-decoration:none;color:var(--sheet);font-weight:700;font-size:12px;margin-left:3px}') +
+    '\n/* 答えたあと、選択肢の番号の上に赤い○×（正しい記述は○、誤りは×）。番号の字は残す。形は CSS（輪と2本の線）。見えない字で「正しい」「誤り」 */\n' +
+    '.kk-no{position:relative;display:inline-block}\n' +
+    '.kk-jg{position:absolute;left:50%;top:50%;width:1.9em;height:1.9em;box-sizing:border-box;transform:translate(-50%,-50%);pointer-events:none}\n' +
+    '.kk-jg-o{border:2.5px solid var(--sheet);border-radius:50%}\n' +
+    '.kk-jg-x{width:2.3em;height:2.3em}\n' +
+    '.kk-jg-x::before,.kk-jg-x::after{content:"";position:absolute;left:0;top:50%;width:100%;height:2.5px;margin-top:-1.25px;background:linear-gradient(to right,var(--sheet) 0,var(--sheet) 28%,transparent 28%,transparent 72%,var(--sheet) 72%,var(--sheet) 100%)}\n' +
+    '.kk-jg-x::before{transform:rotate(45deg)}\n' +
+    '.kk-jg-x::after{transform:rotate(-45deg)}\n' +
+    '.kk-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}';
   return {
     SHUIRE_FN: `
   /* 朱入れ（試し用）：答えたあと、選択肢の本文に赤を重ねる（mark＝決め手の語に赤い下線／del＝誤りの語に赤い取り消し線＋正しい言い方を小さい赤字で）。本文の字は変えない */
@@ -444,10 +453,17 @@ const shuireVals = shuire => {
   }`,
     SHUIRE_REF: `
     var tspans = box.querySelectorAll('.kk-item > span:last-child');
+    var kkNums = box.querySelectorAll('.kk-item > .kk-mark');
     function shuire(on) {
       Array.prototype.forEach.call(tspans, function (s, i) {
         var it = k.items[i];
         if (it.r) { s.innerHTML = on ? shuireHtml(it) : esc(it.t); }
+        var mk = kkNums[i];
+        if (mk) {
+          mk.innerHTML = on
+            ? '<span class="kk-no">' + esc(it.m) + '<span class="kk-jg ' + (it.ok ? 'kk-jg-o' : 'kk-jg-x') + '" aria-hidden="true"></span><span class="kk-sr">（' + (it.ok ? '正しい' : '誤り') + '）</span></span>'
+            : esc(it.m);
+        }
       });
     }`,
     SHUIRE_ON: ' shuire(true);',
@@ -457,7 +473,7 @@ const shuireVals = shuire => {
 };
 
 const kakomonJs = (k, shuire) => {
-  const items = k.items.map(it => (shuire && shuire[it.m] ? { m: it.m, t: it.t, r: shuire[it.m] } : { m: it.m, t: it.t }));
+  const items = k.items.map(it => (shuire && shuire[it.m] ? { m: it.m, t: it.t, ok: !!it.ok, r: shuire[it.m] } : { m: it.m, t: it.t, ok: !!it.ok }));
   const lines = k.items.map(it => ({ m: it.m, t: (it.ok ? '正しい。' : '誤り。') + it.why }));
   const buttons = k.buttons || (k.kosu ? ['1 一つ', '2 二つ', '3 三つ', '4 四つ'] : ['1', '2', '3', '4']);
   const out = { year: k.year, no: k.no, revised: !!k.revised, stem: k.stem, items, buttons, answer: k.answer, lines, onair: k.onair };
@@ -537,7 +553,7 @@ export function buildPages(m, text, ex, mode) {
     TEXT_SAMPLE_URL: abs(CFG.TEXT_SAMPLE_PATH), TEXT_SAMPLE_IMG: abs(CFG.TEXT_SAMPLE_IMG), ART: abs(CFG.ART_PATH),
     Y2026: y2026Section(data.prev2026),
     LIFF_ID: CFG.LIFF_ID[mode],
-    SHUIRE_CSS: shuireVals(shuireFor(ep, json.kakomon)).SHUIRE_CSS,
+    SHUIRE_CSS: shuireVals(null).SHUIRE_CSS,
     MIHON_EXPR: test ? "qs.get('mihon')" : "isLocal ? qs.get('mihon') : null",
     MIHON_EXPORT: test ? ' window.__epMihon = mihon;' : '',
     NO_WHO: test ? "!who && mihon !== 'kounyu'" : '!who',
