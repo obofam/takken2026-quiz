@@ -170,7 +170,9 @@ test('kk ○×: every episode (trial and production) carries ok from the materia
       kk.items.forEach((it,i)=>assert.equal(it.ok,!!m.json.kakomon.items[i].ok,'第'+n+'回 '+it.m+' の正誤は材料と同じ'));
       const idx=read(path.join(base,'ep',String(n),'index.html'));
       assert.match(idx,/\.kk-jg-o\{border:2\.5px solid var\(--sheet\);border-radius:50%\}/);
-      assert.match(idx,/\.kk-jg-x::before,\.kk-jg-x::after\{[^}]*linear-gradient\([^}]*var\(--sheet\)/);
+      // 2026-11-15 Kei：×は番号の上にそのまま重ねてよい（真ん中を空けない・2本の線）
+      assert.match(idx,/\.kk-jg-x::before,\.kk-jg-x::after\{[^}]*background:var\(--sheet\)/);
+      assert.doesNotMatch(idx,/\.kk-jg-x::before,\.kk-jg-x::after\{[^}]*linear-gradient/);
       assert.match(idx,/\.kk-sr\{position:absolute;/);
     }
   }

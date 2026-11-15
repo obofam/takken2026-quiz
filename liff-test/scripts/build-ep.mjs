@@ -424,11 +424,11 @@ const shuireVals = shuire => {
       ? '.kk-item ins{text-decoration:none;color:var(--sheet);font-weight:700}\n.kk-item rt{font-size:11px;line-height:1;color:var(--sheet)}'
       : '.kk-item ins{text-decoration:none;color:var(--sheet);font-weight:700;font-size:12px;margin-left:3px}') +
     '\n/* 答えたあと、選択肢の番号の上に赤い○×（正しい記述は○、誤りは×）。番号の字は残す。形は CSS（輪と2本の線）。見えない字で「正しい」「誤り」 */\n' +
-    '.kk-no{position:relative;display:inline-block}\n' +
+    '.kk-no{position:relative;display:inline-block;z-index:0}\n' +
     '.kk-jg{position:absolute;left:50%;top:50%;width:1.9em;height:1.9em;box-sizing:border-box;transform:translate(-50%,-50%);pointer-events:none}\n' +
     '.kk-jg-o{border:2.5px solid var(--sheet);border-radius:50%}\n' +
-    '.kk-jg-x{width:2.3em;height:2.3em}\n' +
-    '.kk-jg-x::before,.kk-jg-x::after{content:"";position:absolute;left:0;top:50%;width:100%;height:2.5px;margin-top:-1.25px;background:linear-gradient(to right,var(--sheet) 0,var(--sheet) 28%,transparent 28%,transparent 72%,var(--sheet) 72%,var(--sheet) 100%)}\n' +
+    '.kk-jg-x{width:2em;height:2em;z-index:-1}\n' +
+    '.kk-jg-x::before,.kk-jg-x::after{content:"";position:absolute;left:0;top:50%;width:100%;height:2.5px;margin-top:-1.25px;border-radius:2px;background:var(--sheet)}\n' +
     '.kk-jg-x::before{transform:rotate(45deg)}\n' +
     '.kk-jg-x::after{transform:rotate(-45deg)}\n' +
     '.kk-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}';
