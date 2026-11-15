@@ -751,11 +751,6 @@ ${sheetJs}
   var q1 = document.getElementById('q1'), q2 = document.getElementById('q2');
   /* 3問は前半・後半のテキストの直後へ。解き終えたあとの案内は、購入者の画面と同じく次のテキスト・今日のポイントへ */
   document.getElementById('text1').appendChild(q1);
-  /* 後半のテキストの終わり（○×3問の手前）の目印。高さ0・上のすき間を打ち消して並びは変えない。ここが画面に入ったら赤シートが自動でかかる */
-  var sheetEnd = document.createElement('div');
-  sheetEnd.setAttribute('aria-hidden', 'true');
-  sheetEnd.style.cssText = 'height:0;margin-top:-12px;pointer-events:none';
-  document.getElementById('text2').appendChild(sheetEnd);
   document.getElementById('text2').appendChild(q2);
   var a1 = q1.querySelector('.line-inv a'), a2 = q2.querySelector('.line-inv a');
   if (a1) { a1.setAttribute('href', '#text2'); a1.textContent = '後半のテキストへ'; }
@@ -777,6 +772,11 @@ ${sheetJs}
     root.appendChild(document.getElementById(h.getAttribute('data-tpl')).content.cloneNode(true));
     roots.push(root);
   });
+  /* 赤シートが自動でかかる目印：「今回の数字」の節の終わり（過去問1選の手前）。高さ0・上のすき間を打ち消して並びは変えない */
+  var sheetEnd = document.createElement('div');
+  sheetEnd.setAttribute('aria-hidden', 'true');
+  sheetEnd.style.cssText = 'height:0;margin-top:-12px;pointer-events:none';
+  document.getElementById('numbers').appendChild(sheetEnd);
   try { setupSheet(roots, document.getElementById('sbar'), {hint: document.querySelector('.shint'), end: sheetEnd}); } catch (e) { console.warn(e); }
   /* LINE・メールの枠：配信前（2027-01-04より前）の文言（roadmap/index.html と同じ） */
   var d = new Date(), t = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();

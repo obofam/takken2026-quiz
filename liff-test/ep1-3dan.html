@@ -889,11 +889,7 @@ body.member .line-card{display:block}
     Array.prototype.forEach.call(document.querySelectorAll('#zukai .core'), function (c) { point.appendChild(c); });
     /* ここから画面を変える */
     sec1.appendChild(h1.el); sec1.appendChild(q1);
-    /* 後半のテキストの終わり（○×3問の手前）の目印。高さ0・上のすき間を打ち消して、並びは変えない。ここが画面に入ったら赤シートが自動でかかる */
-    var sheetEnd = document.createElement('div');
-    sheetEnd.setAttribute('aria-hidden', 'true');
-    sheetEnd.style.cssText = 'height:0;margin-top:-12px;pointer-events:none';
-    sec2.appendChild(h2.el); sec2.appendChild(sheetEnd); sec2.appendChild(q2);
+    sec2.appendChild(h2.el); sec2.appendChild(q2);
     /* 赤シートの帯は前半・後半の両方で上に残るよう、2つの節をまとめる箱の先頭に置く */
     var tw = document.createElement('div'); tw.className = 'textwrap';
     var hint = document.createElement('p'); hint.className = 'shint';
@@ -912,6 +908,13 @@ body.member .line-card{display:block}
     zukai.parentNode.insertBefore(tw, zukai);
     if (point.children.length) { zukai.parentNode.insertBefore(point, honban); }
     zukai.parentNode.insertBefore(sec3, honban);
+    /* 赤シートが自動でかかる目印：3つめの節（数字の節）の終わり（過去問1選の手前）。3つめが無い回は、その手前の最後の節（今日のポイント、無ければ後半のテキストの終わり）。高さ0・上のすき間を打ち消して、並びは変えない */
+    var sheetEnd = document.createElement('div');
+    sheetEnd.setAttribute('aria-hidden', 'true');
+    sheetEnd.style.cssText = 'height:0;margin-top:-12px;pointer-events:none';
+    if (h3) { sec3.appendChild(sheetEnd); }
+    else if (point.children.length) { point.appendChild(sheetEnd); }
+    else { sec2.insertBefore(sheetEnd, q2); }
     body.classList.add('is-buyer');
     var jump = document.getElementById('jump');
     if (jump) { jump.innerHTML = '<a class="jb" href="#text1">前半</a><a class="jb" href="#text2">後半</a><a class="jb" href="#honban">過去問1選</a>'; }

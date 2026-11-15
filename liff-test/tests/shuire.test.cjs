@@ -143,7 +143,8 @@ test('red sheet: no jump - the waiting state is the plain "off" layout (no gaps)
   assert.match(dan,/window\.scrollBy\(0, dy\)/);
   const s=setup({});s.fire();assert.ok(Array.isArray(s.calls));
   assert.match(dan,/sheetEnd\.style\.cssText = 'height:0;margin-top:-12px;pointer-events:none'/);
-  assert.match(dan,/sec2\.appendChild\(h2\.el\); sec2\.appendChild\(sheetEnd\); sec2\.appendChild\(q2\);/);
+  // 目印の置き場：今回の数字の節の終わり。数字が無い回は今日のポイントの終わり、それも無ければ後半のテキストの終わり
+  assert.match(dan,/if \(h3\) \{ sec3\.appendChild\(sheetEnd\); \}\s*else if \(point\.children\.length\) \{ point\.appendChild\(sheetEnd\); \}\s*else \{ sec2\.insertBefore\(sheetEnd, q2\); \}/);
   const view=read(path.join(root,'ep/_shared/text-view.js'));
   assert.ok(view.includes('{hint: hint, end: sheetEnd}')&&view.includes('IntersectionObserver'));
 });
@@ -151,7 +152,7 @@ test('red sheet: no jump - the waiting state is the plain "off" layout (no gaps)
 test('sample page (ep/1/text): red sheet starts off and auto-on at the end marker, same as the buyer view',{skip},()=>{
   const h=read(path.join(prod,'ep/1/text/index.html'));
   assert.match(h,/var sheetEnd = document\.createElement\('div'\);/);
-  assert.match(h,/getElementById\('text2'\)\.appendChild\(sheetEnd\);\s*document\.getElementById\('text2'\)\.appendChild\(q2\);/);
+  assert.match(h,/getElementById\('numbers'\)\.appendChild\(sheetEnd\);/);
   assert.match(h,/setupSheet\(roots, document\.getElementById\('sbar'\), \{hint: document\.querySelector\('\.shint'\), end: sheetEnd\}\)/);
   assert.ok(h.includes('最後まで読むと、</span><span class="nk">自動でかかります。')&&h.includes('.sb2-cnt.is-note{')&&h.includes('IntersectionObserver'));
   assert.ok(h.includes('.kk-item .sh-mk{'));
