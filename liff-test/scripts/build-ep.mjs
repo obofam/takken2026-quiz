@@ -869,7 +869,7 @@ ${CFG.UMAMI_SCRIPT.trimEnd()}
   </section>
 
   <div class="totop-w"><button type="button" class="pill ghost totop" id="toTop">上に戻る</button></div>
-  <script>(function(){var b=document.getElementById("toTop");if(!b){return;}b.addEventListener("click",function(){var r=false;try{r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(_){}window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script>
+  <script>(function(){var b=document.getElementById("toTop");if(!b){return;}b.addEventListener("click",function(){var r=false;try{r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(_){}window.scrollTo({top:0,behavior:r?"auto":"smooth"});var c=false;function x(){c=true;}window.addEventListener("touchstart",x,{once:true,passive:true});window.addEventListener("wheel",x,{once:true,passive:true});setTimeout(function(){window.removeEventListener("touchstart",x);window.removeEventListener("wheel",x);if(!c&&window.scrollY>2){window.scrollTo(0,0);}},900);});})();</script>
 
   <div class="foot">条文は2026年4月1日施行版で照合</div>
 </div>
