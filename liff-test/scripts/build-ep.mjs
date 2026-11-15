@@ -754,6 +754,9 @@ ${quizCss}
   .sec-h{font-size:26px}
 }
 @media (max-width:520px){html{scrollbar-width:none}html::-webkit-scrollbar{display:none}}
+.totop-w{text-align:center;margin:28px 0 8px}
+.totop-w .totop{min-width:160px}
+@media print{.totop-w{display:none !important}}
 `;
   const sampleScript = `
 ${quizScript}
@@ -864,6 +867,9 @@ ${CFG.UMAMI_SCRIPT.trimEnd()}
     <p class="body" id="lineBody"><span class="nb">毎週月曜に、こちらからお届けします。</span><br><span class="nb">登録無料です。</span></p>
     <div class="btns"><a class="btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="text-line" data-umami-event-ep="1">LINEで受け取る</a><a class="btn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="text-mail" data-umami-event-ep="1">メールで受け取る</a></div>
   </section>
+
+  <div class="totop-w"><button type="button" class="pill ghost totop" id="toTop">上に戻る</button></div>
+  <script>(function(){var b=document.getElementById("toTop");if(!b){return;}b.addEventListener("click",function(){var r=false;try{r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(_){}window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script>
 
   <div class="foot">条文は2026年4月1日施行版で照合</div>
 </div>

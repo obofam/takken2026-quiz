@@ -403,6 +403,9 @@ body.member .line-card{display:block}
 .qres{line-height:1.75}
 .next-box a{display:inline-block;padding:12px 2px;margin:-12px 0}
 .thost{display:block}
+.totop-w{text-align:center;margin:28px 0 8px}
+.totop-w .totop{min-width:160px}
+@media print{.totop-w{display:none !important}}
 @media (max-width:600px){
   .sec-h{font-size:22px}
 }
@@ -876,6 +879,9 @@ figure.fig{min-width:0}
     <p class="lnote"><span class="nk">1月4日の配信開始から、</span><span class="nk">お届けします（予定）。</span></p>
     <div class="lbtns"><a class="lbtn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="6">LINEで受け取る</a><a class="lbtn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="6">メールで受け取る</a></div>
   </div>
+
+  <div class="totop-w"><button type="button" class="pill ghost totop" id="toTop">上に戻る</button></div>
+  <script>(function(){var b=document.getElementById("toTop");if(!b){return;}b.addEventListener("click",function(){var r=false;try{r=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(_){}window.scrollTo({top:0,behavior:r?"auto":"smooth"});});})();</script>
 
   <div class="trust">
     <img class="art" src="https://takken.mimiobo.com/ep/1/img/artwork2027.webp" alt="耳で覚える宅建" width="44" height="44">
