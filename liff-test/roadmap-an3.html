@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>学習ロードマップ（兼 進捗トラッカー）｜耳で覚える宅建2027</title>
+<!-- Umami analytics (page: roadmap) -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#17C5E8;
+    --cyan-dark:#0EA2C2;
+    --cyan-soft:#D8F3FA;
+    --cyan-mid:#9DE3F3;
+    --surface:#F4F7F9;
+    --card:#FFFFFF;
+    --text:#2B3A46;
+    --muted:#56636E;
+    --line:#D9E0E6;
+    --gray-pill:#EEF2F5;
+    --shadow:0 2px 8px rgba(43,58,70,.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    font-family: "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans", "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+    background: var(--surface); color: var(--text);
+    min-height: 100dvh; line-height: 1.75;
+  }
+  .container { max-width: 480px; margin: 0 auto; padding: 28px 16px 60px; }
+  a { color: inherit; }
+  .hero { text-align: center; padding: 8px 0 20px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+  .eyebrow { font-size: .85rem; font-weight: 700; letter-spacing: .18em; color: var(--muted); margin-bottom: 14px; }
+  .hero h1 { font-size: 1.5rem; font-weight: 900; line-height: 1.55; }
+  .hero p { font-size: .95rem; color: var(--muted); margin-top: 14px; line-height: 1.85; }
+  .hero p.core { font-size: 1rem; font-weight: 700; color: var(--text); }
+  /* 図解と3問：3つの画面で見られるもの */
+  .tiers { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 12px 16px 6px; margin-bottom: 22px; }
+  .tiers h2 { font-size: .9rem; font-weight: 700; margin-bottom: 4px; line-height: 1.5; }
+  .hero h1 .h1-top { display: block; font-size: .8em; font-weight: 700; }
+  .hero h1 .h1-main { display: inline-block; font-size: 1.35em; line-height: 1.4; padding: 0 4px; background: linear-gradient(transparent 58%, var(--cyan-mid) 58%, var(--cyan-mid) 92%, transparent 92%); }
+  .hero h1 .h1-sub { display: inline-block; font-size: .8em; font-weight: 700; color: var(--muted); }
+  .tt { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 6px; }
+  .tt th, .tt td { border-top: 1px solid var(--line); padding: 9px 4px; text-align: center; vertical-align: middle; font-size: .9375rem; line-height: 1.45; }
+  .tt thead th { border-top: 0; font-weight: 700; font-size: .875rem; vertical-align: bottom; }
+  .tt thead th small { display: block; font-size: .875rem; font-weight: 500; color: var(--muted); }
+  .tt thead th:first-child { width: 31%; }
+  .tt tbody th { text-align: left; font-weight: 700; padding-left: 0; }
+  .tt td.y { color: var(--cyan-dark); font-weight: 900; font-size: 1.15rem; }
+  .tt td.n { color: #8A949C; }
+  .tt-note { font-size: .9375rem; line-height: 1.65; margin: 10px 0 8px; color: var(--text); }
+  .tiers dl { margin: 0; }
+  .tiers .row { display: grid; grid-template-columns: 8.2em 1fr; column-gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .tiers .row:first-child { border-top: 0; }
+  .tiers dt { font-size: .9rem; font-weight: 700; line-height: 1.5; }
+  .tiers dt small { display: block; font-size: .78rem; font-weight: 500; color: var(--muted); }
+  .tiers dd { font-size: .92rem; line-height: 1.6; }
+  .start-note { text-align: center; margin: 0 0 22px; display: none; }
+  .start-note p { font-weight: 700; color: var(--cyan-dark); margin-bottom: 10px; }
+  .btn-o { display: inline-block; font-weight: 700; text-decoration: none; color: var(--cyan-dark); background: var(--card); border: 1.5px solid var(--cyan); border-radius: 999px; padding: 8px 26px; }
+  .how { list-style: none; background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 12px 16px; margin-bottom: 22px; }
+  .how li { font-size: 1rem; font-weight: 700; padding: 3px 0; display: flex; align-items: center; gap: 10px; }
+  .how .n { flex: none; width: 1.6em; height: 1.6em; border-radius: 50%; background: var(--cyan-soft); color: var(--cyan-dark); font-size: .82rem; display: inline-flex; align-items: center; justify-content: center; }
+  .how li { flex-wrap: wrap; row-gap: 0; }
+  .how a.main { color: inherit; text-decoration: none; border-bottom: 1px solid var(--cyan); }
+  .how .oth { flex-basis: 100%; padding-left: 31px; font-size: .85rem; font-weight: 500; color: var(--muted); line-height: 1.6; }
+  .how .oth a { color: var(--cyan-dark); text-underline-offset: 2px; }
+  .smp { font-size: .78rem; font-weight: 700; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; white-space: nowrap; align-self: center; }
+  /* 分野でしぼるボタン */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .filters button { font: inherit; font-size: .92rem; font-weight: 700; cursor: pointer; background: var(--card); border: 1px solid var(--cyan); color: var(--cyan-dark); border-radius: 999px; padding: 4px 14px; }
+  .filters button[aria-pressed="true"] { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
+  .part-lead { font-size: .95rem; color: var(--muted); margin: 0 0 12px; display: none; }
+  .week-note { font-size: .9rem; color: var(--muted); margin: 0 0 10px; line-height: 1.6; }
+
+  /* 受験の地図：本試験50問の内訳（水色の濃淡だけ。分類を意味する別色は使わない） */
+  .exam-map { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 12px 12px 14px; margin-bottom: 22px; }
+  .em-h { font-size: .9rem; font-weight: 700; margin-bottom: 8px; padding-left: 4px; line-height: 1.5; }
+  .em-bar { display: flex; gap: 2px; }
+  .em-seg { min-width: 0; }
+  .em-seg i { display: block; height: 14px; }
+  .em-seg:first-child i { border-radius: 7px 0 0 7px; }
+  .em-seg:last-child i { border-radius: 0 7px 7px 0; }
+  .em-seg .cnt { display: block; font-size: .85rem; color: var(--muted); line-height: 1.4; }
+  .em-leg { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin: 10px 4px 0; padding: 0; }
+  .em-leg li { display: flex; align-items: center; gap: 7px; font-size: .88rem; font-weight: 700; line-height: 1.4; }
+  .em-leg i { flex: none; display: block; width: 12px; height: 12px; border-radius: 3px; }
+  .em1 i { background: var(--cyan-dark); }
+  .em2 i { background: var(--cyan); }
+  .em3 i { background: var(--cyan-mid); }
+  .em4 i { background: var(--cyan-soft); box-shadow: inset 0 0 0 1px var(--cyan-mid); }
+
+  /* 自分の進み具合の帯（50問の帯と同じ区切り）と、本編の印 */
+  .em-h.pg-h { margin-top: 16px; font-size: .85rem; color: var(--muted); }
+  .pg .em-seg i { background: var(--cyan-soft); box-shadow: inset 0 0 0 1px var(--cyan-mid); }
+  .pg .em-seg .cnt { margin-top: 4px; }
+  .pg .em-seg .cnt { font-size: .85rem; }
+  .pg-sum { font-size: .85rem; font-weight: 700; margin: 10px 4px 0; line-height: 1.6; }
+  .pg-sum.none { font-weight: 500; color: var(--muted); }
+  .pg-note { font-size: .85rem; color: var(--muted); margin: 2px 4px 0; line-height: 1.6; }
+  .exam-map [hidden] { display: none !important; }
+  .marks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .mk { font: inherit; font-size: .78rem; font-weight: 700; line-height: 1.6; padding: 0 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--cyan); color: var(--cyan-dark); white-space: nowrap; }
+  button.mk { cursor: pointer; }
+  button.mk-l { min-width: 4.2em; }
+  button.mk-l[data-st="1"] { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
+  button.mk-l[data-st="2"] { background: var(--cyan-soft); border-color: var(--cyan-dark); color: var(--cyan-dark); }
+  .mk-d { background: #E9F8C9; border-color: #8CCB2B; color: #3A6008; }
+
+  /* 配信表：PCは表、スマホは1回ずつのブロック */
+  .sched { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 34px; }
+  .sched table { width: 100%; border-collapse: collapse; }
+  .sched th, .sched td { text-align: left; vertical-align: top; padding: 11px 14px; border-top: 1px solid var(--line); }
+  .sched thead th { font-size: .82rem; font-weight: 700; color: var(--muted); letter-spacing: .08em; background: var(--surface); border-top: 0; padding-top: 9px; padding-bottom: 9px; white-space: nowrap; }
+  .sched tr.month th { font-size: .85rem; font-weight: 700; color: var(--muted); background: var(--gray-pill); padding: 5px 14px; letter-spacing: .05em; }
+  .sched tbody tr:first-child > * { border-top: 0; }
+  .sched tr.ep.now { background: var(--cyan-soft); }
+  .sched tr.ep.now .badge { background: var(--card); }
+  /* まだ配信日が来ていない行（見本の回を除く）：字をグレーに。記録ボタンは出さない */
+  .sched tr.ep.fut > td, .sched tr.ep.fut .c-title, .sched tr.ep.fut .c-date .wd, .sched tr.ep.fut .c-part { color: #6B6B76; }
+  .sched tr.ep.fut .badge { color: #6B6B76; background: transparent; border: 1px solid #C9C9D1; padding: 0 8px; }
+  .sched tr.ep.ms { background: var(--surface); }
+  .c-date { white-space: nowrap; font-weight: 700; font-size: .98rem; }
+  .c-date .wd { font-size: .82rem; font-weight: 500; color: var(--muted); margin-left: 1px; }
+  .c-date .hol { display: block; font-size: .74rem; font-weight: 500; color: var(--muted); line-height: 1.45; white-space: normal; margin-top: 2px; }
+  .c-kind { white-space: nowrap; }
+  .c-part { font-size: .88rem; color: var(--muted); white-space: nowrap; }
+  .c-theme { font-size: 1rem; font-weight: 700; line-height: 1.6; overflow-wrap: anywhere; }
+  .ep.sub .c-theme { font-weight: 500; }
+  .c-title { font-size: .92rem; line-height: 1.6; overflow-wrap: anywhere; color: #46535E; }
+  .badge { display: inline-block; font-size: .8rem; font-weight: 700; line-height: 1.6; color: var(--cyan-dark); background: var(--cyan-soft); border-radius: 999px; padding: 1px 9px; }
+  .badge.tag { color: var(--muted); background: var(--gray-pill); }
+  .badge.line { background: transparent; border: 1px solid var(--cyan); padding: 0 8px; }
+  .now-badge { display: inline-block; font-size: .78rem; font-weight: 700; line-height: 1.6; color: #fff; background: var(--cyan-dark); border-radius: 999px; padding: 1px 8px; margin-left: 4px; }
+  .tbd { font-size: .88rem; color: var(--muted); }
+  .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 16px; margin-top: 5px; }
+  .acts .ok { display: inline-block; margin-left: 5px; font-size: .72rem; line-height: 1.5; padding: 0 6px; border-radius: 999px; background: #E9F8C9; color: #3A6008; vertical-align: 1px; }
+  /* 過去問1選の札（解いた回だけ）。正解＝ライムの地、不正解＝グレーの枠・地の色なし（ライムは成功状態だけ） */
+  .acts .kk { display: inline-block; margin-left: 5px; font-size: .72rem; line-height: 1.5; padding: 0 6px; border-radius: 999px; vertical-align: 1px; white-space: nowrap; }
+  .acts .kk.kk-ok { background: #E9F8C9; color: #3A6008; }
+  .acts .kk.kk-ng { background: none; color: #56636E; border: 1px solid #B5BFC7; padding: 0 5px; }
+  .acts a { font-size: .86rem; font-weight: 700; line-height: 1.6; text-decoration: none; color: var(--cyan-dark); border-bottom: 1px solid var(--cyan); white-space: nowrap; }
+  /* LINE登録：表の下に1か所だけ。強く押さない */
+  .cd-s { display: none; font-weight: 500; }
+  @media (max-width: 767px) { .cd-s { display: block; font-size: 11.5px; } }
+  .core-foot { text-align: center; font-size: 1rem; font-weight: 700; line-height: 1.8; color: var(--text); margin: 26px 0 0; }
+  .line-cta .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 420px; margin: 0 auto; }
+  .line-cta .btns .btn { display: flex; align-items: center; justify-content: center; padding-left: 8px; padding-right: 8px; }
+  .line-cta { background: var(--card); border: 1px solid var(--cyan); border-radius: 12px; box-shadow: var(--shadow); padding: 20px 18px; text-align: center; margin: 0 0 34px; }
+  .line-cta .over { font-size: .75rem; font-weight: 700; letter-spacing: .15em; color: var(--cyan-dark); }
+  .line-cta .head { font-size: 1.08rem; font-weight: 800; margin-top: 4px; }
+  .line-cta .body { font-size: .95rem; color: var(--muted); margin: 4px 0 14px; }
+  .nb { display: inline-block; }
+  .pg-note .pg-login { display: inline-block; color: #0A6477; text-decoration: underline; text-underline-offset: 2px; padding: 11px 6px; margin: -11px 0; white-space: nowrap; }
+  .btn { display: inline-block; font-weight: 700; text-decoration: none; color: #fff; background: var(--cyan-dark); border-radius: 999px; padding: 10px 30px; }
+  .faq { margin-top: 10px; border-top: 1px solid var(--line); padding-top: 20px; }
+  .faq h2 { font-size: 1.12rem; font-weight: 800; margin-bottom: 8px; }
+  .faq dt { font-weight: 700; font-size: .95rem; margin-top: 10px; }
+  .faq dd { font-size: .92rem; }
+  .faq dd a { color: var(--cyan-dark); }
+
+  /* スマホ：1回＝1枚のカード。左に番号、中に日付・テーマ・タイトル、右に大きな丸ボタン */
+  @media (max-width: 767px) {
+    .sched { background: transparent; border: 0; box-shadow: none; overflow: visible; margin-bottom: 34px; }
+    .sched table, .sched tbody, .sched tr.month, .sched tr.month th { display: block; }
+    .sched thead { display: none; }
+    .sched tr.month th { background: transparent; font-size: .92rem; padding: 14px 4px 6px; }
+    .sched tr.ep { display: grid; grid-template-columns: 2.5rem auto 1fr 56px; grid-template-areas: "kind date part rec" "kind theme theme rec" "kind title title rec"; column-gap: 8px; row-gap: 2px; align-items: center; padding: 12px 12px 12px 6px; margin-bottom: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+    .sched tr.ep.sub, .sched tr.ep.ms { grid-template-columns: 4.6rem auto 1fr 56px; }
+    .sched tr.ep.now { background: var(--cyan-soft); border-color: var(--cyan); }
+    .sched tr.ep.ms { background: var(--surface); box-shadow: none; }
+    .sched tr.ep > td { display: block; padding: 0; border: 0; }
+    .c-date { grid-area: date; white-space: normal; font-size: .92rem; align-self: start; }
+    .c-date .wd { display: inline; margin-left: 1px; font-size: .92rem; }
+    .c-date .hol { font-size: .8rem; }
+    .c-kind { grid-area: kind; align-self: center; text-align: center; }
+    .c-part { grid-area: part; align-self: start; font-size: .92rem; }
+    .c-theme { grid-area: theme; margin-top: 2px; }
+    .c-title { grid-area: title; }
+    .c-rec { grid-area: rec; align-self: center; justify-self: end; }
+    .bignum { display: block; font-size: 1.9rem; font-weight: 900; line-height: 1.1; color: var(--cyan-dark); }
+    .badge.bd-main { display: none; }
+    .c-kind .badge { font-size: .78rem; padding: 1px 4px; white-space: nowrap; }
+    .now-badge { display: block; margin: 4px auto 0; width: fit-content; }
+    .acts { gap: 0 18px; margin-top: 2px; }
+    .acts a { display: inline-flex; align-items: center; min-height: 44px; font-size: .92rem; border-bottom: 0; text-decoration: underline; text-decoration-color: var(--cyan); text-underline-offset: 4px; }
+    .filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; position: sticky; top: 0; z-index: 3; background: var(--surface); padding: 8px 0; margin-bottom: 4px; }
+    .filters::-webkit-scrollbar { display: none; }
+    .filters button { flex: none; white-space: nowrap; }
+  }
+
+  /* PC：幅を広げ、絞り込みを上に固定 */
+  @media (min-width: 768px) {
+    .container { max-width: 960px; padding: 44px 32px 80px; }
+    .hero h1 { font-size: 1.9rem; }
+    .how { display: flex; justify-content: center; gap: 32px; padding: 14px 20px; }
+    .filters { position: sticky; top: 0; z-index: 2; background: var(--surface); padding: 10px 0; margin-bottom: 6px; justify-content: center; }
+    .part-lead { text-align: center; }
+    .sched th.c-date { width: 104px; }
+    .sched th.c-kind { width: 108px; }
+    .sched th.c-part { width: 116px; }
+    .sched th.c-theme { width: 30%; }
+    .sched th.c-rec { width: 116px; white-space: nowrap; text-align: right; }
+    .sched td.c-rec { text-align: right; }
+  }
+
+  /* 見直し案：上の帯・1画面目のカード・使い方の箱・分野タブの件数・丸い記録ボタン */
+  .proto { background: var(--cyan-soft); color: var(--text); text-align: center; font-size: .92rem; font-weight: 700; padding: 6px 12px; border-bottom: 1px solid var(--cyan-mid); }
+  .container { padding-top: 16px; }
+  .hero { padding: 0 0 14px; border-bottom: 0; margin-bottom: 0; }
+  .hero h1 { font-size: 1.15rem; line-height: 1.5; }
+  .hero p { margin-top: 10px; line-height: 1.7; font-size: .92rem; }
+  .hero p.core { font-size: 1rem; margin-top: 10px; }
+  .pcard { background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 16px; }
+  .cd { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .cd-l { font-size: .92rem; color: var(--muted); font-weight: 500; line-height: 1.4; }
+  .cd-n { font-size: 2.4rem; font-weight: 900; color: var(--cyan-dark); line-height: 1.1; }
+  .cd-n small { font-size: .92rem; font-weight: 700; color: var(--text); margin-left: 3px; }
+  .cd-d { font-size: .92rem; color: var(--muted); text-align: right; line-height: 1.5; }
+  .pg-wrap { display: flex; align-items: center; gap: 16px; border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
+  .ring { flex: none; width: 84px; height: 84px; }
+  .ring .bg { stroke: var(--cyan-soft); fill: none; stroke-width: 10; }
+  .ring .fg { stroke: var(--cyan); fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset .5s ease; }
+  .ring text { font-size: 24px; font-weight: 900; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  .stats { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 8px; }
+  .stat b { display: block; font-size: 1.6rem; font-weight: 900; line-height: 1.15; color: var(--text); }
+  .stat.l b { color: var(--cyan-dark); }
+  .stat.d b { color: #3A6008; }
+  .stat span { font-size: .92rem; color: var(--muted); line-height: 1.4; }
+  .pcard .pg-note { margin: 10px 0 0; }
+  .pcard [hidden] { display: none !important; }
+  .howbox { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .howbox > summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; padding: 0 16px; font-size: 1rem; font-weight: 700; list-style: none; }
+  .howbox > summary::-webkit-details-marker { display: none; }
+  .howbox > summary::after { content: ""; margin-left: auto; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .2s; }
+  .howbox[open] > summary::after { transform: rotate(-135deg); }
+  .howbox .in { padding: 0 12px 4px; }
+  .cnt8 { margin-left: 8px; font-size: .8rem; font-weight: 700; color: var(--cyan-dark); background: var(--cyan-soft); border-radius: 999px; padding: 1px 9px; }
+  .newlead { margin: 0; padding: 0 16px 10px; font-size: 1rem; font-weight: 700; color: var(--cyan-dark); line-height: 1.6; }
+  .newlist { list-style: none; counter-reset: nw; margin: 0; padding: 0 16px 8px; }
+  .newlist li { counter-increment: nw; position: relative; padding: 10px 0 10px 40px; border-top: 1px solid var(--line); }
+  .newlist li::before { content: counter(nw); position: absolute; left: 0; top: 11px; width: 28px; height: 28px; border-radius: 50%; background: var(--cyan-soft); color: var(--cyan-dark); font-weight: 700; font-size: .95rem; display: flex; align-items: center; justify-content: center; }
+  .newlist b { display: block; font-size: 1.02rem; line-height: 1.55; }
+  .newlist li > span { display: block; font-size: .95rem; line-height: 1.7; color: var(--muted); margin-top: 2px; }
+  .howbox .exam-map, .howbox .tiers, .howbox .how { box-shadow: none; margin-bottom: 12px; }
+  @media (min-width: 768px) { .bignum { display: none; } }
+  .filters button { min-height: 44px; }
+  .filters button .fc { font-size: .8rem; font-weight: 700; background: var(--gray-pill); color: var(--muted); border-radius: 999px; padding: 1px 7px; margin-left: 6px; }
+  .filters button[aria-pressed="true"] .fc { background: rgba(255,255,255,.25); color: #fff; }
+  .start-note { margin-bottom: 16px; }
+  button.mk-l { width: 56px; height: 56px; min-width: 56px; border-radius: 50%; border: 2px solid var(--cyan); background: var(--card); color: var(--cyan-dark); font-size: .9rem; font-weight: 700; padding: 0; line-height: 1; cursor: pointer; transition: background-color .15s, transform .12s; -webkit-tap-highlight-color: transparent; }
+  button.mk-l[data-st="1"] { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
+  button.mk-l[data-st="2"] { background: var(--cyan-soft); border-color: var(--cyan-dark); color: var(--cyan-dark); }
+  /* 押せると伝える：押す前は水色の枠。押したあとはチェックの形（CSS）と字。押した瞬間に軽く動く */
+  button.mk-l[data-st="1"], button.mk-l[data-st="2"] { font-size: .8rem; }
+  button.mk-l[data-st="1"]::before, button.mk-l[data-st="2"]::before { content: ""; display: block; width: 13px; height: 7px; margin: 0 auto 5px; border-left: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(-45deg); }
+  @media (hover: hover) { button.mk-l[data-st="0"]:hover { background: var(--cyan-soft); } }
+  button.mk-l:active { transform: scale(.94); }
+  button.mk-l:focus-visible { outline: 3px solid var(--cyan-mid); outline-offset: 2px; }
+  button.mk-l.pop { animation: mkpop .22s ease-out; }
+  @keyframes mkpop { 0% { transform: scale(.9); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { button.mk-l { transition: none; } button.mk-l.pop { animation: none; } }
+
+  /* スマホ・老眼の見直し：本文16px・注記14px以上・押す所44px以上・文節で折り返す */
+  :root { --muted: #4E5B66; }
+  .hero p { font-size: 1rem; }
+  .hero p.core { font-size: 1.05rem; }
+  .pg-note { font-size: .9rem; }
+  .cd-l, .cd-d { font-size: .95rem; }
+  .stat span { font-size: .95rem; }
+  .btn-o { min-height: 48px; padding: 10px 26px; line-height: 1.7; }
+  .newlist b { font-size: 1.05rem; }
+  .newlist li > span { font-size: 1rem; }
+  .cnt8 { font-size: .85rem; }
+  .em-h, .tiers h2 { font-size: 1rem; }
+  .em-leg li { font-size: .95rem; }
+  .tiers dt, .tiers dd { font-size: 1rem; line-height: 1.65; }
+  .tiers dt small { font-size: .875rem; }
+  .how .oth { font-size: .9rem; }
+  .how a.main { display: inline-block; padding: 8px 0 6px; }
+  .how .oth a { display: inline-block; padding: 11px 6px; }
+  .part-lead, .week-note { font-size: 1rem; }
+  .filters button { font-size: 1rem; }
+  .filters button .fc { font-size: .85rem; }
+  .sched tr.month th { font-size: 1rem; }
+  .c-title { font-size: 1rem; line-height: 1.65; color: #3E4A54; }
+  .c-date .hol { font-size: .9rem; }
+  .badge, .now-badge { font-size: .82rem; }
+  .acts .ok, .acts .kk { font-size: .82rem; }
+  .acts a { font-size: 1rem; }
+  .sched tr.ep.fut > td, .sched tr.ep.fut .c-title, .sched tr.ep.fut .c-date .wd, .sched tr.ep.fut .c-part { color: #4E5B66; }
+  .sched tr.ep.fut .badge { color: #4E5B66; border-color: #AEB8C0; }
+  .line-cta .over { font-size: .85rem; }
+  .line-cta .body { font-size: 1rem; }
+  .btn { min-height: 48px; padding: 11px 30px; }
+  .howbox > summary { min-height: 52px; padding: 8px 16px; }
+  .howbox > summary::after { flex: none; }
+  .howbox > summary .st { flex: 1; min-width: 0; line-height: 1.5; padding-right: 12px; }
+  .faq dt { font-size: 1rem; margin-top: 14px; }
+  .faq dd { font-size: 1rem; }
+  .faq dd a { display: inline-block; padding: 12px 2px; margin: -12px 0; }
+  @media (max-width: 767px) {
+    .tiers .row { display: block; }
+    .tiers dd { margin-top: 2px; }
+    .em-leg { grid-template-columns: 1fr; }
+    .c-date, .c-date .wd, .c-part { font-size: 1rem; }
+    .c-date .hol { font-size: .9rem; width: 0; min-width: 100%; white-space: nowrap; }
+    .c-kind .badge { font-size: .82rem; }
+    .sched tr.ep { grid-template-columns: 2.5rem auto 1fr 56px; grid-template-areas: "kind date part rec" "kind theme theme rec" "kind title title title"; row-gap: 4px; padding: 14px 12px 14px 6px; }
+    .sched tr.ep.nrc { grid-template-columns: 2.5rem auto 1fr; grid-template-areas: "kind date part" "kind theme theme" "kind title title"; }
+    .sched tr.ep.nrc > td.c-rec { display: none; }
+    .sched tr.ep.sub, .sched tr.ep.ms { grid-template-columns: auto auto 1fr; grid-template-areas: "kind date part" "theme theme theme" "title title title"; column-gap: 10px; padding: 14px 14px; }
+    .sched tr.ep.sub .c-kind, .sched tr.ep.ms .c-kind { text-align: left; align-self: center; }
+    .sched tr.ep.sub .c-title:empty, .sched tr.ep.ms .c-title:empty { display: none; }
+    .c-kind .badge { white-space: nowrap; }
+  }
+
+  /* ===== 道の形（スマホ幅だけ。PCは表のまま） ===== */
+  .proto { font-size: 12px; padding: 3px 12px; line-height: 1.5; }
+  .stn, .sched tr.ph { display: none; }
+  @media (max-width: 767px) {
+    .container { padding: 10px 12px 40px; }
+    .hero { text-align: left; padding: 0 0 8px; }
+    .hero h1 { font-size: 12px; line-height: 1.4; }
+    .hero h1 .h1-top { font-size: 12px; font-weight: 700; color: var(--muted); }
+    .hero h1 .h1-main { font-size: 24px; line-height: 1.4; font-weight: 900; }
+    .hero h1 .h1-sub { font-size: 12px; margin-left: 4px; }
+    .hero p { font-size: 13px; line-height: 1.5; margin-top: 6px; }
+    .hero p.core { font-size: 14px; line-height: 1.5; margin-top: 6px; }
+    .pcard { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 12px; padding: 10px 12px; margin-bottom: 8px; border-radius: 12px; }
+    .pcard .cd { display: block; }
+    .pcard .cd-l { font-size: 12px; line-height: 1.3; }
+    .pcard .cd-n { font-size: 28px; line-height: 1.15; white-space: nowrap; }
+    .pcard .cd-n small { font-size: 12px; }
+    .pcard .cd-d { display: none; }
+    .pcard .pg-wrap { border-top: 0; margin-top: 0; padding-top: 0; gap: 10px; justify-content: flex-end; }
+    .pcard .ring { width: 48px; height: 48px; }
+    .pcard .ring text { font-size: 26px; }
+    .pcard .stats { flex: 0 1 auto; gap: 2px 12px; }
+    .pcard .stat b { font-size: 16px; line-height: 1.2; }
+    .pcard .stat span { font-size: 11.5px; line-height: 1.3; white-space: nowrap; }
+    .pcard .pg-note { grid-column: 1 / -1; font-size: 12px; line-height: 1.5; margin: 6px 0 0; padding-top: 6px; border-top: 1px solid var(--line); }
+    #startNote[style*="block"] { display: flex !important; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; text-align: left; margin: 0 0 8px; padding: 6px 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+    .start-note p { font-size: 13px; line-height: 1.5; margin: 0; }
+    .start-note .btn-o { min-height: 40px; padding: 0 16px; font-size: 13px; line-height: 40px; }
+    .howbox { margin-bottom: 8px; box-shadow: none; }
+    .howbox > summary { min-height: 44px; padding: 0 14px; font-size: 14px; }
+    .howbox > summary .st { line-height: 1.4; }
+    .cnt8 { font-size: 12px; padding: 0 8px; }
+    .filters button { font-size: 14px; min-height: 40px; padding: 0 12px; }
+    .filters button .fc { font-size: 12px; margin-left: 5px; }
+    .part-lead, .week-note { font-size: 13px; line-height: 1.5; margin: 0 0 6px; }
+
+    /* 道 */
+    .sched { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
+    .sched tr.ep, .sched tr.month, .sched tr.ph { position: relative; }
+    .sched tr.ep::before, .sched tr.month::before, .sched tr.ph::before { content: ""; position: absolute; left: 20px; top: 0; bottom: 0; width: 4px; background: #D9E0E6; z-index: 0; }
+    .sched tr.lit::before { background: var(--cyan-dark); }
+    .sched tr.litend::before { background: linear-gradient(to bottom, var(--cyan-dark) 0, var(--cyan-dark) 23px, #D9E0E6 23px); }
+    .sched tr.month { display: block; padding: 6px 0 0 52px; }
+    .sched tr.ph { display: block; padding: 4px 0 0 52px; }
+    .sched tr.month th, .sched tr.ph th { border: 0; }
+    .sched tr.month th { display: inline-block; font-size: 12px; font-weight: 700; line-height: 1.5; color: var(--muted); background: var(--gray-pill); border-radius: 999px; padding: 0 10px; }
+    .sched tr.ph th { display: block; font-size: 13px; font-weight: 700; line-height: 1.5; color: var(--text); padding: 2px 0 0; }
+    .sched tr.ep, .sched tr.ep.sub, .sched tr.ep.ms, .sched tr.ep.nrc {
+      display: grid; grid-template-columns: 44px auto auto auto auto 1fr 44px; grid-template-rows: auto auto auto 1fr; grid-template-areas: none;
+      column-gap: 8px; row-gap: 0; align-items: start; padding: 8px 8px 8px 0; margin: 0;
+      background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+    .sched tr.ep::after { content: ""; position: absolute; left: 52px; right: 0; top: 0; height: 1px; background: #E6ECF0; }
+    .sched tr.month + tr.ep::after, .sched tr.ph + tr.ep::after, .sched tbody tr:first-child::after { display: none; }
+    .sched tr.ep.now { background: #EAF8FC; border: 0; }
+    .sched tr.ep > td { min-width: 0; }
+    .sched tr.ep > td.c-kind { display: contents; }
+    .sched tr.ep > td.c-date { grid-area: auto; grid-column: 2; grid-row: 1; white-space: normal; font-size: 12.5px; font-weight: 500; line-height: 1.5; color: var(--muted); align-self: start; }
+    .c-date .wd { display: inline; font-size: 12.5px; margin-left: 0; }
+    .c-date .hol { display: inline; width: auto; min-width: 0; white-space: normal; font-size: 12px; margin: 0 0 0 4px; line-height: 1.5; }
+    .sched tr.ep > td.c-part { grid-area: auto; grid-column: 3; grid-row: 1; font-size: 12px; line-height: 1.6; color: var(--muted); white-space: nowrap; }
+    .sched tr.ep > td.c-theme { grid-area: auto; grid-column: 2 / 7; grid-row: 2; font-size: 15px; font-weight: 700; line-height: 1.5; margin: 0; }
+    .sched tr.ep.sub > td.c-theme, .sched tr.ep.ms > td.c-theme { font-weight: 700; }
+    .sched tr.ep > td.c-title { grid-area: auto; grid-column: 2 / 7; grid-row: 3; font-size: 13px; line-height: 1.5; color: var(--muted); margin: 0; }
+    .sched tr.ep > td.c-title:empty { display: none; }
+    .c-title .t1 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .sched tr.ep > td.c-rec { grid-area: auto; grid-column: 7; grid-row: 1 / -1; align-self: center; justify-self: end; }
+    .sched tr.ep .badge { grid-column: 4; grid-row: 1; align-self: start; justify-self: start; font-size: 12px; line-height: 1.5; padding: 0 8px; }
+    .sched tr.ep .badge.bd-main, .sched tr.ep.ms .badge { display: none; }
+    .sched tr.ep .now-badge { grid-column: 5; grid-row: 1; display: inline-block; margin: 0; width: auto; font-size: 12px; line-height: 1.5; padding: 0 8px; align-self: start; justify-self: start; }
+    .acts { gap: 0 16px; margin-top: 1px; }
+    .acts a { min-height: 40px; margin: -8px 0; font-size: 13px; line-height: 1.5; }
+    .acts .ok, .acts .kk { font-size: 12px; margin-left: 5px; }
+    button.mk-l { width: 44px; height: 44px; min-width: 44px; font-size: 11.5px; border-width: 2px; }
+    /* 駅 */
+    .stn { display: flex; grid-column: 1; grid-row: 1 / -1; align-self: start; justify-self: center; width: 30px; height: 30px; border-radius: 50%; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; line-height: 1; background: var(--card); border: 2px solid var(--cyan); color: var(--cyan-dark); position: relative; z-index: 1; }
+    .stn.sd { width: 12px; height: 12px; margin-top: 9px; border-width: 2px; }
+    .stn.fl { width: 4px; height: 24px; margin-top: 4px; border: 0; border-radius: 0; background: var(--cyan-dark); }
+    .stn.fl::after { content: ""; position: absolute; left: 4px; top: 0; width: 12px; height: 9px; background: var(--cyan-dark); }
+    .sched tr.s1 .stn { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
+    .sched tr.s2 .stn { background: var(--cyan-soft); border-color: var(--cyan-dark); color: var(--cyan-dark); }
+    .sched tr.dn .stn { box-shadow: 0 0 0 3px #8CCB2B; }
+    .sched tr.fut .stn { border-color: #AEB8C0; color: #4E5B66; background: var(--card); }
+    .sched tr.now .stn:not(.sd) { width: 36px; height: 36px; margin-top: -3px; }
+    .sched tr.ep.fut > td, .sched tr.ep.fut .c-title, .sched tr.ep.fut .c-date .wd, .sched tr.ep.fut .c-part { color: #4E5B66; }
+    .sched tr.ep.fut > td.c-theme { color: var(--text); }
+    .sched tr.ep.fut .badge { border-color: #AEB8C0; }
+    .sched tr.ep.ms .c-theme { font-size: 14px; }
+    /* 下の枠 */
+    .line-cta { padding: 14px 14px; margin-bottom: 20px; }
+    .line-cta .over { font-size: 12px; }
+    .line-cta .head { font-size: 16px; line-height: 1.5; }
+    .line-cta .body { font-size: 14px; line-height: 1.5; margin: 4px 0 10px; }
+    .line-cta .btn { min-height: 44px; padding: 8px 26px; font-size: 14px; }
+    .faq { padding-top: 14px; }
+    .faq h2 { font-size: 16px; margin-bottom: 4px; }
+    .faq dt { font-size: 14px; margin-top: 8px; line-height: 1.5; }
+    .faq dd { font-size: 14px; line-height: 1.5; }
+  }
+
+  /* 赤入れ：下のメッセージの囲み・分野コンプリートのバッジ */
+  .core-foot { background: var(--cyan-soft); border-radius: 14px; padding: 18px 16px; margin: 26px auto 0; max-width: 480px; font-weight: 500; line-height: 1.6; }
+  .core-foot .cf1 { display: block; font-size: 14px; font-weight: 700; color: var(--muted); }
+  .core-foot .cf2 { display: block; margin-top: 6px; font-size: 16px; font-weight: 900; line-height: 1.7; }
+  .core-foot .mk-u { padding: 0 4px; background: linear-gradient(transparent 60%, var(--cyan-mid) 60%, var(--cyan-mid) 92%, transparent 92%); }
+  @media (min-width: 768px) { .core-foot .cf2 { font-size: 18px; } }
+  .filters button .fc.ok, .filters button[aria-pressed="true"] .fc.ok { background: #E9F8C9; color: #3A6008; }
+  .phc.ok { color: inherit; }
+  .phk { display: inline-block; margin-left: 6px; font-size: 12px; font-weight: 700; line-height: 1.5; padding: 0 8px; border-radius: 999px; background: #E9F8C9; color: #3A6008; vertical-align: 1px; }
+
+  /* 赤入れ：使い方の「音声で聴く」行（Spotifyだけボタン・ほかは小さな文字リンク） */
+  .how .lead { font-weight: 700; }
+  .how a.spbtn { display: inline-flex; align-items: center; min-height: 38px; padding: 0 16px; font-size: 14px; font-weight: 700; line-height: 1; color: var(--cyan-dark); text-decoration: none; background: var(--card); border: 1.5px solid var(--cyan); border-radius: 999px; }
+  .how .oth { font-size: 13px; line-height: 1.5; }
+  .how .oth a { display: inline-block; padding: 11px 0; margin: -11px 0; text-decoration: underline; text-underline-offset: 3px; }
+
+  /* 赤入れ：分野別の進み具合・今週へ・パワーアップの折りたたみ */
+  .pgd { margin-top: 8px; border-top: 1px solid var(--line); }
+  .pcard .pgd { grid-column: 1 / -1; }
+  .pgd > summary { cursor: pointer; min-height: 38px; display: flex; align-items: center; font-size: 13px; font-weight: 700; list-style: none; }
+  .pgd > summary::-webkit-details-marker { display: none; }
+  .pgd > summary::after { content: ""; margin-left: auto; margin-right: 4px; width: 7px; height: 7px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .2s; }
+  .pgd[open] > summary::after { transform: rotate(-135deg); }
+  .pgl { padding: 0 0 6px; }
+  .pr { display: grid; grid-template-columns: 6.4em 1fr 2.6em 90px; align-items: center; column-gap: 8px; min-height: 30px; font-size: 13px; line-height: 1.5; }
+  .pr .bar { height: 8px; border-radius: 4px; background: var(--cyan-soft); overflow: hidden; }
+  .pr .bar i { display: block; height: 100%; background: var(--cyan); border-radius: 4px; }
+  .pr.ok .bar i { background: #8CCB2B; }
+  .pr .pc2 { text-align: right; }
+  .pr .phk { margin: 0; justify-self: start; white-space: nowrap; }
+  .pr .phk:empty { display: none; }
+  .gonow { position: fixed; right: 16px; bottom: 20px; z-index: 15; min-height: 44px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--cyan-dark); color: #fff; font: inherit; font-size: 14px; font-weight: 700; box-shadow: 0 2px 8px rgba(43,58,70,.22); cursor: pointer; }
+  .gonow[hidden] { display: none; }
+  #newBox { overflow: hidden; }
+  #newBox > summary { background: var(--cyan-dark); color: #fff; font-size: 15px; font-weight: 700; min-height: 44px; padding: 6px 16px; }
+  #newBox > summary::after { border-color: #fff; }
+  #newBox .cnt8 { background: #fff; color: var(--cyan-dark); font-size: 12px; }
+  #newBox .newlead { font-size: 13px; padding: 10px 16px 6px; line-height: 1.5; }
+  #newBox .newlist { padding: 0 16px 4px; }
+  #newBox .newlist li { padding: 8px 0 8px 34px; }
+  #newBox .newlist li::before { width: 24px; height: 24px; top: 9px; font-size: 13px; }
+  #newBox .newlist b { font-size: 14.5px; line-height: 1.5; }
+  #newBox .newlist li > span { font-size: 13px; line-height: 1.6; margin-top: 1px; }
+  #newBox .newlist a { display: inline-block; padding: 11px 0; margin: -11px 0 -11px 6px; color: var(--cyan-dark); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+</style>
+</head>
+<body>
+
+
+<div class="container">
+  <header class="hero">
+    <h1><span class="h1-top">耳で覚える宅建2027</span><span class="h1-main">学習ロードマップ</span><span class="h1-sub">（兼 進捗トラッカー）</span></h1>
+    <p id="heroNote">毎週月曜更新</p>
+  </header>
+
+  <section class="pcard" aria-label="本試験までと進み具合">
+    <div class="cd">
+      <div><div class="cd-l">本試験まで<span class="cd-s">（10月17日・予定）</span></div><div class="cd-n"><span id="daysLeft">-</span><small>日</small></div></div>
+      <div class="cd-d">2027年10月17日<br>予定</div>
+    </div>
+    <div class="pg-wrap" id="pgWrap">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" id="ringFg" cx="60" cy="60" r="50" transform="rotate(-90 60 60)" stroke-dasharray="314.16" stroke-dashoffset="314.16"/><text x="60" y="60" id="ringPct">0%</text></svg>
+      <div class="stats">
+        <div class="stat l"><b id="stL">0</b><span>聴いた</span></div>
+        <div class="stat d"><b id="stD">0</b><span>3問済</span></div>
+        <div class="stat"><b id="stT">41</b><span>本編</span></div>
+      </div>
+    </div>
+    <details class="pgd"><summary>分野別の進み具合</summary><div class="pgl" id="pgl"></div></details>
+    <p class="pg-note" id="pgNote"><span class="nb">いまは、この端末にだけ残ります。</span><span class="nb">LINEで開くと、</span><span class="nb">記録が残ります。</span> <a class="pg-login" href="/login" data-umami-event="roadmap-login">ログインする</a></p>
+  </section>
+
+  <div class="start-note" id="startNote">
+    <p>第1回の見本を公開中</p>
+    <a class="btn-o" href="/ep/1?src=roadmap" data-umami-event="roadmap-sample">第1回の見本を見る</a>
+  </div>
+
+  <details class="howbox" id="newBox" style="display:none">
+    <summary data-umami-event="roadmap-new2027"><span class="st">2027年、<span class="nb">ここがパワーアップします<span class="cnt8">5つ</span></span></span></summary>
+    <p class="newlead"><span class="nb">毎週月曜の配信は、</span><span class="nb">1月4日から。</span></p>
+    <ol class="newlist">
+      <li><b><span class="nb">全41回、</span><span class="nb">ぜんぶ新録。</span></b><span><span class="nb">2人の会話で進みます。</span><span class="nb">中身は、</span><span class="nb">条文と1つずつ照らしてあります。</span></span></li>
+      <li><b><span class="nb">聴いたら、</span><span class="nb">その場で○×3問。</span></b><span><span class="nb">テーマごとに、</span><span class="nb">知識が残っているかを</span><span class="nb">確かめられます。</span></span></li>
+      <li><b><span class="nb">図解は、</span><span class="nb">スマホの縦スクロールに。</span></b><span><span class="nb">聴きながら見られます。</span><span class="nb">有料版には印刷用のA4版もつきます。</span></span></li>
+      <li><b><span class="nb">いま、</span><span class="nb">どこまで来たかが見える。</span></b><span><span class="nb">全41回の予定と自分の進み具合が、</span><span class="nb">このページ1枚で分かります。</span></span></li>
+      <li><b><span class="nb">やさしいテキスト（予定）</span></b><span><span class="nb">聴きながら見て、</span><span class="nb">覚えるべき数字も確認できる。</span><span class="nb">理解を深めるための</span><span class="nb">テキストを準備中です。</span><a href="/ep/1/text" data-umami-event="roadmap-text-sample">見本はこちら</a></span></li>
+    </ol>
+  </details>
+
+  <details class="howbox">
+    <summary>使い方</summary>
+    <div class="in">
+  <section class="exam-map" aria-label="本試験50問の内訳">
+    <p class="em-h">本試験50問の内訳</p>
+    <div class="em-bar">
+      <div class="em-seg em1" style="flex:20"><i></i></div>
+      <div class="em-seg em2" style="flex:14"><i></i></div>
+      <div class="em-seg em3" style="flex:8"><i></i></div>
+      <div class="em-seg em4" style="flex:8"><i></i></div>
+    </div>
+    <ul class="em-leg"><li class="em1"><i></i>業法　20問</li><li class="em2"><i></i>権利関係　14問</li><li class="em3"><i></i>法令上の制限　8問</li><li class="em4"><i></i>税・その他　8問</li></ul>
+  </section>
+  <ul class="how">
+    <li><span class="n">1</span><span class="lead">音声で聴く</span><a class="spbtn" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="spotify">Spotify</a><span class="oth">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="standfm">stand.fm</a></span></li>
+    <li><span class="n">2</span>【図解と3問】のページで確かめる</li>
+  </ul>
+
+  <section class="tiers" aria-label="図解と3問のページで見られるもの">
+    <h2><span class="nb">【図解と3問】のページで</span><span class="nb">見られるもの</span></h2>
+    <table class="tt">
+      <thead><tr><th></th><th><span class="nb">登録</span><span class="nb">なし</span></th><th><span class="nb">LINE・</span><span class="nb">メール</span><small><span class="nb">登録・</span><span class="nb">無料</span></small></th><th><span class="nb">やさしい</span><span class="nb">テキスト</span><small><span class="nb">有料・</span><span class="nb">準備中</span></small></th></tr></thead>
+      <tbody>
+        <tr><th><span class="nb">図解の</span><span class="nb">最初の1枚</span></th><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
+        <tr><th>○×3問</th><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
+        <tr><th><span class="nb">図解の</span><span class="nb">続き</span></th><td class="n"><span aria-label="なし">―</span></td><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
+        <tr><th>過去問1選</th><td class="n"><span aria-label="なし">―</span></td><td class="y"><span aria-label="見られる">○</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
+        <tr><th>図解ぜんぶ</th><td class="n"><span aria-label="なし">―</span></td><td class="n"><span aria-label="なし">―</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
+        <tr><th>今回の数字</th><td class="n"><span aria-label="なし">―</span></td><td class="n"><span aria-label="なし">―</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
+        <tr><th>赤シート</th><td class="n"><span aria-label="なし">―</span></td><td class="n"><span aria-label="なし">―</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
+        <tr><th><span class="nb">印刷用の</span><span class="nb">A4版</span></th><td class="n"><span aria-label="なし">―</span></td><td class="n"><span aria-label="なし">―</span></td><td class="y"><span aria-label="見られる">○</span></td></tr>
+      </tbody>
+    </table>
+    <p class="tt-note"><span class="nb">やさしいテキストを買うと、</span><span class="nb">同じページでテキストが開きます。</span><span class="nb">○×も過去問も、</span><span class="nb">その中で解ける予定です。</span></p>
+  </section>
+    </div>
+  </details>
+
+  <nav class="filters" id="filters" aria-label="分野でしぼる"></nav>
+  <p class="part-lead" id="partLead"></p>
+  <p class="week-note"><span class="nb">月曜は本編。</span><span class="nb">木曜は短い復習・</span><span class="nb">もう1論点・まとめ。</span><span class="nb">聴いたら右の丸を押すと、</span><span class="nb">記録できます。</span></p>
+  <main class="sched"><table id="sched"></table></main>
+
+  <section class="line-cta">
+    <div class="over">LINE・メール</div>
+    <p class="head" id="lineHead"><span class="nb">図解の続きと過去問1選は、</span><span class="nb">LINEかメールで</span></p>
+    <p class="body" id="lineBody"><span class="nb">毎週月曜に、こちらからお届けします。</span><br><span class="nb">登録無料です。</span></p>
+    <div class="btns"><a class="btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="roadmap-line">LINEで受け取る</a><a class="btn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="roadmap-mail">メールで受け取る</a></div>
+  </section>
+
+  <section class="faq">
+    <h2>よくある質問</h2>
+    <dl>
+      <dt>途中からでも大丈夫？</dt>
+      <dd><span class="nb">どの回からでも聴けます。</span><span class="nb">迷ったら業法から。</span></dd>
+      <dt>去年の回は？</dt>
+      <dd><span class="nb">2026年の回は、</span><span class="nb"><a href="/tracker.html" data-umami-event="roadmap-tracker2026">2026年の進捗トラッカー</a>から</span><span class="nb">聴けます。</span></dd>
+    </dl>
+  </section>
+  <p class="core-foot"><span class="cf1"><span style="display:inline-block;white-space:nowrap">忙しい社会人の勉強は、</span><span style="display:inline-block;white-space:nowrap">止まりがちです。</span></span><span class="cf2"><span class="mk-u"><span style="display:inline-block;white-space:nowrap">ここでは、</span><span style="display:inline-block;white-space:nowrap">静かに、淡々と</span><span style="display:inline-block;white-space:nowrap">続けることを</span><span style="display:inline-block;white-space:nowrap">サポートします。</span></span></span></p>
+</div>
+<button type="button" class="gonow" id="goNow" hidden>今週へ</button>
+<script>
+// 各回の spotify / youtube に URL を入れる。zukai（図解）/ mondai（問題）は本編なら回のページから自動で作る（下の EP_URL）。
+// 補強・まとめ・短尺に回のページができたら、その回の zukai / mondai に URL を直接入れる（直接入れた値が優先）。
+// リンクは「URLがある」かつ「配信日を過ぎた」回だけ出る。先に入れておいても配信日まで見えない。
+var PARTS = [["第1部 業法", "試験の4割。ここから固めるのがおすすめ"], ["第2部 権利関係", "民法を中心に。誰を守るルールかで整理して聴く"], ["第3部 法令上の制限", "数字と用語を、耳で慣らしていく"], ["第4部 税・その他", "出題は少なめ。短い回で押さえる"], ["第5部 直前総復習", "全体をもう一度、通して聴く"]];
+var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sample": true,"title": "100部屋貸しても、免許はいらない ── 宅建業と免許","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-01-12","wd": "火","note": "成人の日","kind": "本編","n": 2,"title": "1000万円を預けずに開業する方法 ── 営業保証金と保証協会","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-01-18","wd": "月","note": "","kind": "本編","n": 3,"title": "合格しても、まだ「宅建士」とは名乗れない ── 登録と登録の移転","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-01-25","wd": "月","note": "","kind": "本編","n": 4,"title": "引っ越したのに名簿は古いまま？ ── 宅建士証と変更の登録","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-02-01","wd": "月","note": "","kind": "本編","n": 5,"title": "だまされた人がゼロでも、広告は違反 ── 媒介契約と広告のルール","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-02-08","wd": "月","note": "","kind": "本編","n": 6,"title": "売主には説明しなくていい？ ── 35条書面と重要事項説明","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-02-15","wd": "月","note": "","kind": "本編","n": 7,"title": "マンションを借りる人に、修繕積立金は説明しなくていい ── 重要事項説明の分かれ目","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-02-22","wd": "月","note": "","kind": "本編","n": 8,"title": "契約の書面、宅建士が手渡さなくていい ── 37条書面と35条書面","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-03-01","wd": "月","note": "","kind": "本編","n": 9,"title": "テントで申し込んだら白紙に戻せる？ ── クーリングオフと手付","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-03-08","wd": "月","note": "","kind": "本編","n": 10,"title": "代金の1割以下でも、守らなきゃいけない手付 ── 保全措置と8種制限","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-03-15","wd": "月","note": "","kind": "本編","n": 11,"title": "3000万円の家、報酬はいくら？ ── 報酬計算を耳で解く","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-03-18","wd": "木","note": "","kind": "補強","n": 0,"title": "6人目が入ったら、宅建士は何人？ ── 専任の宅建士","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-03-23","wd": "火","note": "春分の日の振替休日","kind": "本編","n": 12,"title": "免許が消える日 ── 監督処分と住宅瑕疵担保履行法","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-03-25","wd": "木","note": "","kind": "まとめ","n": 0,"title": "20問は、数字で解ける ── 業法12回を1本で","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-04-01","wd": "木","note": "","kind": "短尺","n": 0,"title": "8日・2週間・3か月 ── 業法の「期間」だけ2分","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-04-08","wd": "木","note": "","kind": "短尺","n": 0,"title": "1000万円と60万円 ── 業法の「お金」だけ2分","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-04-15","wd": "木","note": "","kind": "補強","n": 0,"title": "契約しない案内所なら、宅建士はいらない ── 案内所と標識・名簿","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-04-22","wd": "木","note": "","kind": "短尺","n": 0,"title": "5%・4%・3% ── 報酬の数字だけ2分","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-04-29","wd": "木","note": "","kind": "短尺","n": 0,"title": "5人に1人・10日前 ── 宅建士と事務所の数字","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-05-13","wd": "木","note": "","kind": "短尺","n": 0,"title": "2週間か1週間か ── 取り違えやすい数字","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-05-20","wd": "木","note": "","kind": "補強","n": 0,"title": "「今日決めないと」は言ってはいけない ── 禁止行為","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 1},{"d": "2027-03-29","wd": "月","note": "","kind": "本編","n": 13,"title": "18歳の契約は、親でも取り消せない ── 意思表示と制限行為能力者","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-04-05","wd": "月","note": "","kind": "本編","n": 14,"title": "母の土地を、娘が勝手に売ったら ── 無権代理と表見代理","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-04-12","wd": "月","note": "","kind": "本編","n": 15,"title": "20年住めば自分の土地になる？ ── 取得時効と消滅時効","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-04-19","wd": "月","note": "","kind": "本編","n": 16,"title": "先に買ったのに、後から買った人に負ける ── 物権変動と登記","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-04-26","wd": "月","note": "","kind": "本編","n": 17,"title": "相続した家、登記しないとどうなる？ ── 不動産登記法","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-05-06","wd": "木","note": "GW（5/3〜5は祝日）","kind": "本編","n": 18,"title": "家を担保にしたら、家賃まで押さえられる ── 抵当権","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-05-10","wd": "月","note": "","kind": "本編","n": 19,"title": "「先に本人に請求して」が言えない保証人 ── 保証と連帯債務","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-05-17","wd": "月","note": "","kind": "本編","n": 20,"title": "借金は「相殺」で消せる？ ── 弁済・相殺・債権譲渡","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-05-24","wd": "月","note": "","kind": "本編","n": 21,"title": "相手が悪くなくても、契約は解除できる ── 債務不履行と契約不適合責任","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-05-31","wd": "月","note": "","kind": "本編","n": 22,"title": "家賃を「上げない」約束はOK、「下げない」約束はNG ── 賃貸借と借家","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-06-07","wd": "月","note": "","kind": "本編","n": 23,"title": "建て直したら、借地は延びる？ ── 借地権","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-06-14","wd": "月","note": "","kind": "本編","n": 24,"title": "兄弟には、遺留分がない ── 相続と遺言","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-06-21","wd": "月","note": "","kind": "本編","n": 25,"title": "看板が落ちたら、誰が払う？ ── 不法行為と請負・委任・贈与","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-06-28","wd": "月","note": "","kind": "本編","n": 26,"title": "マンションの決め方が変わった ── 2026年改正のポイント","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-07-05","wd": "月","note": "","kind": "本編","n": 27,"title": "隣の木の枝、自分で切っていい？ ── 区分所有法と共有・相隣関係","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-07-08","wd": "木","note": "","kind": "まとめ","n": 0,"title": "民法は「誰を守るか」で解ける ── 権利関係15回を1本で","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-07-15","wd": "木","note": "","kind": "短尺","n": 0,"title": "20年・10年・5年 ── 時効の数字だけ","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-07-22","wd": "木","note": "","kind": "短尺","n": 0,"title": "30年・20年・10年 ── 借地借家の数字だけ","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-07-29","wd": "木","note": "","kind": "短尺","n": 0,"title": "2分の1・4分の3・5分の4 ── 相続と区分所有の割合","sub": "","spotify": "","youtube": "","zukai": "","mondai": "","part": 2},{"d": "2027-07-12","wd": "月","note": "","kind": "本編","n": 28,"title": "都市計画法：区域・用途地域","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 3},{"d": "2027-07-20","wd": "火","note": "海の日","kind": "本編","n": 29,"title": "開発許可","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 3},{"d": "2027-07-26","wd": "月","note": "","kind": "本編","n": 30,"title": "建築基準法①：用途制限・道路・防火","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 3},{"d": "2027-08-02","wd": "月","note": "","kind": "本編","n": 31,"title": "建築基準法②：建ぺい率・容積率・高さ","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 3},{"d": "2027-08-09","wd": "月","note": "","kind": "本編","n": 32,"title": "国土法／農地法","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 3},{"d": "2027-08-16","wd": "月","note": "","kind": "本編","n": 33,"title": "区画整理・盛土規制法・その他の法令","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 3},{"d": "2027-08-23","wd": "月","note": "","kind": "本編","n": 34,"title": "不動産取得税・固定資産税","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 4},{"d": "2027-08-30","wd": "月","note": "","kind": "本編","n": 35,"title": "印紙税・登録免許税","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 4},{"d": "2027-09-06","wd": "月","note": "","kind": "本編","n": 36,"title": "譲渡所得・住宅ローン控除・贈与税の特例（新）","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 4},{"d": "2027-09-13","wd": "月","note": "","kind": "本編","n": 37,"title": "鑑定評価／地価公示","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 4},{"d": "2027-09-21","wd": "火","note": "敬老の日","kind": "本編","n": 38,"title": "機構・景表法・統計","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 4},{"d": "2027-09-27","wd": "月","note": "","kind": "本編","n": 39,"title": "土地・建物（毎年2問・新）","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 4},{"d": "2027-09-30","wd": "木","note": "","kind": "まとめ","n": 0,"title": "法令上の制限・税のまとめ","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 4},{"d": "2027-10-04","wd": "月","note": "","kind": "本編","n": 40,"title": "業法の総復習","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 5},{"d": "2027-10-12","wd": "火","note": "スポーツの日","kind": "本編","n": 41,"title": "全分野の直前チェック","sub": "タイトル未定","spotify": "","youtube": "","zukai": "","mondai": "","part": 5}];
+(function(){
+  var TODAY = new Date();
+  var today = TODAY; var t = today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
+  var num = function(s){ return +s.replace(/-/g,''); };
+  var nowEp = null;
+  EPS.forEach(function(e){ if(e.kind==='本編' && num(e.d)<=t && (!nowEp || e.d>nowEp.d)) nowEp=e; });
+  // 配信開始前：見本の案内を出し、LINEの枠を「始まったらお知らせ」に
+  if (t < 20270104) {
+    document.getElementById('startNote').style.display = 'block';
+    document.getElementById('heroNote').textContent = '1月4日から、毎週月曜更新';
+    document.getElementById('newBox').style.display = 'block';
+    document.getElementById('lineHead').innerHTML = '<span class="nb">始まったら、</span><span class="nb">LINEかメールでお知らせします</span>';
+    document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">登録無料です。</span>';
+  }
+  function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  // 文末の「です／ます／違反」だけが次の行に落ちないよう、最後の文節（約5字）をひとかたまりにする
+  function nbt(str){
+    var segs;
+    try { segs = Array.from(new Intl.Segmenter('ja',{granularity:'word'}).segment(str), function(x){ return x.segment; }); }
+    catch(_) { segs = [str.slice(0,-5), str.slice(-5)]; }
+    var n = 0, i = segs.length;
+    while (i > 0 && n < 5) { i--; n += segs[i].length; }
+    if (i <= 0 || n > 9) { var k = Math.max(0, str.length-5); return esc(str.slice(0,k)) + '<span class="nb">' + esc(str.slice(k)) + '</span>'; }
+    return esc(segs.slice(0,i).join('')) + '<span class="nb">' + esc(segs.slice(i).join('')) + '</span>';
+  }
+  function md(e){ var p=e.d.split('-'); return (+p[1])+'/'+(+p[2]); }
+  function partName(i){ return PARTS[i-1][0].replace(/^第\d部 /,''); }
+  // 「キャッチ ── テーマ」を分ける。区切りがない回はそのままテーマにする
+  function split(e){
+    var p = e.title.split(' ── ');
+    return p.length>1 ? {theme:p.slice(1).join(' ── '), title:p[0]} : {theme:e.title, title:''};
+  }
+  // 印（この端末の localStorage だけ。送信しない）。値は {"1":true,…}
+  function rd(key){
+    var o = {};
+    try {
+      var v = JSON.parse(localStorage.getItem(key) || '{}');
+      if (Array.isArray(v)) { v.forEach(function(n){ o[n]=true; }); }
+      else if (v && typeof v==='object') { o = v; }
+    } catch(_) {}
+    return o;
+  }
+  function wr(key, o){ try { localStorage.setItem(key, JSON.stringify(o)); } catch(_) {} }
+  var K_L = 'takken2027-listened', K_D = 'takken2027-done', K_K = 'takken2027-kako';
+  var ST_LABEL = ['未聴', '聴いた', '復習']; // 復習も聴いた扱いで数える
+  var HONPEN = EPS.filter(function(e){ return e.kind==='本編' && e.n; });
+  var PG = [20,14,8,8];
+  var EXAM = new Date(2027, 9, 17);
+  function renderCountdown(){
+    var diff = Math.ceil((EXAM - TODAY) / 86400000);
+    document.getElementById('daysLeft').textContent = diff > 0 ? diff : 0;
+  }
+  function renderProgress(){
+    var L = rd(K_L), D = rd(K_D), nl = 0, nd = 0, pt = {};
+    // 配信前（2027-01-04より前）は、記録が1件もない端末では進み具合を隠す
+    var showPg = true; // ロードマップ＝トラッカー：進み具合はいつも出す（0でも）
+    document.getElementById('pgWrap').hidden = !showPg;
+    document.getElementById('pgNote').hidden = !showPg;
+    HONPEN.forEach(function(e){
+      if (L[e.n]) nl++;
+      if (D[e.n]) nd++;
+      var p = pt[e.part] || (pt[e.part] = [0,0]); p[1]++; if (L[e.n]) p[0]++;
+    });
+    var pc = HONPEN.length ? Math.round(nl/HONPEN.length*100) : 0;
+    document.getElementById('stL').textContent = nl;
+    document.getElementById('stD').textContent = nd;
+    document.getElementById('stT').textContent = HONPEN.length;
+    document.getElementById('ringPct').textContent = pc + '%';
+    document.getElementById('ringFg').setAttribute('stroke-dashoffset', (314.16*(1-pc/100)).toFixed(1));
+    Array.prototype.forEach.call(document.querySelectorAll('#sched .phc'), function(el){
+      var p = pt[+el.getAttribute('data-p')] || [0,0];
+      el.textContent = p[0] + '/' + p[1];
+    });
+    // 分野コンプリート：バッジ・見出しの札・タブの色（毎回、今の記録から計算）
+    var full = {}, rowsH = '';
+    PARTS.forEach(function(_, i){
+      var q = pt[i+1] || [0,0]; full[i+1] = q[1] > 0 && q[0] === q[1];
+      rowsH += '<div class="pr'+(full[i+1]?' ok':'')+'"><span class="pn">'+esc(partName(i+1))+'</span><span class="bar"><i style="width:'+(q[1]?Math.round(q[0]/q[1]*100):0)+'%"></i></span><span class="pc2">'+q[0]+'/'+q[1]+'</span><span class="phk">'+(full[i+1]?'コンプリート':'')+'</span></div>';
+    });
+    document.getElementById('pgl').innerHTML = rowsH;
+    Array.prototype.forEach.call(document.querySelectorAll('#sched tr.ph th'), function(th){
+      var p = +th.querySelector('.phc').getAttribute('data-p'), k = th.querySelector('.phk');
+      if (full[p] && !k) { k = document.createElement('span'); k.className = 'phk'; k.textContent = 'コンプリート'; th.appendChild(k); }
+      if (!full[p] && k) th.removeChild(k);
+    });
+    // 分野タブの「聴いた数/本編の数」
+    Array.prototype.forEach.call(document.querySelectorAll('#filters .fc'), function(el){
+      var p = +el.getAttribute('data-p'), a, b;
+      if (p) { a = (pt[p]||[0,0])[0]; b = (pt[p]||[0,0])[1]; } else { a = nl; b = HONPEN.length; }
+      el.textContent = a + '/' + b;
+      el.classList.toggle('ok', b > 0 && a === b);
+    });
+  }
+  var KIND = {'本編':['本編',''], '短尺':['復習',' tag'], 'まとめ':['まとめ',' line'], '補強':['もう1論点',' line']};
+  // 本編の図解・問題は回のページ（ep/N）の節へ。?src=roadmap で Umami に入口が残る（YouTube は ?src=yt）
+  var EP_URL = '/ep/';
+  EPS.forEach(function(e){
+    if (e.kind!=='本編' || !e.n) return;
+    var base = EP_URL + e.n + '?src=roadmap';
+    if (!e.zukai) e.zukai = base + '#zukai';
+    if (!e.mondai) e.mondai = base;
+  });
+  var LINKS = [['spotify','Spotify',1], ['youtube','YouTube',1], ['mondai','図解と3問',0]]; // 3つ目=別タブで開く
+  // 節目の行（どの分野でしぼっても出す）。受験申込の日付は目安（7月の頭に置く）
+  var MS = [
+    {d: "2027-07-01", dl: "7月", wd: "", kind: "節目", ms: 1, theme: "受験申込（例年7月）", title: "日程は試験実施機関の発表で確定します"},
+    {d: "2027-10-17", wd: "日", kind: "節目", ms: 1, theme: "本試験", title: "10月17日（日）の予定"}
+  ];
+  var sorted = EPS.concat(MS).sort(function(a,b){ return a.d<b.d?-1:a.d>b.d?1:0; });
+  var cur = 0;
+  var m0 = /^#p([1-9])$/.exec(location.hash);
+  if (m0 && PARTS[+m0[1]-1]) cur = +m0[1];
+
+  // 道の線：聴いた回（いちばん下）までを濃い水色、その先をグレーに
+  function updateRail(){
+    var rows = [].slice.call(document.querySelectorAll('#sched tbody tr')), last = -1;
+    rows.forEach(function(r,i){ if (r.classList.contains('s1') || r.classList.contains('s2')) last = i; });
+    rows.forEach(function(r,i){ r.classList.toggle('lit', i<last); r.classList.toggle('litend', i===last); });
+  }
+  function render(){
+    var cols = 6;
+    var html = '<thead><tr><th class="c-date">日付</th><th class="c-kind">種別</th><th class="c-part">分野</th><th class="c-theme">テーマ</th><th class="c-title">タイトル</th><th class="c-rec">聴いたら押す</th></tr></thead><tbody>';
+    var month = 0, phPart = 0, LS = rd(K_L), DN = rd(K_D), KK = rd(K_K);
+    sorted.forEach(function(e){
+      if (cur && !e.ms && e.part!==cur) return;
+      var m = +e.d.split('-')[1];
+      if (m!==month){ month=m; html += '<tr class="month"><th colspan="'+cols+'">'+m+'月</th></tr>'; }
+      if (!cur && e.kind==='本編' && e.part!==phPart){ phPart=e.part; html += '<tr class="ph"><th colspan="'+cols+'">'+esc(partName(e.part))+'　<span class="phc" data-p="'+e.part+'"></span></th></tr>'; }
+      if (e.ms){
+        html += '<tr class="ep ms"><td class="c-date">'+(e.dl||md(e))+(e.wd?'<span class="wd">('+esc(e.wd)+')</span>':'')+'</td>'
+          + '<td class="c-kind"><span class="stn fl"></span><span class="badge tag">'+esc(e.kind)+'</span></td><td class="c-part"></td>'
+          + '<td class="c-theme">'+esc(e.theme)+'</td><td class="c-title">'+esc(e.title)+'</td><td class="c-rec"></td></tr>';
+        return;
+      }
+      var k = KIND[e.kind] || [e.kind,' line'];
+      var label = e.kind==='本編' ? '本編 #'+e.n : k[0];
+      var isNow = nowEp===e;
+      var s = split(e);
+      var titleHtml = s.title ? nbt(s.title) : (e.sub && e.sub!=='タイトル未定' ? '<span class="tbd">'+esc(e.sub)+'</span>' : '');
+      var acts = '';
+      var early = e.sample && num(e.d) > t; // 見本として配信前から出す回
+      if (num(e.d) <= t || e.sample) LINKS.forEach(function(a){
+        if (!e[a[0]]) return;
+        acts += '<a href="'+esc(e[a[0]])+'"'+(a[2]?' target="_blank" rel="noopener"':'')
+          + ' data-umami-event="roadmap-link" data-umami-event-type="'+a[0]+'" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+a[1]+((a[0]==='mondai' && DN[e.n])?'<span class="ok">済</span>':'')
+          + ((a[0]==='mondai' && (KK[e.n]===1 || KK[e.n]===2))?(KK[e.n]===1?'<span class="kk kk-ok">過去問 ○</span>':'<span class="kk kk-ng">過去問 ×</span>'):'')+'</a>';
+      });
+      var marks = '', stc = '';
+      var fut = !e.sample && num(e.d) > t; // 配信前の行：グレー・記録ボタンなし
+      if (e.kind==='本編' && e.n && !fut) {
+        var st = LS[e.n]===2 ? 2 : (LS[e.n] ? 1 : 0);
+        stc = (st ? ' s'+st : '') + (DN[e.n] ? ' dn' : '');
+        marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-pressed="'+(st?'true':'false')+'" aria-label="第'+e.n+'回の記録 '+ST_LABEL[st]+'">'+ST_LABEL[st]+'</button>'
+          ;
+      }
+      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(marks?'':' nrc')+stc+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
+        + '<td class="c-date">'+md(e)+'<span class="wd">('+esc(e.wd)+')</span>'+(e.note?'<span class="hol">'+esc(e.note)+'</span>':'')+'</td>'
+        + '<td class="c-kind">'+(e.kind==='本編' ? '<span class="stn">'+e.n+'</span>' : '<span class="stn sd"></span>')+'<span class="badge'+k[1]+(e.kind==='本編'?' bd-main':'')+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
+        + '<td class="c-part">'+esc(partName(e.part))+'</td>'
+        + '<td class="c-theme">'+nbt(s.theme)+'</td>'
+        + '<td class="c-title">'+(titleHtml?'<span class="t1">'+titleHtml+'</span>':'')+(acts?'<div class="acts">'+acts+'</div>':'')+'</td>'
+        + '<td class="c-rec">'+marks+'</td>'
+        + '</tr>';
+    });
+    document.getElementById('sched').innerHTML = html + '</tbody>';
+    renderProgress();
+    updateRail();
+    updateGo();
+    var lead = document.getElementById('partLead');
+    lead.textContent = cur ? PARTS[cur-1][1] : '';
+    lead.style.display = cur ? 'block' : 'none';
+    Array.prototype.forEach.call(document.querySelectorAll('#filters button'), function(b){
+      b.setAttribute('aria-pressed', +b.getAttribute('data-p')===cur ? 'true' : 'false');
+    });
+  }
+
+  var fb = '<button type="button" data-p="0" data-umami-event="roadmap-filter" data-umami-event-part="すべて">すべて<span class="fc" data-p="0"></span></button>';
+  PARTS.forEach(function(p,i){
+    var n = partName(i+1);
+    fb += '<button type="button" data-p="'+(i+1)+'" data-umami-event="roadmap-filter" data-umami-event-part="'+esc(n)+'">'+esc(n)+'<span class="fc" data-p="'+(i+1)+'"></span></button>';
+  });
+  var filters = document.getElementById('filters');
+  filters.innerHTML = fb;
+  filters.addEventListener('click', function(ev){
+    var b = ev.target.closest('button'); if (!b) return;
+    cur = +b.getAttribute('data-p');
+    try { history.replaceState(null, '', cur ? '#p'+cur : location.pathname + location.search); } catch(_) {}
+    render();
+  });
+  document.getElementById('sched').addEventListener('click', function(ev){
+    var b = ev.target.closest('button.mk-l'); if (!b) return;
+    var o = rd(K_L), n = b.getAttribute('data-n');
+    var cur0 = o[n]===2 ? 2 : (o[n] ? 1 : 0), nx = (cur0 + 1) % 3; // 未聴→聴了→復習→未聴（2026のトラッカーと同じ）
+    if (nx) { o[n] = nx; } else { delete o[n]; }
+    wr(K_L, o);
+    b.setAttribute('data-st', nx); b.textContent = ST_LABEL[nx];
+    b.setAttribute('aria-pressed', nx ? 'true' : 'false'); b.setAttribute('aria-label', '第'+n+'回の記録 '+ST_LABEL[nx]);
+    b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+    var tr = b.closest('tr'); tr.classList.remove('s1','s2'); if (nx) tr.classList.add('s'+nx);
+    pgSet('listened', n, nx || null);
+    updateRail();
+    if (window.umami) { try { umami.track('roadmap_progress', { to: ST_LABEL[nx] }); } catch(_) {} }
+    renderProgress();
+  });
+  var goBtn = document.getElementById('goNow');
+  function updateGo(){
+    if (!nowEp) { goBtn.hidden = true; return; }
+    var r = document.querySelector('#sched tr.now'), vis = false;
+    if (r) { var b = r.getBoundingClientRect(), fh = document.getElementById('filters').getBoundingClientRect().height; vis = b.bottom > fh && b.top < innerHeight; }
+    goBtn.hidden = vis;
+  }
+  goBtn.addEventListener('click', function(){
+    if (cur) { cur = 0; try { history.replaceState(null, '', location.pathname + location.search); } catch(_) {} render(); }
+    var r = document.querySelector('#sched tr.now'); if (!r) return;
+    var fh = document.getElementById('filters').getBoundingClientRect().height;
+    window.scrollTo({ top: r.getBoundingClientRect().top + window.scrollY - fh - 8, behavior: 'smooth' });
+  });
+  window.addEventListener('scroll', updateGo, { passive: true });
+  window.addEventListener('resize', updateGo);
+  // ===== ログインした人の記録をサーバーにも置く（ログインしていない人の動きは今までと同じ）=====
+  // 同期の部品は、画面が落ち着いたあとで読み込む。LINEの中のときだけ LIFF SDK も読む。例外はすべて握りつぶす。
+  var pgReady = false, pgQueue = [];
+  function pgSet(kind, key, val){
+    try {
+      if (pgReady && window.TakkenProgress) { TakkenProgress.set(kind, key, val); } else { pgQueue.push([kind, key, val]); }
+    } catch(_) {}
+  }
+  function nbs(a){ return a.map(function(s){ return '<span class="nb">'+s+'</span>'; }).join(''); }
+  function renderNote(){
+    var st = 'local', pv = null;
+    try { if (window.TakkenProgress) { st = TakkenProgress.state(); pv = TakkenProgress.provider(); } } catch(_) {}
+    var h = st==='synced'
+      ? nbs(pv==='email' ? ['メールアドレスに記録しています。','ほかの端末でも同じ記録が出ます。'] : ['LINEに記録しています。','機種を変えても残ります。'])
+      : nbs(['いまは、この端末にだけ残ります。','LINEで開くと、','記録が残ります。']) + ' <a class="pg-login" href="/login" data-umami-event="roadmap-login">ログインする</a>';
+    document.getElementById('pgNote').innerHTML = h;
+  }
+  function pgLoad(src){
+    return new Promise(function(ok, ng){
+      var sc = document.createElement('script'); sc.src = src; sc.async = true; sc.onload = ok; sc.onerror = ng; document.head.appendChild(sc);
+    });
+  }
+  function pgStart(){
+    var inLine = /\sLine\//i.test(navigator.userAgent || '');
+    (inLine ? pgLoad('https://static.line-scdn.net/liff/edge/2/sdk.js').catch(function(){}) : Promise.resolve())
+      .then(function(){ return pgLoad('/progress-sync.js'); })
+      .then(function(){
+        if (!window.TakkenProgress) { return; }
+        var p = TakkenProgress.init({ liffId: '2012583516-7vmvMorb', cookieHint: true, onChange: function(){ render(); renderNote(); } });
+        pgReady = true;
+        pgQueue.splice(0).forEach(function(q){ TakkenProgress.set(q[0], q[1], q[2]); });
+        return p;
+      }).catch(function(){});
+  }
+  if (document.readyState === 'complete') { setTimeout(pgStart, 0); } else { window.addEventListener('load', function(){ setTimeout(pgStart, 0); }); }
+  renderCountdown();
+  render();
+  updateGo();
+  // 開いたとき、今週の行まで自動でスクロール（#p1〜#p5 で開いたときはしない）
+  if (nowEp && !/^#p[1-9]$/.test(location.hash)) {
+    var goNow = function(){ var r = document.querySelector('#sched tr.now'); if (r) r.scrollIntoView({block:'center', behavior:'instant'}); };
+    goNow();
+    window.addEventListener('load', function(){ if (window.scrollY === lastY) goNow(); });
+    var lastY = window.scrollY;
+  }
+})();
+</script>
+</body>
+</html>
