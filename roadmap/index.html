@@ -467,6 +467,49 @@
   #newBox .newlist b { font-size: 14.5px; line-height: 1.5; }
   #newBox .newlist li > span { font-size: 13px; line-height: 1.6; margin-top: 1px; }
   #newBox .newlist a { display: inline-block; padding: 11px 0; margin: -11px 0 -11px 6px; color: var(--cyan-dark); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+  /* 路線色：分野ごとに色を1つ持たせる（試作） */
+  .p1 { --pc:#17C5E8; --pc-dark:#0EA2C2; --pc-soft:#D8F3FA; }
+  .p2 { --pc:#9B8CE8; --pc-dark:#6A58C9; --pc-soft:#ECE8FB; }
+  .p3 { --pc:#4CC9A4; --pc-dark:#1E9474; --pc-soft:#DDF5EC; }
+  .p4 { --pc:#F5A54A; --pc-dark:#B86A0E; --pc-soft:#FDEBD3; }
+  .p5 { --pc:#F2788F; --pc-dark:#C6405B; --pc-soft:#FCE1E6; }
+  .r1 { --rm:#17C5E8; --rd:#0EA2C2; }
+  .r2 { --rm:#9B8CE8; --rd:#6A58C9; }
+  .r3 { --rm:#4CC9A4; --rd:#1E9474; }
+  .r4 { --rm:#F5A54A; --rd:#B86A0E; }
+  .r5 { --rm:#F2788F; --rd:#C6405B; }
+  .filters button[class] { border-color: var(--pc-dark); color: var(--pc-dark); }
+  .filters button[class][aria-pressed="true"] { background: var(--pc-dark); border-color: var(--pc-dark); color: #fff; }
+  .filters button[class][aria-pressed="true"] .fc { background: rgba(255,255,255,.25); color: #fff; }
+  .em1 i, .em2 i, .em3 i, .em4 i { background: var(--pc); box-shadow: none; }
+  .pr .bar { background: var(--pc-soft); }
+  .pr .bar i { background: var(--pc-dark); }
+  .badge { color: var(--pc-dark, var(--cyan-dark)); background: var(--pc-soft, var(--cyan-soft)); }
+  .badge.tag { color: var(--muted); background: var(--gray-pill); }
+  .badge.line { background: transparent; border: 1px solid var(--pc, var(--cyan)); }
+  .sched tr.ep:not(.fut) .badge.bd-main { color: var(--pc-dark, var(--cyan-dark)); background: var(--pc-soft, var(--cyan-soft)); }
+  .sched tr.ep.now:not(.fut) .badge.bd-main { background: var(--card); }
+  .sched tr.ep.fut .badge.bd-main { color: #6B6B76; background: transparent; }
+  .now-badge { background: var(--pc-dark, var(--cyan-dark)); }
+  .sched tr.ep.now { background: var(--pc-soft, var(--cyan-soft)); outline: 2px solid var(--pc, var(--cyan)); outline-offset: -2px; }
+  button.mk-l[data-st="0"] { border-color: var(--pc, var(--cyan)); color: var(--pc-dark, var(--cyan-dark)); }
+  button.mk-l[data-st="1"] { background: var(--pc-dark, var(--cyan-dark)); border-color: var(--pc-dark, var(--cyan-dark)); color: #fff; }
+  button.mk-l[data-st="2"] { background: #E9F8C9; border-color: #8CCB2B; color: #3A6008; }
+  button.mk-l:focus-visible { outline-color: color-mix(in srgb, var(--pc, var(--cyan)) 55%, white); }
+  @media (hover: hover) { button.mk-l[data-st="0"]:hover { background: var(--pc-soft, var(--cyan-soft)); } }
+  @media (max-width: 767px) {
+    .sched tr.ep::before, .sched tr.month::before, .sched tr.ph::before { background: color-mix(in srgb, var(--rm, var(--cyan)) 45%, white); }
+    .sched tr.lit::before { background: var(--rd, var(--cyan-dark)); }
+    .sched tr.litend::before { background: linear-gradient(to bottom, var(--rd, var(--cyan-dark)) 0, var(--rd, var(--cyan-dark)) 23px, color-mix(in srgb, var(--rm, var(--cyan)) 45%, white) 23px); }
+    .sched tr.ph th { display: inline-flex; align-items: center; gap: 7px; color: var(--pc-dark); background: var(--pc-soft); border-radius: 999px; padding: 2px 12px 2px 10px; }
+    .sched tr.ph th::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--pc); }
+    .stn { border-color: var(--pc, var(--cyan)); color: var(--pc-dark, var(--cyan-dark)); }
+    .sched tr.s1 .stn { background: var(--pc-dark, var(--cyan-dark)); border-color: var(--pc-dark, var(--cyan-dark)); color: #fff; }
+    .sched tr.s2 .stn { background: #E9F8C9; border-color: #8CCB2B; color: #3A6008; }
+    .sched tr.fut .stn { border-color: color-mix(in srgb, var(--pc, var(--cyan)) 45%, white); color: #4E5B66; background: var(--card); }
+    .sched tr.ep.now { background: var(--pc-soft, #EAF8FC); }
+  }
 </style>
 </head>
 <body>
@@ -518,12 +561,12 @@
   <section class="exam-map" aria-label="本試験50問の内訳">
     <p class="em-h">本試験50問の内訳</p>
     <div class="em-bar">
-      <div class="em-seg em1" style="flex:20"><i></i></div>
-      <div class="em-seg em2" style="flex:14"><i></i></div>
-      <div class="em-seg em3" style="flex:8"><i></i></div>
-      <div class="em-seg em4" style="flex:8"><i></i></div>
+      <div class="em-seg em1 p1" style="flex:20"><i></i></div>
+      <div class="em-seg em2 p2" style="flex:14"><i></i></div>
+      <div class="em-seg em3 p3" style="flex:8"><i></i></div>
+      <div class="em-seg em4 p4" style="flex:8"><i></i></div>
     </div>
-    <ul class="em-leg"><li class="em1"><i></i>業法　20問</li><li class="em2"><i></i>権利関係　14問</li><li class="em3"><i></i>法令上の制限　8問</li><li class="em4"><i></i>税・その他　8問</li></ul>
+    <ul class="em-leg"><li class="em1 p1"><i></i>業法　20問</li><li class="em2 p2"><i></i>権利関係　14問</li><li class="em3 p3"><i></i>法令上の制限　8問</li><li class="em4 p4"><i></i>税・その他　8問</li></ul>
   </section>
   <ul class="how">
     <li><span class="n">1</span><span class="lead">音声で聴く</span><a class="spbtn" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="spotify">Spotify</a><span class="oth">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="standfm">stand.fm</a></span></li>
@@ -657,7 +700,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     var full = {}, rowsH = '';
     PARTS.forEach(function(_, i){
       var q = pt[i+1] || [0,0]; full[i+1] = q[1] > 0 && q[0] === q[1];
-      rowsH += '<div class="pr'+(full[i+1]?' ok':'')+'"><span class="pn">'+esc(partName(i+1))+'</span><span class="bar"><i style="width:'+(q[1]?Math.round(q[0]/q[1]*100):0)+'%"></i></span><span class="pc2">'+q[0]+'/'+q[1]+'</span><span class="phk">'+(full[i+1]?'コンプリート':'')+'</span></div>';
+      rowsH += '<div class="pr p'+(i+1)+(full[i+1]?' ok':'')+'"><span class="pn">'+esc(partName(i+1))+'</span><span class="bar"><i style="width:'+(q[1]?Math.round(q[0]/q[1]*100):0)+'%"></i></span><span class="pc2">'+q[0]+'/'+q[1]+'</span><span class="phk">'+(full[i+1]?'コンプリート':'')+'</span></div>';
     });
     document.getElementById('pgl').innerHTML = rowsH;
     Array.prototype.forEach.call(document.querySelectorAll('#sched tr.ph th'), function(th){
@@ -698,6 +741,19 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     var rows = [].slice.call(document.querySelectorAll('#sched tbody tr')), last = -1;
     rows.forEach(function(r,i){ if (r.classList.contains('s1') || r.classList.contains('s2')) last = i; });
     rows.forEach(function(r,i){ r.classList.toggle('lit', i<last); r.classList.toggle('litend', i===last); });
+    // 道の線の色：直前の本編（分野の見出し）の路線色。木曜の回や月の行は線だけ前の分野に合わせる
+    var curR = 0, firstR = 0;
+    rows.forEach(function(r){
+      var m = /(?:^|\s)p([1-5])(?:\s|$)/.exec(r.className);
+      if (m && !firstR && !r.classList.contains('sub')) firstR = +m[1];
+    });
+    curR = firstR;
+    rows.forEach(function(r){
+      var m = /(?:^|\s)p([1-5])(?:\s|$)/.exec(r.className);
+      if (m && (r.classList.contains('ph') || (r.classList.contains('ep') && !r.classList.contains('sub') && !r.classList.contains('ms')))) curR = +m[1];
+      [1,2,3,4,5].forEach(function(n){ r.classList.remove('r'+n); });
+      if (curR) r.classList.add('r'+curR);
+    });
   }
   function render(){
     var cols = 6;
@@ -707,7 +763,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
       if (cur && !e.ms && e.part!==cur) return;
       var m = +e.d.split('-')[1];
       if (m!==month){ month=m; html += '<tr class="month"><th colspan="'+cols+'">'+m+'月</th></tr>'; }
-      if (!cur && e.kind==='本編' && e.part!==phPart){ phPart=e.part; html += '<tr class="ph"><th colspan="'+cols+'">'+esc(partName(e.part))+'　<span class="phc" data-p="'+e.part+'"></span></th></tr>'; }
+      if (!cur && e.kind==='本編' && e.part!==phPart){ phPart=e.part; html += '<tr class="ph p'+e.part+'"><th colspan="'+cols+'">'+esc(partName(e.part))+'　<span class="phc" data-p="'+e.part+'"></span></th></tr>'; }
       if (e.ms){
         html += '<tr class="ep ms"><td class="c-date">'+(e.dl||md(e))+(e.wd?'<span class="wd">('+esc(e.wd)+')</span>':'')+'</td>'
           + '<td class="c-kind"><span class="stn fl"></span><span class="badge tag">'+esc(e.kind)+'</span></td><td class="c-part"></td>'
@@ -735,7 +791,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
         marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-pressed="'+(st?'true':'false')+'" aria-label="第'+e.n+'回の記録 '+ST_LABEL[st]+'">'+ST_LABEL[st]+'</button>'
           ;
       }
-      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+((marks || (e.kind==='本編' && e.n && fut))?'':' nrc')+stc+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
+      html += '<tr class="ep'+(e.part?' p'+e.part:'')+(e.kind==='本編'?'':' sub')+((marks || (e.kind==='本編' && e.n && fut))?'':' nrc')+stc+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
         + '<td class="c-date">'+md(e)+'<span class="wd">('+esc(e.wd)+')</span>'+(e.note?'<span class="hol">'+esc(e.note)+'</span>':'')+'</td>'
         + '<td class="c-kind">'+(e.kind==='本編' ? '<span class="stn">'+e.n+'</span>' : '<span class="stn sd"></span>')+'<span class="badge'+k[1]+(e.kind==='本編'?' bd-main':'')+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
         + '<td class="c-part">'+esc(partName(e.part))+'</td>'
@@ -759,7 +815,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   var fb = '<button type="button" data-p="0" data-umami-event="roadmap-filter" data-umami-event-part="すべて">すべて<span class="fc" data-p="0"></span></button>';
   PARTS.forEach(function(p,i){
     var n = partName(i+1);
-    fb += '<button type="button" data-p="'+(i+1)+'" data-umami-event="roadmap-filter" data-umami-event-part="'+esc(n)+'">'+esc(n)+'<span class="fc" data-p="'+(i+1)+'"></span></button>';
+    fb += '<button type="button" class="p'+(i+1)+'" data-p="'+(i+1)+'" data-umami-event="roadmap-filter" data-umami-event-part="'+esc(n)+'">'+esc(n)+'<span class="fc" data-p="'+(i+1)+'"></span></button>';
   });
   var filters = document.getElementById('filters');
   filters.innerHTML = fb;
