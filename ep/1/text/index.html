@@ -118,6 +118,9 @@ a.lbtn{text-decoration:none;cursor:pointer}
 .qres .kk-onair-l{margin-top:10px;font-size:13px;font-weight:700;color:var(--sub)}
 .qres .kk-onair{font-size:14px;line-height:1.75}
 .kk-again{margin-top:10px}
+.kk-item .sh-mk{text-decoration:underline;text-decoration-color:var(--sheet);text-decoration-thickness:2px;text-underline-offset:4px}
+.kk-item del{text-decoration:line-through;text-decoration-color:var(--sheet);text-decoration-thickness:2px}
+.kk-item ins{text-decoration:none;color:var(--sheet);font-weight:700;font-size:12px;margin-left:3px}
 .line-inv,.line-card{background:#fff;border:1.5px solid var(--sky);border-radius:14px;padding:12px 14px}
 .line-inv{margin-top:10px}
 .line-inv p,.line-card p{margin:0 0 10px;font-size:14px;line-height:1.7}
@@ -797,7 +800,24 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   var esc = function (s) {
     return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
   };
-  var KK = {"year": "令和5年", "no": 29, "revised": true, "stem": "宅地建物取引業の免許（以下この問において「免許」という。）に関する次の記述のうち、宅地建物取引業法の規定によれば、正しいものはどれか。", "items": [{"m": "1", "t": "宅地建物取引業者Ａ社の使用人であって、Ａ社の宅地建物取引業を行う支店の代表者であるものが、道路交通法の規定に違反したことにより拘禁刑に処せられたとしても、Ａ社の免許は取り消されることはない。"}, {"m": "2", "t": "宅地建物取引業者Ｂ社の取締役が、所得税法の規定に違反したことにより罰金の刑に処せられたとしても、Ｂ社の免許は取り消されることはない。"}, {"m": "3", "t": "宅地建物取引業者である個人Ｃが、宅地建物取引業法の規定に違反したことにより罰金の刑に処せられたとしても、Ｃの免許は取り消されることはない。"}, {"m": "4", "t": "宅地建物取引業者Ｄ社の非常勤の取締役が、刑法第222条（脅迫）の罪を犯したことにより罰金の刑に処せられたとしても、Ｄ社の免許は取り消されることはない。"}], "buttons": ["1", "2", "3", "4"], "answer": 2, "lines": [{"m": "1", "t": "誤り。拘禁刑以上は罪の種類を問わず欠格で、使用人が該当すれば免許取消し（法5条1項5号、66条1項3号）。"}, {"m": "2", "t": "正しい。所得税法違反は、罰金で欠格になる罪（業法・暴対法・刑法の一部・暴力行為等処罰法）に入らない（法5条1項6号）。"}, {"m": "3", "t": "誤り。宅建業法違反の罰金は欠格で、個人が該当すれば取消し（法5条1項6号、66条1項1号）。"}, {"m": "4", "t": "誤り。脅迫（刑法222条）の罰金は欠格で、役員は常勤・非常勤を問わない（法5条1項6号・12号、66条1項3号）。"}], "onair": "第1回の後半「免許の基準」で解ける（拘禁刑以上は罪の種類を問わない、罰金で欠格になる罪、役員は常勤・非常勤を問わない）。"};
+  var KK = {"year": "令和5年", "no": 29, "revised": true, "stem": "宅地建物取引業の免許（以下この問において「免許」という。）に関する次の記述のうち、宅地建物取引業法の規定によれば、正しいものはどれか。", "items": [{"m": "1", "t": "宅地建物取引業者Ａ社の使用人であって、Ａ社の宅地建物取引業を行う支店の代表者であるものが、道路交通法の規定に違反したことにより拘禁刑に処せられたとしても、Ａ社の免許は取り消されることはない。", "r": [{"mark": "拘禁刑"}, {"del": "取り消されることはない", "to": "取り消される"}]}, {"m": "2", "t": "宅地建物取引業者Ｂ社の取締役が、所得税法の規定に違反したことにより罰金の刑に処せられたとしても、Ｂ社の免許は取り消されることはない。", "r": [{"mark": "所得税法"}]}, {"m": "3", "t": "宅地建物取引業者である個人Ｃが、宅地建物取引業法の規定に違反したことにより罰金の刑に処せられたとしても、Ｃの免許は取り消されることはない。", "r": [{"mark": "宅地建物取引業法"}, {"del": "取り消されることはない", "to": "取り消される"}]}, {"m": "4", "t": "宅地建物取引業者Ｄ社の非常勤の取締役が、刑法第222条（脅迫）の罪を犯したことにより罰金の刑に処せられたとしても、Ｄ社の免許は取り消されることはない。", "r": [{"mark": "非常勤"}, {"del": "取り消されることはない", "to": "取り消される"}]}], "buttons": ["1", "2", "3", "4"], "answer": 2, "lines": [{"m": "1", "t": "誤り。拘禁刑以上は罪の種類を問わず欠格で、使用人が該当すれば免許取消し（法5条1項5号、66条1項3号）。"}, {"m": "2", "t": "正しい。所得税法違反は、罰金で欠格になる罪（業法・暴対法・刑法の一部・暴力行為等処罰法）に入らない（法5条1項6号）。"}, {"m": "3", "t": "誤り。宅建業法違反の罰金は欠格で、個人が該当すれば取消し（法5条1項6号、66条1項1号）。"}, {"m": "4", "t": "誤り。脅迫（刑法222条）の罰金は欠格で、役員は常勤・非常勤を問わない（法5条1項6号・12号、66条1項3号）。"}], "onair": "第1回の後半「免許の基準」で解ける（拘禁刑以上は罪の種類を問わない、罰金で欠格になる罪、役員は常勤・非常勤を問わない）。"};
+  /* 朱入れ（試し用）：答えたあと、選択肢の本文に赤を重ねる（mark＝決め手の語に赤い下線／del＝誤りの語に赤い取り消し線＋正しい言い方を小さい赤字で）。本文の字は変えない */
+  function shuireHtml(it) {
+    var t = it.t, list = [];
+    it.r.forEach(function (a) {
+      var w = a.mark || a.del, i = t.indexOf(w);
+      if (i >= 0) { list.push({i: i, w: w, a: a}); }
+    });
+    list.sort(function (x, y) { return x.i - y.i; });
+    var out = '', pos = 0;
+    list.forEach(function (x) {
+      var a = x.a;
+      out += esc(t.slice(pos, x.i));
+      out += a.mark ? '<span class="sh-mk">' + esc(a.mark) + '</span>' : '<span class="sh-g" role="group" aria-label="' + esc('誤り「' + a.del + '」。正しくは「' + a.to + '」') + '"><del>' + esc(a.del) + '</del><ins aria-hidden="true">' + esc(a.to) + '</ins></span>';
+      pos = x.i + x.w.length;
+    });
+    return out + esc(t.slice(pos));
+  }
   /* 過去問を解いた結果を、回ごとに記録に残す（1=正解、2=不正解。解き直したら上書き）。端末の takken2027-kako に書き、ログインしている人はサーバーにも置く */
   var KAKO_EP = '1';
   function saveKako(ok) {
@@ -838,6 +858,13 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
       '</div>';
     var dms = box.querySelectorAll('.kk-item .dm');
     var btns = box.querySelectorAll('.kk-btns .pill');
+    var tspans = box.querySelectorAll('.kk-item > span:last-child');
+    function shuire(on) {
+      Array.prototype.forEach.call(tspans, function (s, i) {
+        var it = k.items[i];
+        if (it.r) { s.innerHTML = on ? shuireHtml(it) : esc(it.t); }
+      });
+    }
     var res = box.querySelector('.qres');
     var again = box.querySelector('.kk-again');
     function refresh() {
@@ -866,14 +893,14 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
           (k.tail ? '<p class="kk-tail">' + esc(k.tail) + '</p>' : '') +
           '<p class="kk-onair-l">今日の放送のどこで解けるか</p>' +
           '<p class="kk-onair">' + esc(k.onair) + '</p>';
-        res.hidden = false;
+        res.hidden = false; shuire(true);
         again.hidden = false;
         refresh();
       });
     });
     again.querySelector('button').addEventListener('click', function () {
       Array.prototype.forEach.call(btns, function (x) { x.disabled = false; x.classList.remove('chosen'); });
-      res.hidden = true; res.innerHTML = ''; again.hidden = true;
+      res.hidden = true; res.innerHTML = ''; again.hidden = true; shuire(false);
       marks = marks.map(function () { return 0; });
       refresh();
       box.scrollIntoView({block: 'nearest'});
@@ -889,15 +916,21 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   /* 赤シート：購入者の画面（ep1-3dan.html）と同じ関数。build-ep1-text.mjs が切り出して入れる */
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
 
-  /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。「かける｜はずす」は全部に一斉に効く */
-  function setupSheet(roots, bar) {
+  /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。「かける｜はずす」は全部に一斉に効く。
+     opts.end を渡すと、最初は「はずす」。その要素（後半のテキストの終わり）が画面に入ったら、1回だけ自動で「かける」にする（IntersectionObserver。使えない端末ではかけないまま）。
+     自動より前に人が「かける」「はずす」を押していたら、自動は動かさない。opts.hint は帯の下の案内（.shint） */
+  function setupSheet(roots, bar, opts) {
+    opts = opts || {};
     var items = [];
     roots.forEach(function (root) {
       Array.prototype.forEach.call(root.querySelectorAll('.rs'), function (el) {
         items.push({el: el, html: el.innerHTML, hint: el.getAttribute('data-hint') || '', open: false});
       });
     });
-    var on = true;
+    var endEl = opts.end || null, hintEl = opts.hint || null;
+    var on = !endEl;
+    var auto = endEl && typeof IntersectionObserver === 'function' ? 'wait' : 'none'; /* wait＝まだ自動が動いていない／done＝自動でかかった／cancel＝その前に人が押した／none＝自動なし */
+    var io = null;
     var elOn = bar.querySelector('[data-r="on"]'), elOff = bar.querySelector('[data-r="off"]'), elHid = bar.querySelector('[data-r="hid"]');
     function paint(it) {
       var el = it.el;
@@ -914,12 +947,22 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
       items.forEach(function (it) { if (on && !it.open) { hid += 1; } });
       elHid.textContent = 'かくれている ' + hid;
     }
+    function paintHint() {
+      if (!hintEl) { return; }
+      var normal = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと、またかくれます。</span>';
+      hintEl.innerHTML = (auto === 'wait' && !on) ? '<span class="nk">最後まで読むと、赤シートがかかります。</span>' : normal;
+    }
+    function stopAuto() {
+      if (io) { io.disconnect(); io = null; }
+      if (auto === 'wait') { auto = 'cancel'; }
+    }
     function render() {
       roots.forEach(function (r) { var w = r.querySelector('.tx'); if (w) { w.classList.toggle('sheet', on); } });
       items.forEach(paint);
       count();
       elOn.setAttribute('aria-pressed', on ? 'true' : 'false');
       elOff.setAttribute('aria-pressed', on ? 'false' : 'true');
+      paintHint();
     }
     items.forEach(function (it) {
       function step() {
@@ -930,9 +973,26 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
       it.el.addEventListener('click', step);
       it.el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); step(); } });
     });
-    elOn.addEventListener('click', function () { on = true; items.forEach(function (it) { it.open = false; }); render(); });
-    elOff.addEventListener('click', function () { on = false; render(); });
+    elOn.addEventListener('click', function () { stopAuto(); on = true; items.forEach(function (it) { it.open = false; }); render(); });
+    elOff.addEventListener('click', function () { stopAuto(); on = false; render(); });
     render();
+    if (auto === 'wait') {
+      io = new IntersectionObserver(function (entries) {
+        if (auto !== 'wait') { return; }
+        for (var i = 0; i < entries.length; i += 1) {
+          if (entries[i].isIntersecting) {
+            io.disconnect(); io = null; auto = 'done';
+            /* かかる前後で、目印（後半のテキストの下端）の画面上の位置が動かないよう、差のぶんだけスクロールを直す */
+            var y0 = endEl.getBoundingClientRect().top;
+            on = true; items.forEach(function (it) { it.open = false; }); render();
+            var dy = endEl.getBoundingClientRect().top - y0;
+            if (dy && window.scrollBy) { window.scrollBy(0, dy); }
+            return;
+          }
+        }
+      });
+      io.observe(endEl);
+    }
     return items.length;
   }
 
@@ -941,6 +1001,11 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
   var q1 = document.getElementById('q1'), q2 = document.getElementById('q2');
   /* 3問は前半・後半のテキストの直後へ。解き終えたあとの案内は、購入者の画面と同じく次のテキスト・今日のポイントへ */
   document.getElementById('text1').appendChild(q1);
+  /* 後半のテキストの終わり（○×3問の手前）の目印。高さ0・上のすき間を打ち消して並びは変えない。ここが画面に入ったら赤シートが自動でかかる */
+  var sheetEnd = document.createElement('div');
+  sheetEnd.setAttribute('aria-hidden', 'true');
+  sheetEnd.style.cssText = 'height:0;margin-top:-12px;pointer-events:none';
+  document.getElementById('text2').appendChild(sheetEnd);
   document.getElementById('text2').appendChild(q2);
   var a1 = q1.querySelector('.line-inv a'), a2 = q2.querySelector('.line-inv a');
   if (a1) { a1.setAttribute('href', '#text2'); a1.textContent = '後半のテキストへ'; }
@@ -962,7 +1027,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
     root.appendChild(document.getElementById(h.getAttribute('data-tpl')).content.cloneNode(true));
     roots.push(root);
   });
-  try { setupSheet(roots, document.getElementById('sbar')); } catch (e) { console.warn(e); }
+  try { setupSheet(roots, document.getElementById('sbar'), {hint: document.querySelector('.shint'), end: sheetEnd}); } catch (e) { console.warn(e); }
   /* LINE・メールの枠：配信前（2027-01-04より前）の文言（roadmap/index.html と同じ） */
   var d = new Date(), t = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
   if (t < 20270104) {

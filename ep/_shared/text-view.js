@@ -10,15 +10,21 @@
   function setTier() {}
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
 
-  /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。「かける｜はずす」は全部に一斉に効く */
-  function setupSheet(roots, bar) {
+  /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。「かける｜はずす」は全部に一斉に効く。
+     opts.end を渡すと、最初は「はずす」。その要素（後半のテキストの終わり）が画面に入ったら、1回だけ自動で「かける」にする（IntersectionObserver。使えない端末ではかけないまま）。
+     自動より前に人が「かける」「はずす」を押していたら、自動は動かさない。opts.hint は帯の下の案内（.shint） */
+  function setupSheet(roots, bar, opts) {
+    opts = opts || {};
     var items = [];
     roots.forEach(function (root) {
       Array.prototype.forEach.call(root.querySelectorAll('.rs'), function (el) {
         items.push({el: el, html: el.innerHTML, hint: el.getAttribute('data-hint') || '', open: false});
       });
     });
-    var on = true;
+    var endEl = opts.end || null, hintEl = opts.hint || null;
+    var on = !endEl;
+    var auto = endEl && typeof IntersectionObserver === 'function' ? 'wait' : 'none'; /* wait＝まだ自動が動いていない／done＝自動でかかった／cancel＝その前に人が押した／none＝自動なし */
+    var io = null;
     var elOn = bar.querySelector('[data-r="on"]'), elOff = bar.querySelector('[data-r="off"]'), elHid = bar.querySelector('[data-r="hid"]');
     function paint(it) {
       var el = it.el;
@@ -35,12 +41,22 @@
       items.forEach(function (it) { if (on && !it.open) { hid += 1; } });
       elHid.textContent = 'かくれている ' + hid;
     }
+    function paintHint() {
+      if (!hintEl) { return; }
+      var normal = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと、またかくれます。</span>';
+      hintEl.innerHTML = (auto === 'wait' && !on) ? '<span class="nk">最後まで読むと、赤シートがかかります。</span>' : normal;
+    }
+    function stopAuto() {
+      if (io) { io.disconnect(); io = null; }
+      if (auto === 'wait') { auto = 'cancel'; }
+    }
     function render() {
       roots.forEach(function (r) { var w = r.querySelector('.tx'); if (w) { w.classList.toggle('sheet', on); } });
       items.forEach(paint);
       count();
       elOn.setAttribute('aria-pressed', on ? 'true' : 'false');
       elOff.setAttribute('aria-pressed', on ? 'false' : 'true');
+      paintHint();
     }
     items.forEach(function (it) {
       function step() {
@@ -51,9 +67,26 @@
       it.el.addEventListener('click', step);
       it.el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); step(); } });
     });
-    elOn.addEventListener('click', function () { on = true; items.forEach(function (it) { it.open = false; }); render(); });
-    elOff.addEventListener('click', function () { on = false; render(); });
+    elOn.addEventListener('click', function () { stopAuto(); on = true; items.forEach(function (it) { it.open = false; }); render(); });
+    elOff.addEventListener('click', function () { stopAuto(); on = false; render(); });
     render();
+    if (auto === 'wait') {
+      io = new IntersectionObserver(function (entries) {
+        if (auto !== 'wait') { return; }
+        for (var i = 0; i < entries.length; i += 1) {
+          if (entries[i].isIntersecting) {
+            io.disconnect(); io = null; auto = 'done';
+            /* かかる前後で、目印（後半のテキストの下端）の画面上の位置が動かないよう、差のぶんだけスクロールを直す */
+            var y0 = endEl.getBoundingClientRect().top;
+            on = true; items.forEach(function (it) { it.open = false; }); render();
+            var dy = endEl.getBoundingClientRect().top - y0;
+            if (dy && window.scrollBy) { window.scrollBy(0, dy); }
+            return;
+          }
+        }
+      });
+      io.observe(endEl);
+    }
     return items.length;
   }
 
@@ -86,7 +119,11 @@
     Array.prototype.forEach.call(document.querySelectorAll('#zukai .core'), function (c) { point.appendChild(c); });
     /* ここから画面を変える */
     sec1.appendChild(h1.el); sec1.appendChild(q1);
-    sec2.appendChild(h2.el); sec2.appendChild(q2);
+    /* 後半のテキストの終わり（○×3問の手前）の目印。高さ0・上のすき間を打ち消して、並びは変えない。ここが画面に入ったら赤シートが自動でかかる */
+    var sheetEnd = document.createElement('div');
+    sheetEnd.setAttribute('aria-hidden', 'true');
+    sheetEnd.style.cssText = 'height:0;margin-top:-12px;pointer-events:none';
+    sec2.appendChild(h2.el); sec2.appendChild(sheetEnd); sec2.appendChild(q2);
     /* 赤シートの帯は前半・後半の両方で上に残るよう、2つの節をまとめる箱の先頭に置く */
     var tw = document.createElement('div'); tw.className = 'textwrap';
     var hint = document.createElement('p'); hint.className = 'shint';
@@ -112,7 +149,7 @@
     if (a1) { a1.setAttribute('href', '#text2'); a1.textContent = '後半のテキストへ'; }
     if (a2) { a2.setAttribute('href', point.children.length ? '#point' : '#honban'); a2.textContent = point.children.length ? '今日のポイントへ' : '過去問1選について'; }
     var n = 0;
-    try { n = setupSheet(h3 ? [h1.root, h2.root, h3.root] : [h1.root, h2.root], bar); } catch (e) { console.warn(e); }
+    try { n = setupSheet(h3 ? [h1.root, h2.root, h3.root] : [h1.root, h2.root], bar, {hint: hint, end: sheetEnd}); } catch (e) { console.warn(e); }
     buyerShown = true;
     setTier('3段目（やさしいテキスト購入者）');
     return n;

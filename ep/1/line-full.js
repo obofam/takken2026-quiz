@@ -4,7 +4,24 @@
   var esc = function (s) {
     return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
   };
-  var KK = {"year": "令和5年", "no": 29, "revised": true, "stem": "宅地建物取引業の免許（以下この問において「免許」という。）に関する次の記述のうち、宅地建物取引業法の規定によれば、正しいものはどれか。", "items": [{"m": "1", "t": "宅地建物取引業者Ａ社の使用人であって、Ａ社の宅地建物取引業を行う支店の代表者であるものが、道路交通法の規定に違反したことにより拘禁刑に処せられたとしても、Ａ社の免許は取り消されることはない。"}, {"m": "2", "t": "宅地建物取引業者Ｂ社の取締役が、所得税法の規定に違反したことにより罰金の刑に処せられたとしても、Ｂ社の免許は取り消されることはない。"}, {"m": "3", "t": "宅地建物取引業者である個人Ｃが、宅地建物取引業法の規定に違反したことにより罰金の刑に処せられたとしても、Ｃの免許は取り消されることはない。"}, {"m": "4", "t": "宅地建物取引業者Ｄ社の非常勤の取締役が、刑法第222条（脅迫）の罪を犯したことにより罰金の刑に処せられたとしても、Ｄ社の免許は取り消されることはない。"}], "buttons": ["1", "2", "3", "4"], "answer": 2, "lines": [{"m": "1", "t": "誤り。拘禁刑以上は罪の種類を問わず欠格で、使用人が該当すれば免許取消し（法5条1項5号、66条1項3号）。"}, {"m": "2", "t": "正しい。所得税法違反は、罰金で欠格になる罪（業法・暴対法・刑法の一部・暴力行為等処罰法）に入らない（法5条1項6号）。"}, {"m": "3", "t": "誤り。宅建業法違反の罰金は欠格で、個人が該当すれば取消し（法5条1項6号、66条1項1号）。"}, {"m": "4", "t": "誤り。脅迫（刑法222条）の罰金は欠格で、役員は常勤・非常勤を問わない（法5条1項6号・12号、66条1項3号）。"}], "onair": "第1回の後半「免許の基準」で解ける（拘禁刑以上は罪の種類を問わない、罰金で欠格になる罪、役員は常勤・非常勤を問わない）。"};
+  var KK = {"year": "令和5年", "no": 29, "revised": true, "stem": "宅地建物取引業の免許（以下この問において「免許」という。）に関する次の記述のうち、宅地建物取引業法の規定によれば、正しいものはどれか。", "items": [{"m": "1", "t": "宅地建物取引業者Ａ社の使用人であって、Ａ社の宅地建物取引業を行う支店の代表者であるものが、道路交通法の規定に違反したことにより拘禁刑に処せられたとしても、Ａ社の免許は取り消されることはない。", "r": [{"mark": "拘禁刑"}, {"del": "取り消されることはない", "to": "取り消される"}]}, {"m": "2", "t": "宅地建物取引業者Ｂ社の取締役が、所得税法の規定に違反したことにより罰金の刑に処せられたとしても、Ｂ社の免許は取り消されることはない。", "r": [{"mark": "所得税法"}]}, {"m": "3", "t": "宅地建物取引業者である個人Ｃが、宅地建物取引業法の規定に違反したことにより罰金の刑に処せられたとしても、Ｃの免許は取り消されることはない。", "r": [{"mark": "宅地建物取引業法"}, {"del": "取り消されることはない", "to": "取り消される"}]}, {"m": "4", "t": "宅地建物取引業者Ｄ社の非常勤の取締役が、刑法第222条（脅迫）の罪を犯したことにより罰金の刑に処せられたとしても、Ｄ社の免許は取り消されることはない。", "r": [{"mark": "非常勤"}, {"del": "取り消されることはない", "to": "取り消される"}]}], "buttons": ["1", "2", "3", "4"], "answer": 2, "lines": [{"m": "1", "t": "誤り。拘禁刑以上は罪の種類を問わず欠格で、使用人が該当すれば免許取消し（法5条1項5号、66条1項3号）。"}, {"m": "2", "t": "正しい。所得税法違反は、罰金で欠格になる罪（業法・暴対法・刑法の一部・暴力行為等処罰法）に入らない（法5条1項6号）。"}, {"m": "3", "t": "誤り。宅建業法違反の罰金は欠格で、個人が該当すれば取消し（法5条1項6号、66条1項1号）。"}, {"m": "4", "t": "誤り。脅迫（刑法222条）の罰金は欠格で、役員は常勤・非常勤を問わない（法5条1項6号・12号、66条1項3号）。"}], "onair": "第1回の後半「免許の基準」で解ける（拘禁刑以上は罪の種類を問わない、罰金で欠格になる罪、役員は常勤・非常勤を問わない）。"};
+  /* 朱入れ（試し用）：答えたあと、選択肢の本文に赤を重ねる（mark＝決め手の語に赤い下線／del＝誤りの語に赤い取り消し線＋正しい言い方を小さい赤字で）。本文の字は変えない */
+  function shuireHtml(it) {
+    var t = it.t, list = [];
+    it.r.forEach(function (a) {
+      var w = a.mark || a.del, i = t.indexOf(w);
+      if (i >= 0) { list.push({i: i, w: w, a: a}); }
+    });
+    list.sort(function (x, y) { return x.i - y.i; });
+    var out = '', pos = 0;
+    list.forEach(function (x) {
+      var a = x.a;
+      out += esc(t.slice(pos, x.i));
+      out += a.mark ? '<span class="sh-mk">' + esc(a.mark) + '</span>' : '<span class="sh-g" role="group" aria-label="' + esc('誤り「' + a.del + '」。正しくは「' + a.to + '」') + '"><del>' + esc(a.del) + '</del><ins aria-hidden="true">' + esc(a.to) + '</ins></span>';
+      pos = x.i + x.w.length;
+    });
+    return out + esc(t.slice(pos));
+  }
   /* 過去問を解いた結果を、回ごとに記録に残す（1=正解、2=不正解。解き直したら上書き）。端末の takken2027-kako に書き、ログインしている人はサーバーにも置く */
   var KAKO_EP = '1';
   function saveKako(ok) {
@@ -45,6 +62,13 @@
       '</div>';
     var dms = box.querySelectorAll('.kk-item .dm');
     var btns = box.querySelectorAll('.kk-btns .pill');
+    var tspans = box.querySelectorAll('.kk-item > span:last-child');
+    function shuire(on) {
+      Array.prototype.forEach.call(tspans, function (s, i) {
+        var it = k.items[i];
+        if (it.r) { s.innerHTML = on ? shuireHtml(it) : esc(it.t); }
+      });
+    }
     var res = box.querySelector('.qres');
     var again = box.querySelector('.kk-again');
     function refresh() {
@@ -73,14 +97,14 @@
           (k.tail ? '<p class="kk-tail">' + esc(k.tail) + '</p>' : '') +
           '<p class="kk-onair-l">今日の放送のどこで解けるか</p>' +
           '<p class="kk-onair">' + esc(k.onair) + '</p>';
-        res.hidden = false;
+        res.hidden = false; shuire(true);
         again.hidden = false;
         refresh();
       });
     });
     again.querySelector('button').addEventListener('click', function () {
       Array.prototype.forEach.call(btns, function (x) { x.disabled = false; x.classList.remove('chosen'); });
-      res.hidden = true; res.innerHTML = ''; again.hidden = true;
+      res.hidden = true; res.innerHTML = ''; again.hidden = true; shuire(false);
       marks = marks.map(function () { return 0; });
       refresh();
       box.scrollIntoView({block: 'nearest'});

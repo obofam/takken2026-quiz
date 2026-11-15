@@ -376,7 +376,7 @@ const targetDiv = (ep, halfNo, scope) => {
 };
 const pointCore = text => `<div class="core"><h2>今日のポイント</h2><p>${T(text)}</p></div>`;
 
-/* ---- 過去問の朱入れ（試し用だけ）。データは liff-test/ep-kakomon-shuire.json（回→選択肢の記号→[{mark}|{del,to}]）。
+/* ---- 過去問の朱入れ（本番・試し用の両方）。データは liff-test/ep-kakomon-shuire.json（回→選択肢の記号→[{mark}|{del,to}]）。
    mark・del の語は、その選択肢の本文（材料の kakomon.items[].t）にちょうど1回。del は ok:false の選択肢だけ。語どうしは重ならない。 */
 export const SHUIRE_FILE = path.join(TEST_ROOT, 'ep-kakomon-shuire.json');
 export const SHUIRE_STYLE = 'after'; /* 'ruby'（取り消した字の上）／'after'（すぐ後ろ）。375px幅で確かめて決めた */
@@ -537,7 +537,7 @@ export function buildPages(m, text, ex, mode) {
     TEXT_SAMPLE_URL: abs(CFG.TEXT_SAMPLE_PATH), TEXT_SAMPLE_IMG: abs(CFG.TEXT_SAMPLE_IMG), ART: abs(CFG.ART_PATH),
     Y2026: y2026Section(data.prev2026),
     LIFF_ID: CFG.LIFF_ID[mode],
-    SHUIRE_CSS: shuireVals(test ? shuireFor(ep, json.kakomon) : null).SHUIRE_CSS,
+    SHUIRE_CSS: shuireVals(shuireFor(ep, json.kakomon)).SHUIRE_CSS,
     MIHON_EXPR: test ? "qs.get('mihon')" : "isLocal ? qs.get('mihon') : null",
     MIHON_EXPORT: test ? ' window.__epMihon = mihon;' : '',
     NO_WHO: test ? "!who && mihon !== 'kounyu'" : '!who',
@@ -554,8 +554,8 @@ export function buildPages(m, text, ex, mode) {
     CORE2: c2 ? '  ' + pointCore(c2.text) + '\n' : '',
     TARGET2: sec[1].scope ? '  ' + targetDiv(ep, 2, sec[1].scope) + '\n' : '',
   });
-  /* 朱入れは試し用だけ（本番の出力は変えない） */
-  const shuire = test ? shuireFor(ep, json.kakomon) : null;
+  /* 朱入れ（データのある回だけ。本番・試し用とも同じ） */
+  const shuire = shuireFor(ep, json.kakomon);
   const lineFullJs = fill(template('ep-line-full.js'), { EP: String(ep), KK_JSON: jsJson(kakomonJs(json.kakomon, shuire)), ...(({ SHUIRE_CSS, ...js }) => js)(shuireVals(shuire)) });
   return { index, lineFullHtml, lineFullJs, points: { c1, c2 } };
 }
@@ -751,6 +751,11 @@ ${sheetJs}
   var q1 = document.getElementById('q1'), q2 = document.getElementById('q2');
   /* 3問は前半・後半のテキストの直後へ。解き終えたあとの案内は、購入者の画面と同じく次のテキスト・今日のポイントへ */
   document.getElementById('text1').appendChild(q1);
+  /* 後半のテキストの終わり（○×3問の手前）の目印。高さ0・上のすき間を打ち消して並びは変えない。ここが画面に入ったら赤シートが自動でかかる */
+  var sheetEnd = document.createElement('div');
+  sheetEnd.setAttribute('aria-hidden', 'true');
+  sheetEnd.style.cssText = 'height:0;margin-top:-12px;pointer-events:none';
+  document.getElementById('text2').appendChild(sheetEnd);
   document.getElementById('text2').appendChild(q2);
   var a1 = q1.querySelector('.line-inv a'), a2 = q2.querySelector('.line-inv a');
   if (a1) { a1.setAttribute('href', '#text2'); a1.textContent = '後半のテキストへ'; }
@@ -772,7 +777,7 @@ ${sheetJs}
     root.appendChild(document.getElementById(h.getAttribute('data-tpl')).content.cloneNode(true));
     roots.push(root);
   });
-  try { setupSheet(roots, document.getElementById('sbar')); } catch (e) { console.warn(e); }
+  try { setupSheet(roots, document.getElementById('sbar'), {hint: document.querySelector('.shint'), end: sheetEnd}); } catch (e) { console.warn(e); }
   /* LINE・メールの枠：配信前（2027-01-04より前）の文言（roadmap/index.html と同じ） */
   var d = new Date(), t = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
   if (t < 20270104) {
