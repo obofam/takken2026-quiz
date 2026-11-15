@@ -79,15 +79,15 @@ function setup(opts){
   const rootN=[{querySelectorAll:()=>rs,querySelector:()=>tx,appendChild(){}},{querySelectorAll:()=>[],querySelector:()=>null,appendChild(){}}];
   const on=el(),off=el(),hid=el();
   const bar={querySelector:s=>({'[data-r="on"]':on,'[data-r="off"]':off,'[data-r="hid"]':hid})[s]};
-  const hint=el(),end={};
+  const hint=el(),end={getBoundingClientRect:()=>({top:100})};
   let obs=null;
   class IO{constructor(cb){this.cb=cb;obs=this;this.disc=false;}observe(t){this.t=t;}disconnect(){this.disc=true;}}
-  const ctx={document:{createElement:()=>el()},IntersectionObserver:opts.noIO?undefined:IO,console};
+  const calls=[];const ctx={window:{scrollBy:(x,y)=>calls.push(y)},document:{createElement:()=>el()},IntersectionObserver:opts.noIO?undefined:IO,console};
   vm.createContext(ctx);
   vm.runInContext(src+';this.setupSheet=setupSheet;',ctx);
   const n=ctx.setupSheet(rootN,bar,opts.noEnd?{}:{hint,end});
   const state=()=>({on:on.attrs['aria-pressed'],off:off.attrs['aria-pressed'],hint:hint.html,sheet:tx.cls.has('sheet'),hid:hid.textContent,rs0:rs[0].cls.has('s-hide')});
-  return{n,state,on,off,rs,fire:()=>{obs.cb([{isIntersecting:true}]);},fireOut:()=>{obs.cb([{isIntersecting:false}]);},obs:()=>obs};
+  return{calls,n,state,on,off,rs,fire:()=>{obs.cb([{isIntersecting:true}]);},fireOut:()=>{obs.cb([{isIntersecting:false}]);},obs:()=>obs};
 }
 const WAIT='最後まで読むと、赤シートがかかります。',NORMAL1='赤い所を押すと答えが出ます。',NORMAL2='もう一度押すと、またかくれます。';
 test('red sheet: starts off (all words visible) with the waiting hint; end not yet in view does nothing',()=>{
@@ -128,11 +128,12 @@ test('red sheet: no IntersectionObserver -> stays off (never auto); without an e
   const o=setup({noEnd:true});
   assert.equal(o.state().on,'true');
 });
-test('red sheet: no layout jump - waiting state keeps the sheet layout, the waiting hint keeps the 2-line height, the end marker adds no space; shared part has it',()=>{
+test('red sheet: no jump - the waiting state is the plain "off" layout (no gaps), scroll is corrected by the marker shift, the end marker adds no space; shared part has it',()=>{
   const dan=read(path.join(root,'ep1-3dan.html'));
-  assert.match(dan,/w\.classList\.toggle\('sheet', on \|\| auto === 'wait'\)/);
-  assert.match(dan,/s-wait \.hv\{visibility:hidden\}/);
-  assert.match(dan,/hintEl\.style\.minHeight = h \+ 'px'/);
+  assert.doesNotMatch(dan,/s-wait|minHeight/);
+  assert.match(dan,/w\.classList\.toggle\('sheet', on\)/);
+  assert.match(dan,/window\.scrollBy\(0, dy\)/);
+  const s=setup({});s.fire();assert.ok(Array.isArray(s.calls));
   assert.match(dan,/sheetEnd\.style\.cssText = 'height:0;margin-top:-12px;pointer-events:none'/);
   assert.match(dan,/sec2\.appendChild\(h2\.el\); sec2\.appendChild\(sheetEnd\); sec2\.appendChild\(q2\);/);
   const view=read(path.join(root,'ep/_shared/text-view.js'));

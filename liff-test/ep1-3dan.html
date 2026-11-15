@@ -784,21 +784,10 @@ body.member .line-card{display:block}
     var on = !endEl;
     var auto = endEl && typeof IntersectionObserver === 'function' ? 'wait' : 'none'; /* wait＝まだ自動が動いていない／done＝自動でかかった／cancel＝その前に人が押した／none＝自動なし */
     var io = null;
-    /* 自動でかかる前（wait）も、かけたときと同じ組み方（語と答えを重ねた箱）にして、字は見せたまま。かかった瞬間にページの高さが変わらない（画面が跳ねない）ようにする */
-    if (auto === 'wait') {
-      roots.forEach(function (root) {
-        var st = document.createElement('style');
-        st.textContent = '.tx.sheet .rs.s-wait .hv{visibility:hidden}';
-        root.appendChild(st);
-      });
-    }
     var elOn = bar.querySelector('[data-r="on"]'), elOff = bar.querySelector('[data-r="off"]'), elHid = bar.querySelector('[data-r="hid"]');
     function paint(it) {
       var el = it.el;
-      el.classList.remove('s-hide', 's-open', 's-wait');
-      if (!on && auto === 'wait') {
-        el.classList.add('s-wait'); el.innerHTML = '<span class="av">' + it.html + '</span><span class="hv" aria-hidden="true">' + esc(it.hint) + '</span>'; el.removeAttribute('aria-label'); return;
-      }
+      el.classList.remove('s-hide', 's-open');
       if (!on) { el.innerHTML = it.html; el.removeAttribute('aria-label'); return; }
       if (it.open) {
         el.classList.add('s-open'); el.innerHTML = '<span class="av">' + it.html + '</span><span class="hv" aria-hidden="true">' + esc(it.hint) + '</span>'; el.setAttribute('aria-label', '答え。もう一度押すとかくれます');
@@ -814,20 +803,14 @@ body.member .line-card{display:block}
     function paintHint() {
       if (!hintEl) { return; }
       var normal = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと、またかくれます。</span>';
-      if (auto === 'wait' && !on) {
-        /* 案内の高さは、かかったあとの案内（2行）に合わせておく。かかった瞬間に高さが変わらない */
-        hintEl.style.minHeight = ''; hintEl.innerHTML = normal;
-        var h = hintEl.getBoundingClientRect().height;
-        hintEl.innerHTML = '<span class="nk">最後まで読むと、赤シートがかかります。</span>';
-        if (h) { hintEl.style.minHeight = h + 'px'; }
-      } else { hintEl.style.minHeight = ''; hintEl.innerHTML = normal; }
+      hintEl.innerHTML = (auto === 'wait' && !on) ? '<span class="nk">最後まで読むと、赤シートがかかります。</span>' : normal;
     }
     function stopAuto() {
       if (io) { io.disconnect(); io = null; }
       if (auto === 'wait') { auto = 'cancel'; }
     }
     function render() {
-      roots.forEach(function (r) { var w = r.querySelector('.tx'); if (w) { w.classList.toggle('sheet', on || auto === 'wait'); } });
+      roots.forEach(function (r) { var w = r.querySelector('.tx'); if (w) { w.classList.toggle('sheet', on); } });
       items.forEach(paint);
       count();
       elOn.setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -852,7 +835,11 @@ body.member .line-card{display:block}
         for (var i = 0; i < entries.length; i += 1) {
           if (entries[i].isIntersecting) {
             io.disconnect(); io = null; auto = 'done';
+            /* かかる前後で、目印（後半のテキストの下端）の画面上の位置が動かないよう、差のぶんだけスクロールを直す */
+            var y0 = endEl.getBoundingClientRect().top;
             on = true; items.forEach(function (it) { it.open = false; }); render();
+            var dy = endEl.getBoundingClientRect().top - y0;
+            if (dy && window.scrollBy) { window.scrollBy(0, dy); }
             return;
           }
         }
