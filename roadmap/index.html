@@ -204,7 +204,7 @@
     .sched th.c-kind { width: 108px; }
     .sched th.c-part { width: 116px; }
     .sched th.c-theme { width: 30%; }
-    .sched th.c-rec { width: 84px; }
+    .sched th.c-rec { width: 116px; white-space: nowrap; text-align: right; }
     .sched td.c-rec { text-align: right; }
   }
 
@@ -252,9 +252,20 @@
   .filters button .fc { font-size: .8rem; font-weight: 700; background: var(--gray-pill); color: var(--muted); border-radius: 999px; padding: 1px 7px; margin-left: 6px; }
   .filters button[aria-pressed="true"] .fc { background: rgba(255,255,255,.25); color: #fff; }
   .start-note { margin-bottom: 16px; }
-  button.mk-l { width: 56px; height: 56px; min-width: 56px; border-radius: 50%; border: 2px solid var(--line); background: var(--card); color: var(--muted); font-size: .9rem; font-weight: 700; padding: 0; line-height: 1; cursor: pointer; }
+  button.mk-l { width: 56px; height: 56px; min-width: 56px; border-radius: 50%; border: 2px solid var(--cyan); background: var(--card); color: var(--cyan-dark); font-size: .9rem; font-weight: 700; padding: 0; line-height: 1; cursor: pointer; transition: background-color .15s, transform .12s; -webkit-tap-highlight-color: transparent; }
   button.mk-l[data-st="1"] { background: var(--cyan-dark); border-color: var(--cyan-dark); color: #fff; }
   button.mk-l[data-st="2"] { background: var(--cyan-soft); border-color: var(--cyan-dark); color: var(--cyan-dark); }
+  /* 押せると伝える：押す前は水色の枠。押したあとはチェックの形（CSS）と字。押した瞬間に軽く動く */
+  button.mk-l[data-st="1"], button.mk-l[data-st="2"] { font-size: .8rem; }
+  button.mk-l[data-st="1"]::before, button.mk-l[data-st="2"]::before { content: ""; display: block; width: 13px; height: 7px; margin: 0 auto 5px; border-left: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(-45deg); }
+  /* まだ配信していない回：同じ場所にグレーの丸（押せない・ボタンではない） */
+  .mk-off { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: var(--gray-pill); color: #4E5B66; font-size: .8rem; font-weight: 700; line-height: 1; white-space: nowrap; }
+  @media (hover: hover) { button.mk-l[data-st="0"]:hover { background: var(--cyan-soft); } }
+  button.mk-l:active { transform: scale(.94); }
+  button.mk-l:focus-visible { outline: 3px solid var(--cyan-mid); outline-offset: 2px; }
+  button.mk-l.pop { animation: mkpop .22s ease-out; }
+  @keyframes mkpop { 0% { transform: scale(.9); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { button.mk-l { transition: none; } button.mk-l.pop { animation: none; } }
 
   /* スマホ・老眼の見直し：本文16px・注記14px以上・押す所44px以上・文節で折り返す */
   :root { --muted: #4E5B66; }
@@ -383,6 +394,9 @@
     .acts a { min-height: 40px; margin: -8px 0; font-size: 13px; line-height: 1.5; }
     .acts .ok, .acts .kk { font-size: 12px; margin-left: 5px; }
     button.mk-l { width: 44px; height: 44px; min-width: 44px; font-size: 11.5px; border-width: 2px; }
+    button.mk-l[data-st="1"], button.mk-l[data-st="2"] { font-size: 11px; }
+    button.mk-l[data-st="1"]::before, button.mk-l[data-st="2"]::before { width: 11px; height: 6px; margin-bottom: 3px; border-width: 2.5px; }
+    .mk-off { width: 44px; height: 44px; font-size: 11px; }
     /* 駅 */
     .stn { display: flex; grid-column: 1; grid-row: 1 / -1; align-self: start; justify-self: center; width: 30px; height: 30px; border-radius: 50%; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; line-height: 1; background: var(--card); border: 2px solid var(--cyan); color: var(--cyan-dark); position: relative; z-index: 1; }
     .stn.sd { width: 12px; height: 12px; margin-top: 9px; border-width: 2px; }
@@ -538,7 +552,7 @@
 
   <nav class="filters" id="filters" aria-label="分野でしぼる"></nav>
   <p class="part-lead" id="partLead"></p>
-  <p class="week-note"><span class="nb">月曜は本編。</span><span class="nb">木曜は短い復習・</span><span class="nb">もう1論点・まとめ。</span></p>
+  <p class="week-note"><span class="nb">月曜は本編。</span><span class="nb">木曜は短い復習・</span><span class="nb">もう1論点・まとめ。</span><span class="nb">聴いたら右の丸を押すと、</span><span class="nb">記録できます。</span></p>
   <main class="sched"><table id="sched"></table></main>
 
   <section class="line-cta">
@@ -687,7 +701,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   }
   function render(){
     var cols = 6;
-    var html = '<thead><tr><th class="c-date">日付</th><th class="c-kind">種別</th><th class="c-part">分野</th><th class="c-theme">テーマ</th><th class="c-title">タイトル</th><th class="c-rec">記録</th></tr></thead><tbody>';
+    var html = '<thead><tr><th class="c-date">日付</th><th class="c-kind">種別</th><th class="c-part">分野</th><th class="c-theme">テーマ</th><th class="c-title">タイトル</th><th class="c-rec">聴いたら押す</th></tr></thead><tbody>';
     var month = 0, phPart = 0, LS = rd(K_L), DN = rd(K_D), KK = rd(K_K);
     sorted.forEach(function(e){
       if (cur && !e.ms && e.part!==cur) return;
@@ -718,16 +732,16 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
       if (e.kind==='本編' && e.n && !fut) {
         var st = LS[e.n]===2 ? 2 : (LS[e.n] ? 1 : 0);
         stc = (st ? ' s'+st : '') + (DN[e.n] ? ' dn' : '');
-        marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-label="聴いたかどうかを切り替え">'+ST_LABEL[st]+'</button>'
+        marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-pressed="'+(st?'true':'false')+'" aria-label="第'+e.n+'回の記録 '+ST_LABEL[st]+'">'+ST_LABEL[st]+'</button>'
           ;
       }
-      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+(marks?'':' nrc')+stc+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
+      html += '<tr class="ep'+(e.kind==='本編'?'':' sub')+((marks || (e.kind==='本編' && e.n && fut))?'':' nrc')+stc+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
         + '<td class="c-date">'+md(e)+'<span class="wd">('+esc(e.wd)+')</span>'+(e.note?'<span class="hol">'+esc(e.note)+'</span>':'')+'</td>'
         + '<td class="c-kind">'+(e.kind==='本編' ? '<span class="stn">'+e.n+'</span>' : '<span class="stn sd"></span>')+'<span class="badge'+k[1]+(e.kind==='本編'?' bd-main':'')+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
         + '<td class="c-part">'+esc(partName(e.part))+'</td>'
         + '<td class="c-theme">'+nbt(s.theme)+'</td>'
         + '<td class="c-title">'+(titleHtml?'<span class="t1">'+titleHtml+'</span>':'')+(acts?'<div class="acts">'+acts+'</div>':'')+'</td>'
-        + '<td class="c-rec">'+marks+'</td>'
+        + '<td class="c-rec">'+(marks || ((e.kind==='本編' && e.n && fut) ? '<span class="mk-off">未配信</span>' : ''))+'</td>'
         + '</tr>';
     });
     document.getElementById('sched').innerHTML = html + '</tbody>';
@@ -762,6 +776,8 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     if (nx) { o[n] = nx; } else { delete o[n]; }
     wr(K_L, o);
     b.setAttribute('data-st', nx); b.textContent = ST_LABEL[nx];
+    b.setAttribute('aria-pressed', nx ? 'true' : 'false'); b.setAttribute('aria-label', '第'+n+'回の記録 '+ST_LABEL[nx]);
+    b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
     var tr = b.closest('tr'); tr.classList.remove('s1','s2'); if (nx) tr.classList.add('s'+nx);
     pgSet('listened', n, nx || null);
     updateRail();
