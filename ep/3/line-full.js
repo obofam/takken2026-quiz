@@ -4,7 +4,24 @@
   var esc = function (s) {
     return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
   };
-  var KK = {"year": "令和4年", "no": 33, "revised": false, "stem": "宅地建物取引士に関する次の記述のうち、宅地建物取引業法の規定によれば、正しいものはいくつあるか。", "items": [{"m": "ア", "t": "宅地建物取引士資格試験は未成年者でも受験することができるが、宅地建物取引士の登録は成年に達するまでいかなる場合にも受けることができない。"}, {"m": "イ", "t": "甲県知事登録の宅地建物取引士が、宅地建物取引業者（乙県知事免許）の専任の宅地建物取引士に就任するためには、宅地建物取引士の登録を乙県に移転しなければならない。"}, {"m": "ウ", "t": "丙県知事登録の宅地建物取引士が、事務の禁止の処分を受けた場合、丁県に所在する宅地建物取引業者の事務所の業務に従事しようとするときでも、その禁止の期間が満了するまで、宅地建物取引士の登録の移転を丁県知事に申請することができない。"}, {"m": "エ", "t": "戊県知事登録の宅地建物取引士が、己県へ登録の移転の申請とともに宅地建物取引士証の交付を申請した場合、己県知事が宅地建物取引士証を交付するときは、戊県で交付された宅地建物取引士証の有効期間が経過するまでの期間を有効期間とする宅地建物取引士証を交付しなければならない。"}], "buttons": ["1 一つ", "2 二つ", "3 三つ", "4 四つ"], "answer": 2, "lines": [{"m": "ア", "t": "誤り。登録を受けられないのは、営業に関し成年者と同一の行為能力を有しない未成年者だけ（法18条1項1号）。"}, {"m": "イ", "t": "誤り。登録の移転は「申請することができる」で任意（法19条の2）。"}, {"m": "ウ", "t": "正しい。事務禁止の期間が満了していないときは移転を申請できない（法19条の2ただし書）。"}, {"m": "エ", "t": "正しい。移転後の知事は、従前の宅建士証の有効期間が経過するまでの期間を有効期間とする証を交付する（法22条の2第5項）。"}], "onair": "肢ア・イ・ウは第3回（図5の未成年者・図6の任意と事務禁止中）で解ける。肢エ（移転と同時に交付される宅建士証の有効期間）は第4回で扱う", "tail": "正しいものは ウ・エ の二つ。"};
+  var KK = {"year": "令和4年", "no": 33, "revised": false, "stem": "宅地建物取引士に関する次の記述のうち、宅地建物取引業法の規定によれば、正しいものはいくつあるか。", "items": [{"m": "ア", "t": "宅地建物取引士資格試験は未成年者でも受験することができるが、宅地建物取引士の登録は成年に達するまでいかなる場合にも受けることができない。", "r": [{"mark": "いかなる場合にも"}]}, {"m": "イ", "t": "甲県知事登録の宅地建物取引士が、宅地建物取引業者（乙県知事免許）の専任の宅地建物取引士に就任するためには、宅地建物取引士の登録を乙県に移転しなければならない。", "r": [{"del": "しなければならない", "to": "することができる"}]}, {"m": "ウ", "t": "丙県知事登録の宅地建物取引士が、事務の禁止の処分を受けた場合、丁県に所在する宅地建物取引業者の事務所の業務に従事しようとするときでも、その禁止の期間が満了するまで、宅地建物取引士の登録の移転を丁県知事に申請することができない。", "r": [{"mark": "その禁止の期間が満了するまで"}]}, {"m": "エ", "t": "戊県知事登録の宅地建物取引士が、己県へ登録の移転の申請とともに宅地建物取引士証の交付を申請した場合、己県知事が宅地建物取引士証を交付するときは、戊県で交付された宅地建物取引士証の有効期間が経過するまでの期間を有効期間とする宅地建物取引士証を交付しなければならない。", "r": [{"mark": "有効期間が経過するまでの期間"}]}], "buttons": ["1 一つ", "2 二つ", "3 三つ", "4 四つ"], "answer": 2, "lines": [{"m": "ア", "t": "誤り。登録を受けられないのは、営業に関し成年者と同一の行為能力を有しない未成年者だけ（法18条1項1号）。"}, {"m": "イ", "t": "誤り。登録の移転は「申請することができる」で任意（法19条の2）。"}, {"m": "ウ", "t": "正しい。事務禁止の期間が満了していないときは移転を申請できない（法19条の2ただし書）。"}, {"m": "エ", "t": "正しい。移転後の知事は、従前の宅建士証の有効期間が経過するまでの期間を有効期間とする証を交付する（法22条の2第5項）。"}], "onair": "肢ア・イ・ウは第3回（図5の未成年者・図6の任意と事務禁止中）で解ける。肢エ（移転と同時に交付される宅建士証の有効期間）は第4回で扱う", "tail": "正しいものは ウ・エ の二つ。"};
+  /* 朱入れ（試し用）：答えたあと、選択肢の本文に赤を重ねる（mark＝決め手の語に赤い下線／del＝誤りの語に赤い取り消し線＋正しい言い方を小さい赤字で）。本文の字は変えない */
+  function shuireHtml(it) {
+    var t = it.t, list = [];
+    it.r.forEach(function (a) {
+      var w = a.mark || a.del, i = t.indexOf(w);
+      if (i >= 0) { list.push({i: i, w: w, a: a}); }
+    });
+    list.sort(function (x, y) { return x.i - y.i; });
+    var out = '', pos = 0;
+    list.forEach(function (x) {
+      var a = x.a;
+      out += esc(t.slice(pos, x.i));
+      out += a.mark ? '<span class="sh-mk">' + esc(a.mark) + '</span>' : '<span class="sh-g" role="group" aria-label="' + esc('誤り「' + a.del + '」。正しくは「' + a.to + '」') + '"><del>' + esc(a.del) + '</del><ins aria-hidden="true">' + esc(a.to) + '</ins></span>';
+      pos = x.i + x.w.length;
+    });
+    return out + esc(t.slice(pos));
+  }
   /* 過去問を解いた結果を、回ごとに記録に残す（1=正解、2=不正解。解き直したら上書き）。端末の takken2027-kako に書き、ログインしている人はサーバーにも置く */
   var KAKO_EP = '3';
   function saveKako(ok) {
@@ -45,6 +62,13 @@
       '</div>';
     var dms = box.querySelectorAll('.kk-item .dm');
     var btns = box.querySelectorAll('.kk-btns .pill');
+    var tspans = box.querySelectorAll('.kk-item > span:last-child');
+    function shuire(on) {
+      Array.prototype.forEach.call(tspans, function (s, i) {
+        var it = k.items[i];
+        if (it.r) { s.innerHTML = on ? shuireHtml(it) : esc(it.t); }
+      });
+    }
     var res = box.querySelector('.qres');
     var again = box.querySelector('.kk-again');
     function refresh() {
@@ -73,14 +97,14 @@
           (k.tail ? '<p class="kk-tail">' + esc(k.tail) + '</p>' : '') +
           '<p class="kk-onair-l">今日の放送のどこで解けるか</p>' +
           '<p class="kk-onair">' + esc(k.onair) + '</p>';
-        res.hidden = false;
+        res.hidden = false; shuire(true);
         again.hidden = false;
         refresh();
       });
     });
     again.querySelector('button').addEventListener('click', function () {
       Array.prototype.forEach.call(btns, function (x) { x.disabled = false; x.classList.remove('chosen'); });
-      res.hidden = true; res.innerHTML = ''; again.hidden = true;
+      res.hidden = true; res.innerHTML = ''; again.hidden = true; shuire(false);
       marks = marks.map(function () { return 0; });
       refresh();
       box.scrollIntoView({block: 'nearest'});

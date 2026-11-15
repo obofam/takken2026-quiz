@@ -4,7 +4,24 @@
   var esc = function (s) {
     return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
   };
-  var KK = {"year": "令和6年", "no": 36, "revised": false, "stem": "営業保証金及び宅地建物取引業保証協会（以下この問において「保証協会」という。）に関する次の記述のうち、宅地建物取引業法の規定によれば、誤っているものはどれか。", "items": [{"m": "1", "t": "宅地建物取引業者で保証協会に加入しようとする者は、その加入しようとする日までに、政令で定める額の弁済業務保証金分担金を当該保証協会に納付しなければならない。"}, {"m": "2", "t": "保証協会の社員と宅地建物取引業に関し取引をした者（宅地建物取引業者に該当する者を除く。）は、その取引により生じた債権に関し、当該社員が社員ではないとしたならばその者が供託すべき営業保証金の額に相当する額の範囲内で弁済を受ける権利を有する。"}, {"m": "3", "t": "宅地建物取引業者は、保証協会の社員の地位を失ったときは、保証協会が弁済業務保証金の還付請求権者に対し、一定期間内に宅地建物取引業法第64条の8第2項の規定による認証を受けるため申し出るべき旨の公告をした後でなければ、弁済業務保証金分担金の返還を受けることができない。"}, {"m": "4", "t": "宅地建物取引業者は、一部の事務所を廃止し営業保証金を取り戻そうとする場合には、供託した営業保証金につき還付を請求する権利を有する者に対し、公告をすることなく営業保証金を取り戻すことができる。"}], "buttons": ["1", "2", "3", "4"], "answer": 4, "lines": [{"m": "1", "t": "正しい。分担金は加入しようとする日までに納付（法64条の9第1項1号）。"}, {"m": "2", "t": "正しい。還付の上限は、社員でなかったら供託すべき営業保証金の額に相当する範囲（法64条の8第1項）。"}, {"m": "3", "t": "正しい。社員の地位を失ったときは、6か月以上の公告の期間が過ぎてから分担金を返還（法64条の11第3項・4項）。"}, {"m": "4", "t": "誤り。営業保証金は、一部の事務所の廃止でも6か月以上の公告が必要（法30条1項後段・2項）。協会は、公告が要るのは社員の地位を失ったときだけ（法64条の11第1項・4項）で、一部の事務所の廃止では不要。ここが逆。"}], "onair": "第2回の前半（取戻しは6か月以上の公告）と後半（協会は地位を失ったときだけ公告・分担金は加入日まで・還付の上限）の対比で解ける"};
+  var KK = {"year": "令和6年", "no": 36, "revised": false, "stem": "営業保証金及び宅地建物取引業保証協会（以下この問において「保証協会」という。）に関する次の記述のうち、宅地建物取引業法の規定によれば、誤っているものはどれか。", "items": [{"m": "1", "t": "宅地建物取引業者で保証協会に加入しようとする者は、その加入しようとする日までに、政令で定める額の弁済業務保証金分担金を当該保証協会に納付しなければならない。", "r": [{"mark": "加入しようとする日までに"}]}, {"m": "2", "t": "保証協会の社員と宅地建物取引業に関し取引をした者（宅地建物取引業者に該当する者を除く。）は、その取引により生じた債権に関し、当該社員が社員ではないとしたならばその者が供託すべき営業保証金の額に相当する額の範囲内で弁済を受ける権利を有する。", "r": [{"mark": "営業保証金の額に相当する額"}]}, {"m": "3", "t": "宅地建物取引業者は、保証協会の社員の地位を失ったときは、保証協会が弁済業務保証金の還付請求権者に対し、一定期間内に宅地建物取引業法第64条の8第2項の規定による認証を受けるため申し出るべき旨の公告をした後でなければ、弁済業務保証金分担金の返還を受けることができない。", "r": [{"mark": "公告をした後でなければ"}]}, {"m": "4", "t": "宅地建物取引業者は、一部の事務所を廃止し営業保証金を取り戻そうとする場合には、供託した営業保証金につき還付を請求する権利を有する者に対し、公告をすることなく営業保証金を取り戻すことができる。", "r": [{"mark": "一部の事務所"}, {"del": "公告をすることなく", "to": "公告をして"}]}], "buttons": ["1", "2", "3", "4"], "answer": 4, "lines": [{"m": "1", "t": "正しい。分担金は加入しようとする日までに納付（法64条の9第1項1号）。"}, {"m": "2", "t": "正しい。還付の上限は、社員でなかったら供託すべき営業保証金の額に相当する範囲（法64条の8第1項）。"}, {"m": "3", "t": "正しい。社員の地位を失ったときは、6か月以上の公告の期間が過ぎてから分担金を返還（法64条の11第3項・4項）。"}, {"m": "4", "t": "誤り。営業保証金は、一部の事務所の廃止でも6か月以上の公告が必要（法30条1項後段・2項）。協会は、公告が要るのは社員の地位を失ったときだけ（法64条の11第1項・4項）で、一部の事務所の廃止では不要。ここが逆。"}], "onair": "第2回の前半（取戻しは6か月以上の公告）と後半（協会は地位を失ったときだけ公告・分担金は加入日まで・還付の上限）の対比で解ける"};
+  /* 朱入れ（試し用）：答えたあと、選択肢の本文に赤を重ねる（mark＝決め手の語に赤い下線／del＝誤りの語に赤い取り消し線＋正しい言い方を小さい赤字で）。本文の字は変えない */
+  function shuireHtml(it) {
+    var t = it.t, list = [];
+    it.r.forEach(function (a) {
+      var w = a.mark || a.del, i = t.indexOf(w);
+      if (i >= 0) { list.push({i: i, w: w, a: a}); }
+    });
+    list.sort(function (x, y) { return x.i - y.i; });
+    var out = '', pos = 0;
+    list.forEach(function (x) {
+      var a = x.a;
+      out += esc(t.slice(pos, x.i));
+      out += a.mark ? '<span class="sh-mk">' + esc(a.mark) + '</span>' : '<span class="sh-g" role="group" aria-label="' + esc('誤り「' + a.del + '」。正しくは「' + a.to + '」') + '"><del>' + esc(a.del) + '</del><ins aria-hidden="true">' + esc(a.to) + '</ins></span>';
+      pos = x.i + x.w.length;
+    });
+    return out + esc(t.slice(pos));
+  }
   /* 過去問を解いた結果を、回ごとに記録に残す（1=正解、2=不正解。解き直したら上書き）。端末の takken2027-kako に書き、ログインしている人はサーバーにも置く */
   var KAKO_EP = '2';
   function saveKako(ok) {
@@ -45,6 +62,13 @@
       '</div>';
     var dms = box.querySelectorAll('.kk-item .dm');
     var btns = box.querySelectorAll('.kk-btns .pill');
+    var tspans = box.querySelectorAll('.kk-item > span:last-child');
+    function shuire(on) {
+      Array.prototype.forEach.call(tspans, function (s, i) {
+        var it = k.items[i];
+        if (it.r) { s.innerHTML = on ? shuireHtml(it) : esc(it.t); }
+      });
+    }
     var res = box.querySelector('.qres');
     var again = box.querySelector('.kk-again');
     function refresh() {
@@ -73,14 +97,14 @@
           (k.tail ? '<p class="kk-tail">' + esc(k.tail) + '</p>' : '') +
           '<p class="kk-onair-l">今日の放送のどこで解けるか</p>' +
           '<p class="kk-onair">' + esc(k.onair) + '</p>';
-        res.hidden = false;
+        res.hidden = false; shuire(true);
         again.hidden = false;
         refresh();
       });
     });
     again.querySelector('button').addEventListener('click', function () {
       Array.prototype.forEach.call(btns, function (x) { x.disabled = false; x.classList.remove('chosen'); });
-      res.hidden = true; res.innerHTML = ''; again.hidden = true;
+      res.hidden = true; res.innerHTML = ''; again.hidden = true; shuire(false);
       marks = marks.map(function () { return 0; });
       refresh();
       box.scrollIntoView({block: 'nearest'});

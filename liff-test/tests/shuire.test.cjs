@@ -25,25 +25,28 @@ test('shuire guard: real data passes; word 0 times, 2+ times, del on a correct c
   assert.equal(b.shuireFor(2,kakomon(2),{1:{}}),null,'データの無い回は何もしない');
 });
 
-test('shuire build: trial ep1 carries r on every choice and the choice text is unchanged; other episodes get nothing; production has the same shuire (only ep1 has data)',{skip},async()=>{
+test('shuire build: every episode with data carries r on exactly the listed choices, choice/explanation text unchanged; episodes without data get nothing; production = trial',{skip},async()=>{
   const b=await lib();
-  const m=b.loadMaterial(1);
-  const js=read(path.join(root,'ep/1/line-full.js'));
-  const kk=JSON.parse(js.match(/var KK = (\{[\s\S]*?\});\n/)[1]);
-  kk.items.forEach((it,i)=>{assert.equal(it.t,m.json.kakomon.items[i].t,'本文は1字も変えない');assert.ok(Array.isArray(it.r)&&it.r.length);});
-  assert.equal(kk.stem,m.json.kakomon.stem);
-  assert.deepEqual(kk.lines.map(l=>l.t),m.json.kakomon.items.map(it=>(it.ok?'正しい。':'誤り。')+it.why),'解説の字も同じ');
-  assert.match(read(path.join(root,'ep/1/index.html')),/\.kk-item \.sh-mk\{[^}]*var\(--sheet\)/);
-  for(let n=2;n<=9;n++){
-    assert.doesNotMatch(read(path.join(root,'ep',String(n),'line-full.js')),/shuire|"r":/,'第'+n+'回');
-    assert.doesNotMatch(read(path.join(root,'ep',String(n),'index.html')),/sh-mk|sh-g/,'第'+n+'回');
-  }
-  // 本番にも試し用と同じ朱入れ（データのある第1回だけ。第2〜9回は何も出ない）
-  assert.equal(read(path.join(prod,'ep/1/line-full.js')),js,'本番の第1回の過去問は試し用と同じ');
-  assert.match(read(path.join(prod,'ep/1/index.html')),/\.kk-item \.sh-mk\{[^}]*var\(--sheet\)/);
-  for(let n=2;n<=9;n++){
-    assert.doesNotMatch(read(path.join(prod,'ep',String(n),'line-full.js')),/shuire|"r":/,'本番 第'+n+'回');
-    assert.doesNotMatch(read(path.join(prod,'ep',String(n),'index.html')),/sh-mk|sh-g/,'本番 第'+n+'回');
+  const data=JSON.parse(read(path.join(root,'ep-kakomon-shuire.json')));
+  for(let n=1;n<=9;n++){
+    const m=b.loadMaterial(n);
+    const js=read(path.join(root,'ep',String(n),'line-full.js'));
+    if(data[String(n)]){
+      const kk=JSON.parse(js.match(/var KK = (\{[\s\S]*?\});\n/)[1]);
+      kk.items.forEach((it,i)=>{
+        assert.equal(it.t,m.json.kakomon.items[i].t,'第'+n+'回 本文は1字も変えない');
+        assert.deepEqual(it.r,data[String(n)][it.m],'第'+n+'回 '+it.m);
+      });
+      assert.equal(kk.stem,m.json.kakomon.stem);
+      assert.deepEqual(kk.lines.map(l=>l.t),m.json.kakomon.items.map(it=>(it.ok?'正しい。':'誤り。')+it.why),'解説の字も同じ');
+      assert.match(read(path.join(root,'ep',String(n),'index.html')),/\.kk-item \.sh-mk\{[^}]*var\(--sheet\)/);
+    }else{
+      assert.doesNotMatch(js,/shuire|"r":/,'第'+n+'回');
+      assert.doesNotMatch(read(path.join(root,'ep',String(n),'index.html')),/sh-mk|sh-g/,'第'+n+'回');
+    }
+    // 本番にも試し用と同じ朱入れ
+    assert.equal(read(path.join(prod,'ep',String(n),'line-full.js')),js,'第'+n+'回 本番の過去問＝試し用');
+    assert.equal(/sh-mk/.test(read(path.join(prod,'ep',String(n),'index.html'))),!!data[String(n)],'第'+n+'回 本番のCSS');
   }
 });
 
@@ -92,7 +95,7 @@ function setup(opts){
   const state=()=>({on:on.attrs['aria-pressed'],off:off.attrs['aria-pressed'],hint:hint.html,sheet:tx.cls.has('sheet'),hid:hid.textContent,rs0:rs[0].cls.has('s-hide')});
   return{calls,n,state,on,off,rs,fire:()=>{obs.cb([{isIntersecting:true}]);},fireOut:()=>{obs.cb([{isIntersecting:false}]);},obs:()=>obs};
 }
-const WAIT='最後まで読むと、赤シートがかかります。',NORMAL1='赤い所を押すと答えが出ます。',NORMAL2='もう一度押すと、またかくれます。';
+const WAIT='最後まで読むと、自動で赤シートがかかります。',NORMAL1='赤い所を押すと答えが出ます。',NORMAL2='もう一度押すと、またかくれます。';
 test('red sheet: starts off (all words visible) with the waiting hint; end not yet in view does nothing',()=>{
   const s=setup({});
   assert.equal(s.n,2);
@@ -148,6 +151,6 @@ test('sample page (ep/1/text): red sheet starts off and auto-on at the end marke
   assert.match(h,/var sheetEnd = document\.createElement\('div'\);/);
   assert.match(h,/getElementById\('text2'\)\.appendChild\(sheetEnd\);\s*document\.getElementById\('text2'\)\.appendChild\(q2\);/);
   assert.match(h,/setupSheet\(roots, document\.getElementById\('sbar'\), \{hint: document\.querySelector\('\.shint'\), end: sheetEnd\}\)/);
-  assert.ok(h.includes('最後まで読むと、赤シートがかかります。')&&h.includes('IntersectionObserver'));
+  assert.ok(h.includes('最後まで読むと、自動で赤シートがかかります。')&&h.includes('IntersectionObserver'));
   assert.ok(h.includes('.kk-item .sh-mk{'));
 });

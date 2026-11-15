@@ -44,7 +44,9 @@
     function paintHint() {
       if (!hintEl) { return; }
       var normal = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと、またかくれます。</span>';
-      hintEl.innerHTML = (auto === 'wait' && !on) ? '<span class="nk">最後まで読むと、赤シートがかかります。</span>' : normal;
+      var waiting = auto === 'wait' && !on;
+      hintEl.innerHTML = waiting ? '<span class="nk">最後まで読むと、自動で赤シートがかかります。</span>' : normal;
+      hintEl.style.color = waiting ? 'var(--sheet)' : ''; /* 待っている間だけ、帯の「赤シート」の札と同じ赤 */
     }
     function stopAuto() {
       if (io) { io.disconnect(); io = null; }

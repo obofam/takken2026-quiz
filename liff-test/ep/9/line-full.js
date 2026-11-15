@@ -4,7 +4,24 @@
   var esc = function (s) {
     return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
   };
-  var KK = {"year": "令和4年", "no": 38, "revised": false, "stem": "宅地建物取引業者が自ら売主となる宅地の売買契約について、買受けの申込みを喫茶店で行った場合における宅地建物取引業法第37条の2の規定に基づくいわゆるクーリング・オフに関する次の記述のうち、正しいものはどれか。", "items": [{"m": "1", "t": "買受けの申込みをした者が、売買契約締結後、当該宅地の引渡しを受けた場合、クーリング・オフによる当該売買契約の解除を行うことができない。"}, {"m": "2", "t": "買受けの申込みをした者が宅地建物取引業者であった場合、クーリング・オフについて告げられていなくても、申込みを行った日から起算して8日を経過するまでは、書面により買受けの申込みの撤回をすることができる。"}, {"m": "3", "t": "売主業者の申出により、買受けの申込みをした者の勤務先で売買契約を行った場合、クーリング・オフによる当該売買契約の解除を行うことはできない。"}, {"m": "4", "t": "クーリング・オフによる売買契約の解除がなされた場合において、宅地建物取引業者は、買受けの申込みをした者に対し、速やかに、当該売買契約の締結に際し受領した手付金その他の金銭を返還しなければならない。"}], "buttons": ["1", "2", "3", "4"], "answer": 4, "lines": [{"m": "1", "t": "誤り。できなくなるのは、引渡しを受け、かつ代金の全部を支払ったとき（法37条の2第1項2号）。"}, {"m": "2", "t": "誤り。買主が宅建業者なら37条の2は適用されない（法78条2項）。"}, {"m": "3", "t": "誤り。勤務先が事務所等になるのは買主の申出があった場合だけで、売主業者の申出なら解除できる（施行規則16条の5第2号）。"}, {"m": "4", "t": "正しい。解除されたら速やかに手付金その他の金銭を返還する（法37条の2第3項）。"}], "onair": "第9回の前半（できなくなるとき・白紙に戻したら・場所の図）で4肢とも解ける"};
+  var KK = {"year": "令和4年", "no": 38, "revised": false, "stem": "宅地建物取引業者が自ら売主となる宅地の売買契約について、買受けの申込みを喫茶店で行った場合における宅地建物取引業法第37条の2の規定に基づくいわゆるクーリング・オフに関する次の記述のうち、正しいものはどれか。", "items": [{"m": "1", "t": "買受けの申込みをした者が、売買契約締結後、当該宅地の引渡しを受けた場合、クーリング・オフによる当該売買契約の解除を行うことができない。", "r": [{"mark": "引渡しを受けた"}, {"del": "行うことができない", "to": "行うことができる"}]}, {"m": "2", "t": "買受けの申込みをした者が宅地建物取引業者であった場合、クーリング・オフについて告げられていなくても、申込みを行った日から起算して8日を経過するまでは、書面により買受けの申込みの撤回をすることができる。", "r": [{"mark": "宅地建物取引業者であった場合"}, {"del": "撤回をすることができる", "to": "撤回はできない"}]}, {"m": "3", "t": "売主業者の申出により、買受けの申込みをした者の勤務先で売買契約を行った場合、クーリング・オフによる当該売買契約の解除を行うことはできない。", "r": [{"mark": "売主業者の申出"}, {"del": "行うことはできない", "to": "行うことができる"}]}, {"m": "4", "t": "クーリング・オフによる売買契約の解除がなされた場合において、宅地建物取引業者は、買受けの申込みをした者に対し、速やかに、当該売買契約の締結に際し受領した手付金その他の金銭を返還しなければならない。", "r": [{"mark": "速やかに"}]}], "buttons": ["1", "2", "3", "4"], "answer": 4, "lines": [{"m": "1", "t": "誤り。できなくなるのは、引渡しを受け、かつ代金の全部を支払ったとき（法37条の2第1項2号）。"}, {"m": "2", "t": "誤り。買主が宅建業者なら37条の2は適用されない（法78条2項）。"}, {"m": "3", "t": "誤り。勤務先が事務所等になるのは買主の申出があった場合だけで、売主業者の申出なら解除できる（施行規則16条の5第2号）。"}, {"m": "4", "t": "正しい。解除されたら速やかに手付金その他の金銭を返還する（法37条の2第3項）。"}], "onair": "第9回の前半（できなくなるとき・白紙に戻したら・場所の図）で4肢とも解ける"};
+  /* 朱入れ（試し用）：答えたあと、選択肢の本文に赤を重ねる（mark＝決め手の語に赤い下線／del＝誤りの語に赤い取り消し線＋正しい言い方を小さい赤字で）。本文の字は変えない */
+  function shuireHtml(it) {
+    var t = it.t, list = [];
+    it.r.forEach(function (a) {
+      var w = a.mark || a.del, i = t.indexOf(w);
+      if (i >= 0) { list.push({i: i, w: w, a: a}); }
+    });
+    list.sort(function (x, y) { return x.i - y.i; });
+    var out = '', pos = 0;
+    list.forEach(function (x) {
+      var a = x.a;
+      out += esc(t.slice(pos, x.i));
+      out += a.mark ? '<span class="sh-mk">' + esc(a.mark) + '</span>' : '<span class="sh-g" role="group" aria-label="' + esc('誤り「' + a.del + '」。正しくは「' + a.to + '」') + '"><del>' + esc(a.del) + '</del><ins aria-hidden="true">' + esc(a.to) + '</ins></span>';
+      pos = x.i + x.w.length;
+    });
+    return out + esc(t.slice(pos));
+  }
   /* 過去問を解いた結果を、回ごとに記録に残す（1=正解、2=不正解。解き直したら上書き）。端末の takken2027-kako に書き、ログインしている人はサーバーにも置く */
   var KAKO_EP = '9';
   function saveKako(ok) {
@@ -45,6 +62,13 @@
       '</div>';
     var dms = box.querySelectorAll('.kk-item .dm');
     var btns = box.querySelectorAll('.kk-btns .pill');
+    var tspans = box.querySelectorAll('.kk-item > span:last-child');
+    function shuire(on) {
+      Array.prototype.forEach.call(tspans, function (s, i) {
+        var it = k.items[i];
+        if (it.r) { s.innerHTML = on ? shuireHtml(it) : esc(it.t); }
+      });
+    }
     var res = box.querySelector('.qres');
     var again = box.querySelector('.kk-again');
     function refresh() {
@@ -73,14 +97,14 @@
           (k.tail ? '<p class="kk-tail">' + esc(k.tail) + '</p>' : '') +
           '<p class="kk-onair-l">今日の放送のどこで解けるか</p>' +
           '<p class="kk-onair">' + esc(k.onair) + '</p>';
-        res.hidden = false;
+        res.hidden = false; shuire(true);
         again.hidden = false;
         refresh();
       });
     });
     again.querySelector('button').addEventListener('click', function () {
       Array.prototype.forEach.call(btns, function (x) { x.disabled = false; x.classList.remove('chosen'); });
-      res.hidden = true; res.innerHTML = ''; again.hidden = true;
+      res.hidden = true; res.innerHTML = ''; again.hidden = true; shuire(false);
       marks = marks.map(function () { return 0; });
       refresh();
       box.scrollIntoView({block: 'nearest'});

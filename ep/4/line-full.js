@@ -4,7 +4,24 @@
   var esc = function (s) {
     return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; });
   };
-  var KK = {"year": "令和4年", "no": 29, "revised": true, "stem": "宅地建物取引士に関する次の記述のうち、宅地建物取引業法の規定によれば、誤っているものはどれか。", "items": [{"m": "1", "t": "宅地建物取引士は、拘禁刑以上の刑に処せられた場合、刑に処せられた日から30日以内に、その旨を宅地建物取引士の登録を受けた都道府県知事に届け出なければならない。"}, {"m": "2", "t": "宅地建物取引士は、業務に関して事務禁止の処分を受けた場合、速やかに、宅地建物取引士証をその交付を受けた都道府県知事に提出しなければならず、これを怠った場合には罰則の適用を受けることがある。"}, {"m": "3", "t": "宅地建物取引士は、有効期間の満了日が到来する宅地建物取引士証を更新する場合、国土交通大臣が指定する講習を受講しなければならず、また、当該宅地建物取引士証の有効期間は5年である。"}, {"m": "4", "t": "宅地建物取引士は、宅地建物取引士の信用を害するような行為をしてはならず、信用を害するような行為には、宅地建物取引士の職務に必ずしも直接関係しない行為や私的な行為も含まれる。"}], "buttons": ["1", "2", "3", "4"], "answer": 3, "lines": [{"m": "1", "t": "正しい。欠格事由に当たるに至ったら本人が30日以内に届出（法21条2号、18条1項6号）。"}, {"m": "2", "t": "正しい。事務禁止は返納ではなく提出で、違反は10万円以下の過料（法22条の2第7項、86条）。"}, {"m": "3", "t": "誤り。更新の講習は登録をしている都道府県知事が指定するもの（法22条の3第2項、22条の2第2項）。有効期間5年は正しい（法22条の2第3項）。"}, {"m": "4", "t": "正しい。信用失墜行為の禁止（法15条の2）。私的な行為も含むのは運用上の解釈（条文外）。"}], "onair": "第3回と第4回で解ける（肢1は第3回、肢2・3・4は第4回）"};
+  var KK = {"year": "令和4年", "no": 29, "revised": true, "stem": "宅地建物取引士に関する次の記述のうち、宅地建物取引業法の規定によれば、誤っているものはどれか。", "items": [{"m": "1", "t": "宅地建物取引士は、拘禁刑以上の刑に処せられた場合、刑に処せられた日から30日以内に、その旨を宅地建物取引士の登録を受けた都道府県知事に届け出なければならない。", "r": [{"mark": "30日以内"}]}, {"m": "2", "t": "宅地建物取引士は、業務に関して事務禁止の処分を受けた場合、速やかに、宅地建物取引士証をその交付を受けた都道府県知事に提出しなければならず、これを怠った場合には罰則の適用を受けることがある。", "r": [{"mark": "提出しなければならず"}]}, {"m": "3", "t": "宅地建物取引士は、有効期間の満了日が到来する宅地建物取引士証を更新する場合、国土交通大臣が指定する講習を受講しなければならず、また、当該宅地建物取引士証の有効期間は5年である。", "r": [{"del": "国土交通大臣", "to": "登録をしている都道府県知事"}]}, {"m": "4", "t": "宅地建物取引士は、宅地建物取引士の信用を害するような行為をしてはならず、信用を害するような行為には、宅地建物取引士の職務に必ずしも直接関係しない行為や私的な行為も含まれる。", "r": [{"mark": "私的な行為"}]}], "buttons": ["1", "2", "3", "4"], "answer": 3, "lines": [{"m": "1", "t": "正しい。欠格事由に当たるに至ったら本人が30日以内に届出（法21条2号、18条1項6号）。"}, {"m": "2", "t": "正しい。事務禁止は返納ではなく提出で、違反は10万円以下の過料（法22条の2第7項、86条）。"}, {"m": "3", "t": "誤り。更新の講習は登録をしている都道府県知事が指定するもの（法22条の3第2項、22条の2第2項）。有効期間5年は正しい（法22条の2第3項）。"}, {"m": "4", "t": "正しい。信用失墜行為の禁止（法15条の2）。私的な行為も含むのは運用上の解釈（条文外）。"}], "onair": "第3回と第4回で解ける（肢1は第3回、肢2・3・4は第4回）"};
+  /* 朱入れ（試し用）：答えたあと、選択肢の本文に赤を重ねる（mark＝決め手の語に赤い下線／del＝誤りの語に赤い取り消し線＋正しい言い方を小さい赤字で）。本文の字は変えない */
+  function shuireHtml(it) {
+    var t = it.t, list = [];
+    it.r.forEach(function (a) {
+      var w = a.mark || a.del, i = t.indexOf(w);
+      if (i >= 0) { list.push({i: i, w: w, a: a}); }
+    });
+    list.sort(function (x, y) { return x.i - y.i; });
+    var out = '', pos = 0;
+    list.forEach(function (x) {
+      var a = x.a;
+      out += esc(t.slice(pos, x.i));
+      out += a.mark ? '<span class="sh-mk">' + esc(a.mark) + '</span>' : '<span class="sh-g" role="group" aria-label="' + esc('誤り「' + a.del + '」。正しくは「' + a.to + '」') + '"><del>' + esc(a.del) + '</del><ins aria-hidden="true">' + esc(a.to) + '</ins></span>';
+      pos = x.i + x.w.length;
+    });
+    return out + esc(t.slice(pos));
+  }
   /* 過去問を解いた結果を、回ごとに記録に残す（1=正解、2=不正解。解き直したら上書き）。端末の takken2027-kako に書き、ログインしている人はサーバーにも置く */
   var KAKO_EP = '4';
   function saveKako(ok) {
@@ -45,6 +62,13 @@
       '</div>';
     var dms = box.querySelectorAll('.kk-item .dm');
     var btns = box.querySelectorAll('.kk-btns .pill');
+    var tspans = box.querySelectorAll('.kk-item > span:last-child');
+    function shuire(on) {
+      Array.prototype.forEach.call(tspans, function (s, i) {
+        var it = k.items[i];
+        if (it.r) { s.innerHTML = on ? shuireHtml(it) : esc(it.t); }
+      });
+    }
     var res = box.querySelector('.qres');
     var again = box.querySelector('.kk-again');
     function refresh() {
@@ -73,14 +97,14 @@
           (k.tail ? '<p class="kk-tail">' + esc(k.tail) + '</p>' : '') +
           '<p class="kk-onair-l">今日の放送のどこで解けるか</p>' +
           '<p class="kk-onair">' + esc(k.onair) + '</p>';
-        res.hidden = false;
+        res.hidden = false; shuire(true);
         again.hidden = false;
         refresh();
       });
     });
     again.querySelector('button').addEventListener('click', function () {
       Array.prototype.forEach.call(btns, function (x) { x.disabled = false; x.classList.remove('chosen'); });
-      res.hidden = true; res.innerHTML = ''; again.hidden = true;
+      res.hidden = true; res.innerHTML = ''; again.hidden = true; shuire(false);
       marks = marks.map(function () { return 0; });
       refresh();
       box.scrollIntoView({block: 'nearest'});
