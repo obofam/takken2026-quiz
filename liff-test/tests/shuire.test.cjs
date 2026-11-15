@@ -92,17 +92,19 @@ function setup(opts){
   vm.createContext(ctx);
   vm.runInContext(src+';this.setupSheet=setupSheet;',ctx);
   const n=ctx.setupSheet(rootN,bar,opts.noEnd?{}:{hint,end});
-  const state=()=>({on:on.attrs['aria-pressed'],off:off.attrs['aria-pressed'],hint:hint.html,sheet:tx.cls.has('sheet'),hid:hid.textContent,rs0:rs[0].cls.has('s-hide')});
+  const state=()=>({on:on.attrs['aria-pressed'],off:off.attrs['aria-pressed'],hint:hint.html,sheet:tx.cls.has('sheet'),hid:hid.textContent,hidHtml:hid.html,note:hid.cls.has('is-note'),hintShown:hint.style.display!=='none',rs0:rs[0].cls.has('s-hide')});
   return{calls,n,state,on,off,rs,fire:()=>{obs.cb([{isIntersecting:true}]);},fireOut:()=>{obs.cb([{isIntersecting:false}]);},obs:()=>obs};
 }
-const WAIT='最後まで読むと、自動で赤シートがかかります。',NORMAL1='赤い所を押すと答えが出ます。',NORMAL2='もう一度押すと、またかくれます。';
+const WAIT='最後まで読むと、自動でかかります。',NORMAL1='赤い所を押すと答えが出ます。',NORMAL2='もう一度押すと、またかくれます。';
 test('red sheet: starts off (all words visible) with the waiting hint; end not yet in view does nothing',()=>{
   const s=setup({});
   assert.equal(s.n,2);
   const st=s.state();
   assert.equal(st.on,'false');assert.equal(st.off,'true');assert.equal(st.rs0,false);
-  assert.ok(st.hint.includes(WAIT)&&!st.hint.includes('赤い所を押すと'));
-  assert.equal(st.hid,'かくれている 0');
+  // 待っている間：帯の右に小さい注釈（2つの語のまとまり）。かくれている数は出さない。帯の下の案内は出さない（余白も空けない）
+  assert.equal(st.hidHtml,'<span class="nk">最後まで読むと、</span><span class="nk">自動でかかります。</span>');
+  assert.ok(st.note);assert.ok(!st.hidHtml.includes('かくれている'));
+  assert.equal(st.hintShown,false);assert.equal(st.hint,'');
   s.fireOut();assert.equal(s.state().on,'false');
 });
 test('red sheet: end comes into view -> sheet goes on once; hint switches; a later manual off stays off and never re-fires',()=>{
@@ -110,7 +112,7 @@ test('red sheet: end comes into view -> sheet goes on once; hint switches; a lat
   s.fire();
   let st=s.state();
   assert.equal(st.on,'true');assert.equal(st.sheet,true);assert.equal(st.rs0,true);assert.equal(st.hid,'かくれている 2');
-  assert.ok(st.hint.includes(NORMAL1)&&st.hint.includes(NORMAL2)&&!st.hint.includes(WAIT));
+  assert.ok(st.hint.includes(NORMAL1)&&st.hint.includes(NORMAL2)&&st.hintShown&&!st.note&&!st.hid.includes('最後まで'));
   s.off.l.click();
   st=s.state();assert.equal(st.on,'false');assert.equal(st.rs0,false);
   s.fire();
@@ -123,7 +125,7 @@ test('red sheet: a person pressing かける/はずす before the end cancels th
     s[which].l.click();
     const st=s.state();
     assert.equal(st.on,which==='on'?'true':'false');
-    assert.ok(st.hint.includes(NORMAL1)&&!st.hint.includes(WAIT));
+    assert.ok(st.hint.includes(NORMAL1)&&st.hintShown&&!st.note&&/^かくれている \d+$/.test(st.hid));
     assert.equal(s.obs().disc,true);
     if(which==='off'){s.fire();assert.equal(s.state().on,'false','自動はもう動かさない');}
   }
@@ -151,6 +153,6 @@ test('sample page (ep/1/text): red sheet starts off and auto-on at the end marke
   assert.match(h,/var sheetEnd = document\.createElement\('div'\);/);
   assert.match(h,/getElementById\('text2'\)\.appendChild\(sheetEnd\);\s*document\.getElementById\('text2'\)\.appendChild\(q2\);/);
   assert.match(h,/setupSheet\(roots, document\.getElementById\('sbar'\), \{hint: document\.querySelector\('\.shint'\), end: sheetEnd\}\)/);
-  assert.ok(h.includes('最後まで読むと、自動で赤シートがかかります。')&&h.includes('IntersectionObserver'));
+  assert.ok(h.includes('最後まで読むと、</span><span class="nk">自動でかかります。')&&h.includes('.sb2-cnt.is-note{')&&h.includes('IntersectionObserver'));
   assert.ok(h.includes('.kk-item .sh-mk{'));
 });

@@ -395,6 +395,8 @@ body.member .line-card{display:block}
 .seg .sb2:first-child{border-radius:999px 0 0 999px;border-right-width:0}
 .seg .sb2:last-child{border-radius:0 999px 999px 0}
 .sb2-cnt{margin-left:auto;font-size:14px;font-weight:700;line-height:1.3;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
+.sb2-cnt.is-note{font-size:12px;font-weight:700;line-height:1.3;text-align:right;white-space:normal;flex:0 1 auto;min-width:0}
+.sb2-cnt.is-note .nk{display:inline-block}
 .shint{margin:0;font-size:14px;line-height:1.7;color:#4F5963}
 .pdfrow{display:block;margin:4px 0 0;text-align:center}
 .pdfbtn{display:inline-block;box-sizing:border-box;min-height:44px;line-height:1.4;padding:10px 20px;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--ink);border-radius:999px;text-decoration:none}
@@ -798,14 +800,21 @@ body.member .line-card{display:block}
     function count() {
       var hid = 0;
       items.forEach(function (it) { if (on && !it.open) { hid += 1; } });
-      elHid.textContent = 'かくれている ' + hid;
+      if (auto === 'wait' && !on) {
+        /* 待っている間は、帯の右に小さい赤字の注釈（かくれている数は出さない）。狭ければ「最後まで読むと、」「自動でかかります。」の2行 */
+        elHid.classList.add('is-note');
+        elHid.innerHTML = '<span class="nk">最後まで読むと、</span><span class="nk">自動でかかります。</span>';
+      } else {
+        elHid.classList.remove('is-note');
+        elHid.textContent = 'かくれている ' + hid;
+      }
     }
     function paintHint() {
       if (!hintEl) { return; }
       var normal = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと、またかくれます。</span>';
       var waiting = auto === 'wait' && !on;
-      hintEl.innerHTML = waiting ? '<span class="nk">最後まで読むと、自動で赤シートがかかります。</span>' : normal;
-      hintEl.style.color = waiting ? 'var(--sheet)' : ''; /* 待っている間だけ、帯の「赤シート」の札と同じ赤 */
+      hintEl.innerHTML = waiting ? '' : normal;
+      hintEl.style.display = waiting ? 'none' : ''; /* 待っている間は帯の下に何も出さず、余白も空けない */
     }
     function stopAuto() {
       if (io) { io.disconnect(); io = null; }

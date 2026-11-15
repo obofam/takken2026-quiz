@@ -39,14 +39,21 @@
     function count() {
       var hid = 0;
       items.forEach(function (it) { if (on && !it.open) { hid += 1; } });
-      elHid.textContent = 'かくれている ' + hid;
+      if (auto === 'wait' && !on) {
+        /* 待っている間は、帯の右に小さい赤字の注釈（かくれている数は出さない）。狭ければ「最後まで読むと、」「自動でかかります。」の2行 */
+        elHid.classList.add('is-note');
+        elHid.innerHTML = '<span class="nk">最後まで読むと、</span><span class="nk">自動でかかります。</span>';
+      } else {
+        elHid.classList.remove('is-note');
+        elHid.textContent = 'かくれている ' + hid;
+      }
     }
     function paintHint() {
       if (!hintEl) { return; }
       var normal = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと、またかくれます。</span>';
       var waiting = auto === 'wait' && !on;
-      hintEl.innerHTML = waiting ? '<span class="nk">最後まで読むと、自動で赤シートがかかります。</span>' : normal;
-      hintEl.style.color = waiting ? 'var(--sheet)' : ''; /* 待っている間だけ、帯の「赤シート」の札と同じ赤 */
+      hintEl.innerHTML = waiting ? '' : normal;
+      hintEl.style.display = waiting ? 'none' : ''; /* 待っている間は帯の下に何も出さず、余白も空けない */
     }
     function stopAuto() {
       if (io) { io.disconnect(); io = null; }
