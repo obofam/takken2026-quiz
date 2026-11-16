@@ -82,9 +82,9 @@
   var HINT = 'takken2027-login-hint', SLOT = 'mimiobo-link-ticket';
   var $ = function (id) { return document.getElementById(id); };
   var inLine = /\sLine\//i.test(navigator.userAgent || '');
-  /* 戻り先（?next=）：受け付けるのは /ep/数字 と /roadmap だけ。それ以外は無視して、今までどおり */
+  /* 戻り先（?next=）：受け付けるのは /ep/数字 と /roadmap と /kounyu.html（売り場）だけ。それ以外は無視して、今までどおり */
   var NEXT_KEY = 'takken2027-login-next';
-  var validNext = function (v) { return typeof v === 'string' && /^(\/ep\/\d{1,3}|\/roadmap)$/.test(v); };
+  var validNext = function (v) { return typeof v === 'string' && /^(\/ep\/\d{1,3}|\/roadmap|\/kounyu\.html)$/.test(v); };
   var NEXT = (function () { var v = new URLSearchParams(location.search).get('next'); return validNext(v) ? v : ''; })();
   function say(t, err) { var m = $('msg'); m.textContent = t || ''; m.hidden = !t; m.className = 'msg' + (err ? ' err' : ''); }
   function lget(k) { try { return localStorage.getItem(k); } catch (_) { return null; } }
@@ -141,6 +141,8 @@
       /* ログイン済みで、戻り先つきで来たとき：LINEの中ならそのまま戻る。LINEの外では戻さない
          （回のページで登録なしと見えている人が来る所。戻すと同じ画面に帰るだけなので、「LINEで開く」を出す） */
       if (NEXT && inLine) { location.replace(NEXT); return; }
+      /* 売り場から来たとき：ログインだけで足りるページなので、LINEの外でもそのまま戻る */
+      if (NEXT === '/kounyu.html' && r.json.userId) { location.replace(NEXT); return; }
       showIn(p.length ? p : ['email']);
     }, function () { showOut(); });
   }
