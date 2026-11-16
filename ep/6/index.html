@@ -467,15 +467,21 @@ a.pill.ghost{display:inline-flex;align-items:center;justify-content:center;text-
 .tcard .tcount{display:none}
 .is-friend .tcard .tcount{display:block;margin-top:6px;font-size:14px;font-weight:700;line-height:1.65;color:var(--ink)}
 .is-buyer .tcard .tcount{display:none}
+/* 右上の札：購入者の見え方のときは「やさしいテキスト」（見本の札は出さない） */
+.smp.smp-b{display:none;color:var(--ink);border-color:#9ADDEC;background:#fff}
+.is-buyer .smp{display:none}
+.is-buyer .smp.smp-b{display:inline-block}
 /* 下の固定バー（前の回・上に戻る・次の回）。上の固定（.jump）より控えめ・水色もライムも使わない */
 .totop-w{display:none}
-body{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
+body{padding-bottom:calc(44px + env(safe-area-inset-bottom))}
 .epnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-.epnav-in{max-width:430px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.epnav-in{max-width:430px;margin:0 auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .epnav-s{flex:1 1 0;display:flex}
 .epnav-s.r{justify-content:flex-end}
-.epnav .enb{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 12px;border:0;border-radius:999px;background:none;color:#46535E;font:700 13px/1 var(--font);text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.epnav .enb.top{border:1px solid #C9CED3;padding:0 18px;flex:0 0 auto}
+.epnav .enb{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 10px;border:0;border-radius:999px;background:none;color:#5B6670;font:700 12px/1 var(--font);text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+/* 「上に戻る」：囲みは低く細く（見た目は26px）。押せる範囲はバーの高さいっぱい */
+.epnav .enb.top{position:relative;min-height:26px;border:1px solid #D9DDE1;padding:0 12px;flex:0 0 auto;font-weight:500}
+.epnav .enb.top::before{content:"";position:absolute;left:-6px;right:-6px;top:-8px;bottom:-8px}
 .epnav .enb:active{background:#F1F2F4}
 @media (hover:hover){.epnav .enb:hover{background:#F1F2F4}}
 .epnav .enb:focus-visible{outline:2px solid #46535E;outline-offset:2px}
@@ -483,14 +489,14 @@ body{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
 .epnav .chv{display:inline-block;width:7px;height:7px;border-left:2px solid currentColor;border-bottom:2px solid currentColor}
 .epnav .chv.l{transform:rotate(45deg);margin-left:3px}
 .epnav .chv.r{transform:rotate(-135deg);margin-right:3px}
-@media (min-width:820px){.epnav-in{max-width:680px;padding:8px 32px}}
+@media (min-width:820px){.epnav-in{max-width:680px;padding:0 32px}}
 @media print{.epnav{display:none !important}body{padding-bottom:0}}
 </style>
 </head>
 <body>
 <div class="page">
 
-  <div class="top"><span>第6回　2027年2月8日（月）予定</span><span class="top-login only-a">無料ページ（<a href="/login?next=/ep/6" data-umami-event="ep-login" data-umami-event-ep="6">登録済の方はこちら</a>）</span></div>
+  <div class="top"><span>第6回　2027年2月8日（月）予定</span><span class="smp smp-b">やさしいテキスト</span><span class="top-login only-a">無料ページ（<a href="/login?next=/ep/6" data-umami-event="ep-login" data-umami-event-ep="6">登録済の方はこちら</a>）</span></div>
   <div class="title">
     <div class="row"><span class="no">第6回</span><h1>売主には<br>説明しなくていい？</h1></div>
     <div class="side">35条書面と重要事項説明</div>
