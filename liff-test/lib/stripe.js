@@ -1,5 +1,5 @@
 'use strict';
-// Stripe helpers. Test mode only: live keys are refused. The client can be injected for tests.
+// Stripe helpers. テストの鍵（sk_test_／rk_test_）はいつでも通す。本番の鍵（sk_live_／rk_live_）は環境変数 STRIPE_ALLOW_LIVE=1 のときだけ通す（試し用のサイトに本番の鍵が紛れても動かさない番人）。The client can be injected for tests.
 const s=require('./server');
 const DEFAULT_VALID_UNTIL='2027-10-17T23:59:59+09:00';
 let injected=null;
@@ -7,7 +7,8 @@ function setClient(client){injected=client;}
 function client(){
   if(injected)return injected;
   const key=process.env.STRIPE_SECRET_KEY;
-  if(typeof key!=='string'||!/^(sk|rk)_test_[A-Za-z0-9_]+$/.test(key))s.fail(503,'payment_not_configured');
+  const live=typeof key==='string'&&/^(sk|rk)_live_[A-Za-z0-9_]+$/.test(key);
+  if(typeof key!=='string'||!(/^(sk|rk)_test_[A-Za-z0-9_]+$/.test(key)||(live&&process.env.STRIPE_ALLOW_LIVE==='1')))s.fail(503,'payment_not_configured');
   injected=new (require('stripe'))(key,{maxNetworkRetries:1,timeout:10000});
   return injected;
 }

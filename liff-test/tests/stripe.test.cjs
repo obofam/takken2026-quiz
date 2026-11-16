@@ -84,7 +84,8 @@ test('a Stripe API failure becomes a generic 503 without leaking the upstream me
 });
 
 // ---- webhook ----
-const event=(over={},sessionOver={})=>({id:'evt_test_1',object:'event',type:'checkout.session.completed',data:{object:{id:'cs_test_abc',object:'checkout.session',payment_status:'paid',client_reference_id:user,metadata:{userId:user,plan:'ume'},...sessionOver}},...over});
+const CREATED=1790000000;
+const event=(over={},sessionOver={})=>({id:'evt_test_1',object:'event',type:'checkout.session.completed',created:CREATED,livemode:false,data:{object:{id:'cs_test_abc',object:'checkout.session',payment_status:'paid',client_reference_id:user,metadata:{userId:user,plan:'ume'},amount_total:2980,currency:'jpy',payment_intent:'pi_test_1',...sessionOver}},...over});
 const sign=(payload,signingValue=webhookSigningValue,timestamp)=>realStripe.webhooks.generateTestHeaderString({payload,secret:signingValue,...(timestamp?{timestamp}:{})});
 function webhookRequest(payload,header=sign(payload),{stream=false}={}){
   const buffer=Buffer.from(payload);
@@ -96,7 +97,7 @@ function webhookRequest(payload,header=sign(payload),{stream=false}={}){
 function grantMock(results,rpcCalls=[]){
   stripeLib.setClient(realStripe);
   global.fetch=async(url,options)=>{
-    const u=new URL(url);assert.equal(u.pathname,'/rest/v1/rpc/grant_entitlement');
+    const u=new URL(url);assert.equal(u.pathname,'/rest/v1/rpc/record_purchase');
     const body=JSON.parse(options.body);rpcCalls.push(body);
     const result=typeof results==='function'?results(body):results;
     return {ok:true,status:200,json:async()=>result};
@@ -129,7 +130,7 @@ test('paid checkout.session.completed grants one learning-karte entitlement, rea
     const payload=JSON.stringify(event());
     const res=response();await webhookApi(webhookRequest(payload,sign(payload),{stream}),res);
     assert.equal(res.code,200);assert.deepEqual(res.data,{received:true,result:'granted'});
-    assert.deepEqual(calls,[{p_user_id:user,p_plan:'ume',p_valid_until:'2027-10-17T14:59:59.000Z',p_source:'stripe:cs_test_abc',p_event_id:'evt_test_1'}]);
+    assert.deepEqual(calls,[{p_user_id:user,p_plan:'ume',p_valid_until:'2027-10-17T14:59:59.000Z',p_source:'stripe:cs_test_abc',p_event_id:'evt_test_1',p_product:'ume',p_amount:2980,p_currency:'jpy',p_list_price:null,p_price_kind:'tsujo',p_payment_intent:'pi_test_1',p_purchased_at:new Date(CREATED*1000).toISOString(),p_livemode:false}]);
   }
 });
 test('redelivery of the same payment is acknowledged and keyed to the same source (idempotent)',async()=>{
@@ -191,6 +192,39 @@ test('an unknown user is acknowledged with 200 and logged; a database outage ret
   res=response();await webhookApi(webhookRequest(payload),res);assert.equal(res.code,503);assert.deepEqual(res.data,{error:'database_unavailable'});
   grantMock('something_else');
   res=response();await webhookApi(webhookRequest(payload),res);assert.equal(res.code,503);
+});
+test('webhook passes the ledger values: product, amount, currency, list price, price kind, payment intent, time, livemode',async()=>{
+  const run=async(sessionOver,over={})=>{const calls=grantMock('granted');const res=response();await webhookApi(webhookRequest(JSON.stringify(event(over,sessionOver))),res);assert.equal(res.code,200);return calls[0];};
+  let c=await run({metadata:{userId:user,plan:'text',product:'text',price_kind:'start'},amount_total:2480});
+  assert.deepEqual([c.p_product,c.p_plan,c.p_amount,c.p_currency,c.p_list_price,c.p_price_kind],['text','text',2480,'jpy',2980,'start']);
+  // metadata.product が無ければ plan が商品コード。台帳に無ければ list_price は null。price_kind は start 以外すべて tsujo。
+  c=await run({metadata:{userId:user,plan:'zenbu',price_kind:'sagaku'},amount_total:19800});
+  assert.deepEqual([c.p_product,c.p_list_price,c.p_price_kind],['zenbu',19800,'tsujo']);
+  c=await run({metadata:{userId:user,plan:'haru'},amount_total:4980});assert.deepEqual([c.p_product,c.p_list_price],['haru',null]);
+  // payment_intent は pi_ で始まる文字列だけ。amount 0 は通る。
+  for(const pi of [undefined,null,'cs_x',123,{}]){c=await run({payment_intent:pi});assert.equal(c.p_payment_intent,null);}
+  c=await run({amount_total:0});assert.equal(c.p_amount,0);
+  // 時刻は event.created（秒）。数でなければ今。livemode は true のときだけ true。
+  c=await run({},{created:1800000000,livemode:true});assert.deepEqual([c.p_purchased_at,c.p_livemode],[new Date(1800000000*1000).toISOString(),true]);
+  c=await run({},{created:'x',livemode:'true'});assert.equal(c.p_livemode,false);assert.ok(Math.abs(Date.parse(c.p_purchased_at)-Date.now())<60000);
+});
+test('webhook skips (200, malformed_event, no database call) when amount or currency is unreadable',async()=>{
+  stripeLib.setClient(realStripe);global.fetch=async()=>assert.fail('no database call expected');
+  const logs=[];console.error=(...args)=>logs.push(args);
+  const bad=[{amount_total:undefined},{amount_total:-1},{amount_total:12.5},{amount_total:'2980'},{amount_total:null},{currency:undefined},{currency:123},{currency:''}];
+  for(const patch of bad){const res=response();await webhookApi(webhookRequest(JSON.stringify(event({},patch))),res);assert.equal(res.code,200,JSON.stringify(patch));assert.deepEqual(res.data,{received:true,skipped:'malformed_event'},JSON.stringify(patch));}
+  assert.equal(logs.length,bad.length);for(const entry of logs)assert.deepEqual(Object.keys(entry[1]).sort(),['reason','session']);
+});
+test('Stripe key guard: test keys always pass, live keys only with STRIPE_ALLOW_LIVE=1, anything else is payment_not_configured',()=>{
+  const pick=value=>{stripeLib.setClient(null);if(value===undefined)delete process.env.STRIPE_SECRET_KEY;else process.env.STRIPE_SECRET_KEY=value;try{stripeLib.client();return 'ok';}catch(e){return e.message;}};
+  delete process.env.STRIPE_ALLOW_LIVE;
+  for(const k of ['sk_test_abc123','rk_test_abc123'])assert.equal(pick(k),'ok',k);
+  for(const k of ['sk_live_abc123','rk_live_abc123',undefined,'garbage','pk_test_abc'])assert.equal(pick(k),'payment_not_configured',String(k));
+  for(const v of ['0','true',''])  {process.env.STRIPE_ALLOW_LIVE=v;assert.equal(pick('sk_live_abc123'),'payment_not_configured',v);}
+  process.env.STRIPE_ALLOW_LIVE='1';
+  for(const k of ['sk_live_abc123','rk_live_abc123','sk_test_abc123','rk_test_abc123'])assert.equal(pick(k),'ok',k);
+  for(const k of ['garbage','pk_live_abc','sk_live_'])assert.equal(pick(k),'payment_not_configured',k);
+  delete process.env.STRIPE_ALLOW_LIVE;stripeLib.setClient(null);delete process.env.STRIPE_SECRET_KEY;
 });
 test('webhook endpoint opts out of body parsing so Vercel hands over the raw stream',()=>{
   assert.deepEqual(webhookApi.config,{api:{bodyParser:false}});

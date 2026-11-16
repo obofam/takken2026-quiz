@@ -59,7 +59,7 @@ button[disabled]{background:#9FB9BF;cursor:default}
   'use strict';
   var LIFF_ID='2011606963-hH0DzETc';
   var $=function(id){return document.getElementById(id);};
-  var state={user:null,ents:[],products:[],includes:{}};
+  var state={user:null,ents:[],products:[],includes:{},offers:{}};
   var OLD={ume:'学習カルテ（旧）',take:'竹（旧）',matsu:'松（旧）',matome:'要点まとめと問題'};
   var qs=new URLSearchParams(location.search);
 
@@ -93,7 +93,7 @@ button[disabled]{background:#9FB9BF;cursor:default}
       var row=document.createElement('div');row.className='row';
       var left=document.createElement('div');
       var n=document.createElement('div');n.className='name';n.textContent=p.name;
-      var pr=document.createElement('div');pr.className='price';pr.textContent=yen(p.price)+'（仮）';
+      var pr=document.createElement('div');pr.className='price';var o=state.offers[p.code];pr.textContent=o&&o.kind==='start'?yen(o.price)+'（スタート価格・通常 '+yen(o.listPrice)+'・'+(o.until||'')+' まで）':yen(o&&o.price||p.price)+'（仮）';
       left.appendChild(n);left.appendChild(pr);row.appendChild(left);
       if(have.indexOf(p.plan)>=0){
         var d=document.createElement('span');d.className='done';d.textContent='購入済み';row.appendChild(d);
@@ -110,6 +110,7 @@ button[disabled]{background:#9FB9BF;cursor:default}
     api('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json','X-Mimiobo-User':state.user},body:JSON.stringify({product:code})}).then(function(r){
       if(r.status===200&&r.json.url){location.href=r.json.url;return;}
       btn.disabled=false;
+      if(r.status===409){say('すでに購入済みです。');return;}
       say(r.status===503?'この商品の価格がまだ用意されていません（'+(r.json.error||'')+'）':'始められませんでした（'+r.status+(r.json.error?'：'+r.json.error:'')+'）',true);
     }).catch(function(){btn.disabled=false;say('通信できませんでした',true);});
   }
@@ -145,7 +146,7 @@ button[disabled]{background:#9FB9BF;cursor:default}
   function start(){
     api('/api/products').then(function(r){
       if(r.status!==200||!Array.isArray(r.json.products))throw new Error('products');
-      state.products=r.json.products;state.includes=r.json.includes||{};
+      state.products=r.json.products;state.includes=r.json.includes||{};state.offers=r.json.offers||{};
       return readSession();
     }).then(function(ok){
       if(ok)return true;

@@ -1,5 +1,6 @@
 // テスト利用者を丸ごと削除（answers→attempts→link_tickets→identities→entitlements→users）。
 // 使い方: node scripts/db-delete-user.mjs <user_id の先頭8文字>   ※テスト環境専用
+// 帳簿（purchases）は消さない：人を指す列を持たず、7年残す表。下の表の一覧に入れないこと。
 import fs from 'node:fs';
 const env = {}; for (const l of fs.readFileSync(new URL('../.env.local', import.meta.url), 'utf8').split(/\r?\n/)) { const m = l.match(/^(\w+)=(.*)$/); if (m) env[m[1]] = m[2].trim(); }
 const h = { apikey: env.SUPABASE_SECRET_KEY, Authorization: 'Bearer ' + env.SUPABASE_SECRET_KEY, Prefer: 'return=representation' };

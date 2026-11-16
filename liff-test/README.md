@@ -1,3 +1,23 @@
+## 帳簿・スタート価格・本番の鍵（2026-11-16）
+
+有料テキスト販売のサーバー側。値段・期間は仮置き（最終決定はKei。数字は台帳 `lib/products.js` の1か所と下の既定だけ）。
+
+- 帳簿 `public.purchases`（migration `supabase/migrations/202611160001_purchases.sql`。`202611130004_progress_kako.sql` の次に1回だけ適用）：買った日時・商品・plan・実際に払った額・通貨・通常の値段・値段の種類（tsujo／start／sagaku）・Stripe の cs_／pi_・本番かテストか・返金の日と額。**人を指す列は持たない**（user_id もメールも無い）。RLS あり・service_role だけ。7年残す。
+- 関数：`record_purchase`（13引数。`grant_entitlement` と同じ検査・lock・戻り値 granted／duplicate／unknown_user ＋ 同じトランザクションで帳簿に1行。利用者が見つからなくても帳簿は書く＝権利は付けない。二重に届いても増えない）／`refund_purchase(cs_… か pi_…, 額, 日時)`（全額のときだけ権利を外す。戻り値 refunded／partial／not_found／already）。既存の `grant_entitlement`（5引数）・表・制約はそのまま残す。
+- **適用の順：migration を先に、そのあとデプロイ**。migration は足すだけなので、本番の古いコード（`grant_entitlement` を呼ぶ）は動き続ける。webhook は新しいコードで `record_purchase` を呼ぶので、migration 前にデプロイすると支払い通知が 503 になる（Stripe が再送するので取りこぼしはしないが、先に適用する）。
+- `api/stripe-webhook.js`：`record_purchase` を呼ぶ。金額（`amount_total`）・通貨が読めないイベントは権利も付けず skip（200）。`p_product`＝`metadata.product`（無ければ plan）、`p_price_kind`＝`metadata.price_kind` が start のときだけ start。
+- スタート価格（やさしいテキスト 2,480円。通常 2,980円）：Stripe の札は通常 `takken2027_text`、スタート `takken2027_text_start`（同じ商品の2つ目の Price）。`lib/products.js` の `offer(product,{now,registeredAt})` が決める。**2027-01-11 23:59:59（日本時間）まで全員**、それより後は**登録の日（`users.created_at`）を1日目として7日目の23:59:59まで**（ログインしていない人は通常）。境目は日本時間。`api/checkout.js` が決めた札で決済を作り、`metadata.price_kind` に start／tsujo を入れる。すでにその plan（zenbu・bansou 経由も）を持つ人は 409 `already_purchased`。
+- `GET /api/products`（ログイン不要）：`{products, includes, loggedIn, owned, offers:{text:{kind,price,listPrice,startPrice,until,basis}}, validUntil}`。cookie が無い・不正・切れているは `loggedIn:false`（401 にしない）。`lookupKey` は返さない。
+- いま売っているのは台帳で `sale:true` の商品（text）だけ。それ以外を checkout に送ると 400 `invalid_product`。
+- 新しい環境変数：`STRIPE_ALLOW_LIVE=1`（これが無いと `sk_live_`／`rk_live_` の鍵は `payment_not_configured`。試し用のサイトに本番の鍵が紛れても動かない番人。テストの鍵はいつでも通る）／`START_PRICE_OPEN_UNTIL`（開始のころの終わり。既定 `2027-01-11T23:59:59+09:00`。読めない値は既定に戻す）／`SHOW_ALL_PRODUCTS=1`（売っていない商品も一覧・購入に出す。試し用）。`CHECKOUT_RETURN_PATH` の既定が `/kounyu-test.html` から **`/kounyu.html`** になった（上書きは今までどおり）。
+- 道具（`.env.local` を読む。鍵・値は表示しない）：
+  - `node scripts/stripe-setup.mjs [--dry-run] [--only <コード>] [--live]`：Stripe に商品と価格（スタート価格の2つ目の Price も）を作る。`--live` を付けたときだけ本番の鍵、付けないときにテスト以外の鍵なら止まる（逆も）。あれば何もしない。
+  - `node scripts/stripe-check.mjs`：Webhook の宛先と、台帳にある札（スタートも）がそろっているかを表示。
+  - `node scripts/db-refund.mjs <cs_… か pi_…> <返金した額> [--dry-run]`：Stripe の画面で返金したあと、帳簿に記録（全額なら権利も外す）。結果を日本語で1行表示。
+  - `node scripts/db-purchases.mjs [--year 2027] > 帳簿_2027.csv`：帳簿を CSV で（買った日（日本時間）・商品・値段の種類・金額・取引番号・セッションの番号・返金の日・返金の額・本番かテストか）。
+- 年末の記録削除（`db-delete-user.mjs` ほか）で **purchases は消さない**（人を指さない・7年残す）。`db-dump.mjs`／`db-backup-weekly.mjs` は表の一覧を Supabase から取るので、purchases も自動で控えに入る。
+- テスト：`tests/purchases-db.test.cjs`（pglite）・`stripe.test.cjs`・`products.test.cjs`。`tests/prod-api.test.cjs` の「本番側のコードは liff-test の正本と同じ」は、本番へ反映する（`node scripts/sync-prod.mjs`）まで落ちるのが想定どおり。
+
 ## 本番の第1回に、やさしいテキストを買った人の見え方（2026-11-13）
 
 - 判定の流れ（`ep/1/index.html`）：いまの判定（メールの合言葉／LINEの中でログイン済み／それ以外）が先。そのあと記録の同期（`TakkenProgress.init`。LINEの中なら ID トークンで `/api/session`）が済み、`provider()` があるとき（＝ログインのセッションがある人）だけ `GET /api/ep-text?ep=1`。200 なら購入者の見え方、401・403・失敗はいまの見え方のまま。セッションの無い人は呼ばない。

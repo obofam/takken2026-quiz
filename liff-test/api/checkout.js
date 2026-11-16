@@ -2,7 +2,8 @@
 const s=require('../lib/server');
 const stripe=require('../lib/stripe');
 const products=require('../lib/products');
-// Starts a Stripe Checkout (hosted, test mode). Only the Checkout URL goes back to the browser.
+// 売っていない商品（台帳に sale:true が無い。SHOW_ALL_PRODUCTS=1 なら全部）は 400 invalid_product。すでにその plan を持つ人は 409 already_purchased。
+// Starts a Stripe Checkout (hosted). 値段は offer()（スタート価格か通常か）で決めた lookup_key で引く。 Only the Checkout URL goes back to the browser.
 // Body {product:"<code>"} picks a 2027 product from lib/products.js (price found by lookup_key). No product = the learning karte (plan ume), as before.
 module.exports=s.endpoint(['POST'],async(req,res)=>{
   s.mutation(req);
@@ -19,11 +20,15 @@ module.exports=s.endpoint(['POST'],async(req,res)=>{
     cancel_url=origin+'/ep10-preview.html?checkout=cancel';
   }else{
     const product=typeof requested==='string'?products.find(requested):null;
-    if(!product)s.fail(400,'invalid_product');
-    price=await stripe.priceByLookupKey(product.lookupKey);
-    metadata={userId:current.userId,plan:product.plan,product:product.code};
-    // 戻り先のページ。本番の購入ページを作ったら環境変数 CHECKOUT_RETURN_PATH（例 /kounyu.html）で指す。未設定は試し用のページ。
-    const back=/^\/[A-Za-z0-9._\/-]*$/.test(process.env.CHECKOUT_RETURN_PATH||'')&&!process.env.CHECKOUT_RETURN_PATH.includes('//')?process.env.CHECKOUT_RETURN_PATH:'/kounyu-test.html';
+    if(!product||!products.onSale(product.code))s.fail(400,'invalid_product');
+    // すでにその plan を持つ人は止める（二重に買わせない）。スタート価格のある商品は、登録の日（users.created_at）も読む。
+    const [owned,registered]=await Promise.all([s.entitlements(current.userId),product.start?s.supabase('/rest/v1/users?'+new URLSearchParams({id:'eq.'+current.userId,select:'created_at'})):null]);
+    if(products.has(owned,product.plan))s.fail(409,'already_purchased');
+    const offer=products.offer(product,{now:Date.now(),registeredAt:Array.isArray(registered)?registered[0]?.created_at:undefined});
+    price=await stripe.priceByLookupKey(offer.lookupKey);
+    metadata={userId:current.userId,plan:product.plan,product:product.code,price_kind:offer.kind==='start'?'start':'tsujo'};
+    // 戻り先のページ。環境変数 CHECKOUT_RETURN_PATH で変えられる。未設定は売り場のページ /kounyu.html。
+    const back=/^\/[A-Za-z0-9._\/-]*$/.test(process.env.CHECKOUT_RETURN_PATH||'')&&!process.env.CHECKOUT_RETURN_PATH.includes('//')?process.env.CHECKOUT_RETURN_PATH:'/kounyu.html';
     success_url=origin+back+'?checkout=ok&product='+product.code;
     cancel_url=origin+back+'?checkout=cancel';
   }
