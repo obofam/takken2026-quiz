@@ -192,6 +192,8 @@
   @media (min-width: 768px) {
     .container { max-width: 960px; padding: 44px 32px 80px; }
     .hero h1 { font-size: 1.9rem; }
+    /* PC：「学習ロードマップ」を1行で中央に。（兼 進捗トラッカー）は下の行へ */
+    .hero h1 .h1-sub { display: block; margin-top: 2px; }
     .how { display: grid; grid-template-columns: 1fr 1.3fr .9fr; align-items: start; gap: 8px 28px; padding: 14px 20px; }
     .filters { position: sticky; top: 0; z-index: 2; background: var(--surface); padding: 10px 0; margin-bottom: 6px; justify-content: center; }
     .part-lead { text-align: center; }
