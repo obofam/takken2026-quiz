@@ -18,11 +18,20 @@ if (only && !targets.length) { console.error('その商品コードは台帳に�
 // 鍵の読み先：テストは .env.local。--live のときは .env.local を読まず、起動時の環境変数だけ（node --env-file=<本番の鍵を1行書いたファイル> で渡す。試し用のフォルダに本番の鍵を置かないため）。
 const env = {};
 if (!live) for (const l of fs.readFileSync(new URL('../.env.local', import.meta.url), 'utf8').split(/\r?\n/)) { const m = l.match(/^(\w+)=(.*)$/); if (m) env[m[1]] = m[2].trim().replace(/^["']|["']$/g, ''); }
-const key = live ? process.env.STRIPE_SECRET_KEY : env.STRIPE_SECRET_KEY;
+// メモ帳の保存の形によっては、名前の前に見えない印（BOM）が付く。その場合も拾う。前後の空白と引用符は外す。
+const liveName = Object.keys(process.env).find(k => k.replace(/^﻿/, '').trim() === 'STRIPE_SECRET_KEY');
+const tidy = v => typeof v === 'string' ? v.trim().replace(/^["']|["']$/g, '').trim() : v;
+const key = tidy(live ? (liveName ? process.env[liveName] : undefined) : env.STRIPE_SECRET_KEY);
+// 鍵が合わないときの手がかり（鍵そのものは出さない。先頭の種類・長さ・混ざった字の有無だけ）。
+const hint = () => typeof key !== 'string' || !key ? '鍵が読めていません（ファイルの1行が STRIPE_SECRET_KEY=… の形か、保存できているかを確かめてください）'
+  : /^pk_/.test(key) ? '「公開可能キー」（pk_ で始まる）が入っています。「シークレットキー」（sk_live_ で始まる）に入れ替えてください'
+  : /^(sk|rk)_test_/.test(key) ? 'テスト用の鍵が入っています。Stripe の画面を本番に切り替えてから、シークレットキーをコピーしてください'
+  : /^(sk|rk)_live_/.test(key) ? 'sk_live_ で始まっていますが、途中に鍵に使えない字（空白・全角・記号など）が混ざっています。貼り直してください（長さ ' + key.length + ' 字）'
+  : '鍵の先頭が sk_live_ ではありません（先頭3字：' + key.slice(0, 3) + '…・長さ ' + key.length + ' 字）。「ここに鍵を貼る」の字が残っていないか確かめてください';
 const isTest = typeof key === 'string' && /^(sk|rk)_test_[A-Za-z0-9_]+$/.test(key);
 const isLive = typeof key === 'string' && /^(sk|rk)_live_[A-Za-z0-9_]+$/.test(key);
 if (live ? !isLive : !isTest) {
-  console.error(live ? '--live が付いていますが、STRIPE_SECRET_KEY が本番の鍵ではないため、何もしませんでした。' : 'STRIPE_SECRET_KEY がテストの鍵ではないため、何もしませんでした（本番に作るときは --live を付けます）。');
+  console.error(live ? '--live が付いていますが、STRIPE_SECRET_KEY が本番の鍵ではないため、何もしませんでした。\n手がかり：' + hint() : 'STRIPE_SECRET_KEY がテストの鍵ではないため、何もしませんでした（本番に作るときは --live を付けます）。');
   process.exit(1);
 }
 const stripe = new (require('stripe'))(key, { maxNetworkRetries: 1, timeout: 10000 });
