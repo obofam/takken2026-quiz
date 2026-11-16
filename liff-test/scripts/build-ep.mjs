@@ -526,6 +526,46 @@ function loginVals(ep, sample, test) {
   };
 }
 
+/* ---- 試し用だけの部品（第1回だけ全部開ける／この記録を残す／やさしいテキストのその回の中身の実数）。
+   ひな形の中の「試」の印の間は、試し用の出力にだけ入る（本番の出力は1バイトも変わらない）。本番へ出すと決めたら、印を外すだけ。
+   印は2種類：行ごと（印だけの行から印だけの行まで）と、行の中（印と印の間）。 */
+const TEST_LINE = /^[ \t]*(?:\/\*試(?:終)?\*\/|<!--試(?:終)?-->)[ \t]*\n/gm;
+const TEST_LINE_BLOCK = /^[ \t]*(?:\/\*試\*\/|<!--試-->)[ \t]*\n[\s\S]*?^[ \t]*(?:\/\*試終\*\/|<!--試終-->)[ \t]*\n/gm;
+const TEST_INLINE_BLOCK = /(?:\/\*試\*\/|<!--試-->)[\s\S]*?(?:\/\*試終\*\/|<!--試終-->)/g;
+const TEST_MARK = /\/\*試(?:終)?\*\/|<!--試(?:終)?-->/g;
+export const gateTest = (tpl, test) => (test
+  ? tpl.replace(TEST_LINE, '').replace(TEST_MARK, '')
+  : tpl.replace(TEST_LINE_BLOCK, '').replace(TEST_INLINE_BLOCK, ''));
+const loginAnchor = (href, ep, from) => `<a href="${href}" data-umami-event="ep-login" data-umami-event-ep="${ep}" data-umami-event-from="${from}">登録済の方はこちら</a>`;
+const LINK_STYLE = 'color:var(--ink);text-decoration:underline;text-underline-offset:3px';
+/* やさしいテキストの「その回の中身」の実数。A＝購入者の画面に出る図の数 −（登録者の画面に出る図＝最初の1枚＋続きの抜粋）／B＝その回のテキストの赤シートの箇所（.rs。今回の数字の分も含む＝TakkenTextView.show() の返り値と同じ） */
+export function tcountOf(m, text, ex) {
+  const buyerFigs = figsOf(text.p1 + text.p2).length; /* 購入者の画面に出る図（前半・後半。今回の数字の節に図は無い） */
+  if (buyerFigs !== m.json.figures.length) throw new Error(`第${m.ep}回：テキストの図の数（${buyerFigs}）が json（${m.json.figures.length}）と違う`);
+  const friendFigs = ex.counts.free + ex.counts.line;
+  const A = buyerFigs - friendFigs, B = text.rs.reduce((a, b) => a + b, 0);
+  return { A, B, buyerFigs, friendFigs };
+}
+export function tcountHtml({ A, B }) {
+  const parts = [];
+  if (A > 0) parts.push(`図解があと${A}枚`);
+  if (B > 0) parts.push(`赤シートが${B}か所`);
+  if (!parts.length) return '';
+  return '<span class="tcount">' + ['この回は、', ...parts.map((p, i) => p + (i < parts.length - 1 ? '、' : '。'))].map(x => `<span class="nk">${x}</span>`).join('') + '</span>';
+}
+function shisakuVals(m, text, ex) {
+  const ep = m.ep;
+  const openAll = CFG.OPEN_ALL_EPS.includes(ep);
+  const a = (href, label, extra) => `<a href="${href}" target="_blank" rel="noopener"${extra || ''} style="${LINK_STYLE}">${label}</a>`;
+  const mailA = a('https://mimiobo.substack.com/subscribe', 'メール', ` data-umami-event="ep-mail" data-umami-event-ep="${ep}"`);
+  return {
+    OPEN_ALL: openAll ? 'true' : 'false',
+    OPEN1_NOTE: openAll ? `<div class="next-box only-open1" id="open1-note"><p><span class="nk">第2回からは、</span><span class="nk">${a('https://lin.ee/r6uYtnE', 'LINE')}か${mailA}の</span><span class="nk">登録（無料）で</span><span class="nk">開きます。</span></p></div>` : '',
+    OPEN1_LOGIN: openAll ? `<p class="login-line only-open1">${loginAnchor('/account.html', ep, 'open1')}</p>` : '',
+    TCOUNT: tcountHtml(tcountOf(m, text, ex)),
+  };
+}
+
 /* 回のページ一式（index.html・line-full.html・line-full.js）。mode は 'prod'（本番）か 'test'（試し用） */
 export function buildPages(m, text, ex, mode) {
   const { ep, json, data } = m;
@@ -542,8 +582,9 @@ export function buildPages(m, text, ex, mode) {
   const sample = CFG.SAMPLE_EPS.includes(ep);
   const abs = p => (test ? CFG.SITE + p : p);
   const fig1Template = '<template id="nk-fig1"><style data-nk="css">' + ex.css + '</style>' + ex.fig1 + '</template>';
-  const index = fill(template('ep-index.html'), {
+  const index = fill(gateTest(template('ep-index.html'), test), {
     EP: String(ep), SUB: escText(json.sub),
+    ...(test ? shisakuVals(m, text, ex) : {}),
     UMAMI: test ? '' : `<!-- Umami analytics (page: ep${ep}${sample ? ' 見本' : ''}) -->\n` + CFG.UMAMI_SCRIPT,
     DATE: date, DATE_YMD: fmtYmd(json.date),
     SMP: sample ? '<span class="smp">2027年版の見本</span>' : '',

@@ -22,6 +22,10 @@ export const UMAMI_SCRIPT = '<script defer src="https://cloud.umami.is/script.js
 // 第1回にしかない言い方（見本の回）。第2回以降は出さない
 export const SAMPLE_EPS = [1];
 
+// 登録なしの人にも、登録者と同じ続き（図の続き・今日のポイント・過去問1選）を全部開ける回。第1回だけ（第2回からは今までどおり、LINE・メールの登録で開く）。
+// ここを増やす・外すだけで、その回のページの「全部開ける」が切り替わる（回の番号の決め打ちはここ1か所）。
+export const OPEN_ALL_EPS = [1];
+
 // 第1回は、手で作った版が本番に出ていて確認ずみ。見た目・動きを変えないため、第1回だけ昔のスマホ幅の手当て（CSS・図7の位置・図5の横スクロール箱）を使う。
 // 第2回以降は、材料の _tools/sp_overrides.css と、図の幅の計算（plan_svgs と同じ）を使う。
 export const LEGACY_EPS = [1];

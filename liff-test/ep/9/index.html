@@ -449,6 +449,22 @@ body.member .line-card{display:block}
 .ep-closed .top-login{display:none}
 .ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}
 .next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}
+/* 第1回だけ全部開ける（登録なしでも続きを出した状態。body.is-open1）：案内の一文と、line-card の中の登録済の入口はこの状態のときだけ。下の登録の案内（line-card）は残す */
+.only-open1{display:none}
+.is-open1 .only-open1{display:block}
+.is-open1 .only-a.line-card{display:block !important}
+.line-card .login-line{margin:10px 0 0;font-size:14px;line-height:1.7;text-align:center}
+.line-card .login-line a{color:var(--ink);text-decoration:underline;text-underline-offset:2px;display:inline-block;padding:11px 0;margin:-11px 0}
+.next-box.only-open1{margin-top:4px}
+/* この記録を残す（○×を解き終えた直後だけ。記録がサーバーに残っていない人だけ） */
+.kiroku{margin-top:12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.kiroku p{margin:0;font-size:14px;line-height:1.65;color:#4F5963}
+a.pill.ghost{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
+@media print{.kiroku{display:none !important}}
+/* やさしいテキストのカードの「この回の中身」の実数（登録者の画面だけ。登録なし・購入者には出さない） */
+.tcard .tcount{display:none}
+.is-friend .tcard .tcount{display:block;margin-top:6px;font-size:14px;font-weight:700;line-height:1.65;color:var(--ink)}
+.is-buyer .tcard .tcount{display:none}
 </style>
 </head>
 <body>
@@ -858,6 +874,7 @@ figure.fig{min-width:0}
   <section class="sec" id="maru">
     <h2 class="sec-h">○×3問</h2>
     <div id="quizBox"></div>
+    <div class="kiroku" id="kirokuBox" hidden><p>いまは、この端末にだけ残ります。</p><a class="pill ghost" href="/login?next=/ep/9" data-umami-event="ep-kiroku-nokosu" data-umami-event-ep="9">この記録を残す</a></div>
   </section>
 
   <!-- 節3：過去問1選 -->
@@ -869,7 +886,7 @@ figure.fig{min-width:0}
     <a class="tcard" href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="9">
       <span class="tlab">有料版の見本</span>
       <span class="tbody"><img src="https://takken.mimiobo.com/ep/1/text/a4-p1.webp" alt="" width="800" height="1133" loading="lazy">
-        <span class="tmid"><span class="tt">やさしいテキスト</span><span class="td"><span class="nk">放送を聴きながら</span><span class="nk">見られるテキストです。</span><br><span class="nk">図をすべて・</span><span class="nk">今回の数字・</span><span class="nk">赤シートつき。</span></span></span></span>
+        <span class="tmid"><span class="tt">やさしいテキスト</span><span class="td"><span class="nk">放送を聴きながら</span><span class="nk">見られるテキストです。</span><br><span class="nk">図をすべて・</span><span class="nk">今回の数字・</span><span class="nk">赤シートつき。</span></span><span class="tcount"><span class="nk">この回は、</span><span class="nk">図解があと4枚、</span><span class="nk">赤シートが36か所。</span></span></span></span>
       <span class="tgo">見本を見る</span>
     </a>
   </section>
@@ -933,12 +950,25 @@ figure.fig{min-width:0}
       if (!o || typeof o !== 'object') { o = {}; }
       o[m[1]] = true;
       localStorage.setItem('takken2027-done', JSON.stringify(o));
-    } catch (_) {}
+    } catch (_) {} showKiroku();
     /* ログインしている人は、サーバーにも置く（ログインしていない人は端末だけ）。同期の部品が動き出す前なら、動き出してから送る */
     progDoneKey = m[1];
     if (progReady) { try { window.TakkenProgress.set('done', progDoneKey, true); } catch (_) {} }
   }
   var progDoneKey = null, progReady = false;
+  /* 「この記録を残す」：3問とも解き終えた直後だけ出す。記録がサーバーに残っていない（TakkenProgress.state() が 'synced' でない・部品が無い・例外）ときだけ見せる。あとから synced になったら隠す */
+  var kirokuOn = false, kirokuTimer = null;
+  function isSynced() { try { return !!(window.TakkenProgress && window.TakkenProgress.state() === 'synced'); } catch (_) { return false; } }
+  function updateKiroku() {
+    var el = document.getElementById('kirokuBox');
+    if (el) { el.hidden = !(kirokuOn && !isSynced()); }
+  }
+  function showKiroku() {
+    kirokuOn = true; updateKiroku();
+    if (kirokuTimer) { return; }
+    var n = 0;
+    kirokuTimer = setInterval(function () { updateKiroku(); if (++n >= 15) { clearInterval(kirokuTimer); } }, 1000);
+  }
   /* 記録の同期。LINEの判定（liff.init）はこのページがすでに済ませているので、ここでは二重に init しない（liffId を渡さない）。
      LINEの中でログイン済みなら ID トークンでサーバーのセッションに入り、メールのログインなどはクッキーのセッションがあるときだけ。なければ端末だけ。 */
   function startProgress() {
@@ -946,7 +976,7 @@ figure.fig{min-width:0}
       var sc = document.createElement('script'); sc.src = '/progress-sync.js'; sc.async = true; sc.onload = ok; sc.onerror = ng; document.head.appendChild(sc);
     }).then(function () {
       if (!window.TakkenProgress) { return; }
-      var started = window.TakkenProgress.init({cookieHint: true});
+      var started = window.TakkenProgress.init({cookieHint: true, onChange: updateKiroku});
       progReady = true;
       if (progDoneKey) { window.TakkenProgress.set('done', progDoneKey, true); }
       return started; /* ログインの確認が済むまで待てるよう返す（下の判定のスクリプトが、済んだあとにテキストの確認をする） */
@@ -1255,7 +1285,17 @@ figure.fig{min-width:0}
       });
     });
   }
-  function openView(msg) { tier = '登録なし'; say(msg); pendView('open'); }
+  /* 第1回だけ全部開ける：判定が登録なしになったとき、登録者と同じ続き（図の続き・今日のポイント・過去問1選）を出す。tier（Umami に送る見え方）は「登録なし」のまま。失敗したら今までの登録なしの表示のまま */
+  var OPEN_ALL = false, openAllTried = false, openAllOn = true;
+  function openAll() {
+    if (!OPEN_ALL || openAllTried || fullShown) { return Promise.resolve(); }
+    openAllTried = true;
+    return showFull().then(function () {
+      if (!openAllOn || body.classList.contains('is-buyer')) { return; }
+      body.classList.add('is-open1'); tier = '登録なし'; render();
+    }, function (e) { warn(e); });
+  }
+  function openView(msg) { tier = '登録なし'; say(msg); pendView('open'); openAll(); }
   function lineView(note) {
     judgeNote = note;
     return showFull().then(function () {
@@ -1347,7 +1387,7 @@ figure.fig{min-width:0}
       /* 今日のポイント・過去問1選の差し込み（LINE・メールの見え方と同じ続き）がまだなら、先に入れる。入れられなくても、テキストは出す */
       return fullShown ? null : showFull().catch(function (e) { warn(e); lastErr = e; });
     }).then(function () {
-      var n = window.TakkenTextView.show(html);
+      var n = window.TakkenTextView.show(html); openAllOn = false; body.classList.remove('is-open1');
       tier = 'やさしいテキスト購入者';
       judgeNote = judgeNote || '判定：テキストの確認が200';
       setText('200（テキストを表示。赤シート ' + n + ' か所）');
