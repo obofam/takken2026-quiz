@@ -1,6 +1,6 @@
 'use strict';
 // 回のページ（試し用）の3つの直し：第1回だけ全部開ける／「この記録を残す」／やさしいテキストのその回の中身の実数。
-// 本番（リポジトリ直下の ep/）には出していない（ひな形の「試」の印の間は試し用の出力だけに入る）ことも確かめる。
+// 本番（リポジトリ直下の ep/）の出力にも入っている。違うのは「登録済の方はこちら」「この記録を残す」の行き先だけ（本番 /login?next=/ep/N・試し用 /account.html）。
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
@@ -39,20 +39,25 @@ test('open-all: only episode 1 is opened to everyone (OPEN_ALL true + the one-li
   assert.match(h1,/body\.classList\.add\('is-open1'\); tier = '登録なし'; render\(\);/);
   assert.match(h1,/function openView\(msg\) \{[^}]*pendView\('open'\); openAll\(\); \}/);
   assert.match(h1,/openAllOn = false; body\.classList\.remove\('is-open1'\);/);
-  // 第2回以降：全部開けない。一文の要素も、line-card の中の入口も出さない
-  for(let n=2;n<=9;n++){
-    const h=trial(n);
-    assert.match(h,/var OPEN_ALL = false,/,'ep'+n);
-    assert.doesNotMatch(h,/id="open1-note"|<p class="login-line only-open1">|第2回からは/,'ep'+n);
+  // 本番の出力：第1回は同じく全部開ける。登録済の入口の行き先は /login?next=/ep/1
+  const p1=prodHtml(1);
+  assert.match(p1,/var OPEN_ALL = true,/);
+  assert.equal(strip(p1.match(/<div class="next-box only-open1" id="open1-note">[\s\S]*?<\/p><\/div>/)[0]),'第2回からは、LINEかメールの登録（無料）で開きます。');
+  assert.match(p1.match(/<div class="line-card only-a">[\s\S]*?<\/div>\s*<\/div>/)[0],/<p class="login-line only-open1"><a href="\/login\?next=\/ep\/1" data-umami-event="ep-login" data-umami-event-ep="1" data-umami-event-from="open1">登録済の方はこちら<\/a><\/p>/);
+  assert.doesNotMatch(p1,/account\.html/);
+  // 第2回以降：全部開けない。一文の要素も、line-card の中の入口も出さない（本番も同じ）
+  for(const h of [2,3,4,5,6,7,8,9].flatMap(n=>[trial(n),prodHtml(n)]).map((h,i)=>h)){
+    const n='ep';
+    assert.match(h,/var OPEN_ALL = false,/,n);
+    assert.doesNotMatch(h,/id="open1-note"|<p class="login-line only-open1">|第2回からは/,n);
   }
 });
-test('kiroku: the "save this record" button appears after the 3 questions, links to /login?next=/ep/N, only while not synced',()=>{
-  for(let n=1;n<=9;n++){
-    const h=trial(n);
+test('kiroku: the "save this record" button appears after the 3 questions (links to /login?next=/ep/N), only while not synced',()=>{
+  for(const [n,h,href] of [1,2,3,4,5,6,7,8,9].flatMap(n=>[[n,trial(n),'/login?next=/ep/'+n],[n,prodHtml(n),'/login?next=/ep/'+n]])){
     const box=h.match(/<div class="kiroku" id="kirokuBox" hidden>[\s\S]*?<\/div>/);
     assert.ok(box,'ep'+n);
     assert.equal(strip(box[0]),'いまは、この端末にだけ残ります。この記録を残す');
-    assert.ok(box[0].includes(`<a class="pill ghost" href="/login?next=/ep/${n}" data-umami-event="ep-kiroku-nokosu" data-umami-event-ep="${n}">この記録を残す</a>`),'ep'+n);
+    assert.ok(box[0].includes(`<a class="pill ghost" href="${href}" data-umami-event="ep-kiroku-nokosu" data-umami-event-ep="${n}">この記録を残す</a>`),'ep'+n);
     assert.doesNotMatch(box[0],NG);
     // 結果の表示（#quizBox）の外・節の最後。解く前は hidden
     assert.match(h,/<div id="quizBox"><\/div>\s*<div class="kiroku"/);
@@ -84,6 +89,7 @@ test('tcount: the "what is in this episode" line on the text card is made from t
     const want=b.tcountHtml({A,B:Bn});
     const h=trial(n);
     assert.ok(h.includes(want),'ep'+n);
+    assert.ok(prodHtml(n).includes(want),'prod ep'+n);
     const line=strip(want);
     assert.equal(line,`この回は、図解があと${A}枚、赤シートが${Bn}か所。`);
     assert.doesNotMatch(line,NG);
@@ -105,12 +111,14 @@ test('tcount: wording rules (A<=0 drops the figure part, B=0 drops the red-sheet
   assert.equal(b.tcountHtml({A:0,B:0}),'');
   assert.equal(b.tcountHtml({A:-2,B:0}),'');
 });
-test('gate: the trial-only parts (marked 試) are in the trial output and not one byte in the production output',{skip},async()=>{
-  const b=await lib();
+test('gate: no 試 marks are left in the template, and the three fixes are in both the trial and the production output',{skip},async()=>{
   const tpl=read(path.join(root,'templates/ep-index.html'));
-  const p=b.gateTest(tpl,false),t=b.gateTest(tpl,true);
-  assert.doesNotMatch(p,/試\*\/|<!--試|OPEN_ALL|kiroku|tcount|only-open1|is-open1|OPEN1_|TCOUNT/);
-  assert.match(t,/OPEN_ALL/);assert.doesNotMatch(t,/\/\*試|<!--試/);
-  // 本番の出力に、3つの直しは入っていない
-  for(let n=1;n<=9;n++)assert.doesNotMatch(prodHtml(n),/kiroku|is-open1|only-open1|tcount|OPEN_ALL|第2回からは/,'ep'+n);
+  assert.doesNotMatch(tpl,/\/\*試(終)?\*\/|<!--試(終)?-->/);
+  const b=await lib();
+  assert.equal(b.gateTest,undefined);
+  for(let n=1;n<=9;n++)for(const h of [trial(n),prodHtml(n)]){
+    assert.match(h,/kiroku|OPEN_ALL|tcount/,'ep'+n);
+    assert.doesNotMatch(h,/\/\*試|<!--試/,'ep'+n);
+    assert.doesNotMatch(h,/\{\{[A-Z_0-9]+\}\}/,'ep'+n);
+  }
 });

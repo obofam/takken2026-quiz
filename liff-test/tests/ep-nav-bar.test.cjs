@@ -1,5 +1,5 @@
 'use strict';
-// 回のページ（試し用）の下の固定バー（前の回・上に戻る・次の回）。本番には出していない（ひな形の「試」の印の間）。
+// 回のページの下の固定バー（前の回・上に戻る・次の回）。本番にも試し用にも入る。
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
@@ -33,14 +33,28 @@ test('nav bar: the episode after the last built one (10) is a disabled span, not
 test('nav bar: no arrow characters (chevrons are drawn with CSS)',()=>{
   for(let n=1;n<=9;n++)assert.doesNotMatch(bar(trial(n)),/[→←›‹▶◀▼▲]/,'ep'+n);
 });
-test('nav bar: not in the production output (not one byte), also not in the gated template',{skip},async()=>{
+test('nav bar: also in the production output (same prev/next/data-open, no arrows, no price words), only the date check differs',{skip},async()=>{
   const b=await lib();
   const tpl=read(path.join(root,'templates/ep-index.html'));
-  const p=b.gateTest(tpl,false);
-  assert.doesNotMatch(p,/epnav|NAV_PREV|NAV_NEXT|navTop|ep-nav/);
-  assert.match(b.gateTest(tpl,true),/epnav/);
-  for(let n=1;n<=9;n++)assert.doesNotMatch(prodHtml(n),/epnav|ep-nav|navTop/,'ep'+n);
-  // 本番モードで組んだ文字列にも入っていない
+  assert.doesNotMatch(tpl,/<!--試|\/\*試/);
+  assert.match(tpl,/epnav/);
+  for(let n=1;n<=9;n++){
+    const bp=bar(prodHtml(n)),bt=bar(trial(n));
+    assert.equal(bp,bt,'ep'+n);// 前後の番号・data-open・ボタンは本番と試し用で同じ（バーの中は日付の比べ方に依らない）
+    assert.doesNotMatch(bp,/[→←›‹▶◀▼▲]/,'ep'+n);
+    assert.doesNotMatch(bp,/購入|買|円/,'ep'+n);
+  }
+  assert.match(bar(prodHtml(3)),/<a class="enb prev" href="\/ep\/2"/);
+  assert.match(bar(prodHtml(3)),/<a class="enb next" href="\/ep\/4"[^>]* data-open="20270125"/);
+  assert.match(bar(prodHtml(1)),/<a class="enb next" href="\/ep\/2"[^>]* data-open="/);
+  assert.match(bar(prodHtml(9)),/<span class="enb next off" aria-disabled="true" data-ep="10">第10回/);
+  // 日付の比べ方：本番は端末の日付、試し用は ?today= だけ
   const m=b.loadMaterial(3),text=b.buildText(m),ex=b.buildExcerpt(m,text);
-  assert.doesNotMatch(b.buildPages(m,text,ex,'prod').index,/epnav|ep-nav|navTop|NAV_/);
+  const pi=b.buildPages(m,text,ex,'prod',[1,2,3,4,5,6,7,8,9]).index,ti=b.buildPages(m,text,ex,'test',[1,2,3]).index;
+  assert.ok(pi.includes("var n=new Date(),t=n.getFullYear()*10000+(n.getMonth()+1)*100+n.getDate();var as=document.querySelectorAll('.epnav a[data-open]')"));
+  assert.doesNotMatch(pi,/today=\(/);
+  assert.match(ti,/\[\?&\]today=/);
+  assert.doesNotMatch(pi,/NAV_|\{\{/);
+  // 本番の「ページがあるか」は ep-release.json の prod（ここでは 1〜9 を渡した）、試し用は今回 build した回
+  assert.match(ti.match(/<nav class="epnav"[\s\S]*?<\/nav>/)[0],/<span class="enb next off" aria-disabled="true" data-ep="4">/);
 });

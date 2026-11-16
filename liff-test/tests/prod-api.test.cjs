@@ -29,7 +29,7 @@ test('本番の画面側：progress-sync.js は正本の写しで、ロードマ
   assert.match(road,/TakkenProgress\.init\(\{ liffId: '2012583516-7vmvMorb', cookieHint: true/);
   assert.match(road,/pgSet\('listened'/);assert.match(road,/href="\/login"/);
   assert.equal((road.match(/href="\/login"/g)||[]).length,2); // 初期表示と、描き直しの注記だけ
-  assert.match(ep,/TakkenProgress\.set\('done'/);assert.match(ep,/init\(\{cookieHint: true\}\)/);assert.ok(!/TakkenProgress\.init\(\{liffId/.test(ep)); // 二重に liff.init しない
+  assert.match(ep,/TakkenProgress\.set\('done'/);assert.match(ep,/init\(\{cookieHint: true, onChange: updateKiroku\}\)/);assert.ok(!/TakkenProgress\.init\(\{liffId/.test(ep)); // 二重に liff.init しない
   assert.match(login,/<meta name="robots" content="noindex">/);assert.match(login,/cloud\.umami\.is/);assert.match(login,/liff\.line\.me\/2012583516-7vmvMorb\/roadmap/);
   assert.ok(!/ep10-preview|checks\.html|karte|宅建ドック/.test(login));
   const cb=read('auth-callback.js');

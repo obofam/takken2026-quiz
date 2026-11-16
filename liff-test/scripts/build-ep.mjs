@@ -526,16 +526,7 @@ function loginVals(ep, sample, test) {
   };
 }
 
-/* ---- 試し用だけの部品（第1回だけ全部開ける／この記録を残す／やさしいテキストのその回の中身の実数）。
-   ひな形の中の「試」の印の間は、試し用の出力にだけ入る（本番の出力は1バイトも変わらない）。本番へ出すと決めたら、印を外すだけ。
-   印は2種類：行ごと（印だけの行から印だけの行まで）と、行の中（印と印の間）。 */
-const TEST_LINE = /^[ \t]*(?:\/\*試(?:終)?\*\/|<!--試(?:終)?-->)[ \t]*\n/gm;
-const TEST_LINE_BLOCK = /^[ \t]*(?:\/\*試\*\/|<!--試-->)[ \t]*\n[\s\S]*?^[ \t]*(?:\/\*試終\*\/|<!--試終-->)[ \t]*\n/gm;
-const TEST_INLINE_BLOCK = /(?:\/\*試\*\/|<!--試-->)[\s\S]*?(?:\/\*試終\*\/|<!--試終-->)/g;
-const TEST_MARK = /\/\*試(?:終)?\*\/|<!--試(?:終)?-->/g;
-export const gateTest = (tpl, test) => (test
-  ? tpl.replace(TEST_LINE, '').replace(TEST_MARK, '')
-  : tpl.replace(TEST_LINE_BLOCK, '').replace(TEST_INLINE_BLOCK, ''));
+/* ---- 第1回だけ全部開ける／この記録を残す／やさしいテキストのその回の中身の実数／下の固定バー。本番・試し用とも入る（行き先と日付の比べ方だけ mode で変える） */
 const loginAnchor = (href, ep, from) => `<a href="${href}" data-umami-event="ep-login" data-umami-event-ep="${ep}" data-umami-event-from="${from}">登録済の方はこちら</a>`;
 const LINK_STYLE = 'color:var(--ink);text-decoration:underline;text-underline-offset:3px';
 /* やさしいテキストの「その回の中身」の実数。A＝購入者の画面に出る図の数 −（登録者の画面に出る図＝最初の1枚＋続きの抜粋）／B＝その回のテキストの赤シートの箇所（.rs。今回の数字の分も含む＝TakkenTextView.show() の返り値と同じ） */
@@ -554,9 +545,11 @@ export function tcountHtml({ A, B }) {
   return '<span class="tcount">' + ['この回は、', ...parts.map((p, i) => p + (i < parts.length - 1 ? '、' : '。'))].map(x => `<span class="nk">${x}</span>`).join('') + '</span>';
 }
 /* 下の固定バーの前・次。ページが無い回（built に入っていない／TOTAL_EPS の外）は <span aria-disabled>。配信日がまだの回は、端末の日付で画面の側が <span> に替える（data-open＝材料 json の date。第1回は閉じないので付けない）。 */
-function navVals(ep, built) {
+function navVals(ep, built, test) {
   /* 今日の日付（8桁）。配信日の比べ方は gateVals と同じ：試し用は ?today=YYYY-MM-DD だけ（付けなければ閉じない）、本番は端末の日付 */
-  const now = String.raw`var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):99999999;`;
+  const now = test
+    ? String.raw`var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):99999999;`
+    : 'var n=new Date(),t=n.getFullYear()*10000+(n.getMonth()+1)*100+n.getDate();';
   const have = new Set(built || readRelease().prod);
   const dateOf = n => { try { return Number(readJson(path.join(MATERIAL, `第${String(n).padStart(2, '0')}回_流し込み材料.json`)).date.replace(/-/g, '')); } catch { return 0; } };
   const item = (n, dir) => {
@@ -568,19 +561,27 @@ function navVals(ep, built) {
   };
   return { NAV_NOW: now, NAV_PREV: ep > 1 ? item(ep - 1, 'prev') : '', NAV_NEXT: ep < CFG.TOTAL_EPS ? item(ep + 1, 'next') : '' };
 }
-function shisakuVals(m, text, ex, built) {
+function epVals(m, text, ex, built, test) {
   const ep = m.ep;
+  const loginHref = test ? '/account.html' : `/login?next=/ep/${ep}`;
   const openAll = CFG.OPEN_ALL_EPS.includes(ep);
   const a = (href, label, extra) => `<a href="${href}" target="_blank" rel="noopener"${extra || ''} style="${LINK_STYLE}">${label}</a>`;
   const mailA = a('https://mimiobo.substack.com/subscribe', 'メール', ` data-umami-event="ep-mail" data-umami-event-ep="${ep}"`);
   return {
     OPEN_ALL: openAll ? 'true' : 'false',
-    ...navVals(ep, built),
+    KIROKU_HREF: `/login?next=/ep/${ep}`, /* 試し用の「この記録を残す」は今までどおり /login?next=（本番と同じ形） */
+    ...navVals(ep, built, test),
     OPEN1_NOTE: openAll ? `<div class="next-box only-open1" id="open1-note"><p><span class="nk">第2回からは、</span><span class="nk">${a('https://lin.ee/r6uYtnE', 'LINE')}か${mailA}の</span><span class="nk">登録（無料）で</span><span class="nk">開きます。</span></p></div>` : '',
-    OPEN1_LOGIN: openAll ? `<p class="login-line only-open1">${loginAnchor('/account.html', ep, 'open1')}</p>` : '',
+    OPEN1_LOGIN: openAll ? `<p class="login-line only-open1">${loginAnchor(loginHref, ep, 'open1')}</p>` : '',
     TCOUNT: tcountHtml(tcountOf(m, text, ex)),
   };
 }
+
+/* 見本ページ（ep/1/text）は「この記録を残す」の箱を持たないので、取り込む3問のスクリプトからその部品だけ外す（見本ページは今回の直しで変わらない） */
+const stripKiroku = js => js
+  .replace(' showKiroku();\n', '\n')
+  .replace(/  \/\* 「この記録を残す」[\s\S]*?kirokuTimer = setInterval[^\n]*\n  \}\n/, '')
+  .replace(', onChange: updateKiroku', '');
 
 /* 回のページ一式（index.html・line-full.html・line-full.js）。mode は 'prod'（本番）か 'test'（試し用） */
 export function buildPages(m, text, ex, mode, built) {
@@ -598,9 +599,9 @@ export function buildPages(m, text, ex, mode, built) {
   const sample = CFG.SAMPLE_EPS.includes(ep);
   const abs = p => (test ? CFG.SITE + p : p);
   const fig1Template = '<template id="nk-fig1"><style data-nk="css">' + ex.css + '</style>' + ex.fig1 + '</template>';
-  const index = fill(gateTest(template('ep-index.html'), test), {
+  const index = fill(template('ep-index.html'), {
     EP: String(ep), SUB: escText(json.sub),
-    ...(test ? shisakuVals(m, text, ex, built) : {}),
+    ...epVals(m, text, ex, built, test),
     UMAMI: test ? '' : `<!-- Umami analytics (page: ep${ep}${sample ? ' 見本' : ''}) -->\n` + CFG.UMAMI_SCRIPT,
     DATE: date, DATE_YMD: fmtYmd(json.date),
     SMP: sample ? '<span class="smp">2027年版の見本</span>' : '',
@@ -727,7 +728,7 @@ export function buildSample(m, text, pages, shared) {
   if ((tiers.match(/<tbody>[\s\S]*<\/tbody>/)[0].match(/<tr>/g) || []).length !== 8) throw new Error('見本ページ：表の行は8つのはず');
   /* ○×3問・過去問1選：本番（ep/1/index.html・ep/1/line-full.js）のデータと動きとCSSをそのまま取り込む（手で二重に持たない） */
   const idxHtml = pages.index, lineFullJs = pages.lineFullJs.replace(/\r\n?/g, '\n').trim();
-  const quizScript = must(idxHtml.match(/<script>\n(\(function \(\) \{\n  'use strict';\n  \/\* 3問のデータ[\s\S]*?\n\}\)\(\);)\n<\/script>/), 'ep/1/index.html の3問のスクリプト')[1];
+  const quizScript = stripKiroku(must(idxHtml.match(/<script>\n(\(function \(\) \{\n  'use strict';\n  \/\* 3問のデータ[\s\S]*?\n\}\)\(\);)\n<\/script>/), 'ep/1/index.html の3問のスクリプト')[1]);
   if (!/getElementById\('kkBox'\)/.test(lineFullJs) || /class="dm"/.test(lineFullJs)) throw new Error('見本ページ：line-full.js の形が想定と違う');
   const idxCss = must(idxHtml.match(/<style>([\s\S]*?)<\/style>/), 'ep/1/index.html のCSS')[1];
   const quizKeep = /^(\.over|\.qset|\.qcard|\.qhead|\.qno|\.qtext|\.qbtns|\.pill|\.qres|\.score|\.kk|\.line-inv|\.lbtn|a\.lbtn|\.nk\{)/;
@@ -973,7 +974,7 @@ export function buildEp(ep, release, shared, opts = {}) {
   let checked = 0;
   const byMode = {};
   for (const mode of modes) {
-    const pages = buildPages(m, text, ex, mode, opts.built);
+    const pages = buildPages(m, text, ex, mode, mode === 'prod' ? release.prod : (opts.built || release.prod));
     byMode[mode] = pages;
     checked += checkPublic(m, text, ex, pages);
     const base = mode === 'prod' ? '' : 'liff-test/';
@@ -1036,7 +1037,7 @@ export function main(argv) {
   const reports = [];
   const writes = new Map();
   for (const ep of eps) {
-    const r = buildEp(ep, release, shared, { shisaku, built: shisaku ? eps : release.prod });
+    const r = buildEp(ep, release, shared, { shisaku, built: eps });
     reports.push(r.report);
     for (const f of r.files) writes.set(f.rel, f);
   }
