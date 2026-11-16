@@ -271,7 +271,7 @@ test('kako: a kako change made before the login check ends is sent afterwards, a
   assert.deepEqual(w.st.kako, { '1': 1 });
   assert.deepEqual(parse(w.ls, 'takken2027-kako'), { '1': 1 });
 });
-test('kako: the solving code (line-full.js / ep1-full.js) writes takken2027-kako and calls TakkenProgress.set("kako", ...); the roadmap shows the tag', () => {
+test('kako: the solving code (line-full.js / ep1-full.js) writes takken2027-kako and calls TakkenProgress.set("kako", ...); the old trial roadmap shows the tag; the production roadmap does not (Kei 2026-11-16: 過去問の記録は過去問まとめページで使う)', () => {
   const root = path.join(__dirname, '..');
   for (const f of ['ep1-full.js', '../ep/1/line-full.js']) {
     const js = fs.readFileSync(path.join(root, f), 'utf8');
@@ -280,9 +280,13 @@ test('kako: the solving code (line-full.js / ep1-full.js) writes takken2027-kako
     assert.match(js, /var v = ok \? 1 : 2;/, f);
     assert.ok(js.indexOf('saveKako(ok);') > js.indexOf('var ok = '), f);
   }
-  for (const f of ['roadmap-an2.html', '../roadmap/index.html']) {
+  for (const f of ['roadmap-an2.html']) {
     const h = fs.readFileSync(path.join(root, f), 'utf8');
     assert.ok(h.includes("K_K = 'takken2027-kako'") && h.includes('過去問 ○') && h.includes('過去問 ×'), f);
     assert.match(h, /\.acts \.kk\.kk-ng \{ background: none;/, f);
   }
+  // 本番のロードマップ：過去問の印は出さない。丸の下の印は「3問」だけ
+  const prod = fs.readFileSync(path.join(root, '../roadmap/index.html'), 'utf8');
+  assert.ok(!prod.includes('過去問 ○') && !prod.includes('過去問 ×') && !/\.acts \.kk/.test(prod), 'roadmap/index.html');
+  assert.match(prod, /<span class="ck'\+\(DN\[e\.n\]\?' on':''\)\+'">3問/, 'roadmap/index.html');
 });

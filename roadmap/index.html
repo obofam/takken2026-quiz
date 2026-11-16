@@ -138,11 +138,6 @@
   .now-badge { display: inline-block; font-size: .78rem; font-weight: 700; line-height: 1.6; color: #fff; background: var(--cyan-dark); border-radius: 999px; padding: 1px 8px; margin-left: 4px; }
   .tbd { font-size: .88rem; color: var(--muted); }
   .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 16px; margin-top: 5px; }
-  .acts .ok { display: inline-block; margin-left: 5px; font-size: .72rem; line-height: 1.5; padding: 0 6px; border-radius: 999px; background: #E9F8C9; color: #3A6008; vertical-align: 1px; }
-  /* 過去問1選の札（解いた回だけ）。正解＝ライムの地、不正解＝グレーの枠・地の色なし（ライムは成功状態だけ） */
-  .acts .kk { display: inline-block; margin-left: 5px; font-size: .72rem; line-height: 1.5; padding: 0 6px; border-radius: 999px; vertical-align: 1px; white-space: nowrap; }
-  .acts .kk.kk-ok { background: #E9F8C9; color: #3A6008; }
-  .acts .kk.kk-ng { background: none; color: #56636E; border: 1px solid #B5BFC7; padding: 0 5px; }
   .acts a { font-size: .86rem; font-weight: 700; line-height: 1.6; text-decoration: none; color: var(--cyan-dark); border-bottom: 1px solid var(--cyan); white-space: nowrap; }
   /* LINE登録：表の下に1か所だけ。強く押さない */
   .cd-s { display: none; font-weight: 500; }
@@ -197,13 +192,16 @@
   @media (min-width: 768px) {
     .container { max-width: 960px; padding: 44px 32px 80px; }
     .hero h1 { font-size: 1.9rem; }
-    .how { display: flex; justify-content: center; gap: 32px; padding: 14px 20px; }
+    /* PC：「学習ロードマップ」を1行で中央に。（兼 進捗トラッカー）は下の行へ */
+    .hero h1 .h1-sub { display: block; margin-top: 2px; }
+    .how { display: grid; grid-template-columns: 1fr 1.3fr .9fr; align-items: start; gap: 8px 28px; padding: 14px 20px; }
     .filters { position: sticky; top: 0; z-index: 2; background: var(--surface); padding: 10px 0; margin-bottom: 6px; justify-content: center; }
     .part-lead { text-align: center; }
     .sched th.c-date { width: 104px; }
-    .sched th.c-kind { width: 108px; }
-    .sched th.c-part { width: 116px; }
-    .sched th.c-theme { width: 30%; }
+    .sched th.c-kind { width: 96px; }
+    .sched th.c-part { width: 84px; }
+    .sched th.c-theme { width: 24%; }
+    .sched th.c-title { width: 30%; }
     .sched th.c-rec { width: 116px; white-space: nowrap; text-align: right; }
     .sched td.c-rec { text-align: right; }
   }
@@ -292,7 +290,6 @@
   .c-title { font-size: 1rem; line-height: 1.65; color: #3E4A54; }
   .c-date .hol { font-size: .9rem; }
   .badge, .now-badge { font-size: .82rem; }
-  .acts .ok, .acts .kk { font-size: .82rem; }
   .acts a { font-size: 1rem; }
   .sched tr.ep.fut > td, .sched tr.ep.fut .c-title, .sched tr.ep.fut .c-date .wd, .sched tr.ep.fut .c-part { color: #4E5B66; }
   .sched tr.ep.fut .badge { color: #4E5B66; border-color: #AEB8C0; }
@@ -369,7 +366,7 @@
     .sched tr.month th { display: inline-block; font-size: 12px; font-weight: 700; line-height: 1.5; color: var(--muted); background: var(--gray-pill); border-radius: 999px; padding: 0 10px; }
     .sched tr.ph th { display: block; font-size: 13px; font-weight: 700; line-height: 1.5; color: var(--text); padding: 2px 0 0; }
     .sched tr.ep, .sched tr.ep.sub, .sched tr.ep.ms, .sched tr.ep.nrc {
-      display: grid; grid-template-columns: 44px auto auto auto auto 1fr 44px; grid-template-rows: auto auto auto 1fr; grid-template-areas: none;
+      display: grid; grid-template-columns: 44px auto auto auto auto 1fr 64px; grid-template-rows: auto auto auto 1fr; grid-template-areas: none;
       column-gap: 8px; row-gap: 0; align-items: start; padding: 8px 8px 8px 0; margin: 0;
       background: transparent; border: 0; border-radius: 0; box-shadow: none; }
     .sched tr.ep::after { content: ""; position: absolute; left: 52px; right: 0; top: 0; height: 1px; background: #E6ECF0; }
@@ -385,14 +382,13 @@
     .sched tr.ep.sub > td.c-theme, .sched tr.ep.ms > td.c-theme { font-weight: 700; }
     .sched tr.ep > td.c-title { grid-area: auto; grid-column: 2 / 7; grid-row: 3; font-size: 13px; line-height: 1.5; color: var(--muted); margin: 0; }
     .sched tr.ep > td.c-title:empty { display: none; }
-    .c-title .t1 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .c-title .t1:not(.lk) { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .sched tr.ep > td.c-rec { grid-area: auto; grid-column: 7; grid-row: 1 / -1; align-self: center; justify-self: end; }
     .sched tr.ep .badge { grid-column: 4; grid-row: 1; align-self: start; justify-self: start; font-size: 12px; line-height: 1.5; padding: 0 8px; }
     .sched tr.ep .badge.bd-main, .sched tr.ep.ms .badge { display: none; }
     .sched tr.ep .now-badge { grid-column: 5; grid-row: 1; display: inline-block; margin: 0; width: auto; font-size: 12px; line-height: 1.5; padding: 0 8px; align-self: start; justify-self: start; }
     .acts { gap: 0 16px; margin-top: 1px; }
     .acts a { min-height: 40px; margin: -8px 0; font-size: 13px; line-height: 1.5; }
-    .acts .ok, .acts .kk { font-size: 12px; margin-left: 5px; }
     button.mk-l { width: 44px; height: 44px; min-width: 44px; font-size: 11.5px; border-width: 2px; }
     button.mk-l[data-st="1"], button.mk-l[data-st="2"] { font-size: 11px; }
     button.mk-l[data-st="1"]::before, button.mk-l[data-st="2"]::before { width: 11px; height: 6px; margin-bottom: 3px; border-width: 2.5px; }
@@ -456,6 +452,15 @@
   .pr .phk:empty { display: none; }
   .gonow { position: fixed; right: 16px; bottom: 20px; z-index: 15; min-height: 44px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--cyan-dark); color: #fff; font: inherit; font-size: 14px; font-weight: 700; box-shadow: 0 2px 8px rgba(43,58,70,.22); cursor: pointer; }
   .gonow[hidden] { display: none; }
+  /* いちばん上に戻る（LINE・メールのお知らせのすぐ下に1つ） */
+  .totop-w { text-align: center; margin: 20px 0 8px; }
+  .totop { min-width: 160px; min-height: 44px; padding: 0 24px; border: 1.5px solid var(--cyan); border-radius: 999px; background: var(--card); color: var(--cyan-dark); font: inherit; font-size: .95rem; font-weight: 700; cursor: pointer; }
+  .totop:focus-visible { outline: 3px solid var(--cyan-mid); outline-offset: 2px; }
+  @media (hover: hover) { .totop:hover { background: var(--cyan-soft); } }
+  @media print { .totop-w { display: none !important; } }
+  /* スマホは表の見出しが無いので、第1回の丸の上にだけ小さく書く（PCは見出しがある） */
+  .rec-cap { display: none; }
+  @media (max-width: 767px) { .rec-cap { display: flex; justify-content: flex-end; width: 44px; font-size: 11px; font-weight: 700; line-height: 1.3; color: var(--muted); white-space: nowrap; margin-bottom: 4px; } }
   #newBox { overflow: hidden; }
   #newBox > summary { background: var(--cyan-dark); color: #fff; font-size: 15px; font-weight: 700; min-height: 44px; padding: 6px 16px; }
   #newBox > summary::after { border-color: #fff; }
@@ -509,6 +514,25 @@
     .sched tr.s2 .stn { background: #E9F8C9; border-color: #8CCB2B; color: #3A6008; }
     .sched tr.fut .stn { border-color: color-mix(in srgb, var(--pc, var(--cyan)) 45%, white); color: #4E5B66; background: var(--card); }
     .sched tr.ep.now { background: var(--pc-soft, #EAF8FC); }
+  }
+  /* タイトルのリンク（押すと回のページ）。「›」はCSSで描く */
+  a.tl { position: relative; display: inline-block; max-width: 100%; box-sizing: border-box; padding-right: 18px; color: var(--cyan-dark); font-weight: 700; text-decoration: none; border-radius: 4px; }
+  a.tl::after { content: ""; position: absolute; right: 4px; top: 50%; width: 7px; height: 7px; border-top: 2px solid currentColor; border-right: 2px solid currentColor; transform: translateY(-50%) rotate(45deg); }
+  a.tl:focus-visible { outline: 3px solid var(--cyan-mid); outline-offset: 1px; }
+  .vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  /* 3問の印（押すものではない：枠なし・地の色なし・小さな字）。過去問の記録はここには出さない（あとの過去問まとめページで使う） */
+  .cks { display: flex; flex-wrap: nowrap; justify-content: center; width: 56px; margin: 4px 0 0 auto; }
+  .ck { display: inline-block; font-size: 12.5px; font-weight: 500; line-height: 1.4; color: #6B6B76; white-space: nowrap; cursor: default; }
+  .ck.on { color: #3A6008; font-weight: 700; }
+  .ck.on::before { content: ""; display: inline-block; width: 8px; height: 4px; margin: 0 4px 3px 0; border-left: 2px solid #6FA81A; border-bottom: 2px solid #6FA81A; transform: rotate(-45deg); }
+  @media (max-width: 767px) {
+    .sched tr.ep > td.c-rec { display: flex; flex-direction: column; align-items: center; }
+    .cks { width: auto; margin: 3px 0 0; }
+    .ck { font-size: 11.5px; }
+    .c-title .t1.lk { display: block; overflow: visible; -webkit-line-clamp: none; }
+    .c-title .t1.lk a.tl { display: -webkit-inline-box; vertical-align: top; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; padding: 11px 18px 11px 0; margin: -11px 0; }
+    .sched tr.ep > td.c-theme a.tl { padding: 8px 18px 8px 0; margin: -8px 0; min-height: 40px; display: inline-flex; align-items: center; }
+    .sched tr.ep > td.c-theme a.tl::after { right: 4px; }
   }
 </style>
 </head>
@@ -570,7 +594,8 @@
   </section>
   <ul class="how">
     <li><span class="n">1</span><span class="lead">音声で聴く</span><a class="spbtn" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="spotify">Spotify</a><span class="oth">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="standfm">stand.fm</a></span></li>
-    <li><span class="n">2</span>【図解と3問】のページで確かめる</li>
+    <li><span class="n">2</span>【図解と3問】のページで確かめる<span class="oth"><span class="nb">水色のタイトルを押すと、</span><span class="nb">図解と3問が開きます。</span><span class="nb">3問は、解くと自動でつきます。</span></span></li>
+    <li><span class="n">3</span>記録する<span class="oth"><span class="nb">聴いたら右の丸を押すと、</span><span class="nb">記録できます。</span></span></li>
   </ul>
 
   <section class="tiers" aria-label="図解と3問のページで見られるもの">
@@ -595,7 +620,7 @@
 
   <nav class="filters" id="filters" aria-label="分野でしぼる"></nav>
   <p class="part-lead" id="partLead"></p>
-  <p class="week-note"><span class="nb">月曜は本編。</span><span class="nb">木曜は短い復習・</span><span class="nb">もう1論点・まとめ。</span><span class="nb">聴いたら右の丸を押すと、</span><span class="nb">記録できます。</span></p>
+  <p class="week-note"><span class="nb">月曜は本編。</span><span class="nb">木曜は短い復習・</span><span class="nb">もう1論点・まとめ。</span></p>
   <main class="sched"><table id="sched"></table></main>
 
   <section class="line-cta">
@@ -604,6 +629,7 @@
     <p class="body" id="lineBody"><span class="nb">毎週月曜に、こちらからお届けします。</span><br><span class="nb">登録無料です。</span></p>
     <div class="btns"><a class="btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="roadmap-line">LINEで受け取る</a><a class="btn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="roadmap-mail">メールで受け取る</a></div>
   </section>
+  <div class="totop-w"><button type="button" class="totop" id="toTop" data-umami-event="roadmap-totop">上に戻る</button></div>
 
   <section class="faq">
     <h2>よくある質問</h2>
@@ -637,6 +663,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     document.getElementById('lineHead').innerHTML = '<span class="nb">始まったら、</span><span class="nb">LINEかメールでお知らせします</span>';
     document.getElementById('lineBody').innerHTML = '<span class="nb">図解の続きと過去問1選を、</span><span class="nb">毎週月曜にお届けします（予定）。</span><br><span class="nb">登録無料です。</span>';
   }
+  var IN_LINE = /\sLine\//i.test(navigator.userAgent || '');
   function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   // 文末の「です／ます／違反」だけが次の行に落ちないよう、最後の文節（約5字）をひとかたまりにする
   function nbt(str){
@@ -725,7 +752,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     if (!e.zukai) e.zukai = base + '#zukai';
     if (!e.mondai) e.mondai = base;
   });
-  var LINKS = [['spotify','Spotify',1], ['youtube','YouTube',1], ['mondai','図解と3問',0]]; // 3つ目=別タブで開く
+  var LINKS = [['spotify','Spotify',1], ['youtube','YouTube',1]]; // 別タブで開く（図解と3問はタイトルのリンク）
   // 節目の行（どの分野でしぼっても出す）。受験申込の日付は目安（7月の頭に置く）
   var MS = [
     {d: "2027-07-01", dl: "7月", wd: "", kind: "節目", ms: 1, theme: "受験申込（例年7月）", title: "日程は試験実施機関の発表で確定します"},
@@ -758,7 +785,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
   function render(){
     var cols = 6;
     var html = '<thead><tr><th class="c-date">日付</th><th class="c-kind">種別</th><th class="c-part">分野</th><th class="c-theme">テーマ</th><th class="c-title">タイトル</th><th class="c-rec">聴いたら押す</th></tr></thead><tbody>';
-    var month = 0, phPart = 0, LS = rd(K_L), DN = rd(K_D), KK = rd(K_K);
+    var month = 0, phPart = 0, LS = rd(K_L), DN = rd(K_D);
     sorted.forEach(function(e){
       if (cur && !e.ms && e.part!==cur) return;
       var m = +e.d.split('-')[1];
@@ -774,29 +801,38 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
       var label = e.kind==='本編' ? '本編 #'+e.n : k[0];
       var isNow = nowEp===e;
       var s = split(e);
-      var titleHtml = s.title ? nbt(s.title) : (e.sub && e.sub!=='タイトル未定' ? '<span class="tbd">'+esc(e.sub)+'</span>' : '');
-      var acts = '';
       var early = e.sample && num(e.d) > t; // 見本として配信前から出す回
+      var linkOk = !!((num(e.d) <= t || e.sample) && e.mondai);
+      function tl(inner){
+        return '<a class="tl" href="'+esc(e.mondai)+'" data-umami-event="roadmap-link" data-umami-event-type="mondai" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+inner+'</a>';
+      }
+      var titleHtml = s.title ? nbt(s.title) : (e.sub && e.sub!=='タイトル未定' ? '<span class="tbd">'+esc(e.sub)+'</span>' : '');
+      var titleLinked = linkOk && !!s.title;
+      if (titleLinked) titleHtml = tl(titleHtml);
+      var themeHtml = nbt(s.theme);
+      if (linkOk && !s.title) themeHtml = tl(themeHtml);
+      var acts = '';
       if (num(e.d) <= t || e.sample) LINKS.forEach(function(a){
         if (!e[a[0]]) return;
         acts += '<a href="'+esc(e[a[0]])+'"'+(a[2]?' target="_blank" rel="noopener"':'')
-          + ' data-umami-event="roadmap-link" data-umami-event-type="'+a[0]+'" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+a[1]+((a[0]==='mondai' && DN[e.n])?'<span class="ok">済</span>':'')
-          + ((a[0]==='mondai' && (KK[e.n]===1 || KK[e.n]===2))?(KK[e.n]===1?'<span class="kk kk-ok">過去問 ○</span>':'<span class="kk kk-ng">過去問 ×</span>'):'')+'</a>';
+          + ' data-umami-event="roadmap-link" data-umami-event-type="'+a[0]+'" data-umami-event-ep="'+esc(label)+' '+md(e)+'">'+a[1]+'</a>';
       });
       var marks = '', stc = '';
       var fut = !e.sample && num(e.d) > t; // 配信前の行：グレー・記録ボタンなし
       if (e.kind==='本編' && e.n && !fut) {
         var st = LS[e.n]===2 ? 2 : (LS[e.n] ? 1 : 0);
         stc = (st ? ' s'+st : '') + (DN[e.n] ? ' dn' : '');
-        marks = '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-pressed="'+(st?'true':'false')+'" aria-label="第'+e.n+'回の記録 '+ST_LABEL[st]+'">'+ST_LABEL[st]+'</button>'
-          ;
+        marks = (e.n===1 ? '<span class="rec-cap" aria-hidden="true">聴いたら押す</span>' : '') + '<button type="button" class="mk mk-l" data-n="'+e.n+'" data-st="'+st+'" aria-pressed="'+(st?'true':'false')+'" aria-label="第'+e.n+'回の記録 '+ST_LABEL[st]+'">'+ST_LABEL[st]+'</button>'
+          + '<span class="cks">'
+          + '<span class="ck'+(DN[e.n]?' on':'')+'">3問<span class="vh">'+(DN[e.n]?'済み':'まだ')+'</span></span>'
+          + '</span>';
       }
       html += '<tr class="ep'+(e.part?' p'+e.part:'')+(e.kind==='本編'?'':' sub')+((marks || (e.kind==='本編' && e.n && fut))?'':' nrc')+stc+(isNow?' now':'')+(!isNow && num(e.d)<t?' past':'')+(fut?' fut':'')+'">'
         + '<td class="c-date">'+md(e)+'<span class="wd">('+esc(e.wd)+')</span>'+(e.note?'<span class="hol">'+esc(e.note)+'</span>':'')+'</td>'
         + '<td class="c-kind">'+(e.kind==='本編' ? '<span class="stn">'+e.n+'</span>' : '<span class="stn sd"></span>')+'<span class="badge'+k[1]+(e.kind==='本編'?' bd-main':'')+'">'+esc(label)+'</span>'+(isNow?'<span class="now-badge">今週</span>':'')+'</td>'
         + '<td class="c-part">'+esc(partName(e.part))+'</td>'
-        + '<td class="c-theme">'+nbt(s.theme)+'</td>'
-        + '<td class="c-title">'+(titleHtml?'<span class="t1">'+titleHtml+'</span>':'')+(acts?'<div class="acts">'+acts+'</div>':'')+'</td>'
+        + '<td class="c-theme">'+themeHtml+'</td>'
+        + '<td class="c-title">'+(titleHtml?'<span class="t1'+(titleLinked?' lk':'')+'">'+titleHtml+'</span>':'')+(acts?'<div class="acts">'+acts+'</div>':'')+'</td>'
         + '<td class="c-rec">'+(marks || ((e.kind==='本編' && e.n && fut) ? '<span class="mk-off">未配信</span>' : ''))+'</td>'
         + '</tr>';
     });
@@ -853,6 +889,10 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     var fh = document.getElementById('filters').getBoundingClientRect().height;
     window.scrollTo({ top: r.getBoundingClientRect().top + window.scrollY - fh - 8, behavior: 'smooth' });
   });
+  document.getElementById('toTop').addEventListener('click', function(){
+    var r = false; try { r = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(_) {}
+    window.scrollTo({ top: 0, behavior: r ? 'auto' : 'smooth' });
+  });
   window.addEventListener('scroll', updateGo, { passive: true });
   window.addEventListener('resize', updateGo);
   // ===== ログインした人の記録をサーバーにも置く（ログインしていない人の動きは今までと同じ）=====
@@ -878,7 +918,7 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     });
   }
   function pgStart(){
-    var inLine = /\sLine\//i.test(navigator.userAgent || '');
+    var inLine = IN_LINE;
     (inLine ? pgLoad('https://static.line-scdn.net/liff/edge/2/sdk.js').catch(function(){}) : Promise.resolve())
       .then(function(){ return pgLoad('/progress-sync.js'); })
       .then(function(){
