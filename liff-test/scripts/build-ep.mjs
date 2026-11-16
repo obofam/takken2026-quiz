@@ -553,13 +553,29 @@ export function tcountHtml({ A, B }) {
   if (!parts.length) return '';
   return '<span class="tcount">' + ['この回は、', ...parts.map((p, i) => p + (i < parts.length - 1 ? '、' : '。'))].map(x => `<span class="nk">${x}</span>`).join('') + '</span>';
 }
-function shisakuVals(m, text, ex) {
+/* 下の固定バーの前・次。ページが無い回（built に入っていない／TOTAL_EPS の外）は <span aria-disabled>。配信日がまだの回は、端末の日付で画面の側が <span> に替える（data-open＝材料 json の date。第1回は閉じないので付けない）。 */
+function navVals(ep, built) {
+  /* 今日の日付（8桁）。配信日の比べ方は gateVals と同じ：試し用は ?today=YYYY-MM-DD だけ（付けなければ閉じない）、本番は端末の日付 */
+  const now = String.raw`var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):99999999;`;
+  const have = new Set(built || readRelease().prod);
+  const dateOf = n => { try { return Number(readJson(path.join(MATERIAL, `第${String(n).padStart(2, '0')}回_流し込み材料.json`)).date.replace(/-/g, '')); } catch { return 0; } };
+  const item = (n, dir) => {
+    const lab = `第${n}回`, chv = `<i class="chv ${dir === 'prev' ? 'l' : 'r'}" aria-hidden="true"></i>`;
+    const inner = dir === 'prev' ? chv + lab : lab + chv;
+    if (!have.has(n)) return `<span class="enb ${dir} off" aria-disabled="true" data-ep="${n}">${inner}</span>`;
+    const open = CFG.SAMPLE_EPS.includes(n) ? '' : ` data-open="${dateOf(n)}"`;
+    return `<a class="enb ${dir}" href="/ep/${n}" data-ep="${n}"${open} data-umami-event="ep-nav" data-umami-event-to="${dir === 'prev' ? 'prev' : 'next'}" data-umami-event-ep="${ep}">${inner}</a>`;
+  };
+  return { NAV_NOW: now, NAV_PREV: ep > 1 ? item(ep - 1, 'prev') : '', NAV_NEXT: ep < CFG.TOTAL_EPS ? item(ep + 1, 'next') : '' };
+}
+function shisakuVals(m, text, ex, built) {
   const ep = m.ep;
   const openAll = CFG.OPEN_ALL_EPS.includes(ep);
   const a = (href, label, extra) => `<a href="${href}" target="_blank" rel="noopener"${extra || ''} style="${LINK_STYLE}">${label}</a>`;
   const mailA = a('https://mimiobo.substack.com/subscribe', 'メール', ` data-umami-event="ep-mail" data-umami-event-ep="${ep}"`);
   return {
     OPEN_ALL: openAll ? 'true' : 'false',
+    ...navVals(ep, built),
     OPEN1_NOTE: openAll ? `<div class="next-box only-open1" id="open1-note"><p><span class="nk">第2回からは、</span><span class="nk">${a('https://lin.ee/r6uYtnE', 'LINE')}か${mailA}の</span><span class="nk">登録（無料）で</span><span class="nk">開きます。</span></p></div>` : '',
     OPEN1_LOGIN: openAll ? `<p class="login-line only-open1">${loginAnchor('/account.html', ep, 'open1')}</p>` : '',
     TCOUNT: tcountHtml(tcountOf(m, text, ex)),
@@ -567,7 +583,7 @@ function shisakuVals(m, text, ex) {
 }
 
 /* 回のページ一式（index.html・line-full.html・line-full.js）。mode は 'prod'（本番）か 'test'（試し用） */
-export function buildPages(m, text, ex, mode) {
+export function buildPages(m, text, ex, mode, built) {
   const { ep, json, data } = m;
   const test = mode === 'test';
   const sec = data.sections;
@@ -584,7 +600,7 @@ export function buildPages(m, text, ex, mode) {
   const fig1Template = '<template id="nk-fig1"><style data-nk="css">' + ex.css + '</style>' + ex.fig1 + '</template>';
   const index = fill(gateTest(template('ep-index.html'), test), {
     EP: String(ep), SUB: escText(json.sub),
-    ...(test ? shisakuVals(m, text, ex) : {}),
+    ...(test ? shisakuVals(m, text, ex, built) : {}),
     UMAMI: test ? '' : `<!-- Umami analytics (page: ep${ep}${sample ? ' 見本' : ''}) -->\n` + CFG.UMAMI_SCRIPT,
     DATE: date, DATE_YMD: fmtYmd(json.date),
     SMP: sample ? '<span class="smp">2027年版の見本</span>' : '',
@@ -957,7 +973,7 @@ export function buildEp(ep, release, shared, opts = {}) {
   let checked = 0;
   const byMode = {};
   for (const mode of modes) {
-    const pages = buildPages(m, text, ex, mode);
+    const pages = buildPages(m, text, ex, mode, opts.built);
     byMode[mode] = pages;
     checked += checkPublic(m, text, ex, pages);
     const base = mode === 'prod' ? '' : 'liff-test/';
@@ -1020,7 +1036,7 @@ export function main(argv) {
   const reports = [];
   const writes = new Map();
   for (const ep of eps) {
-    const r = buildEp(ep, release, shared, { shisaku });
+    const r = buildEp(ep, release, shared, { shisaku, built: shisaku ? eps : release.prod });
     reports.push(r.report);
     for (const f of r.files) writes.set(f.rel, f);
   }

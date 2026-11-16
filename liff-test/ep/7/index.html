@@ -465,6 +465,24 @@ a.pill.ghost{display:inline-flex;align-items:center;justify-content:center;text-
 .tcard .tcount{display:none}
 .is-friend .tcard .tcount{display:block;margin-top:6px;font-size:14px;font-weight:700;line-height:1.65;color:var(--ink)}
 .is-buyer .tcard .tcount{display:none}
+/* 下の固定バー（前の回・上に戻る・次の回）。上の固定（.jump）より控えめ・水色もライムも使わない */
+.totop-w{display:none}
+body{padding-bottom:calc(56px + env(safe-area-inset-bottom))}
+.epnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.epnav-in{max-width:430px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.epnav-s{flex:1 1 0;display:flex}
+.epnav-s.r{justify-content:flex-end}
+.epnav .enb{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 12px;border:0;border-radius:999px;background:none;color:#46535E;font:700 13px/1 var(--font);text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.epnav .enb.top{border:1px solid #C9CED3;padding:0 18px;flex:0 0 auto}
+.epnav .enb:active{background:#F1F2F4}
+@media (hover:hover){.epnav .enb:hover{background:#F1F2F4}}
+.epnav .enb:focus-visible{outline:2px solid #46535E;outline-offset:2px}
+.epnav .enb.off{color:#B4BBC1;font-weight:500;cursor:default;pointer-events:none;background:none}
+.epnav .chv{display:inline-block;width:7px;height:7px;border-left:2px solid currentColor;border-bottom:2px solid currentColor}
+.epnav .chv.l{transform:rotate(45deg);margin-left:3px}
+.epnav .chv.r{transform:rotate(-135deg);margin-right:3px}
+@media (min-width:820px){.epnav-in{max-width:680px;padding:8px 32px}}
+@media print{.epnav{display:none !important}body{padding-bottom:0}}
 </style>
 </head>
 <body>
@@ -906,6 +924,12 @@ figure.fig{min-width:0}
 
   <div class="foot">条文は2026年4月1日施行版で照合</div>
 </div>
+<nav class="epnav" aria-label="回の移動"><div class="epnav-in">
+  <div class="epnav-s"><a class="enb prev" href="/ep/6" data-ep="6" data-open="20270208" data-umami-event="ep-nav" data-umami-event-to="prev" data-umami-event-ep="7"><i class="chv l" aria-hidden="true"></i>第6回</a></div>
+  <button type="button" class="enb top" id="navTop" data-umami-event="ep-nav" data-umami-event-to="top" data-umami-event-ep="7">上に戻る</button>
+  <div class="epnav-s r"><a class="enb next" href="/ep/8" data-ep="8" data-open="20270222" data-umami-event="ep-nav" data-umami-event-to="next" data-umami-event-ep="7">第8回<i class="chv r" aria-hidden="true"></i></a></div>
+</div></nav>
+<script>(function(){var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):99999999;var as=document.querySelectorAll('.epnav a[data-open]');for(var i=0;i<as.length;i++){var a=as[i];if(t<+a.getAttribute('data-open')){var s=document.createElement('span');s.className=a.className+' off';s.setAttribute('aria-disabled','true');s.setAttribute('data-ep',a.getAttribute('data-ep'));s.innerHTML=a.innerHTML;a.parentNode.replaceChild(s,a);}}var b=document.getElementById('navTop');if(b){b.addEventListener('click',function(){var o=document.getElementById('toTop');if(o){o.click();}else{window.scrollTo(0,0);}});}})();</script>
 <script>
 (function () {
   'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }

@@ -26,6 +26,9 @@ export const SAMPLE_EPS = [1];
 // ここを増やす・外すだけで、その回のページの「全部開ける」が切り替わる（回の番号の決め打ちはここ1か所）。
 export const OPEN_ALL_EPS = [1];
 
+// 本編の回の数（回のページの下の固定バーで、最後の回の次を空きにする）
+export const TOTAL_EPS = 41;
+
 // 第1回は、手で作った版が本番に出ていて確認ずみ。見た目・動きを変えないため、第1回だけ昔のスマホ幅の手当て（CSS・図7の位置・図5の横スクロール箱）を使う。
 // 第2回以降は、材料の _tools/sp_overrides.css と、図の幅の計算（plan_svgs と同じ）を使う。
 export const LEGACY_EPS = [1];
