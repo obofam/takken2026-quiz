@@ -31,7 +31,7 @@
       out.label='スタート価格';out.amount=yen(offer.price);
       out.note='通常価格 '+yen(offer.listPrice)+'（税込）';
       if(offer.basis==='open'&&offer.until)out.lines.push(dateLong(offer.until)+'までは、どなたでもスタート価格でご購入いただけます。以降は、登録から7日間が対象です。');
-      else if(offer.basis==='touroku'&&offer.until)out.lines.push('スタート価格は、登録から7日間（'+dateShort(offer.until)+'まで）です。');
+      else if(offer.basis==='touroku'&&offer.until)out.lines.push('登録から7日間はスタート価格でご購入いただけます。（'+dateShort(offer.until)+'まで）');
     }else{
       out.amount=yen(offer.price);
       if(!loggedIn&&typeof offer.startPrice==='number')out.lines.push('登録から7日間は、スタート価格 '+yen(offer.startPrice)+'でご購入いただけます。対象かどうかは、ログイン後に表示されます。');

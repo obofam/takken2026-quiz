@@ -40,7 +40,7 @@ test('未ログイン：スタート価格（open）',()=>{
 test('ログイン中：スタート価格（touroku）と通常価格',()=>{
   const t=dec({data:data({loggedIn:true,offers:offer({basis:'touroku',until:'2027-01-20'})})});
   assert.equal(t.state,'member');assert.equal(t.button,'buy');
-  assert.ok(t.price.lines.includes('スタート価格は、登録から7日間（1月20日まで）です。'));
+  assert.ok(t.price.lines.includes('登録から7日間はスタート価格でご購入いただけます。（1月20日まで）'));
   const n=dec({data:data({loggedIn:true,offers:offer({kind:'tsujo',price:2980,basis:null,until:null})})});
   assert.equal(n.price.amount,'2,980円');assert.equal(n.price.label,'');assert.equal(n.price.note,'');
   assert.ok(!n.price.lines.some(l=>l.includes('スタート価格')));
