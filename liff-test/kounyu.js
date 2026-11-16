@@ -25,18 +25,18 @@
   // 値段のカードの中身（行の並び）
   function priceLines(offer,validUntil,loggedIn){
     if(!offer||typeof offer.price!=='number')return null;
-    const out={big:'',small:'',lines:[]};
+    const out={label:'',amount:'',note:'',lines:[]};
     if(offer.kind==='start'){
-      out.big='スタート価格 '+yen(offer.price);
-      out.small='税込。通常 '+yen(offer.listPrice);
-      if(offer.basis==='open'&&offer.until)out.lines.push(dateLong(offer.until)+'まで、どなたもスタート価格です。そのあとは、登録から7日間です。');
-      else if(offer.basis==='touroku'&&offer.until)out.lines.push('登録から7日間です。'+dateShort(offer.until)+'まで。');
+      out.label='スタート価格';out.amount=yen(offer.price);
+      out.note='通常価格 '+yen(offer.listPrice)+'（税込）';
+      if(offer.basis==='open'&&offer.until)out.lines.push(dateLong(offer.until)+'までは、どなたでもスタート価格でご購入いただけます。以降は、登録から7日間が対象です。');
+      else if(offer.basis==='touroku'&&offer.until)out.lines.push('スタート価格は、登録から7日間（'+dateShort(offer.until)+'まで）です。');
     }else{
-      out.big=yen(offer.price);out.small='税込';
-      if(!loggedIn&&typeof offer.startPrice==='number')out.lines.push('登録から7日間は、スタート価格 '+yen(offer.startPrice)+'です。ログインすると確かめられます。');
+      out.amount=yen(offer.price);
+      if(!loggedIn&&typeof offer.startPrice==='number')out.lines.push('登録から7日間は、スタート価格 '+yen(offer.startPrice)+'でご購入いただけます。対象かどうかは、ログイン後に表示されます。');
     }
-    if(validUntil)out.lines.push('使えるのは、'+dateLong(validUntil)+'（本試験の日）までです。');
-    out.lines.push('お支払いはクレジットカードです。Stripe の支払い画面に移ります。');
+    if(validUntil)out.lines.push('利用期間は、'+dateLong(validUntil)+'（本試験日）までです。');
+    out.lines.push('お支払いはクレジットカードです。決済はStripeの画面で行います。');
     return out;
   }
 
@@ -77,16 +77,16 @@
     const v=decide({data:S.data,failed:S.failed,loaded:S.loaded,checkout:S.checkout,verify:S.verify,host:location.hostname,boughtNow:S.boughtNow});
     // 買ったあと
     const th=$('thanks');clear(th);th.hidden=!v.thanks;
-    if(v.thanks==='checking'){th.className='card';th.appendChild(txt('p','plain','購入を確かめています。'));}
+    if(v.thanks==='checking'){th.className='card';th.appendChild(txt('p','plain small','購入を確認しています。'));}
     else if(v.thanks==='ok'){
       th.className='card done-card';
-      th.appendChild(txt('h2','','購入ありがとうございます'));
-      th.appendChild(txt('p','','やさしいテキストが開きました。回のページを開くと、テキストに切り替わっています。'));
-      const row=txt('div','btns','');row.appendChild(link('btn primary','/ep/1/','第1回を開く'));row.appendChild(link('btn ghost',v.roadmap,'ロードマップへ'));th.appendChild(row);
+      th.appendChild(txt('h2','','ご購入ありがとうございます'));
+      th.appendChild(txt('p','','やさしいテキストをご利用いただけます。各回のページを開くと、テキストが表示されます。'));
+      const row=txt('div','btns','');row.appendChild(link('btn primary','/ep/1/','第1回を開く'));row.appendChild(link('btn ghost',v.roadmap,'学習ロードマップ'));th.appendChild(row);
     }else if(v.thanks==='slow'){
       th.className='card';
-      th.appendChild(txt('p','','反映に少し時間がかかっています。1分ほどしてから、このページを開き直してください。'));
-      const p=txt('p','small','');p.appendChild(document.createTextNode('開き直しても変わらないときは、'));p.appendChild(link('','https://www.mimiobo.com/tokushoho','お問い合わせ'));p.appendChild(document.createTextNode('ください。'));th.appendChild(p);
+      th.appendChild(txt('p','','反映に時間がかかっています。1分ほどおいて、このページを再読み込みしてください。'));
+      const p=txt('p','small','');p.appendChild(document.createTextNode('再読み込みしても変わらない場合は、'));p.appendChild(link('','https://www.mimiobo.com/tokushoho','お問い合わせ'));p.appendChild(document.createTextNode('ください。'));th.appendChild(p);
     }
     // 値段・ボタン・購入ずみ
     $('cancel').hidden=!v.cancel;
@@ -96,19 +96,21 @@
     const ownBox=$('owned');ownBox.hidden=!(v.owned&&v.thanks!=='ok');
     const buy=$('buy');clear(buy);
     pc.hidden=true;
-    if(v.state==='loading'){pc.hidden=false;pc.appendChild(txt('p','plain','読み込み中です。'));}
-    else if(v.priceError){pc.hidden=false;pc.appendChild(txt('p','plain err','値段を読み込めませんでした。少しして開き直してください。'));}
+    if(v.state==='loading'){pc.hidden=false;pc.appendChild(txt('p','plain small','読み込み中です。'));}
+    else if(v.priceError){pc.hidden=false;pc.appendChild(txt('p','plain small err','価格を読み込めませんでした。時間をおいて、再読み込みしてください。'));}
     else if(v.price){
-      pc.hidden=false;pc.appendChild(txt('p','price-big',v.price.big));
-      if(v.price.small)pc.appendChild(txt('p','price-small',v.price.small));
-      v.price.lines.forEach(t=>pc.appendChild(txt('p','small',t)));
+      pc.hidden=false;
+      if(v.price.label)pc.appendChild(txt('span','price-label',v.price.label));
+      const am=txt('p','price-amount',v.price.amount.replace(/円$/,''));am.appendChild(txt('span','','円'));if(!v.price.note)am.appendChild(txt('span','','（税込）'));pc.appendChild(am);
+      if(v.price.note)pc.appendChild(txt('p','price-note',v.price.note));
+      const ul=txt('ul','notes','');v.price.lines.forEach(t=>ul.appendChild(txt('li','',t)));pc.appendChild(ul);
       if(v.button==='login'){
-        pc.appendChild(link('btn primary block',v.login,'ログインして購入へ'));
-        pc.appendChild(txt('p','small center','LINEかメールでログインします。登録無料です。'));
+        pc.appendChild(link('btn primary block',v.login,'ログインして購入する'));
+        pc.appendChild(txt('p','small center','LINEまたはメールでログインできます。登録無料です。'));
       }else if(v.button==='buy'){
-        const b=txt('button','btn primary block','購入へ進む');b.type='button';b.id='buyBtn';b.disabled=S.busy;
+        const b=txt('button','btn primary block','購入手続きへ');b.type='button';b.id='buyBtn';b.disabled=S.busy;
         b.addEventListener('click',()=>purchase());pc.appendChild(b);
-        if(S.buyError)pc.appendChild(txt('p','small err center','支払い画面を開けませんでした。少ししてもう一度お試しください。'));
+        if(S.buyError)pc.appendChild(txt('p','small err center','決済画面を開けませんでした。時間をおいて、もう一度お試しください。'));
       }
     }
   }

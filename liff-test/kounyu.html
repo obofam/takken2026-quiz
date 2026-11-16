@@ -7,80 +7,103 @@
 <title>やさしいテキスト｜耳で覚える宅建 2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--sky:#17C5E8;--ink:#0A6477;--soft:color-mix(in srgb,#17C5E8 12%,white);--text:#141B21;--sub:#6B6B76;--line:#ececec;--lime:#D6F034;--lime-soft:#F4FBD2;--lime-dark:#4F6300;--font:"Noto Sans JP",system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif}
 *{box-sizing:border-box}
-body{margin:0;background:#fff;color:var(--text);font-family:var(--font);font-size:17px;line-height:1.9;word-break:auto-phrase;overflow-wrap:anywhere;-webkit-font-smoothing:antialiased}
+body{margin:0;background:#fff;color:var(--text);font-family:var(--font);font-size:15px;line-height:1.85;word-break:auto-phrase;overflow-wrap:anywhere;-webkit-font-smoothing:antialiased}
+a{color:var(--ink)}
 .head{border-bottom:1px solid var(--line)}
-.head-in{max-width:720px;margin:0 auto;padding:12px 20px;font-weight:900;color:var(--ink)}
-.head-in a{color:inherit;text-decoration:none}
-main{max-width:720px;margin:0 auto;padding:24px 20px 40px}
-h1{font-size:28px;font-weight:900;line-height:1.4;margin:8px 0 8px}
-h2{font-size:19px;font-weight:900;line-height:1.5;margin:0 0 8px;color:var(--ink)}
-.lead{margin:0 0 24px}
-.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 16px;box-shadow:0 1px 3px rgba(20,27,33,.04)}
-.card ul{margin:0 0 8px;padding-left:1.3em}
-.card li{margin:0 0 4px}
-.done-card{background:var(--lime-soft);border-color:var(--lime)}
-.done-card h2{color:var(--lime-dark)}
+.head-in{max-width:600px;margin:0 auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px}
+.head-in a{text-decoration:none}
+.brand{font-weight:900;color:var(--ink);letter-spacing:.02em}
+.head-link{color:var(--sub);font-weight:500}
+.hero{background:var(--soft)}
+.hero-in{max-width:600px;margin:0 auto;padding:36px 20px 34px}
+.over{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--ink);line-height:1.4;margin:0 0 10px}
+h1{font-size:24px;font-weight:900;line-height:1.4;letter-spacing:.02em;margin:0 0 8px}
+.lead{margin:0;font-size:14px;color:#3d4750}
+main{max-width:600px;margin:0 auto;padding:28px 20px 44px}
+h2{font-size:16px;font-weight:700;line-height:1.5;margin:0 0 12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 22px 20px;margin:0 0 16px;box-shadow:0 2px 8px rgba(20,27,33,.04)}
+.items{list-style:none;margin:0 0 14px;padding:0}
+.items li{position:relative;padding:9px 0 9px 22px;border-bottom:1px solid var(--line)}
+.items li:last-child{border-bottom:0}
+.items li::before{content:"";position:absolute;left:3px;top:19px;width:7px;height:7px;border-radius:50%;background:var(--sky)}
+.items small{display:block;font-size:12.5px;line-height:1.6;color:var(--sub)}
 .plain,.card p{margin:0 0 8px}
-.small{font-size:15px;line-height:1.8;color:var(--sub)}
+.small{font-size:13px;line-height:1.75;color:var(--sub)}
 .center{text-align:center}
 .err{color:#8E3B3B}
-.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-.btn{display:inline-block;font:inherit;font-size:17px;font-weight:700;line-height:1.3;text-align:center;text-decoration:none;border-radius:999px;padding:12px 24px;min-height:48px;cursor:pointer;border:1.5px solid var(--sky)}
+.tlink{font-size:14px;font-weight:700;color:var(--ink);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.btn{display:inline-block;font:inherit;font-size:15px;font-weight:700;line-height:1.3;text-align:center;text-decoration:none;border-radius:999px;padding:12px 26px;min-height:46px;cursor:pointer;border:1.5px solid var(--sky)}
 .btn.primary{background:var(--sky);color:#fff}
 .btn.ghost{background:#fff;color:var(--ink)}
-.btn.block{display:block;width:100%;margin:12px 0 8px}
+.btn.block{display:block;width:100%;margin:18px 0 10px}
 .btn[disabled]{opacity:.5;cursor:default}
-.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-.price-big{font-size:26px;font-weight:900;line-height:1.4;margin:0 0 2px}
-.price-small{font-size:15px;color:var(--sub);margin:0 0 10px}
-.chip{display:inline-block;font-size:13px;line-height:1.4;color:var(--sub);background:#fff;border:1px solid #cfd2d6;border-radius:999px;padding:2px 12px;margin:0 0 8px}
-.owned-badge{display:inline-block;background:var(--lime-soft);color:var(--lime-dark);font-weight:700;border-radius:999px;padding:4px 16px;margin:0 0 12px}
-.cancel{margin:0 0 8px;color:var(--sub)}
-footer{max-width:720px;margin:0 auto;padding:8px 20px 40px;border-top:1px solid var(--line)}
-footer ul{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:4px 18px;font-size:14px}
-footer a{color:var(--sub);display:inline-block;padding:8px 0}
+.btn:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.price-card{border-color:color-mix(in srgb,var(--sky) 45%,white)}
+.price-label{display:inline-block;font-size:12px;font-weight:700;line-height:1.4;color:var(--ink);border:1px solid var(--sky);border-radius:999px;padding:2px 12px;margin:0 0 6px}
+.price-amount{font-size:30px;font-weight:900;line-height:1.3;letter-spacing:.01em;margin:0!important}
+.price-amount span{font-size:14px;font-weight:700;margin-left:3px}
+.price-note{font-size:13px;color:var(--sub);margin:0 0 14px!important}
+.notes{list-style:none;margin:0;padding:12px 0 0;border-top:1px solid var(--line)}
+.notes li{font-size:13px;line-height:1.75;color:var(--sub);margin:0 0 4px}
+.chip{display:inline-block;font-size:12px;line-height:1.4;color:var(--sub);background:#fff;border:1px solid #cfd2d6;border-radius:999px;padding:2px 12px;margin:0 0 8px}
+.done-card{background:var(--lime-soft);border-color:var(--lime)}
+.done-card h2{color:var(--lime-dark)}
+.owned-badge{display:inline-block;font-size:13px;background:var(--lime-soft);color:var(--lime-dark);font-weight:700;border-radius:999px;padding:3px 14px;margin:0 0 4px}
+.cancel{margin:0 0 10px;font-size:13px;color:var(--sub)}
+.more{margin:24px 0 0;text-align:center}
+footer{max-width:600px;margin:0 auto;padding:4px 20px 40px;border-top:1px solid var(--line)}
+footer ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:2px 18px;font-size:12.5px}
+footer a{color:var(--sub);text-decoration:none;display:inline-block;padding:8px 0}
 [hidden]{display:none!important}
 </style>
 </head>
 <body>
-<header class="head"><div class="head-in"><a href="/">耳で覚える宅建 2027</a></div></header>
-<main>
+<header class="head"><div class="head-in"><a class="brand" href="/">耳で覚える宅建 2027</a><a class="head-link" href="https://takken.mimiobo.com/kyozai.html">教材一覧</a></div></header>
+<div class="hero"><div class="hero-in">
+<span class="over">TEXT 2027</span>
 <h1>やさしいテキスト</h1>
-<p class="lead">音声の回ごとに、図解でたしかめるテキストです。</p>
-
+<p class="lead">各回の音声に対応した、図解中心のテキストです。</p>
+</div></div>
+<main>
 <div id="thanks" class="card" hidden role="status"></div>
 
 <section class="card">
-  <h2>入っているもの</h2>
-  <ul>
-    <li>図解ぜんぶ（登録で見られるのは一部まで）</li>
-    <li>今回の数字と赤シート</li>
-    <li>印刷用のA4（PDF）</li>
-    <li>全41回ぶん。毎週、配信に合わせて増えます。</li>
+  <span class="over">CONTENTS</span>
+  <h2>内容</h2>
+  <ul class="items">
+    <li>各回の図解すべて<small>無料登録で見られるのは一部です。</small></li>
+    <li>「今回の数字」のまとめと赤シート</li>
+    <li>印刷用PDF（A4）</li>
+    <li>全41回分<small>配信に合わせて、毎週追加されます。</small></li>
   </ul>
-  <p class="small">いま読めるのは第1回です。第2回は2027年1月12日から。</p>
-  <div class="btns"><a class="btn ghost" id="sample" href="/ep/1/text">第1回の見本を見る</a></div>
+  <p class="small">現在は第1回を公開しています。第2回は2027年1月12日に追加します。</p>
+  <a class="tlink" id="sample" href="/ep/1/text">第1回の見本を見る</a>
 </section>
 
-<p id="cancel" class="cancel" hidden>購入は完了していません。</p>
-<span id="trial" class="chip" hidden>試し用・値段は仮です</span>
-<section class="card" id="priceCard">
-  <h2>値段</h2>
-  <div id="price"><p class="plain">読み込み中です。</p></div>
+<p id="cancel" class="cancel" hidden>購入手続きは完了していません。</p>
+<span id="trial" class="chip" hidden>テスト環境・価格は仮のものです</span>
+<section class="card price-card" id="priceCard">
+  <span class="over">PRICE</span>
+  <h2>価格</h2>
+  <div id="price"><p class="plain small">読み込み中です。</p></div>
 </section>
 
 <section class="card" id="owned" hidden>
-  <span class="owned-badge">購入ずみです</span>
+  <span class="owned-badge">購入済みです</span>
   <div class="btns"><a class="btn primary" href="/ep/1/">第1回を開く</a></div>
 </section>
 <div id="buy" hidden></div>
+
+<p class="more"><a class="tlink" href="https://takken.mimiobo.com/kyozai.html">教材一覧を見る</a></p>
 </main>
 <footer>
 <ul>
+  <li><a href="https://takken.mimiobo.com/kyozai.html">教材一覧</a></li>
   <li><a href="https://www.mimiobo.com/tokushoho">特定商取引法に基づく表記</a></li>
   <li><a href="https://www.mimiobo.com/privacy">プライバシーポリシー</a></li>
   <li><a href="https://www.mimiobo.com/tokushoho">お問い合わせ</a></li>

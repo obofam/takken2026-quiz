@@ -30,25 +30,25 @@ test('読み込み中と API 失敗',()=>{
 test('未ログイン：スタート価格（open）',()=>{
   const v=dec({data:data()});
   assert.equal(v.state,'guest');assert.equal(v.button,'login');
-  assert.equal(v.price.big,'スタート価格 2,480円');
-  assert.equal(v.price.small,'税込。通常 2,980円');
-  assert.ok(v.price.lines.includes('2027年1月11日まで、どなたもスタート価格です。そのあとは、登録から7日間です。'));
-  assert.ok(v.price.lines.includes('使えるのは、2027年10月17日（本試験の日）までです。'));
-  assert.ok(v.price.lines.includes('お支払いはクレジットカードです。Stripe の支払い画面に移ります。'));
+  assert.equal(v.price.label,'スタート価格');assert.equal(v.price.amount,'2,480円');
+  assert.equal(v.price.note,'通常価格 2,980円（税込）');
+  assert.ok(v.price.lines.includes('2027年1月11日までは、どなたでもスタート価格でご購入いただけます。以降は、登録から7日間が対象です。'));
+  assert.ok(v.price.lines.includes('利用期間は、2027年10月17日（本試験日）までです。'));
+  assert.ok(v.price.lines.includes('お支払いはクレジットカードです。決済はStripeの画面で行います。'));
 });
 
 test('ログイン中：スタート価格（touroku）と通常価格',()=>{
   const t=dec({data:data({loggedIn:true,offers:offer({basis:'touroku',until:'2027-01-20'})})});
   assert.equal(t.state,'member');assert.equal(t.button,'buy');
-  assert.ok(t.price.lines.includes('登録から7日間です。1月20日まで。'));
+  assert.ok(t.price.lines.includes('スタート価格は、登録から7日間（1月20日まで）です。'));
   const n=dec({data:data({loggedIn:true,offers:offer({kind:'tsujo',price:2980,basis:null,until:null})})});
-  assert.equal(n.price.big,'2,980円');assert.equal(n.price.small,'税込');
+  assert.equal(n.price.amount,'2,980円');assert.equal(n.price.label,'');assert.equal(n.price.note,'');
   assert.ok(!n.price.lines.some(l=>l.includes('スタート価格')));
 });
 
 test('通常価格：未ログインだけスタート価格の案内',()=>{
   const g=dec({data:data({offers:offer({kind:'tsujo',price:2980,basis:null,until:null})})});
-  assert.ok(g.price.lines.includes('登録から7日間は、スタート価格 2,480円です。ログインすると確かめられます。'));
+  assert.ok(g.price.lines.includes('登録から7日間は、スタート価格 2,480円でご購入いただけます。対象かどうかは、ログイン後に表示されます。'));
   assert.equal(g.button,'login');
 });
 
