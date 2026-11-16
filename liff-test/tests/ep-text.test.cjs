@@ -134,7 +134,7 @@ test('the 3-step page: no picture-illustration cards or img/*.webp for figures; 
   assert.match(html,/ep\/1\/tsuzuki\.html/);assert.match(html,/id="slot-fig1"/);
   assert.match(html,/class="tcard" id="tsample"[\s\S]{0,300}有料版の見本[\s\S]{0,700}見本を見る/);
   assert.doesNotMatch(html,/ul class="past txt/);assert.match(html,/学習ロードマップ（兼 進捗トラッカー）[\s\S]{0,80}全41回の予定を見る・聴いた回を記録する/);
-  assert.doesNotMatch(html,/s-hint|ヒント。/);assert.match(html,/かける[\s\S]{0,200}はずす/);assert.match(html,/かくれている/);
+  assert.doesNotMatch(html,/s-hint|ヒント。/);assert.match(html,/role="switch" data-r="sw" aria-checked="true"/);assert.match(html,/かくれている/);
   assert.doesNotMatch(html,/△|doubt|takken2027-sheet|△だけ/);assert.match(html,/もう一度押すと、またかくれます。/);
   // ヒントの規則（build-ep1-text.mjs の表が決めた data-hint を、組み上がったテキストで確かめる）
   const built=require('../api/_ep-text/ep1');
@@ -251,7 +251,7 @@ test('sample page (ep/1/text): the same text as the buyer screen, 30 red-sheet s
   const dan=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8');
   assert.ok(html.includes(dan.match(/  function esc\(s\)[\s\S]*?(?=\n  function showBuyer\(html\))/)[0]),'setupSheet');
   assert.ok(html.includes(dan.match(/\.sbar2\{[\s\S]*?\.sb2:focus-visible\{[^}]*\}/)[0]),'sheet css');
-  assert.match(html,/赤シート<\/span>[\s\S]{0,200}かける[\s\S]{0,300}はずす[\s\S]{0,200}data-r="hid"/);
+  assert.match(html,/赤シート<\/span><button type="button" class="sb2" role="switch" data-r="sw"[\s\S]{0,200}data-r="hid"/);
   assert.match(html,/赤い所を押すと答えが出ます。[\s\S]{0,60}もう一度押すと、またかくれます。/);
   // 並び：前半、後半、今日のポイント、今回の数字、過去問1選、PDF（3問は前半・後半の直後に script が移す）
   const order=['id="text1"','id="text2"','id="point"','id="numbers"','id="honban"','class="pdfbtn"'].map(k=>html.indexOf(k));

@@ -83,8 +83,8 @@ function setup(opts){
   const rs=[el(),el()];rs.forEach((e,i)=>{e.html='語'+i;e.attrs['data-hint']='○'+i;});
   const tx=el();
   const rootN=[{querySelectorAll:()=>rs,querySelector:()=>tx,appendChild(){}},{querySelectorAll:()=>[],querySelector:()=>null,appendChild(){}}];
-  const on=el(),off=el(),hid=el();
-  const bar={querySelector:s=>({'[data-r="on"]':on,'[data-r="off"]':off,'[data-r="hid"]':hid})[s]};
+  const sw=el(),hid=el();
+  const bar={querySelector:s=>({'[data-r="sw"]':sw,'[data-r="hid"]':hid})[s]};
   const hint=el(),end={getBoundingClientRect:()=>({top:100})};
   let obs=null;
   class IO{constructor(cb){this.cb=cb;obs=this;this.disc=false;}observe(t){this.t=t;}disconnect(){this.disc=true;}}
@@ -92,8 +92,8 @@ function setup(opts){
   vm.createContext(ctx);
   vm.runInContext(src+';this.setupSheet=setupSheet;',ctx);
   const n=ctx.setupSheet(rootN,bar,opts.noEnd?{}:{hint,end});
-  const state=()=>({on:on.attrs['aria-pressed'],off:off.attrs['aria-pressed'],hint:hint.html,sheet:tx.cls.has('sheet'),hid:hid.textContent,hidHtml:hid.html,note:hid.cls.has('is-note'),hintShown:hint.style.display!=='none',rs0:rs[0].cls.has('s-hide')});
-  return{calls,n,state,on,off,rs,fire:()=>{obs.cb([{isIntersecting:true}]);},fireOut:()=>{obs.cb([{isIntersecting:false}]);},obs:()=>obs};
+  const state=()=>({on:sw.attrs['aria-checked'],off:sw.attrs['aria-checked']==='true'?'false':'true',hint:hint.html,sheet:tx.cls.has('sheet'),hid:hid.textContent,hidHtml:hid.html,note:hid.cls.has('is-note'),hintShown:hint.style.display!=='none',rs0:rs[0].cls.has('s-hide')});
+  return{calls,n,state,sw,rs,fire:()=>{obs.cb([{isIntersecting:true}]);},fireOut:()=>{obs.cb([{isIntersecting:false}]);},obs:()=>obs};
 }
 const WAIT='最後まで読むと、自動でかかります。',NORMAL1='赤い所を押すと答えが出ます。',NORMAL2='もう一度押すと、またかくれます。';
 test('red sheet: starts off (all words visible) with the waiting hint; end not yet in view does nothing',()=>{
@@ -113,19 +113,19 @@ test('red sheet: end comes into view -> sheet goes on once; hint switches; a lat
   let st=s.state();
   assert.equal(st.on,'true');assert.equal(st.sheet,true);assert.equal(st.rs0,true);assert.equal(st.hid,'かくれている 2');
   assert.ok(st.hint.includes(NORMAL1)&&st.hint.includes(NORMAL2)&&st.hintShown&&!st.note&&!st.hid.includes('最後まで'));
-  s.off.l.click();
+  s.sw.l.click();
   st=s.state();assert.equal(st.on,'false');assert.equal(st.rs0,false);
   s.fire();
   assert.equal(s.state().on,'false','自動は1回だけ');
   assert.equal(s.obs().disc,true);
 });
-test('red sheet: a person pressing かける/はずす before the end cancels the auto for good',()=>{
+test('red sheet: a person flipping the switch before the end cancels the auto for good',()=>{
   for(const which of ['on','off']){
     const s=setup({});
-    s[which].l.click();
+    s.sw.l.click();if(which==='off')s.sw.l.click();
     const st=s.state();
     assert.equal(st.on,which==='on'?'true':'false');
-    assert.ok(st.hint.includes(NORMAL1)&&st.hintShown&&!st.note&&/^かくれている \d+$/.test(st.hid));
+    assert.ok(st.hint.includes(NORMAL1)&&st.hintShown&&!st.note);assert.ok(which==='on'?/^かくれている \d+$/.test(st.hid):st.hid==='','オフのときは数を出さない');
     assert.equal(s.obs().disc,true);
     if(which==='off'){s.fire();assert.equal(s.state().on,'false','自動はもう動かさない');}
   }

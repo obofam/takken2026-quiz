@@ -386,21 +386,23 @@ body.member .line-card{display:block}
 .is-buyer .tcard,.is-buyer .past.txt,.is-buyer #zukai,.is-buyer #maru{display:none}
 .thost{display:block}
 .textwrap{display:flex;flex-direction:column;gap:12px}
-.is-buyer #text1,.is-buyer #text2,.is-buyer .qset{scroll-margin-top:calc(var(--navh) + 52px)}
-.sbar2{position:sticky;top:var(--navh);z-index:20;box-sizing:border-box;height:44px;display:flex;align-items:center;flex-wrap:nowrap;gap:8px;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding:2px 16px}
-.sb2{appearance:none;-webkit-appearance:none;font:inherit;font-size:14px;font-weight:700;line-height:1.2;color:var(--sheet);background:#fff;border:1.5px solid var(--sheet);border-radius:999px;padding:0 14px;min-height:40px;cursor:pointer;white-space:nowrap;flex:0 0 auto;-webkit-tap-highlight-color:transparent}
-.sb2[aria-pressed="true"]{background:var(--sheet);color:#fff}
-.sb2-lab{font-size:14px;font-weight:900;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
-.seg{display:flex;flex:0 0 auto}
-.seg .sb2:first-child{border-radius:999px 0 0 999px;border-right-width:0}
-.seg .sb2:last-child{border-radius:0 999px 999px 0}
-.sb2-cnt{margin-left:auto;font-size:14px;font-weight:700;line-height:1.3;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
-.sb2-cnt.is-note{font-size:12px;font-weight:700;line-height:1.3;text-align:right;white-space:normal;flex:0 1 auto;min-width:0}
+.is-buyer #text1,.is-buyer #text2,.is-buyer .qset{scroll-margin-top:calc(var(--navh) + 44px)}
+.sbar2{position:sticky;top:var(--navh);z-index:20;box-sizing:border-box;height:36px;display:flex;align-items:center;flex-wrap:nowrap;gap:10px;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -16px;padding:0 16px}
+/* 赤シートのスイッチ（左右にずらす形）。右＝オン（赤）、左＝オフ。押せる範囲は見た目より少し広い */
+.sb2{appearance:none;-webkit-appearance:none;position:relative;box-sizing:border-box;width:40px;height:22px;padding:0;margin:0;border:0;border-radius:999px;background:#CDD2D7;cursor:pointer;flex:0 0 auto;transition:background-color .18s;-webkit-tap-highlight-color:transparent}
+.sb2::before{content:"";position:absolute;left:-8px;right:-8px;top:-7px;bottom:-7px}
+.sb2 .sw-k{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(20,27,33,.3);transition:transform .18s}
+.sb2[aria-checked="true"]{background:var(--sheet)}
+.sb2[aria-checked="true"] .sw-k{transform:translateX(18px)}
+@media (prefers-reduced-motion:reduce){.sb2,.sb2 .sw-k{transition:none}}
+.sb2-lab{font-size:13px;font-weight:700;color:var(--sheet);white-space:nowrap;flex:0 0 auto;cursor:pointer}
+.sb2-cnt{margin-left:auto;font-size:12px;font-weight:700;line-height:1.3;color:var(--sheet);white-space:nowrap;flex:0 0 auto}
+.sb2-cnt.is-note{font-size:11px;font-weight:700;line-height:1.3;text-align:right;white-space:normal;flex:0 1 auto;min-width:0}
 .sb2-cnt.is-note .nk{display:inline-block}
 .shint{margin:0;font-size:14px;line-height:1.7;color:#4F5963}
 .pdfrow{display:block;margin:4px 0 0;text-align:center}
 .pdfbtn{display:inline-block;box-sizing:border-box;min-height:44px;line-height:1.4;padding:10px 20px;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--ink);border-radius:999px;text-decoration:none}
-@media (min-width:820px){.sbar2{margin:0 -32px;padding:2px 32px}}
+@media (min-width:820px){.sbar2{margin:0 -32px;padding:0 32px}}
 .sb2:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
 </style>
 </head>
@@ -771,9 +773,9 @@ body.member .line-card{display:block}
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
 
-  /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。「かける｜はずす」は全部に一斉に効く。
-     opts.end を渡すと、最初は「はずす」。その要素（後半のテキストの終わり）が画面に入ったら、1回だけ自動で「かける」にする（IntersectionObserver。使えない端末ではかけないまま）。
-     自動より前に人が「かける」「はずす」を押していたら、自動は動かさない。opts.hint は帯の下の案内（.shint） */
+  /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。帯のスイッチ（右＝オン）は全部に一斉に効く。
+     opts.end を渡すと、最初はオフ。その要素（後半のテキストの終わり）が画面に入ったら、1回だけ自動でオンにする（IntersectionObserver。使えない端末ではかけないまま）。
+     自動より前に人がスイッチを押していたら、自動は動かさない。opts.hint は帯の下の案内（.shint） */
   function setupSheet(roots, bar, opts) {
     opts = opts || {};
     var items = [];
@@ -786,7 +788,7 @@ body.member .line-card{display:block}
     var on = !endEl;
     var auto = endEl && typeof IntersectionObserver === 'function' ? 'wait' : 'none'; /* wait＝まだ自動が動いていない／done＝自動でかかった／cancel＝その前に人が押した／none＝自動なし */
     var io = null;
-    var elOn = bar.querySelector('[data-r="on"]'), elOff = bar.querySelector('[data-r="off"]'), elHid = bar.querySelector('[data-r="hid"]');
+    var elSw = bar.querySelector('[data-r="sw"]'), elLab = bar.querySelector('.sb2-lab'), elHid = bar.querySelector('[data-r="hid"]');
     function paint(it) {
       var el = it.el;
       el.classList.remove('s-hide', 's-open');
@@ -806,7 +808,7 @@ body.member .line-card{display:block}
         elHid.innerHTML = '<span class="nk">最後まで読むと、</span><span class="nk">自動でかかります。</span>';
       } else {
         elHid.classList.remove('is-note');
-        elHid.textContent = 'かくれている ' + hid;
+        elHid.textContent = on ? 'かくれている ' + hid : ''; /* オフのときは数を出さない */
       }
     }
     function paintHint() {
@@ -824,8 +826,7 @@ body.member .line-card{display:block}
       roots.forEach(function (r) { var w = r.querySelector('.tx'); if (w) { w.classList.toggle('sheet', on); } });
       items.forEach(paint);
       count();
-      elOn.setAttribute('aria-pressed', on ? 'true' : 'false');
-      elOff.setAttribute('aria-pressed', on ? 'false' : 'true');
+      elSw.setAttribute('aria-checked', on ? 'true' : 'false');
       paintHint();
     }
     items.forEach(function (it) {
@@ -837,8 +838,9 @@ body.member .line-card{display:block}
       it.el.addEventListener('click', step);
       it.el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); step(); } });
     });
-    elOn.addEventListener('click', function () { stopAuto(); on = true; items.forEach(function (it) { it.open = false; }); render(); });
-    elOff.addEventListener('click', function () { stopAuto(); on = false; render(); });
+    function flip() { stopAuto(); on = !on; if (on) { items.forEach(function (it) { it.open = false; }); } render(); }
+    elSw.addEventListener('click', flip);
+    if (elLab) { elLab.addEventListener('click', flip); }
     render();
     if (auto === 'wait') {
       io = new IntersectionObserver(function (entries) {
@@ -884,7 +886,7 @@ body.member .line-card{display:block}
     var sec2 = document.createElement('section'); sec2.className = 'sec'; sec2.id = 'text2';
     var bar = document.createElement('div');
     bar.className = 'sbar2';
-    bar.innerHTML = '<span class="sb2-lab">赤シート</span><span class="seg"><button type="button" class="sb2" data-r="on" aria-pressed="true" aria-label="赤シートをかける（全部の語をかくす）">かける</button><button type="button" class="sb2" data-r="off" aria-pressed="false" aria-label="赤シートをはずす（全部の語を見せる）">はずす</button></span><span class="sb2-cnt" data-r="hid"></span>';
+    bar.innerHTML = '<span class="sb2-lab">赤シート</span><button type="button" class="sb2" role="switch" data-r="sw" aria-checked="true" aria-label="赤シート（オンで全部の語をかくす）"><span class="sw-k" aria-hidden="true"></span></button><span class="sb2-cnt" data-r="hid"></span>';
     var point = document.createElement('section'); point.className = 'sec'; point.id = 'point';
     Array.prototype.forEach.call(document.querySelectorAll('#zukai .core'), function (c) { point.appendChild(c); });
     /* ここから画面を変える */

@@ -895,7 +895,7 @@ ${CFG.UMAMI_SCRIPT.trimEnd()}
 
   <div class="reader" id="reader">
     <nav class="jump" id="jump" aria-label="このページの節"><a class="jb" href="#text1">前半</a><a class="jb" href="#text2">後半</a><a class="jb" href="#honban">過去問1選</a></nav>
-    <div class="sbar2" id="sbar"><span class="sb2-lab">赤シート</span><span class="seg"><button type="button" class="sb2" data-r="on" aria-pressed="true" aria-label="赤シートをかける（全部の語をかくす）">かける</button><button type="button" class="sb2" data-r="off" aria-pressed="false" aria-label="赤シートをはずす（全部の語を見せる）">はずす</button></span><span class="sb2-cnt" data-r="hid"></span></div>
+    <div class="sbar2" id="sbar"><span class="sb2-lab">赤シート</span><button type="button" class="sb2" role="switch" data-r="sw" aria-checked="true" aria-label="赤シート（オンで全部の語をかくす）"><span class="sw-k" aria-hidden="true"></span></button><span class="sb2-cnt" data-r="hid"></span></div>
     <p class="shint"><span class="nb">赤い所を押すと答えが出ます。</span><span class="nb">もう一度押すと、またかくれます。</span></p>
     <div class="textwrap">
       <section class="sec" id="text1"><div class="thost" data-tpl="tpl-1"></div></section>

@@ -10,9 +10,9 @@
   function setTier() {}
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
 
-  /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。「かける｜はずす」は全部に一斉に効く。
-     opts.end を渡すと、最初は「はずす」。その要素（後半のテキストの終わり）が画面に入ったら、1回だけ自動で「かける」にする（IntersectionObserver。使えない端末ではかけないまま）。
-     自動より前に人が「かける」「はずす」を押していたら、自動は動かさない。opts.hint は帯の下の案内（.shint） */
+  /* 赤シート：かけた状態では、赤い帯の中にヒント（白い字）が見える。押す＝答え。もう一度押す＝またかくれる。帯のスイッチ（右＝オン）は全部に一斉に効く。
+     opts.end を渡すと、最初はオフ。その要素（後半のテキストの終わり）が画面に入ったら、1回だけ自動でオンにする（IntersectionObserver。使えない端末ではかけないまま）。
+     自動より前に人がスイッチを押していたら、自動は動かさない。opts.hint は帯の下の案内（.shint） */
   function setupSheet(roots, bar, opts) {
     opts = opts || {};
     var items = [];
@@ -25,7 +25,7 @@
     var on = !endEl;
     var auto = endEl && typeof IntersectionObserver === 'function' ? 'wait' : 'none'; /* wait＝まだ自動が動いていない／done＝自動でかかった／cancel＝その前に人が押した／none＝自動なし */
     var io = null;
-    var elOn = bar.querySelector('[data-r="on"]'), elOff = bar.querySelector('[data-r="off"]'), elHid = bar.querySelector('[data-r="hid"]');
+    var elSw = bar.querySelector('[data-r="sw"]'), elLab = bar.querySelector('.sb2-lab'), elHid = bar.querySelector('[data-r="hid"]');
     function paint(it) {
       var el = it.el;
       el.classList.remove('s-hide', 's-open');
@@ -45,7 +45,7 @@
         elHid.innerHTML = '<span class="nk">最後まで読むと、</span><span class="nk">自動でかかります。</span>';
       } else {
         elHid.classList.remove('is-note');
-        elHid.textContent = 'かくれている ' + hid;
+        elHid.textContent = on ? 'かくれている ' + hid : ''; /* オフのときは数を出さない */
       }
     }
     function paintHint() {
@@ -63,8 +63,7 @@
       roots.forEach(function (r) { var w = r.querySelector('.tx'); if (w) { w.classList.toggle('sheet', on); } });
       items.forEach(paint);
       count();
-      elOn.setAttribute('aria-pressed', on ? 'true' : 'false');
-      elOff.setAttribute('aria-pressed', on ? 'false' : 'true');
+      elSw.setAttribute('aria-checked', on ? 'true' : 'false');
       paintHint();
     }
     items.forEach(function (it) {
@@ -76,8 +75,9 @@
       it.el.addEventListener('click', step);
       it.el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); step(); } });
     });
-    elOn.addEventListener('click', function () { stopAuto(); on = true; items.forEach(function (it) { it.open = false; }); render(); });
-    elOff.addEventListener('click', function () { stopAuto(); on = false; render(); });
+    function flip() { stopAuto(); on = !on; if (on) { items.forEach(function (it) { it.open = false; }); } render(); }
+    elSw.addEventListener('click', flip);
+    if (elLab) { elLab.addEventListener('click', flip); }
     render();
     if (auto === 'wait') {
       io = new IntersectionObserver(function (entries) {
@@ -123,7 +123,7 @@
     var sec2 = document.createElement('section'); sec2.className = 'sec'; sec2.id = 'text2';
     var bar = document.createElement('div');
     bar.className = 'sbar2';
-    bar.innerHTML = '<span class="sb2-lab">赤シート</span><span class="seg"><button type="button" class="sb2" data-r="on" aria-pressed="true" aria-label="赤シートをかける（全部の語をかくす）">かける</button><button type="button" class="sb2" data-r="off" aria-pressed="false" aria-label="赤シートをはずす（全部の語を見せる）">はずす</button></span><span class="sb2-cnt" data-r="hid"></span>';
+    bar.innerHTML = '<span class="sb2-lab">赤シート</span><button type="button" class="sb2" role="switch" data-r="sw" aria-checked="true" aria-label="赤シート（オンで全部の語をかくす）"><span class="sw-k" aria-hidden="true"></span></button><span class="sb2-cnt" data-r="hid"></span>';
     var point = document.createElement('section'); point.className = 'sec'; point.id = 'point';
     Array.prototype.forEach.call(document.querySelectorAll('#zukai .core'), function (c) { point.appendChild(c); });
     /* ここから画面を変える */
