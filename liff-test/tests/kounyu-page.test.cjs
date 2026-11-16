@@ -85,3 +85,9 @@ test('ページ：値段の決め打ちが無い・リンク・禁止文字・no
   assert.ok(!/innerHTML/.test(js));
   for(const w of ['今だけ','お得','急いで','残り']){assert.ok(!html.includes(w)&&!js.includes(w),w);}
 });
+test('売り場でログインが確かめられたら、回のページと同じ「ログインした印」を付ける（買ったあとテキストに切り替わるため）',()=>{
+  const core=require('../kounyu.js');
+  assert.ok(read('progress-sync.js').includes("K_H = '"+core.LOGIN_HINT+"'"),'progress-sync.js の K_H と同じ名前');
+  assert.ok(js.includes("if(d&&d.loggedIn===true){try{localStorage.setItem(LOGIN_HINT,'1');}catch(_){}}"));
+  assert.ok(js.includes('markLogin(r.json)'));
+});

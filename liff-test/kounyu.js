@@ -9,6 +9,7 @@
   const PRODUCT='text';
   const PROD_HOST='takken.mimiobo.com';
   const POLL_MS=2000,POLL_MAX=15;
+  const LOGIN_HINT='takken2027-login-hint';
 
   function yen(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',')+'円';}
   function parts(iso){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso||''));return m?{y:+m[1],m:+m[2],d:+m[3]}:null;}
@@ -59,7 +60,7 @@
     return v;
   }
 
-  const core={samplePath,PRODUCT,POLL_MS,POLL_MAX,yen,dateLong,dateShort,isProdHost,roadmapPath,loginPath,priceLines,decide};
+  const core={LOGIN_HINT,samplePath,PRODUCT,POLL_MS,POLL_MAX,yen,dateLong,dateShort,isProdHost,roadmapPath,loginPath,priceLines,decide};
 
   // ---- ここから下はブラウザだけ ----
   if(typeof document==='undefined')return core;
@@ -119,10 +120,13 @@
   function readProducts(){
     return getJson('/api/products').then(r=>{
       if(r.status!==200||!Array.isArray(r.json.products)){S.failed=true;S.data=null;}
-      else{S.failed=false;S.data=r.json;}
+      else{S.failed=false;S.data=r.json;markLogin(r.json);}
       S.loaded=true;
     }).catch(()=>{S.failed=true;S.data=null;S.loaded=true;});
   }
+  // 回のページ（progress-sync.js の cookieHint）は、このブラウザでログインした印があるときだけサーバーにログインを確かめる。
+  // 売り場でログインが確かめられたら、同じ印を付ける（買ったあと、回のページがテキストに切り替わるように）。鍵の名前は progress-sync.js の K_H と同じ。
+  function markLogin(d){if(d&&d.loggedIn===true){try{localStorage.setItem(LOGIN_HINT,'1');}catch(_){}}}
   function isOwned(){return !!(S.data&&Array.isArray(S.data.owned)&&S.data.owned.indexOf(PRODUCT)>=0);}
 
   function purchase(){
