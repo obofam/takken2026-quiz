@@ -469,7 +469,7 @@ a.pill.ghost{display:inline-flex;align-items:center;justify-content:center;text-
 .smp.smp-b{display:none;color:var(--ink);border-color:#9ADDEC;background:#fff}
 .is-buyer .smp{display:none}
 .is-buyer .smp.smp-b{display:inline-block}
-/* 下の固定バー（前の回・上に戻る・次の回）。上の固定（.jump）より控えめ・水色もライムも使わない */
+/* 下の固定バー（前の回・上に戻る・最新回へ・次の回）。上の固定（.jump）より控えめ・水色もライムも使わない */
 .totop-w{display:none}
 body{padding-bottom:calc(44px + env(safe-area-inset-bottom))}
 .epnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
@@ -479,7 +479,9 @@ body{padding-bottom:calc(44px + env(safe-area-inset-bottom))}
 .epnav .enb{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 10px;border:0;border-radius:999px;background:none;color:#5B6670;font:700 12px/1 var(--font);text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 /* 「上に戻る」：囲みは低く細く（見た目は26px）。押せる範囲はバーの高さいっぱい */
 .epnav .enb.top{position:relative;min-height:26px;border:1px solid #D9DDE1;padding:0 12px;flex:0 0 auto;font-weight:500}
-.epnav .enb.top::before{content:"";position:absolute;left:-6px;right:-6px;top:-8px;bottom:-8px}
+.epnav .enb.top::before{content:"";position:absolute;left:-5px;right:-5px;top:-8px;bottom:-8px}
+/* 中央：上に戻る＋最新回へ（最新回へは、いま開いている回が最新でないときだけ出る） */
+.epnav-c{display:flex;align-items:center;gap:10px;flex:0 0 auto}
 .epnav .enb:active{background:#F1F2F4}
 @media (hover:hover){.epnav .enb:hover{background:#F1F2F4}}
 .epnav .enb:focus-visible{outline:2px solid #46535E;outline-offset:2px}
@@ -913,10 +915,10 @@ figure.fig{min-width:0}
 </div>
 <nav class="epnav" aria-label="回の移動"><div class="epnav-in">
   <div class="epnav-s"><a class="enb prev" href="/ep/1" data-ep="1" data-umami-event="ep-nav" data-umami-event-to="prev" data-umami-event-ep="2"><i class="chv l" aria-hidden="true"></i>第1回</a></div>
-  <button type="button" class="enb top" id="navTop" data-umami-event="ep-nav" data-umami-event-to="top" data-umami-event-ep="2">上に戻る</button>
+  <div class="epnav-c"><button type="button" class="enb top" id="navTop" data-umami-event="ep-nav" data-umami-event-to="top" data-umami-event-ep="2">上に戻る</button><a class="enb top latest" id="navLatest" href="/ep/2" style="display:none" data-cur="2" data-eps="1:0,2:20270112,3:20270118,4:20270125,5:20270201,6:20270208,7:20270215,8:20270222,9:20270301" data-umami-event="ep-nav" data-umami-event-to="latest" data-umami-event-ep="2">最新回へ</a></div>
   <div class="epnav-s r"><a class="enb next" href="/ep/3" data-ep="3" data-open="20270118" data-umami-event="ep-nav" data-umami-event-to="next" data-umami-event-ep="2">第3回<i class="chv r" aria-hidden="true"></i></a></div>
 </div></nav>
-<script>(function(){var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):99999999;var as=document.querySelectorAll('.epnav a[data-open]');for(var i=0;i<as.length;i++){var a=as[i];if(t<+a.getAttribute('data-open')){var s=document.createElement('span');s.className=a.className+' off';s.setAttribute('aria-disabled','true');s.setAttribute('data-ep',a.getAttribute('data-ep'));s.innerHTML=a.innerHTML;a.parentNode.replaceChild(s,a);}}var b=document.getElementById('navTop');if(b){b.addEventListener('click',function(){var o=document.getElementById('toTop');if(o){o.click();}else{window.scrollTo(0,0);}});}})();</script>
+<script>(function(){var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):99999999;var as=document.querySelectorAll('.epnav a[data-open]');for(var i=0;i<as.length;i++){var a=as[i];if(t<+a.getAttribute('data-open')){var s=document.createElement('span');s.className=a.className+' off';s.setAttribute('aria-disabled','true');s.setAttribute('data-ep',a.getAttribute('data-ep'));s.innerHTML=a.innerHTML;a.parentNode.replaceChild(s,a);}}var b=document.getElementById('navTop');if(b){b.addEventListener('click',function(){var o=document.getElementById('toTop');if(o){o.click();}else{window.scrollTo(0,0);}});}var L=document.getElementById('navLatest');if(L){var k=0,ps=L.getAttribute('data-eps').split(',');for(var j=0;j<ps.length;j++){var q=ps[j].split(':');if(+q[1]<=t&&+q[0]>k)k=+q[0];}if(k&&k!==+L.getAttribute('data-cur')){L.href='/ep/'+k;L.style.display='';}}})();</script>
 <script>
 (function () {
   'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }

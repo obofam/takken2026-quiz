@@ -18,6 +18,16 @@ test('nav bar: episode 3 has prev=2 and next=4 with links, open dates and umami 
   assert.match(b,/<a class="enb prev" href="\/ep\/2"[^>]*data-umami-event="ep-nav" data-umami-event-to="prev" data-umami-event-ep="3">[\s\S]*?第2回<\/a>/);
   assert.match(b,/<a class="enb next" href="\/ep\/4"[^>]* data-open="20270125"[^>]*data-umami-event-to="next" data-umami-event-ep="3">第4回/);
   assert.match(b,/<button type="button" class="enb top" id="navTop" data-umami-event="ep-nav" data-umami-event-to="top" data-umami-event-ep="3">上に戻る<\/button>/);
+  assert.match(b,/<a class="enb top latest" id="navLatest" href="\/ep\/3" style="display:none" data-cur="3" data-eps="1:0,2:20270112,3:20270118,4:20270125[^"]*" data-umami-event="ep-nav" data-umami-event-to="latest" data-umami-event-ep="3">最新回へ<\/a>/);
+});
+test('nav bar: 最新回へ picks the newest open episode by date and hides on that episode',()=>{
+  const vm=require('node:vm');
+  const run=(n,today)=>{const b=bar(trial(n));const eps=b.match(/data-eps="([^"]+)"/)[1].split(',').map(x=>x.split(':').map(Number));let k=0;for(const [e,d] of eps)if(d<=today&&e>k)k=e;return k===n?null:k;};
+  assert.equal(run(3,20261117),1);
+  assert.equal(run(1,20261117),null);
+  assert.equal(run(1,20270120),3);
+  assert.equal(run(3,20270120),null);
+  assert.equal(run(2,99999999),9);
 });
 test('nav bar: episode 1 has no prev (empty slot), the sample episode is never closed (no data-open on a link to it)',()=>{
   const b=bar(trial(1));

@@ -559,7 +559,10 @@ function navVals(ep, built, test) {
     const open = CFG.SAMPLE_EPS.includes(n) ? '' : ` data-open="${dateOf(n)}"`;
     return `<a class="enb ${dir}" href="/ep/${n}" data-ep="${n}"${open} data-umami-event="ep-nav" data-umami-event-to="${dir === 'prev' ? 'prev' : 'next'}" data-umami-event-ep="${ep}">${inner}</a>`;
   };
-  return { NAV_NOW: now, NAV_PREV: ep > 1 ? item(ep - 1, 'prev') : '', NAV_NEXT: ep < CFG.TOTAL_EPS ? item(ep + 1, 'next') : '' };
+  /* 最新回へ：ページがある回のうち、配信日が来ている一番大きい回（第1回は日付0＝いつでも開いている）。いま開いている回が最新なら出さない（画面の側で決める） */
+  const eps = [...have].filter(n => n >= 1 && n <= CFG.TOTAL_EPS).sort((a, b) => a - b).map(n => `${n}:${CFG.SAMPLE_EPS.includes(n) ? 0 : dateOf(n)}`).join(',');
+  const latest = `<a class="enb top latest" id="navLatest" href="/ep/${ep}" style="display:none" data-cur="${ep}" data-eps="${eps}" data-umami-event="ep-nav" data-umami-event-to="latest" data-umami-event-ep="${ep}">最新回へ</a>`;
+  return { NAV_NOW: now, NAV_LATEST: latest, NAV_PREV: ep > 1 ? item(ep - 1, 'prev') : '', NAV_NEXT: ep < CFG.TOTAL_EPS ? item(ep + 1, 'next') : '' };
 }
 function epVals(m, text, ex, built, test) {
   const ep = m.ep;
