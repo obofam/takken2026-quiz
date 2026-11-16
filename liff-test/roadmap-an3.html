@@ -450,6 +450,12 @@
   .pr .phk:empty { display: none; }
   .gonow { position: fixed; right: 16px; bottom: 20px; z-index: 15; min-height: 44px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--cyan-dark); color: #fff; font: inherit; font-size: 14px; font-weight: 700; box-shadow: 0 2px 8px rgba(43,58,70,.22); cursor: pointer; }
   .gonow[hidden] { display: none; }
+  /* いちばん上に戻る（LINE・メールのお知らせのすぐ下に1つ） */
+  .totop-w { text-align: center; margin: 20px 0 8px; }
+  .totop { min-width: 160px; min-height: 44px; padding: 0 24px; border: 1.5px solid var(--cyan); border-radius: 999px; background: var(--card); color: var(--cyan-dark); font: inherit; font-size: .95rem; font-weight: 700; cursor: pointer; }
+  .totop:focus-visible { outline: 3px solid var(--cyan-mid); outline-offset: 2px; }
+  @media (hover: hover) { .totop:hover { background: var(--cyan-soft); } }
+  @media print { .totop-w { display: none !important; } }
   #newBox { overflow: hidden; }
   #newBox > summary { background: var(--cyan-dark); color: #fff; font-size: 15px; font-weight: 700; min-height: 44px; padding: 6px 16px; }
   #newBox > summary::after { border-color: #fff; }
@@ -618,6 +624,7 @@
     <p class="body" id="lineBody"><span class="nb">毎週月曜に、こちらからお届けします。</span><br><span class="nb">登録無料です。</span></p>
     <div class="btns"><a class="btn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="roadmap-line">LINEで受け取る</a><a class="btn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="roadmap-mail">メールで受け取る</a></div>
   </section>
+  <div class="totop-w"><button type="button" class="totop" id="toTop" data-umami-event="roadmap-totop">上に戻る</button></div>
 
   <section class="faq">
     <h2>よくある質問</h2>
@@ -876,6 +883,10 @@ var EPS = [{"d": "2027-01-04","wd": "月","note": "","kind": "本編","n": 1,"sa
     var r = document.querySelector('#sched tr.now'); if (!r) return;
     var fh = document.getElementById('filters').getBoundingClientRect().height;
     window.scrollTo({ top: r.getBoundingClientRect().top + window.scrollY - fh - 8, behavior: 'smooth' });
+  });
+  document.getElementById('toTop').addEventListener('click', function(){
+    var r = false; try { r = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(_) {}
+    window.scrollTo({ top: 0, behavior: r ? 'auto' : 'smooth' });
   });
   window.addEventListener('scroll', updateGo, { passive: true });
   window.addEventListener('resize', updateGo);
