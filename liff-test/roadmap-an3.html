@@ -192,7 +192,7 @@
   @media (min-width: 768px) {
     .container { max-width: 960px; padding: 44px 32px 80px; }
     .hero h1 { font-size: 1.9rem; }
-    .how { display: flex; justify-content: center; gap: 32px; padding: 14px 20px; }
+    .how { display: grid; grid-template-columns: 1fr 1.3fr .9fr; align-items: start; gap: 8px 28px; padding: 14px 20px; }
     .filters { position: sticky; top: 0; z-index: 2; background: var(--surface); padding: 10px 0; margin-bottom: 6px; justify-content: center; }
     .part-lead { text-align: center; }
     .sched th.c-date { width: 104px; }
@@ -583,7 +583,8 @@
   </section>
   <ul class="how">
     <li><span class="n">1</span><span class="lead">音声で聴く</span><a class="spbtn" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="spotify">Spotify</a><span class="oth">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="roadmap-app" data-umami-event-app="standfm">stand.fm</a></span></li>
-    <li><span class="n">2</span>【図解と3問】のページで確かめる</li>
+    <li><span class="n">2</span>【図解と3問】のページで確かめる<span class="oth"><span class="nb">水色のタイトルを押すと、</span><span class="nb">図解と3問が開きます。</span><span class="nb">3問は、解くと自動でつきます。</span></span></li>
+    <li><span class="n">3</span>記録する<span class="oth"><span class="nb">聴いたら右の丸を押すと、</span><span class="nb">記録できます。</span></span></li>
   </ul>
 
   <section class="tiers" aria-label="図解と3問のページで見られるもの">
@@ -608,7 +609,7 @@
 
   <nav class="filters" id="filters" aria-label="分野でしぼる"></nav>
   <p class="part-lead" id="partLead"></p>
-  <p class="week-note"><span class="nb">月曜は本編。</span><span class="nb">木曜は短い復習・</span><span class="nb">もう1論点・まとめ。</span><span class="nb">水色のタイトルを押すと、</span><span class="nb">図解と3問が開きます。</span><span class="nb">聴いたら右の丸を押すと、</span><span class="nb">記録できます。</span><span class="nb">3問は、解くと自動でつきます。</span></p>
+  <p class="week-note"><span class="nb">月曜は本編。</span><span class="nb">木曜は短い復習・</span><span class="nb">もう1論点・まとめ。</span></p>
   <main class="sched"><table id="sched"></table></main>
 
   <section class="line-cta">
