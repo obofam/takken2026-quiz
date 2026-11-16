@@ -30,7 +30,13 @@ module.exports=s.endpoint(['POST'],async(req,res)=>{
   const userId=session.metadata?.userId;
   if(typeof session.id!=='string'||!session.id.startsWith('cs_')||typeof event.id!=='string'||!event.id)return skip(res,'malformed_event',session);
   if(typeof userId!=='string'||!s.UUID.test(userId)||session.client_reference_id!==userId||!planAllowed(session.metadata))return skip(res,'metadata_missing',session);
-  const result=await s.supabase('/rest/v1/rpc/grant_entitlement',{method:'POST',body:{p_user_id:userId,p_plan:session.metadata.plan,p_valid_until:stripe.validUntil(),p_source:'stripe:'+session.id,p_event_id:event.id}});
+  // 帳簿に書く値。お金の額・通貨が読めないイベントは権利も付けない（Stripe には200で返す）。
+  if(!Number.isInteger(session.amount_total)||session.amount_total<0||typeof session.currency!=='string'||!session.currency)return skip(res,'malformed_event',session);
+  const metadata=session.metadata;
+  const product=typeof metadata.product==='string'?metadata.product:metadata.plan;
+  const listed=products.find(product)?.price;
+  const purchasedAt=Number.isFinite(event.created)?new Date(event.created*1000).toISOString():new Date().toISOString();
+  const result=await s.supabase('/rest/v1/rpc/record_purchase',{method:'POST',body:{p_user_id:userId,p_plan:metadata.plan,p_valid_until:stripe.validUntil(),p_source:'stripe:'+session.id,p_event_id:event.id,p_product:product,p_amount:session.amount_total,p_currency:session.currency,p_list_price:Number.isInteger(listed)?listed:null,p_price_kind:metadata.price_kind==='start'?'start':'tsujo',p_payment_intent:typeof session.payment_intent==='string'&&session.payment_intent.startsWith('pi_')?session.payment_intent:null,p_purchased_at:purchasedAt,p_livemode:event.livemode===true}});
   if(result==='unknown_user')return skip(res,'unknown_user',session);
   if(!['granted','duplicate'].includes(result))s.fail(503,'database_unavailable');
   return res.status(200).json({received:true,result});

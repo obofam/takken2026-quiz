@@ -15,6 +15,9 @@ export function expected() {
   out.set(path.join(prod, 'api/_lib/quiz-catalog.js'), HEADER + fs.readFileSync(path.join(test, 'quiz-catalog.js'), 'utf8'));
   // 画面側の共通ファイル（本番のロードマップ・第1回が /progress-sync.js として読む）。中身は同じ、先頭に注記だけ足す。
   out.set(path.join(prod, 'progress-sync.js'), HEADER + fs.readFileSync(path.join(test, 'progress-sync.js'), 'utf8'));
+  // 売り場のページ（本番では /kounyu.html。/kounyu は vercel.json の書き換え）。html はそのまま、js は先頭に注記だけ足す。
+  out.set(path.join(prod, 'kounyu.html'), fs.readFileSync(path.join(test, 'kounyu.html'), 'utf8'));
+  out.set(path.join(prod, 'kounyu.js'), HEADER + fs.readFileSync(path.join(test, 'kounyu.js'), 'utf8'));
   for (const f of fs.readdirSync(path.join(test, 'api')).filter(n => n.endsWith('.js'))) {
     const src = fs.readFileSync(path.join(test, 'api', f), 'utf8')
       .replaceAll("require('../lib/", "require('./_lib/").replaceAll("require('../quiz-catalog')", "require('./_lib/quiz-catalog')");

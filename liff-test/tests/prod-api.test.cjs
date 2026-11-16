@@ -86,7 +86,7 @@ test('本番側の session：ALLOWED_HOSTS・STORAGE_PREFIX・OPEN_LOGIN を設�
   assert.equal(r.sent.find(x=>x[0]==='/rest/v1/rpc/resolve_identity')[1].p_open,true);
   assert.match(r.res.headers['Set-Cookie'][0],/Secure$/);
 });
-test('checkout の戻り先：未設定は kounyu-test.html、CHECKOUT_RETURN_PATH で変えられ、不正な値は無視',async()=>{
+test('checkout の戻り先：未設定は kounyu.html（売り場）、CHECKOUT_RETURN_PATH で変えられ、不正な値は無視',async()=>{
   const checkout=require(path.join(prod,'api/checkout')),stripe=require(path.join(prod,'api/_lib/stripe'));
   let created;stripe.setClient({prices:{list:async()=>({data:[{id:'price_x1'}]})},checkout:{sessions:{create:async a=>{created=a;return {url:'https://checkout.stripe.com/x'};}}}});
   try{
@@ -95,8 +95,8 @@ test('checkout の戻り先：未設定は kounyu-test.html、CHECKOUT_RETURN_PA
     process.env.OPEN_LOGIN='1';
     global.fetch=async url=>{const p=new URL(url).pathname;return {ok:true,status:200,json:async()=>p==='/rest/v1/identities'?[{user_id:user}]:[]};};
     const run=async()=>{const res=response();await checkout({method:'POST',headers:{host:'takken.mimiobo.com',origin:'https://takken.mimiobo.com','content-type':'application/json','x-mimiobo-user':user,cookie},body:{product:'text'}},res);return res;};
-    let res=await run();assert.equal(res.code,200);assert.match(created.success_url,/^https:\/\/takken\.mimiobo\.com\/kounyu-test\.html\?checkout=ok&product=text$/);
-    process.env.CHECKOUT_RETURN_PATH='/kounyu.html';await run();assert.match(created.success_url,/\/kounyu\.html\?checkout=ok/);assert.match(created.cancel_url,/\/kounyu\.html\?checkout=cancel/);
-    process.env.CHECKOUT_RETURN_PATH='//evil.example';await run();assert.match(created.success_url,/^https:\/\/takken\.mimiobo\.com\/kounyu-test\.html/);
+    let res=await run();assert.equal(res.code,200);assert.match(created.success_url,/^https:\/\/takken\.mimiobo\.com\/kounyu\.html\?checkout=ok&product=text$/);
+    process.env.CHECKOUT_RETURN_PATH='/kau.html';await run();assert.match(created.success_url,/\/kau\.html\?checkout=ok/);assert.match(created.cancel_url,/\/kau\.html\?checkout=cancel/);
+    process.env.CHECKOUT_RETURN_PATH='//evil.example';await run();assert.match(created.success_url,/^https:\/\/takken\.mimiobo\.com\/kounyu\.html/);
   }finally{stripe.setClient(null);}
 });
