@@ -37,6 +37,45 @@ test('liff-test/ichimon is a copy of 公開待ち/ichimon (same content, both fi
   for (const f of ['index.html', 'questions.js']) assert.equal(copy(f), fs.readFileSync(path.join(waiting, f), 'utf8'), f);
 });
 
+// 日の行き来の規則だけを取り出して動かす（DOM なし）
+function navRules(today) {
+  const h = copy('index.html');
+  const src = h.match(/<script>([\s\S]*?)<\/script>\s*<\/body>/)[1];
+  const a = src.indexOf('function pad(n)'), b = src.indexOf('function jstToday');
+  const c = src.indexOf('function addDays'), d = src.indexOf('function renderDayNav');
+  const sandbox = { window: {}, TODAY: today };
+  vm.createContext(sandbox);
+  vm.runInContext(fs.readFileSync(path.join(root, 'ichimon', 'questions.js'), 'utf8'), sandbox);
+  vm.runInContext('var D=window.ICHIMON,BY={};D.questions.forEach(function(q){BY[q.id]=q;});var TODAY=' + JSON.stringify(today) + ',viewDay=TODAY;'
+    + src.slice(a, b) + src.slice(c, d)
+    + ';this.api={set:function(v){viewDay=v;},canPrev:canPrev,canNext:canNext,prevDay:prevDay};', sandbox);
+  return sandbox.api;
+}
+
+test('ichimon page: day navigation (prev back to 2027-01-04; next only when that day is today or earlier, or its question is already delivered)', () => {
+  const n = navRules('2027-01-12');
+  const at = d => { n.set(d); return [n.canPrev(), n.canNext()]; };
+  assert.deepEqual(at('2027-01-04'), [false, true]);   // 1/5 の問題 o002 は d=1/4
+  assert.deepEqual(at('2027-01-09'), [true, true]);    // 1/10 は復習の日だが今日以前
+  assert.deepEqual(at('2027-01-12'), [true, true]);    // 1/13 の問題 o008 は d=1/12
+  assert.deepEqual(at('2027-01-20')[1], false);        // 1/21 の問題は d が今日より先
+  const t2 = navRules('2027-01-09');
+  t2.set('2027-01-09'); assert.equal(t2.canNext(), false); // 1/10 は復習の日で今日より先
+  assert.equal(navRules('2026-11-17').canPrev(), false);
+});
+
+test('ichimon page: bottom tab bar, hash screens, review days kept per date, small type', () => {
+  const h = copy('index.html');
+  for (const k of ['ichimon', 'kiroku', 'fukushu', 'subete']) assert.ok(h.includes('k:"' + k + '"'), k);
+  for (const n of ['1日1問', '記録', '復習', 'すべて']) assert.ok(h.includes('n:"' + n + '"'), n);
+  assert.ok(h.includes('env(safe-area-inset-bottom)') && h.includes('viewport-fit=cover'));
+  assert.ok(h.includes('"hashchange"') && !h.includes('<details'));
+  assert.match(h, /font-size:15px;line-height:1\.8/);
+  assert.match(h, /height:48px/);
+  assert.ok(h.includes('DayPick.get(viewDay)') && h.includes('DayPick.set(viewDay,id)'));
+  assert.ok(h.includes('"次の日の問題へ"') && h.includes('"先取り"'));
+});
+
 test('the production ichimon folder is not created yet', () => {
   assert.equal(fs.existsSync(path.resolve(root, '../ichimon')), false);
 });

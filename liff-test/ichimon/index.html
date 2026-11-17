@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>○×1日1問｜耳で覚える宅建</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,68 +13,74 @@
 --lime:#D6F034;--lime-soft:#F4FBD2;--lime-ink:#4F6300;--miss:#B5727A;--miss-soft:#F8EDEE;}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:#fff;color:var(--ink);font-family:"Noto Sans JP",system-ui,"Hiragino Sans","Yu Gothic",sans-serif;font-size:17px;line-height:1.9}
-main{max-width:720px;margin:0 auto;padding:28px 18px 56px}
-h1{font-size:26px;font-weight:900;line-height:1.4;margin:0}
-.date{color:var(--sub);margin:2px 0 22px}
-.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 8px rgba(20,27,33,.04);padding:20px 18px;margin:0 0 18px}
+body{margin:0;background:#fff;color:var(--ink);font-family:"Noto Sans JP",system-ui,"Hiragino Sans","Yu Gothic",sans-serif;font-size:15px;line-height:1.8}
+main{max-width:720px;margin:0 auto;padding:20px 16px calc(56px + env(safe-area-inset-bottom) + 24px)}
+h1{font-size:20px;font-weight:900;line-height:1.4;margin:0 0 14px}
+[hidden]{display:none!important}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 8px rgba(20,27,33,.04);padding:16px;margin:0 0 14px}
 .lab{font-size:11px;letter-spacing:.15em;color:var(--cyan);font-weight:700;line-height:1.4;margin:0 0 6px}
-h2{font-size:18px;font-weight:700;margin:0 0 8px;line-height:1.5}
-h2 small{font-size:13px;font-weight:700;color:var(--cyan-dark);background:var(--cyan-soft);border-radius:999px;padding:2px 10px;margin-left:8px;vertical-align:middle}
+h2{font-size:16px;font-weight:700;margin:0 0 8px;line-height:1.5}
+h2 small{font-size:12px;font-weight:700;color:var(--cyan-dark);background:var(--cyan-soft);border-radius:999px;padding:2px 10px;margin-left:8px;vertical-align:middle}
 p{margin:0 0 8px}
-.sub{color:var(--sub);font-size:15px}
-.tag{display:inline-block;font-size:13px;font-weight:700;line-height:1.6;padding:1px 10px;border-radius:999px;color:var(--pd);background:var(--ps);margin-bottom:6px}
+.sub{color:var(--sub);font-size:14px}
+.tag{display:inline-block;font-size:12px;font-weight:700;line-height:1.6;padding:1px 10px;border-radius:999px;color:var(--pd);background:var(--ps);margin-bottom:6px}
 .p1{--pc:#17C5E8;--pd:#0EA2C2;--ps:#D8F3FA}
 .p2{--pc:#9B8CE8;--pd:#6A58C9;--ps:#ECE8FB}
 .p3{--pc:#4CC9A4;--pd:#1E9474;--ps:#DDF5EC}
 .p4{--pc:#F5A54A;--pd:#B86A0E;--ps:#FDEBD3}
-.qtext{font-size:18px;font-weight:700;margin:2px 0 14px}
-.ox{display:flex;gap:12px}
-.ox button{flex:1 1 0;font:inherit;font-size:40px;font-weight:900;line-height:1;padding:20px 0;border-radius:999px;border:2px solid var(--cyan);background:#fff;color:var(--cyan-dark);cursor:pointer;touch-action:manipulation}
+.qtext{font-size:16px;font-weight:700;margin:2px 0 12px}
+.ox{display:flex;gap:16px}
+.ox button{flex:1 1 0;font:inherit;font-size:22px;font-weight:900;line-height:1;height:48px;padding:0;border-radius:999px;border:2px solid var(--cyan);background:#fff;color:var(--cyan-dark);cursor:pointer;touch-action:manipulation}
 .ox button:active{background:var(--cyan-soft)}
-.btn{font:inherit;font-size:16px;font-weight:700;padding:10px 22px;border-radius:999px;border:2px solid var(--cyan);background:var(--cyan);color:#fff;cursor:pointer}
+.btn{font:inherit;font-size:14px;font-weight:700;padding:8px 18px;border-radius:999px;border:2px solid var(--cyan);background:var(--cyan);color:#fff;cursor:pointer}
 button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid rgba(23,197,232,.5);outline-offset:2px}
 .res{border-radius:12px;padding:12px 14px;margin-top:2px}
 .res.ok{background:var(--lime-soft)}
 .res.ng{background:var(--miss-soft)}
-.res .v{font-weight:900;font-size:20px;margin:0}
+.res .v{font-weight:900;font-size:16px;margin:0}
 .res.ok .v{color:var(--lime-ink)}
 .res.ng .v{color:var(--miss)}
 .res .ans{font-weight:700}
-.from{font-size:15px;color:var(--sub);margin-top:10px}
+.from{font-size:13px;color:var(--sub);margin-top:10px}
 a{color:var(--cyan-dark)}
 .nums{display:flex;gap:28px;margin:0 0 14px}
-.nums b{font-size:28px;font-weight:900;line-height:1.4}
-.nums span{font-size:14px;color:var(--sub);display:block;line-height:1.5}
-.fr{display:grid;grid-template-columns:1fr auto;gap:0 12px;align-items:center;margin:0 0 10px;font-size:15px}
+.nums b{font-size:22px;font-weight:900;line-height:1.4}
+.nums span{font-size:13px;color:var(--sub);display:block;line-height:1.5}
+.fr{display:grid;grid-template-columns:1fr auto;gap:0 12px;align-items:center;margin:0 0 10px;font-size:14px}
 .fr .n{font-weight:700}
 .fr .bar{grid-column:1/3;height:8px;border-radius:999px;background:var(--ps);overflow:hidden;margin-top:2px}
 .fr .bar i{display:block;height:100%;background:var(--pc);border-radius:999px}
-details summary{cursor:pointer;font-weight:700;font-size:18px;list-style:none}
-details summary::-webkit-details-marker{display:none}
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.filters button{font:inherit;font-size:14px;font-weight:700;padding:3px 14px;border-radius:999px;border:1px solid var(--cyan);background:#fff;color:var(--cyan-dark);cursor:pointer}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.filters button{font:inherit;font-size:13px;font-weight:700;padding:2px 12px;border-radius:999px;border:1px solid var(--cyan);background:#fff;color:var(--cyan-dark);cursor:pointer}
 .filters button[aria-pressed="true"]{background:var(--cyan);color:#fff}
-.eph{font-size:14px;font-weight:700;color:var(--sub);margin:16px 0 2px;line-height:1.6}
-.row{display:flex;gap:10px;width:100%;text-align:left;font:inherit;font-size:15px;line-height:1.6;background:none;border:0;border-top:1px solid var(--line);padding:8px 2px;cursor:pointer;color:var(--ink)}
+.eph{font-size:13px;font-weight:700;color:var(--sub);margin:16px 0 2px;line-height:1.6}
+.row{display:flex;gap:10px;width:100%;text-align:left;font:inherit;font-size:14px;line-height:1.6;background:none;border:0;border-top:1px solid var(--line);padding:8px 2px;cursor:pointer;color:var(--ink)}
 .row .t{flex:1}
-.row .s{flex:none;font-size:13px;font-weight:700;color:var(--sub)}
+.row .s{flex:none;font-size:12px;font-weight:700;color:var(--sub)}
 .row .s.ok{color:var(--lime-ink)}
 .row .s.ng{color:var(--miss)}
 .one{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:6px}
-.foot{text-align:center;font-size:15px;margin-top:28px}
+.foot{text-align:center;font-size:14px;margin:20px 0 0}
+.btn.small{font-size:13px;padding:5px 14px;margin-top:12px}
+.daynav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 12px}
+.daynav button{font:inherit;font-size:14px;font-weight:700;background:none;border:0;color:var(--cyan-dark);padding:6px 4px;cursor:pointer;touch-action:manipulation}
+.daynav button:disabled{color:#c9c9d0;cursor:default}
+.daynav .d{font-size:15px;font-weight:700;text-align:center}
+.daynav .d small{font-size:11px;font-weight:700;color:var(--cyan-dark);background:var(--cyan-soft);border-radius:999px;padding:1px 8px;margin-left:6px;vertical-align:middle}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{flex:1 1 0;height:56px;font:inherit;font-size:13px;font-weight:400;color:var(--sub);background:none;border:0;cursor:pointer;touch-action:manipulation}
+.tabs button[aria-current="page"]{color:var(--cyan);font-weight:700}
 </style>
 </head>
 <body>
 <main>
 <h1>○×1日1問</h1>
-<p class="date" id="date"></p>
-<section class="card" id="today"></section>
-<section class="card" id="record"></section>
-<section class="card" id="redo"></section>
-<section class="card" id="all"></section>
-<p class="foot"><a href="/roadmap">学習ロードマップへ</a></p>
+<div class="view" id="v-today"><div class="daynav" id="daynav"></div><section class="card" id="today"></section></div>
+<div class="view" id="v-kiroku" hidden><section class="card" id="record"></section></div>
+<div class="view" id="v-fukushu" hidden><section class="card" id="redo"></section></div>
+<div class="view" id="v-subete" hidden><section class="card" id="all"></section></div>
 </main>
+<nav class="tabs" id="tabs" aria-label="画面の切り替え"></nav>
 <script src="questions.js"></script>
 <script>
 (function(){
@@ -139,11 +145,12 @@ var IchimonStore = (function(){
   }
   return {get:get,set:set};
 })();
-/* その日の出題を覚える（答えたあと復習の日に別の問題へ変わらないように） */
+/* 復習の日の出題を日付ごとに覚える（答えたあと別の問題へ変わらないように） */
 var DayPick = {
   KEY:"takken2027-ichimon-day",
-  get:function(){ try{ var o=JSON.parse(localStorage.getItem(this.KEY)||"null"); return (o&&o.d===TODAY&&BY[o.id])?o.id:null; }catch(e){return null;} },
-  set:function(id){ try{ localStorage.setItem(this.KEY, JSON.stringify({d:TODAY,id:id})); }catch(e){} }
+  all:function(){ try{ var o=JSON.parse(localStorage.getItem(this.KEY)||"null"); return (o&&o.days&&typeof o.days==="object")?o.days:{}; }catch(e){return {};} },
+  get:function(day){ var id=this.all()[day]; return (id&&BY[id])?id:null; },
+  set:function(day,id){ try{ var days=this.all(); days[day]=id; localStorage.setItem(this.KEY, JSON.stringify({days:days})); }catch(e){} }
 };
 function last(rec){ return (rec && Array.isArray(rec.r) && rec.r.length) ? rec.r[rec.r.length-1] : null; }
 function el(tag, cls, text){
@@ -194,32 +201,67 @@ function renderQuestion(host, q, opts){
     }
     host.appendChild(from);
     if(opts.next){
-      var nb = el("button","btn",opts.nextLabel||"次の問題"); nb.type="button"; nb.style.marginTop="12px";
+      var nb = el("button","btn small",opts.nextLabel||"次の問題"); nb.type="button";
       nb.addEventListener("click",opts.next);
       host.appendChild(nb);
     }
   }
 }
 
-/* 今日の1問 */
+/* 日の行き来 */
+var viewDay = TODAY;
+function addDays(s,n){
+  var a=s.split("-"), d=new Date(Date.UTC(+a[0],+a[1]-1,+a[2]+n));
+  return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate());
+}
+/* 今日までの日、または配信日 d が今日以前の問題がある日だけ開ける */
+function canView(day){
+  if(day<D.start || day>D.end) return false;
+  if(day<=TODAY) return true;
+  var id=D.schedule[day];
+  return !!(id && BY[id] && BY[id].d<=TODAY);
+}
+function prevDay(){ var p=addDays(viewDay,-1); return p>D.end?D.end:p; }
+function canPrev(){ return prevDay()>=D.start; }
+function canNext(){ return canView(addDays(viewDay,1)); }
+function goDay(day){ viewDay=day; renderToday(); }
+function renderDayNav(){
+  var nav=document.getElementById("daynav"); clear(nav);
+  var pb=el("button",null,"‹ 前の日"); pb.type="button"; pb.disabled=!canPrev();
+  pb.addEventListener("click",function(){ if(canPrev()) goDay(prevDay()); });
+  var d=el("span","d",jpDate(viewDay));
+  if(viewDay===TODAY) d.appendChild(el("small",null,"今日"));
+  else if(viewDay>TODAY) d.appendChild(el("small",null,"先取り"));
+  var nb=el("button",null,"次の日 ›"); nb.type="button"; nb.disabled=!canNext();
+  nb.addEventListener("click",function(){ if(canNext()) goDay(addDays(viewDay,1)); });
+  nav.appendChild(pb); nav.appendChild(d); nav.appendChild(nb);
+}
+
+/* 1日1問（表示中の日の1問） */
 function renderToday(){
+  renderDayNav();
   var card = document.getElementById("today"); clear(card);
-  card.appendChild(el("p","lab","TODAY"));
-  var h = el("h2",null,"今日の1問"); card.appendChild(h);
-  if(TODAY < D.start){ card.appendChild(el("p",null,"1月4日から、毎日1問。")); return; }
-  if(TODAY >= D.exam){ card.appendChild(el("p",null,"試験、おつかれさまでした。")); return; }
-  var id = DayPick.get(), review = (D.schedule[TODAY]==null);
-  if(!id){
-    id = review ? pickReview() : D.schedule[TODAY];
-    if(id) DayPick.set(id);
+  var isToday = (viewDay===TODAY);
+  card.appendChild(el("p","lab",isToday?"TODAY":"DAY"));
+  var h = el("h2",null,isToday?"今日の1問":"この日の1問"); card.appendChild(h);
+  if(TODAY < D.start && viewDay < D.start){ card.appendChild(el("p",null,"1月4日から、毎日1問。")); return; }
+  if(viewDay >= D.exam){ card.appendChild(el("p",null,"試験、おつかれさまでした。")); return; }
+  var review = (D.schedule[viewDay]==null), id;
+  if(review){
+    id = DayPick.get(viewDay);
+    if(!id){ id = pickReview(); if(id) DayPick.set(viewDay,id); }
+    h.appendChild(el("small",null,isToday?"今日は復習":"復習の日"));
+  }else{
+    id = D.schedule[viewDay];
   }
-  if(review) h.appendChild(el("small",null,"今日は復習"));
   if(!id){
-    card.appendChild(el("p",null,"まだ解いた問題がありません。「これまでの問題」から解けます。"));
+    card.appendChild(el("p",null,"まだ解いた問題がありません。「すべて」から解けます。"));
     return;
   }
   var host = el("div"); card.appendChild(host);
-  renderQuestion(host, BY[id], {showSaved:true, done:refreshAll});
+  var o = {showSaved:true, done:refreshAll};
+  if(canNext()){ o.next=function(){ goDay(addDays(viewDay,1)); }; o.nextLabel="次の日の問題へ"; }
+  renderQuestion(host, BY[id], o);
 }
 function pickReview(){
   var rec = IchimonStore.get(), wrong=[], all=[], k;
@@ -257,6 +299,7 @@ function renderRecord(){
     var bar=el("div","bar"), fill=el("i"); fill.style.width=(p.s?Math.round(p.o/p.s*100):0)+"%"; bar.appendChild(fill);
     row.appendChild(bar); card.appendChild(row);
   });
+  var ft=el("p","foot"), ra=el("a",null,"学習ロードマップへ"); ra.href="/roadmap"; ft.appendChild(ra); card.appendChild(ft);
 }
 
 /* 解き直し */
@@ -269,10 +312,10 @@ function wrongIds(){
 function renderRedo(){
   var card=document.getElementById("redo"); clear(card);
   card.appendChild(el("p","lab","REVIEW"));
-  card.appendChild(el("h2",null,"解き直し"));
+  card.appendChild(el("h2",null,"復習"));
   if(redoQueue){
     if(!redoQueue.length){
-      card.appendChild(el("p",null,"解き直しは終わりです。"));
+      card.appendChild(el("p",null,"復習は終わりです。"));
       redoQueue=null; return;
     }
     var host=el("div"); card.appendChild(host);
@@ -296,7 +339,7 @@ var allFilter="all";
 function renderAll(){
   var card=document.getElementById("all"); clear(card);
   card.appendChild(el("p","lab","ALL"));
-  var det=el("details"); det.appendChild(el("summary",null,"これまでの問題"));
+  var det=el("div"); det.appendChild(el("h2",null,"これまでの問題"));
   var fl=el("div","filters"); det.appendChild(fl);
   [{k:"all",n:"すべて"}].concat(FIELDS).forEach(function(f){
     var b=el("button",null,f.n); b.type="button"; b.dataset.k=f.k; b.setAttribute("aria-pressed",f.k===allFilter?"true":"false");
@@ -339,8 +382,35 @@ function renderAllList(){
 }
 function refreshAll(){ renderRecord(); if(!redoQueue) renderRedo(); renderAllList(); }
 
-document.getElementById("date").textContent = jpDate(TODAY);
+/* 下の固定帯と画面の切り替え */
+var TABS=[{k:"ichimon",n:"1日1問",v:"v-today"},{k:"kiroku",n:"記録",v:"v-kiroku"},{k:"fukushu",n:"復習",v:"v-fukushu"},{k:"subete",n:"すべて",v:"v-subete"}];
+function hashKey(){
+  var h=(location.hash||"").replace(/^#/,"");
+  for(var j=0;j<TABS.length;j++) if(TABS[j].k===h) return h;
+  return "ichimon";
+}
+function showTab(key){
+  var bs=document.getElementById("tabs").querySelectorAll("button");
+  TABS.forEach(function(t,j){
+    var on=(t.k===key);
+    document.getElementById(t.v).hidden=!on;
+    if(on) bs[j].setAttribute("aria-current","page"); else bs[j].removeAttribute("aria-current");
+  });
+}
+(function(){
+  var bar=document.getElementById("tabs");
+  TABS.forEach(function(t){
+    var b=el("button",null,t.n); b.type="button"; b.dataset.k=t.k;
+    b.addEventListener("click",function(){
+      try{ history.replaceState(null,"",t.k==="ichimon"?location.pathname+location.search:"#"+t.k); }catch(e){}
+      showTab(t.k); window.scrollTo(0,0);
+    });
+    bar.appendChild(b);
+  });
+  window.addEventListener("hashchange",function(){ showTab(hashKey()); });
+})();
 renderToday(); renderRecord(); renderRedo(); renderAll();
+showTab(hashKey());
 
 /* サーバーから記録が届いたとき（別の端末の分が入ったとき）、画面を描き直す */
 function pgLoad(src){
