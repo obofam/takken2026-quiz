@@ -191,13 +191,16 @@ function renderQuestion(host, q, opts){
     if(q.ex) r.appendChild(el("p",null,q.ex));
     host.appendChild(r);
     var from = el("p","from");
-    if(q.epNo!=null){
+    var aired = (q.d <= TODAY);   /* その回がもう配信されているか */
+    var dp = q.d.split("-"), onair = "（"+(+dp[1])+"月"+(+dp[2])+"日の放送）";
+    var label = (q.epNo!=null?"第"+q.epNo+"回":"")+"『"+q.epTitle+"』";
+    if(q.epNo!=null && aired){
       from.appendChild(document.createTextNode("この問題は "));
-      var a = el("a",null,"第"+q.epNo+"回『"+q.epTitle+"』"); a.href="/ep/"+q.epNo;
+      var a = el("a",null,label); a.href="/ep/"+q.epNo;
       from.appendChild(a);
       from.appendChild(document.createTextNode(" から"));
     }else{
-      from.textContent = "この問題は 『"+q.epTitle+"』 から";
+      from.textContent = "この問題は "+label+(aired?"":onair)+" から";
     }
     host.appendChild(from);
     if(opts.next){

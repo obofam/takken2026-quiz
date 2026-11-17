@@ -56,11 +56,11 @@ test('ichimon page: day navigation (prev back to 2027-01-04; next only up to tod
   const n = navRules('2027-01-12');
   const at = d => { n.set(d); return [n.canPrev(), n.canNext()]; };
   assert.deepEqual(at('2027-01-04'), [false, true]);
-  assert.deepEqual(at('2027-01-09'), [true, true]);    // 1/10 は復習の日だが今日以前
+  assert.deepEqual(at('2027-01-09'), [true, true]);    // 1/10 は今日以前
   assert.deepEqual(at('2027-01-11'), [true, true]);    // 1/12 は今日
   assert.deepEqual(at('2027-01-12'), [true, false]);   // 今日より先へは進めない（Kei 11/17）
   const t2 = navRules('2027-01-09');
-  t2.set('2027-01-09'); assert.equal(t2.canNext(), false); // 1/10 は復習の日で今日より先
+  t2.set('2027-01-09'); assert.equal(t2.canNext(), false); // 1/10 は今日より先
   assert.equal(navRules('2026-11-17').canPrev(), false);
 });
 
@@ -75,6 +75,39 @@ test('ichimon page: bottom tab bar, hash screens, review days kept per date, sma
   assert.ok(h.includes('DayPick.get(viewDay)') && h.includes('DayPick.set(viewDay,id)'));
   assert.ok(h.includes('"次の日の問題へ"') && !h.includes('"先取り"'));
   assert.ok(h.includes('jpDate(viewDay)+"の1問"') && h.includes('if(!asked[q.id]) return;'));
+});
+
+// 出題表の決まり（Kei 11/17）：前半 1/4〜3/31 は全分野ミックスのやさしい問題、後半は配信済みの古い順
+test('ichimon schedule: first half (1/4-3/31) is easy mixed-field review, second half goes oldest-first among aired', () => {
+  const sb = { window: {} }; vm.createContext(sb);
+  vm.runInContext(copy('questions.js'), sb);
+  const D = sb.window.ICHIMON, BY = {}; D.questions.forEach(q => { BY[q.id] = q; });
+  assert.equal(D.questions.length, 281);
+  const grp = q => (q.f === 'zei' ? ([37, 38, 39].includes(q.epNo) ? 'other' : null) : q.f);
+  const first = Object.keys(D.schedule).filter(d => d <= '2027-03-31').sort().map(d => BY[D.schedule[d]]);
+  assert.equal(first.length, 87);
+  assert.ok(first.every(q => q), '前半に復習の日は無い');
+  assert.equal(new Set(first.map(q => q.id)).size, 87);
+  assert.ok(first.every(q => q.lv <= 2), 'lv3 は前半に出さない');
+  assert.ok(first.every(q => grp(q) !== null), '税（34〜36回・まとめ3）は前半に出さない');
+  for (let i = 1; i < first.length; i++) assert.notEqual(first[i].ep, first[i - 1].ep, '同じ回が2日続かない');
+  for (let i = 2; i < first.length; i++) assert.ok(!(grp(first[i]) === grp(first[i - 1]) && grp(first[i]) === grp(first[i - 2])), '同じ分野が3日続かない');
+  const cnt = {}; first.forEach(q => { cnt[grp(q)] = (cnt[grp(q)] || 0) + 1; });
+  assert.ok(cnt.gyoho > cnt.kenri && cnt.kenri > cnt.horei && cnt.horei > cnt.other, '業法>権利>法令>その他');
+  // 後半：その日までに配信された回の、まだ出していない最も古い（id順）問題
+  const used = new Set(first.map(q => q.id));
+  Object.keys(D.schedule).filter(d => d > '2027-03-31').sort().forEach(d => {
+    const want = D.questions.find(q => !used.has(q.id) && q.d <= d);
+    assert.equal(D.schedule[d], want ? want.id : null, d);
+    if (want) used.add(want.id);
+  });
+  assert.equal(used.size, 281, '試験日までに出しきれる');
+});
+
+test('ichimon page: 「この問題は〜から」links only aired episodes; unaired ones show the broadcast date as text', () => {
+  const h = copy('index.html');
+  assert.ok(h.includes('var aired = (q.d <= TODAY);'));
+  assert.ok(h.includes('if(q.epNo!=null && aired){') && h.includes('の放送）'));
 });
 
 test('the production ichimon folder is not created yet', () => {
