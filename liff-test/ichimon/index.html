@@ -214,12 +214,15 @@ function addDays(s,n){
   var a=s.split("-"), d=new Date(Date.UTC(+a[0],+a[1]-1,+a[2]+n));
   return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate());
 }
-/* 今日までの日、または配信日 d が今日以前の問題がある日だけ開ける */
+/* 開けるのは今日までの日だけ（先取りはしない。Kei 11/17） */
 function canView(day){
   if(day<D.start || day>D.end) return false;
-  if(day<=TODAY) return true;
-  var id=D.schedule[day];
-  return !!(id && BY[id] && BY[id].d<=TODAY);
+  return day<=TODAY;
+}
+/* 今日までに出題された問題（schedule で今日以前の日に割り当てたもの） */
+function askedIds(){
+  var s={}; Object.keys(D.schedule).forEach(function(day){ var id=D.schedule[day]; if(id && day<=TODAY) s[id]=true; });
+  return s;
 }
 function prevDay(){ var p=addDays(viewDay,-1); return p>D.end?D.end:p; }
 function canPrev(){ return prevDay()>=D.start; }
@@ -231,7 +234,6 @@ function renderDayNav(){
   pb.addEventListener("click",function(){ if(canPrev()) goDay(prevDay()); });
   var d=el("span","d",jpDate(viewDay));
   if(viewDay===TODAY) d.appendChild(el("small",null,"今日"));
-  else if(viewDay>TODAY) d.appendChild(el("small",null,"先取り"));
   var nb=el("button",null,"次の日 ›"); nb.type="button"; nb.disabled=!canNext();
   nb.addEventListener("click",function(){ if(canNext()) goDay(addDays(viewDay,1)); });
   nav.appendChild(pb); nav.appendChild(d); nav.appendChild(nb);
@@ -243,7 +245,7 @@ function renderToday(){
   var card = document.getElementById("today"); clear(card);
   var isToday = (viewDay===TODAY);
   card.appendChild(el("p","lab",isToday?"TODAY":"DAY"));
-  var h = el("h2",null,isToday?"今日の1問":"この日の1問"); card.appendChild(h);
+  var h = el("h2",null,isToday?"今日の1問":jpDate(viewDay)+"の1問"); card.appendChild(h);
   if(TODAY < D.start && viewDay < D.start){ card.appendChild(el("p",null,"1月4日から、毎日1問。")); return; }
   if(viewDay >= D.exam){ card.appendChild(el("p",null,"試験、おつかれさまでした。")); return; }
   var review = (D.schedule[viewDay]==null), id;
@@ -357,9 +359,9 @@ function renderAll(){
 }
 function renderAllList(){
   var list=document.getElementById("allq"); if(!list) return; clear(list);
-  var rec=IchimonStore.get(), lastEp=null, any=false;
+  var rec=IchimonStore.get(), lastEp=null, any=false, asked=askedIds();
   QS.forEach(function(q){
-    if(q.d>TODAY) return;
+    if(!asked[q.id]) return;
     if(allFilter!=="all" && q.f!==allFilter) return;
     any=true;
     if(q.ep!==lastEp){
@@ -378,7 +380,7 @@ function renderAllList(){
     });
     list.appendChild(r);
   });
-  if(!any) list.appendChild(el("p","sub","まだ配信された問題はありません。"));
+  if(!any) list.appendChild(el("p","sub","まだ出題された問題はありません。"));
 }
 function refreshAll(){ renderRecord(); if(!redoQueue) renderRedo(); renderAllList(); }
 

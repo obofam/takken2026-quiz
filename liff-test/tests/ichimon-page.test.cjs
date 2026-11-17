@@ -52,13 +52,13 @@ function navRules(today) {
   return sandbox.api;
 }
 
-test('ichimon page: day navigation (prev back to 2027-01-04; next only when that day is today or earlier, or its question is already delivered)', () => {
+test('ichimon page: day navigation (prev back to 2027-01-04; next only up to today, no 先取り)', () => {
   const n = navRules('2027-01-12');
   const at = d => { n.set(d); return [n.canPrev(), n.canNext()]; };
-  assert.deepEqual(at('2027-01-04'), [false, true]);   // 1/5 の問題 o002 は d=1/4
+  assert.deepEqual(at('2027-01-04'), [false, true]);
   assert.deepEqual(at('2027-01-09'), [true, true]);    // 1/10 は復習の日だが今日以前
-  assert.deepEqual(at('2027-01-12'), [true, true]);    // 1/13 の問題 o008 は d=1/12
-  assert.deepEqual(at('2027-01-20')[1], false);        // 1/21 の問題は d が今日より先
+  assert.deepEqual(at('2027-01-11'), [true, true]);    // 1/12 は今日
+  assert.deepEqual(at('2027-01-12'), [true, false]);   // 今日より先へは進めない（Kei 11/17）
   const t2 = navRules('2027-01-09');
   t2.set('2027-01-09'); assert.equal(t2.canNext(), false); // 1/10 は復習の日で今日より先
   assert.equal(navRules('2026-11-17').canPrev(), false);
@@ -73,7 +73,8 @@ test('ichimon page: bottom tab bar, hash screens, review days kept per date, sma
   assert.match(h, /font-size:15px;line-height:1\.8/);
   assert.match(h, /height:48px/);
   assert.ok(h.includes('DayPick.get(viewDay)') && h.includes('DayPick.set(viewDay,id)'));
-  assert.ok(h.includes('"次の日の問題へ"') && h.includes('"先取り"'));
+  assert.ok(h.includes('"次の日の問題へ"') && !h.includes('"先取り"'));
+  assert.ok(h.includes('jpDate(viewDay)+"の1問"') && h.includes('if(!asked[q.id]) return;'));
 });
 
 test('the production ichimon folder is not created yet', () => {
