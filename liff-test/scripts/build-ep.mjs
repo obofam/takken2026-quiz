@@ -689,7 +689,7 @@ export function buildShared() {
   viewJs = once(viewJs, 'if (!style || !t1 || !t2 || !t3) {', 'if (!style || !t1 || !t2) {');
   viewJs = once(viewJs, 'h3 = host(t3);', 'h3 = t3 ? host(t3) : null;');
   viewJs = once(viewJs, 'sec3.appendChild(h3.el);', 'if (h3) { sec3.appendChild(h3.el); }');
-  viewJs = once(viewJs, 'zukai.parentNode.insertBefore(sec3, honban);', 'if (h3) { zukai.parentNode.insertBefore(sec3, honban); }');
+  viewJs = once(viewJs, 'tw.appendChild(sec3);', 'if (h3) { tw.appendChild(sec3); }');
   viewJs = once(viewJs, 'setupSheet([h1.root, h2.root, h3.root], bar, {hint: hint, end: sheetEnd})', 'setupSheet(h3 ? [h1.root, h2.root, h3.root] : [h1.root, h2.root], bar, {hint: hint, end: sheetEnd})');
   const viewJsOut = `/* 自動生成：liff-test/scripts/build-ep1-text.mjs（正本は liff-test/ep1-3dan.html）。直さない。
    やさしいテキスト購入者の見え方の動き（赤シート・テキストの差し込み・近道）。ep/1/index.html が、購入の確認（テキストのAPI）で 200 が返った人にだけ読み込む。

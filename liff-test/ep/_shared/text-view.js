@@ -129,7 +129,7 @@
     /* ここから画面を変える */
     sec1.appendChild(h1.el); sec1.appendChild(q1);
     sec2.appendChild(h2.el); sec2.appendChild(q2);
-    /* 赤シートの帯は前半・後半の両方で上に残るよう、2つの節をまとめる箱の先頭に置く */
+    /* 赤シートの帯は前半・後半・今日のポイント・数字の節のあいだ上に残るよう、それらをまとめる箱の先頭に置く（数字の節を箱の外に置くと、そこまで下がった所で帯が画面から消える） */
     var tw = document.createElement('div'); tw.className = 'textwrap';
     var hint = document.createElement('p'); hint.className = 'shint';
     hint.innerHTML = '<span class="nk">赤い所を押すと答えが出ます。</span><span class="nk">もう一度押すと、またかくれます。</span>';
@@ -145,8 +145,8 @@
     tw.appendChild(bar); tw.appendChild(hint); tw.appendChild(sec1); tw.appendChild(sec2); tw.appendChild(pdfRow);
     var zukai = document.getElementById('zukai');
     zukai.parentNode.insertBefore(tw, zukai);
-    if (point.children.length) { zukai.parentNode.insertBefore(point, honban); }
-    if (h3) { zukai.parentNode.insertBefore(sec3, honban); }
+    if (point.children.length) { tw.appendChild(point); }
+    if (h3) { tw.appendChild(sec3); }
     /* 赤シートが自動でかかる目印：3つめの節（数字の節）の終わり（過去問1選の手前）。3つめが無い回は、その手前の最後の節（今日のポイント、無ければ後半のテキストの終わり）。高さ0・上のすき間を打ち消して、並びは変えない */
     var sheetEnd = document.createElement('div');
     sheetEnd.setAttribute('aria-hidden', 'true');

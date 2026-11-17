@@ -158,7 +158,8 @@ test('the 3-step page: no picture-illustration cards or img/*.webp for figures; 
   const nk=fs.readFileSync(path.join(__dirname,'../ep/1/tsuzuki.html'),'utf8');
   assert.ok(!nk.includes('今回の数字')&&!nk.includes('data-part="3"'));
   const pg=fs.readFileSync(path.join(__dirname,'../ep1-3dan.html'),'utf8');
-  assert.match(pg,/insertBefore\(sec3, honban\)/);assert.match(pg,/setupSheet\(\[h1\.root, h2\.root, h3\.root\]/);
+  /* 数字の節は、赤シートの帯と同じ箱（tw）の中に入れる。外に置くと、そこまで下がった所で帯が消える */
+  assert.match(pg,/tw\.appendChild\(sec3\)/);assert.doesNotMatch(pg,/insertBefore\(sec3, honban\)/);assert.match(pg,/setupSheet\(\[h1\.root, h2\.root, h3\.root\]/);
 });
 
 // ---- GET /api/ep-pdf（印刷用A4版）：判定は ep-text と同じ。PDFの実体が無い環境でも通るよう読み込みを差し替える ----
