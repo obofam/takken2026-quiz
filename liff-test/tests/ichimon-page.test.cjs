@@ -107,7 +107,7 @@ test('ichimon schedule: first half (1/4-3/31) is easy mixed-field review, second
 test('ichimon page: 「この問題は〜から」links only aired episodes; unaired ones show the broadcast date as text', () => {
   const h = copy('index.html');
   assert.ok(h.includes('var aired = (q.d <= TODAY);'));
-  assert.ok(h.includes('if(q.epNo!=null && aired){') && h.includes('の放送）'));
+  assert.ok(h.includes('}else if(q.epNo!=null){') && h.includes('"この問題は、詳しくは"') && h.includes('"日の放送予定です。"'));
 });
 
 test('the production ichimon folder is not created yet', () => {

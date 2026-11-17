@@ -192,15 +192,18 @@ function renderQuestion(host, q, opts){
     host.appendChild(r);
     var from = el("p","from");
     var aired = (q.d <= TODAY);   /* その回がもう配信されているか */
-    var dp = q.d.split("-"), onair = "（"+(+dp[1])+"月"+(+dp[2])+"日の放送）";
+    var dp = q.d.split("-");
     var label = (q.epNo!=null?"第"+q.epNo+"回":"")+"『"+q.epTitle+"』";
-    if(q.epNo!=null && aired){
+    if(!aired){
+      /* まだ放送していない回（1〜3月の全分野ミックス）：回の名前は出さず、放送の日だけ（Kei 11/17） */
+      from.textContent = "この問題は、詳しくは"+(+dp[1])+"月"+(+dp[2])+"日の放送予定です。";
+    }else if(q.epNo!=null){
       from.appendChild(document.createTextNode("この問題は "));
       var a = el("a",null,label); a.href="/ep/"+q.epNo;
       from.appendChild(a);
       from.appendChild(document.createTextNode(" から"));
     }else{
-      from.textContent = "この問題は "+label+(aired?"":onair)+" から";
+      from.textContent = "この問題は "+label+" から";
     }
     host.appendChild(from);
     if(opts.next){
