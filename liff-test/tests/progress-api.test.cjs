@@ -18,9 +18,11 @@ function response(){const headers={};return {code:0,data:null,headers,setHeader(
 const cookie=(id=user)=>s.COOKIE+'='+s.sign({purpose:'session',userId:id,provider:'email',subject:'tester@example.com',exp:Date.now()/1000+600});
 const get=(patch={})=>({method:'GET',url:'/api/progress',headers:{host:'localhost:3000',cookie:cookie(),...patch}});
 const post=(body,patch={})=>({method:'POST',url:'/api/progress',body,headers:{host:'localhost:3000',cookie:cookie(),origin:'http://localhost:3000','content-type':'application/json',...patch}});
-const okValue=(kind,v)=>(kind==='listened'||kind==='kako')?(v===1||v===2):kind==='done'?v===true:false;
+const oxValue=v=>v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join()==='r,t'&&Array.isArray(v.r)&&v.r.length>=1&&v.r.length<=10&&v.r.every(x=>x===0||x===1)&&typeof v.t==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v.t);
+const okValue=(kind,v)=>kind==='ox'?oxValue(v):(kind==='listened'||kind==='kako')?(v===1||v===2):kind==='done'?v===true:false;
+const okKey=(kind,k)=>kind==='ox'?/^o[0-9]{3}$/.test(k):/^[A-Za-z0-9-]{1,40}$/.test(k);
 // 表と同じ規則の最小の再現：サーバーにあるキーは merge で残す、null は消す、検査に落ちたら invalid_progress（400相当）。
-function database({rows={},allowed=true,noKakoColumn=false}={}){
+function database({rows={},allowed=true,noKakoColumn=false,noOxColumn=false}={}){
   const log=[];
   global.fetch=async(url,options={})=>{
     const u=new URL(url),body=options.body?JSON.parse(options.body):undefined;log.push({path:u.pathname,body});
@@ -30,16 +32,17 @@ function database({rows={},allowed=true,noKakoColumn=false}={}){
     if(u.pathname==='/rest/v1/progress'){
       // kako の列が無い表（migration の適用前）は、kako を選ぶと 400 になる
       if(noKakoColumn&&u.searchParams.get('select').includes('kako'))return reply({message:'column progress.kako does not exist',code:'42703'},400);
+      if(noOxColumn&&u.searchParams.get('select').includes('ox'))return reply({message:'column progress.ox does not exist',code:'42703'},400);
       const who=u.searchParams.get('user_id').replace(/^eq\./,'');return reply(rows[who]?[rows[who]]:[]);}
-    const row=()=>rows[body.p_user_id]??={listened:{},done:{},kako:{},updated_at:'2026-11-13T00:00:00+00:00'};
+    const row=()=>rows[body.p_user_id]??={listened:{},done:{},kako:{},ox:{},updated_at:'2026-11-13T00:00:00+00:00'};
     const bad=()=>reply({message:'invalid_progress',code:'22023'},400);
     if(u.pathname==='/rest/v1/rpc/set_progress'){
-      if(!['listened','done','kako'].includes(body.p_kind)||!/^[A-Za-z0-9-]{1,40}$/.test(body.p_key)||(body.p_value!==null&&!okValue(body.p_kind,body.p_value)))return bad();
-      const r=row();r.kako??={};if(body.p_value===null)delete r[body.p_kind][body.p_key];else r[body.p_kind][body.p_key]=body.p_value;return reply(r);
+      if(!['listened','done','kako','ox'].includes(body.p_kind)||!okKey(body.p_kind,body.p_key)||(body.p_value!==null&&!okValue(body.p_kind,body.p_value)))return bad();
+      const r=row();r.kako??={};r.ox??={};if(body.p_value===null)delete r[body.p_kind][body.p_key];else r[body.p_kind][body.p_key]=body.p_value;return reply(r);
     }
     if(u.pathname==='/rest/v1/rpc/merge_progress'){
-      for(const [k,m] of [['listened',body.p_listened],['done',body.p_done],['kako',body.p_kako??{}]])for(const [key,v] of Object.entries(m))if(!/^[A-Za-z0-9-]{1,40}$/.test(key)||!okValue(k,v))return bad();
-      const r=row();r.kako??={};r.listened={...body.p_listened,...r.listened};r.done={...body.p_done,...r.done};r.kako={...(body.p_kako??{}),...r.kako};return reply(r);
+      for(const [k,m] of [['listened',body.p_listened],['done',body.p_done],['kako',body.p_kako??{}],['ox',body.p_ox??{}]])for(const [key,v] of Object.entries(m))if(!okKey(k,key)||!okValue(k,v))return bad();
+      const r=row();r.kako??={};r.ox??={};r.ox={...(body.p_ox??{}),...r.ox};r.listened={...body.p_listened,...r.listened};r.done={...body.p_done,...r.done};r.kako={...(body.p_kako??{}),...r.kako};return reply(r);
     }
     if(u.pathname==='/rest/v1/users')return reply([{id:user}]);
     assert.fail('unexpected query '+u.pathname);
@@ -60,13 +63,13 @@ test('a user who is not on the allowlist gets 403',async()=>{
 test('GET with no row returns empty maps; only the session user is read',async()=>{
   const db=database({rows:{[other]:{listened:{'9':1},done:{},updated_at:'x'}}});
   const res=response();await progressApi(get(),res);
-  assert.equal(res.code,200);assert.deepEqual(res.data,{listened:{},done:{},kako:{},updatedAt:null});
+  assert.equal(res.code,200);assert.deepEqual(res.data,{listened:{},done:{},kako:{},ox:{},updatedAt:null});
   assert.ok(db.log.find(l=>l.path==='/rest/v1/progress'));
 });
 test('GET returns the stored maps and updatedAt',async()=>{
   database({rows:{[user]:{listened:{'1':2},done:{'1':true},updated_at:'2026-11-13T01:02:03+00:00'}}});
   const res=response();await progressApi(get(),res);
-  assert.deepEqual(res.data,{listened:{'1':2},done:{'1':true},kako:{},updatedAt:'2026-11-13T01:02:03+00:00'});
+  assert.deepEqual(res.data,{listened:{'1':2},done:{'1':true},kako:{},ox:{},updatedAt:'2026-11-13T01:02:03+00:00'});
 });
 test('POST one change: set, then null removes; the user comes from the session, not the body',async()=>{
   const db=database();
@@ -114,7 +117,32 @@ test('kako: merge adds only keys the server lacks; no kako (an old screen) still
 test('before migration 202611130004: GET still works (reads without the kako column and returns kako as empty)',async()=>{
   const db=database({noKakoColumn:true,rows:{[user]:{listened:{'1':1},done:{},updated_at:'x'}}});
   const res=response();await progressApi(get(),res);
-  assert.equal(res.code,200);assert.deepEqual(res.data,{listened:{'1':1},done:{},kako:{},updatedAt:'x'});
+  assert.equal(res.code,200);assert.deepEqual(res.data,{listened:{'1':1},done:{},kako:{},ox:{},updatedAt:'x'});
+  assert.equal(db.log.filter(l=>l.path==='/rest/v1/progress').length,3); // ox 付き→kako 付き→どちらも無し
+});
+const O1={r:[1,0,1],t:'2027-01-04'},O2={r:[0],t:'2027-01-05'};
+test('ox: GET returns it; POST {kind:ox} sets an object, null removes, bad keys and values are 400',async()=>{
+  const db=database({rows:{[user]:{listened:{},done:{},kako:{},ox:{o001:O1},updated_at:'x'}}});
+  let res=response();await progressApi(get(),res);assert.deepEqual(res.data.ox,{o001:O1});
+  res=response();await progressApi(post({kind:'ox',key:'o002',value:O2}),res);assert.equal(res.code,200);assert.deepEqual(res.data.ox,{o001:O1,o002:O2});
+  assert.deepEqual(db.log.find(l=>l.path==='/rest/v1/rpc/set_progress').body,{p_user_id:user,p_kind:'ox',p_key:'o002',p_value:O2});
+  res=response();await progressApi(post({kind:'ox',key:'o001',value:null}),res);assert.deepEqual(res.data.ox,{o002:O2});
+  for(const v of [1,true,[],{r:[],t:'2027-01-04'},{r:[2],t:'2027-01-04'},{r:[1],t:'x'},{r:[1],t:'2027-01-04',z:1}]){res=response();await progressApi(post({kind:'ox',key:'o001',value:v}),res);assert.equal(res.code,400,JSON.stringify(v));}
+  res=response();await progressApi(post({kind:'ox',key:'1',value:O1}),res);assert.equal(res.code,400);
+});
+test('ox: merge adds only keys the server lacks; no ox (an old screen) sends no p_ox; a bad ox is 400',async()=>{
+  const db=database({rows:{[user]:{listened:{},done:{},kako:{},ox:{o001:O2},updated_at:'x'}}});
+  let res=response();await progressApi(post({merge:true,listened:{},done:{},ox:{o001:O1,o002:O1}}),res);
+  assert.equal(res.code,200);assert.deepEqual(res.data.ox,{o001:O2,o002:O1});
+  assert.deepEqual(db.log.find(l=>l.path==='/rest/v1/rpc/merge_progress').body.p_ox,{o001:O1,o002:O1});
+  res=response();await progressApi(post({merge:true,listened:{'3':1},done:{}}),res);
+  assert.equal(res.code,200);assert.equal('p_ox' in db.log.filter(l=>l.path==='/rest/v1/rpc/merge_progress')[1].body,false);
+  for(const ox of [[1],'x',{o001:3},{x:O1}]){res=response();await progressApi(post({merge:true,listened:{},done:{},ox}),res);assert.equal(res.code,400,JSON.stringify(ox));}
+});
+test('before migration 202611170001: GET still works (reads without the ox column, kako is kept, ox is empty)',async()=>{
+  const db=database({noOxColumn:true,rows:{[user]:{listened:{'1':1},done:{},kako:{'1':2},updated_at:'x'}}});
+  const res=response();await progressApi(get(),res);
+  assert.equal(res.code,200);assert.deepEqual(res.data,{listened:{'1':1},done:{},kako:{'1':2},ox:{},updatedAt:'x'});
   assert.equal(db.log.filter(l=>l.path==='/rest/v1/progress').length,2);
 });
 test('other methods: 405',async()=>{

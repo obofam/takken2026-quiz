@@ -27,6 +27,18 @@
 
 # LIFF本人テスト・Sprint 1／2／3
 
+## 4つ目の種類 ox（2026-11-17）
+
+○×1日1問（`/ichimon`）の記録を、ログインした人はサーバーにも置く。ログインしていない人は今までどおり端末の localStorage だけ。kako のときと同じやり方。
+
+- 4つ目の種類 `ox`：`{"o001":{"r":[1,0,1],"t":"2027-01-04"}}`（キー＝問題の番号 `^o[0-9]{3}$`、`r`＝結果の並び・古い順・1〜10件・正解1／不正解0、`t`＝最後に解いた日 `YYYY-MM-DD`。ほかのフィールドは不可）。端末は `takken2027-ichimon`（ページの `IchimonStore` が書く）。表 `public.progress` に列 `ox jsonb not null default '{}'`（migration `202611170001_progress_ox.sql`。**`202611160001_purchases.sql` の次に1回だけ適用**）。1つの map は400キーまで。
+- DB：`progress_map_ok`（kind に ox）・`progress_ox_ok`（1件分の検査）／`set_progress`（kind='ox'。JSON null でキーを消す）／`merge_progress(user, listened, done, p_kako default '{}', p_ox default '{}')`（古い4引数の版は消す。サーバーに無いキーだけ足す）／`resolve_identity`（2人をまとめるとき、ox は同じキーなら t が新しいほう、同じ t なら残す利用者＝古いほう、片方だけならそれ）。返す jsonb に `ox`。足すだけで、既存の列・値は変えない。古い呼び方（ox を知らない set_progress・3／4引数の merge_progress）はそのまま通る。
+- API `/api/progress`：`GET` は `{listened, done, kako, ox, updatedAt}`。`POST {kind:'ox', key, value}`。`POST {merge:true, listened, done, kako, ox}`（ox は省略可・空なら `p_ox` を付けない）。ox の列がまだ無い表でも GET は動く（ox を外して読み直し、`ox:{}`）。api のファイルは増やしていない（無料プランの上限12個）。
+- `progress-sync.js`：ox を4つ目の種類として扱う（端末キー `takken2027-ichimon`・待ち行列・`set('ox', key, value)`）。端末側の合わせ込みは、同じキーなら t が新しいほうを残す（同じ t ならサーバーの値）。端末のほうが新しいキーはサーバーへ送り直す。サーバーが ox を返さないときは端末の ox にさわらない。ox の 400 は kako と同じく待ち行列に残す。`takken2027-ichimon-day`（復習の日の出題の固定）は端末だけ。
+- ページ：`4_LINE運用\1日1問_公開待ち\ichimon\index.html`。答えるたびに `IchimonStore.set` → `TakkenProgress.set('ox', id, 値)`。LIFF ID は本番（`takken.mimiobo.com`）が `2012583516-7vmvMorb`、それ以外のホストは試し用。サーバーから記録が届いたら今日の1問・記録・復習・一覧を描き直す。`/progress-sync.js` が読めなくても画面は今までどおり。
+- 試し用サイトの写し：`liff-test\ichimon\index.html` と `questions.js`（中身は公開待ちフォルダと同じ）。**ページを作り直したら写す先は2か所**（公開待ち `ichimon\` と `liff-test\ichimon\`）。本番の直下（`7_クイズと進捗トラッカー\ichimon\`）にはまだ置かない。
+- 適用の順：migration を先に、そのあとデプロイ。テストは `tests/progress-ox-db.test.cjs` ほか（`progress-api`・`progress-sync`・`ichimon-page`）。
+
 ## 過去問1選の結果（kako）（2026-11-13）
 
 過去問1選を解いた結果を、回ごとに記録に残す（回が溜まったら、過去問だけ横ぐしで見られるようにするための元データ。見る画面はまだ無い）。

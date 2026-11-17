@@ -13,7 +13,7 @@ function storage(initial = {}) {
   const m = new Map(Object.entries(initial));
   return { getItem: k => (m.has(k) ? m.get(k) : null), setItem: (k, v) => { m.set(k, String(v)); }, removeItem: k => m.delete(k), m };
 }
-/* server: { loggedIn: 'email'|'line'|null, listened, done, kako, failPost }（kako を渡さない＝古いサーバー：kako を返さず、kako の変更は 400） */
+/* server: { loggedIn: 'email'|'line'|null, listened, done, kako, ox, failPost }（kako・ox を渡さない＝古いサーバー：kako を返さず、kako の変更は 400） */
 function world({ local = {}, server = {}, liff } = {}) {
   const st = Object.assign({ loggedIn: null, listened: {}, done: {}, failPost: false, failGet: false }, server);
   const log = [];
@@ -28,11 +28,11 @@ function world({ local = {}, server = {}, liff } = {}) {
     }
     if (url === '/api/progress') {
       if (!st.loggedIn) return reply(401, { error: 'login_required' });
-      const out = () => (st.kako ? { listened: st.listened, done: st.done, kako: st.kako } : { listened: st.listened, done: st.done });
+      const out = () => Object.assign({ listened: st.listened, done: st.done }, st.kako ? { kako: st.kako } : {}, st.ox ? { ox: st.ox } : {});
       if (method === 'GET') return st.failGet ? reply(503, { error: 'service_unavailable' }) : reply(200, Object.assign(out(), { updatedAt: 'x' }));
       if (st.failPost) throw new Error('network');
-      if (body.merge) { st.listened = Object.assign({}, body.listened, st.listened); st.done = Object.assign({}, body.done, st.done); if (st.kako) st.kako = Object.assign({}, body.kako, st.kako); }
-      else { if (body.kind === 'kako' && !st.kako) return reply(400, { error: 'invalid_progress' }); const m = st[body.kind]; if (body.value === null) delete m[body.key]; else m[body.key] = body.value; }
+      if (body.merge) { st.listened = Object.assign({}, body.listened, st.listened); st.done = Object.assign({}, body.done, st.done); if (st.kako) st.kako = Object.assign({}, body.kako, st.kako); if (st.ox) st.ox = Object.assign({}, body.ox, st.ox); }
+      else { if ((body.kind === 'kako' && !st.kako) || (body.kind === 'ox' && !st.ox)) return reply(400, { error: 'invalid_progress' }); const m = st[body.kind]; if (body.value === null) delete m[body.key]; else m[body.key] = body.value; }
       return reply(200, out());
     }
     throw new Error('unexpected ' + url);
@@ -64,7 +64,7 @@ test('logged in by email session: merges the device once, replaces the two local
   let changed = 0;
   await w.P.init({ onChange: () => { changed++; } });
   const merge = w.posts()[0].body;
-  assert.deepEqual(merge, { merge: true, listened: { '1': 1, '2': 2 }, done: { '1': true }, kako: {} });
+  assert.deepEqual(merge, { merge: true, listened: { '1': 1, '2': 2 }, done: { '1': true }, kako: {}, ox: {} });
   assert.equal(w.st.listened['1'], 2); // サーバーの値が残る
   assert.deepEqual(parse(w.ls, 'takken2027-listened'), { '1': 2, '2': 2, '3': 1 });
   assert.deepEqual(parse(w.ls, 'takken2027-done'), { '1': true });
@@ -171,7 +171,7 @@ test('merge failure or GET failure: state error, the local record is kept as it 
 test('old array format and invalid entries are cleaned before the merge is sent; a broken localStorage never throws', async () => {
   const w = world({ local: { 'takken2027-listened': '[1,2]', 'takken2027-done': '{"3":true,"4":"x","a b":true}' }, server: { loggedIn: 'email' } });
   await w.P.init({});
-  assert.deepEqual(w.posts()[0].body, { merge: true, listened: { '1': 1, '2': 1 }, done: { '3': true }, kako: {} });
+  assert.deepEqual(w.posts()[0].body, { merge: true, listened: { '1': 1, '2': 1 }, done: { '3': true }, kako: {}, ox: {} });
   const broken = world({ local: { 'takken2027-listened': '{oops' }, server: { loggedIn: 'email' } });
   await broken.P.init({});
   assert.equal(broken.P.state(), 'synced');
@@ -289,4 +289,69 @@ test('kako: the solving code (line-full.js / ep1-full.js) writes takken2027-kako
   const prod = fs.readFileSync(path.join(root, '../roadmap/index.html'), 'utf8');
   assert.ok(!prod.includes('過去問 ○') && !prod.includes('過去問 ×') && !/\.acts \.kk/.test(prod), 'roadmap/index.html');
   assert.match(prod, /<span class="ck'\+\(DN\[e\.n\]\?' on':''\)\+'">3問/, 'roadmap/index.html');
+});
+
+/* ---- ○×1日1問の記録（ox）：4つ目の種類。端末のキーは takken2027-ichimon ---- */
+const OA = { r: [1, 0, 1], t: '2027-01-04' }, OB = { r: [0], t: '2027-01-05' }, OC = { r: [1], t: '2027-01-06' };
+test('ox: the device value is merged once; on the same key the newer t stays on the device and is sent back to the server', async () => {
+  const w = world({
+    local: { 'takken2027-ichimon': JSON.stringify({ o001: OA, o002: OC, o003: OA, bad: OA, o004: { r: [2], t: '2027-01-04' }, o005: { r: [1], t: '2027-01-04', x: 1 }, o006: { r: [], t: '2027-01-04' } }) },
+    server: { loggedIn: 'email', ox: { o001: OB, o002: OB, o009: OB } },
+  });
+  await w.P.init({});
+  await new Promise(r => setTimeout(r, 20));
+  assert.deepEqual(w.posts()[0].body.ox, { o001: OA, o002: OC, o003: OA }); // 形に合わないものは送らない
+  assert.deepEqual(parse(w.ls, 'takken2027-ichimon'), { o001: OB, o002: OC, o003: OA, o009: OB }); // o001＝サーバーが新しい／o002＝端末が新しい
+  assert.deepEqual(w.st.ox, { o001: OB, o002: OC, o003: OA, o009: OB }); // 端末が新しい o002 はサーバーへ送り直す
+  assert.equal(w.ls.getItem('takken2027-progress-queue'), '[]');
+  assert.equal(w.P.state(), 'synced');
+});
+test('ox: same t keeps the server value; set() sends kind ox (object only, null removes), the last value wins', async () => {
+  const w = world({ local: { 'takken2027-ichimon': JSON.stringify({ o001: { r: [0], t: '2027-01-04' } }) }, server: { loggedIn: 'email', ox: { o001: OA } } });
+  await w.P.init({});
+  assert.deepEqual(parse(w.ls, 'takken2027-ichimon'), { o001: OA });
+  const before = w.posts().length;
+  w.P.set('ox', 'o002', OB);
+  w.P.set('ox', 'o002', OC);
+  w.P.set('ox', 'o003', 1);                     // 無視
+  w.P.set('ox', 'o004', { r: [3], t: '2027-01-04' }); // 無視
+  w.P.set('ox', 'o004', { r: [1], t: '2027-01-04', z: 1 }); // 無視
+  w.P.set('ox', 'x1', OA);                      // 無視（キーの決まり）
+  w.P.set('ox', 'o001', null);
+  await new Promise(r => setTimeout(r, 20));
+  assert.deepEqual(w.posts().slice(before).map(p => p.body), [{ kind: 'ox', key: 'o002', value: OC }, { kind: 'ox', key: 'o001', value: null }]);
+  assert.deepEqual(w.st.ox, { o002: OC });
+  assert.equal(w.ls.getItem('takken2027-progress-queue'), '[]');
+});
+test('ox: not logged in sends nothing and leaves the device value alone', async () => {
+  const dev = JSON.stringify({ o001: OA });
+  const w = world({ local: { 'takken2027-ichimon': dev } });
+  await w.P.init({});
+  w.P.set('ox', 'o001', OB);
+  assert.equal(w.log.filter(l => l.url === '/api/progress').length, 0);
+  assert.equal(w.ls.getItem('takken2027-ichimon'), dev);
+});
+test('ox: an old server (no ox in the reply) does not break anything; the device value stays and the change waits in the queue', async () => {
+  const w = world({ local: { 'takken2027-ichimon': JSON.stringify({ o001: OA }), 'takken2027-listened': '{"1":1}' }, server: { loggedIn: 'email', listened: { '2': 1 } } });
+  await w.P.init({});
+  assert.equal(w.P.state(), 'synced');
+  assert.deepEqual(parse(w.ls, 'takken2027-ichimon'), { o001: OA });
+  w.P.set('ox', 'o003', OB);
+  w.P.set('listened', '4', 1);
+  await new Promise(r => setTimeout(r, 20));
+  assert.deepEqual(w.st.listened, { '1': 1, '2': 1, '4': 1 });
+  assert.deepEqual(parse(w.ls, 'takken2027-progress-queue').map(i => [i.kind, i.key, i.value]), [['ox', 'o003', OB]]);
+});
+test('ox: a change made before the login check ends is sent afterwards, and the server value reaches the device', async () => {
+  const w = world({ server: { loggedIn: 'email', ox: { o001: OA, o002: OB } } });
+  const p = w.P.init({});
+  w.P.set('ox', 'o001', OC); // 確認の途中
+  await p; await new Promise(r => setTimeout(r, 20));
+  assert.deepEqual(w.st.ox, { o001: OC, o002: OB });
+  assert.deepEqual(parse(w.ls, 'takken2027-ichimon'), { o001: OC, o002: OB });
+});
+test('ox: the other fields on the device (takken2027-ichimon-day) are never touched', async () => {
+  const w = world({ local: { 'takken2027-ichimon-day': '{"d":"2027-01-04","id":"o001"}' }, server: { loggedIn: 'email', ox: { o001: OA } } });
+  await w.P.init({});
+  assert.equal(w.ls.getItem('takken2027-ichimon-day'), '{"d":"2027-01-04","id":"o001"}');
 });

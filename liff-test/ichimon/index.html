@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>○×1日1問｜耳で覚える宅建</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--cyan:#17C5E8;--cyan-dark:#0EA2C2;--cyan-soft:#D8F3FA;--ink:#141B21;--sub:#6B6B76;--line:#ececec;
+--lime:#D6F034;--lime-soft:#F4FBD2;--lime-ink:#4F6300;--miss:#B5727A;--miss-soft:#F8EDEE;}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font-family:"Noto Sans JP",system-ui,"Hiragino Sans","Yu Gothic",sans-serif;font-size:17px;line-height:1.9}
+main{max-width:720px;margin:0 auto;padding:28px 18px 56px}
+h1{font-size:26px;font-weight:900;line-height:1.4;margin:0}
+.date{color:var(--sub);margin:2px 0 22px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 2px 8px rgba(20,27,33,.04);padding:20px 18px;margin:0 0 18px}
+.lab{font-size:11px;letter-spacing:.15em;color:var(--cyan);font-weight:700;line-height:1.4;margin:0 0 6px}
+h2{font-size:18px;font-weight:700;margin:0 0 8px;line-height:1.5}
+h2 small{font-size:13px;font-weight:700;color:var(--cyan-dark);background:var(--cyan-soft);border-radius:999px;padding:2px 10px;margin-left:8px;vertical-align:middle}
+p{margin:0 0 8px}
+.sub{color:var(--sub);font-size:15px}
+.tag{display:inline-block;font-size:13px;font-weight:700;line-height:1.6;padding:1px 10px;border-radius:999px;color:var(--pd);background:var(--ps);margin-bottom:6px}
+.p1{--pc:#17C5E8;--pd:#0EA2C2;--ps:#D8F3FA}
+.p2{--pc:#9B8CE8;--pd:#6A58C9;--ps:#ECE8FB}
+.p3{--pc:#4CC9A4;--pd:#1E9474;--ps:#DDF5EC}
+.p4{--pc:#F5A54A;--pd:#B86A0E;--ps:#FDEBD3}
+.qtext{font-size:18px;font-weight:700;margin:2px 0 14px}
+.ox{display:flex;gap:12px}
+.ox button{flex:1 1 0;font:inherit;font-size:40px;font-weight:900;line-height:1;padding:20px 0;border-radius:999px;border:2px solid var(--cyan);background:#fff;color:var(--cyan-dark);cursor:pointer;touch-action:manipulation}
+.ox button:active{background:var(--cyan-soft)}
+.btn{font:inherit;font-size:16px;font-weight:700;padding:10px 22px;border-radius:999px;border:2px solid var(--cyan);background:var(--cyan);color:#fff;cursor:pointer}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid rgba(23,197,232,.5);outline-offset:2px}
+.res{border-radius:12px;padding:12px 14px;margin-top:2px}
+.res.ok{background:var(--lime-soft)}
+.res.ng{background:var(--miss-soft)}
+.res .v{font-weight:900;font-size:20px;margin:0}
+.res.ok .v{color:var(--lime-ink)}
+.res.ng .v{color:var(--miss)}
+.res .ans{font-weight:700}
+.from{font-size:15px;color:var(--sub);margin-top:10px}
+a{color:var(--cyan-dark)}
+.nums{display:flex;gap:28px;margin:0 0 14px}
+.nums b{font-size:28px;font-weight:900;line-height:1.4}
+.nums span{font-size:14px;color:var(--sub);display:block;line-height:1.5}
+.fr{display:grid;grid-template-columns:1fr auto;gap:0 12px;align-items:center;margin:0 0 10px;font-size:15px}
+.fr .n{font-weight:700}
+.fr .bar{grid-column:1/3;height:8px;border-radius:999px;background:var(--ps);overflow:hidden;margin-top:2px}
+.fr .bar i{display:block;height:100%;background:var(--pc);border-radius:999px}
+details summary{cursor:pointer;font-weight:700;font-size:18px;list-style:none}
+details summary::-webkit-details-marker{display:none}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.filters button{font:inherit;font-size:14px;font-weight:700;padding:3px 14px;border-radius:999px;border:1px solid var(--cyan);background:#fff;color:var(--cyan-dark);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--cyan);color:#fff}
+.eph{font-size:14px;font-weight:700;color:var(--sub);margin:16px 0 2px;line-height:1.6}
+.row{display:flex;gap:10px;width:100%;text-align:left;font:inherit;font-size:15px;line-height:1.6;background:none;border:0;border-top:1px solid var(--line);padding:8px 2px;cursor:pointer;color:var(--ink)}
+.row .t{flex:1}
+.row .s{flex:none;font-size:13px;font-weight:700;color:var(--sub)}
+.row .s.ok{color:var(--lime-ink)}
+.row .s.ng{color:var(--miss)}
+.one{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:6px}
+.foot{text-align:center;font-size:15px;margin-top:28px}
+</style>
+</head>
+<body>
+<main>
+<h1>○×1日1問</h1>
+<p class="date" id="date"></p>
+<section class="card" id="today"></section>
+<section class="card" id="record"></section>
+<section class="card" id="redo"></section>
+<section class="card" id="all"></section>
+<p class="foot"><a href="/roadmap">学習ロードマップへ</a></p>
+</main>
+<script src="questions.js"></script>
+<script>
+(function(){
+"use strict";
+var D = window.ICHIMON || {questions:[],schedule:{},start:"2027-01-04",end:"2027-10-16",exam:"2027-10-17"};
+var QS = D.questions, BY = {}, i;
+for(i=0;i<QS.length;i++) BY[QS[i].id]=QS[i];
+var FIELDS = [{k:"gyoho",n:"業法",c:"p1"},{k:"kenri",n:"権利関係",c:"p2"},{k:"horei",n:"法令上の制限",c:"p3"},{k:"zei",n:"税・その他",c:"p4"}];
+var FBY = {}; FIELDS.forEach(function(f){FBY[f.k]=f;});
+var WD = ["日","月","火","水","木","金","土"];
+
+function pad(n){return (n<10?"0":"")+n;}
+/* 今日の日付（日本時間）。?today= は本番ホスト以外でだけ有効 */
+function jstToday(){
+  try{
+    var p = new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+    if(/^\d{4}-\d{2}-\d{2}$/.test(p)) return p;
+  }catch(e){}
+  var d=new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+}
+function getToday(){
+  var t = jstToday();
+  if(location.hostname !== "takken.mimiobo.com"){
+    var m = /[?&]today=(\d{4}-\d{2}-\d{2})(?:&|$)/.exec(location.search);
+    if(m) t = m[1];
+  }
+  return t;
+}
+var TODAY = getToday();
+function jpDate(s){
+  var a=s.split("-"), d=new Date(Date.UTC(+a[0],+a[1]-1,+a[2]));
+  return (+a[1])+"月"+(+a[2])+"日（"+WD[d.getUTCDay()]+"）";
+}
+
+/* ログインした人の記録をサーバーにも置く（/progress-sync.js。ログインしていない人・読めないときは今までどおり端末だけ）。
+   同期の部品がまだ読めていない間の変更は待たせておき、読めたら渡す。例外はすべて握りつぶす。 */
+var pgReady = false, pgQueue = [];
+function pgSet(id, val){
+  try{
+    if(pgReady && window.TakkenProgress){ TakkenProgress.set("ox", id, val); } else { pgQueue.push([id, val]); }
+  }catch(e){}
+}
+/* 記録（端末は localStorage。ログインしていればサーバーにも） */
+var IchimonStore = (function(){
+  var KEY="takken2027-ichimon";
+  function get(){
+    try{
+      var o = JSON.parse(localStorage.getItem(KEY)||"{}");
+      return (o && typeof o==="object" && !Array.isArray(o)) ? o : {};
+    }catch(e){ return {}; }
+  }
+  function set(id, ok){
+    try{
+      var o = get(), e = o[id];
+      var r = (e && Array.isArray(e.r)) ? e.r.slice() : [];
+      r.push(ok?1:0);
+      if(r.length>10) r = r.slice(r.length-10);
+      o[id] = {r:r, t:TODAY};
+      localStorage.setItem(KEY, JSON.stringify(o));
+      pgSet(id, o[id]);
+    }catch(e){}
+  }
+  return {get:get,set:set};
+})();
+/* その日の出題を覚える（答えたあと復習の日に別の問題へ変わらないように） */
+var DayPick = {
+  KEY:"takken2027-ichimon-day",
+  get:function(){ try{ var o=JSON.parse(localStorage.getItem(this.KEY)||"null"); return (o&&o.d===TODAY&&BY[o.id])?o.id:null; }catch(e){return null;} },
+  set:function(id){ try{ localStorage.setItem(this.KEY, JSON.stringify({d:TODAY,id:id})); }catch(e){} }
+};
+function last(rec){ return (rec && Array.isArray(rec.r) && rec.r.length) ? rec.r[rec.r.length-1] : null; }
+function el(tag, cls, text){
+  var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;
+}
+function clear(n){ while(n.firstChild) n.removeChild(n.firstChild); }
+
+/* 1問の部品。opts.done(ok)=答えた直後、opts.next=「次の問題」ボタン、opts.showSaved=今日答え済みなら結果表示 */
+function renderQuestion(host, q, opts){
+  opts = opts || {};
+  clear(host);
+  var f = FBY[q.f];
+  host.appendChild(el("span","tag "+(f?f.c:""), f?f.n:""));
+  host.appendChild(el("p","qtext",q.q));
+  var rec = IchimonStore.get()[q.id];
+  if(opts.showSaved && rec && rec.t===TODAY && last(rec)!==null){
+    showResult(last(rec)===1);
+    return;
+  }
+  var ox = el("div","ox");
+  ["○","×"].forEach(function(v){
+    var b = el("button",null,v); b.type="button"; b.setAttribute("aria-label",v==="○"?"マル":"バツ");
+    b.addEventListener("click",function(){
+      var ok = (v===q.a);
+      IchimonStore.set(q.id, ok);
+      showResult(ok);
+      if(opts.done) opts.done(ok);
+    });
+    ox.appendChild(b);
+  });
+  host.appendChild(ox);
+
+  function showResult(ok){
+    var old = host.querySelector(".ox"); if(old) old.parentNode.removeChild(old);
+    var r = el("div","res "+(ok?"ok":"ng"));
+    r.appendChild(el("p","v",ok?"正解":"不正解"));
+    r.appendChild(el("p","ans","答え　"+q.a));
+    if(q.ex) r.appendChild(el("p",null,q.ex));
+    host.appendChild(r);
+    var from = el("p","from");
+    if(q.epNo!=null){
+      from.appendChild(document.createTextNode("この問題は "));
+      var a = el("a",null,"第"+q.epNo+"回『"+q.epTitle+"』"); a.href="/ep/"+q.epNo;
+      from.appendChild(a);
+      from.appendChild(document.createTextNode(" から"));
+    }else{
+      from.textContent = "この問題は 『"+q.epTitle+"』 から";
+    }
+    host.appendChild(from);
+    if(opts.next){
+      var nb = el("button","btn",opts.nextLabel||"次の問題"); nb.type="button"; nb.style.marginTop="12px";
+      nb.addEventListener("click",opts.next);
+      host.appendChild(nb);
+    }
+  }
+}
+
+/* 今日の1問 */
+function renderToday(){
+  var card = document.getElementById("today"); clear(card);
+  card.appendChild(el("p","lab","TODAY"));
+  var h = el("h2",null,"今日の1問"); card.appendChild(h);
+  if(TODAY < D.start){ card.appendChild(el("p",null,"1月4日から、毎日1問。")); return; }
+  if(TODAY >= D.exam){ card.appendChild(el("p",null,"試験、おつかれさまでした。")); return; }
+  var id = DayPick.get(), review = (D.schedule[TODAY]==null);
+  if(!id){
+    id = review ? pickReview() : D.schedule[TODAY];
+    if(id) DayPick.set(id);
+  }
+  if(review) h.appendChild(el("small",null,"今日は復習"));
+  if(!id){
+    card.appendChild(el("p",null,"まだ解いた問題がありません。「これまでの問題」から解けます。"));
+    return;
+  }
+  var host = el("div"); card.appendChild(host);
+  renderQuestion(host, BY[id], {showSaved:true, done:refreshAll});
+}
+function pickReview(){
+  var rec = IchimonStore.get(), wrong=[], all=[], k;
+  for(k in rec){
+    if(!BY[k]) continue;
+    var l=last(rec[k]); if(l===null) continue;
+    var item={id:k,t:rec[k].t||""}; all.push(item); if(l===0) wrong.push(item);
+  }
+  function cmp(a,b){ return a.t<b.t?-1:a.t>b.t?1:(a.id<b.id?-1:1); }
+  wrong.sort(cmp); all.sort(cmp);
+  return wrong.length?wrong[0].id:(all.length?all[0].id:null);
+}
+
+/* 記録 */
+function renderRecord(){
+  var card=document.getElementById("record"); clear(card);
+  card.appendChild(el("p","lab","RECORD"));
+  card.appendChild(el("h2",null,"記録"));
+  var rec=IchimonStore.get(), solved=0, ok=0, per={}, k;
+  FIELDS.forEach(function(f){per[f.k]={s:0,o:0};});
+  for(k in rec){
+    if(!BY[k]) continue;
+    var l=last(rec[k]); if(l===null) continue;
+    solved++; if(l===1) ok++;
+    var p=per[BY[k].f]; if(p){p.s++; if(l===1)p.o++;}
+  }
+  var nums=el("div","nums");
+  var a=el("div"); a.appendChild(el("b",null,solved+"問")); a.appendChild(el("span",null,"解いた問題")); nums.appendChild(a);
+  var b=el("div"); b.appendChild(el("b",null,solved?Math.round(ok/solved*100)+"%":"まだ")); b.appendChild(el("span",null,"正解率")); nums.appendChild(b);
+  card.appendChild(nums);
+  FIELDS.forEach(function(f){
+    var p=per[f.k], row=el("div","fr "+f.c);
+    row.appendChild(el("span","n",f.n));
+    row.appendChild(el("span",null,p.s?p.s+"問中"+p.o+"問正解":"まだ"));
+    var bar=el("div","bar"), fill=el("i"); fill.style.width=(p.s?Math.round(p.o/p.s*100):0)+"%"; bar.appendChild(fill);
+    row.appendChild(bar); card.appendChild(row);
+  });
+}
+
+/* 解き直し */
+var redoQueue=null;
+function wrongIds(){
+  var rec=IchimonStore.get(), out=[], k;
+  for(k in rec){ if(BY[k] && last(rec[k])===0) out.push(k); }
+  out.sort(); return out;
+}
+function renderRedo(){
+  var card=document.getElementById("redo"); clear(card);
+  card.appendChild(el("p","lab","REVIEW"));
+  card.appendChild(el("h2",null,"解き直し"));
+  if(redoQueue){
+    if(!redoQueue.length){
+      card.appendChild(el("p",null,"解き直しは終わりです。"));
+      redoQueue=null; return;
+    }
+    var host=el("div"); card.appendChild(host);
+    renderQuestion(host, BY[redoQueue[0]], {
+      done:function(){ renderRecord(); renderAllList(); },
+      next:function(){ redoQueue.shift(); renderRedo(); },
+      nextLabel: redoQueue.length>1?"次の問題":"終わる"
+    });
+    return;
+  }
+  var w=wrongIds();
+  if(!w.length){ card.appendChild(el("p",null,"間違えた問題はありません。")); return; }
+  card.appendChild(el("p",null,"間違えたままの問題 "+w.length+"問"));
+  var b=el("button","btn","解き直す（"+w.length+"問）"); b.type="button";
+  b.addEventListener("click",function(){ redoQueue=wrongIds(); renderRedo(); });
+  card.appendChild(b);
+}
+
+/* これまでの問題 */
+var allFilter="all";
+function renderAll(){
+  var card=document.getElementById("all"); clear(card);
+  card.appendChild(el("p","lab","ALL"));
+  var det=el("details"); det.appendChild(el("summary",null,"これまでの問題"));
+  var fl=el("div","filters"); det.appendChild(fl);
+  [{k:"all",n:"すべて"}].concat(FIELDS).forEach(function(f){
+    var b=el("button",null,f.n); b.type="button"; b.dataset.k=f.k; b.setAttribute("aria-pressed",f.k===allFilter?"true":"false");
+    b.addEventListener("click",function(){
+      allFilter=f.k; var bs=fl.querySelectorAll("button");
+      for(var j=0;j<bs.length;j++) bs[j].setAttribute("aria-pressed",bs[j].dataset.k===allFilter?"true":"false");
+      renderAllList();
+    });
+    fl.appendChild(b);
+  });
+  var one=el("div"); one.id="allone"; det.appendChild(one);
+  var list=el("div"); list.id="allq"; det.appendChild(list);
+  card.appendChild(det);
+  renderAllList();
+}
+function renderAllList(){
+  var list=document.getElementById("allq"); if(!list) return; clear(list);
+  var rec=IchimonStore.get(), lastEp=null, any=false;
+  QS.forEach(function(q){
+    if(q.d>TODAY) return;
+    if(allFilter!=="all" && q.f!==allFilter) return;
+    any=true;
+    if(q.ep!==lastEp){
+      lastEp=q.ep;
+      list.appendChild(el("p","eph",(q.epNo!=null?"第"+q.epNo+"回　":"")+q.epTitle));
+    }
+    var l=last(rec[q.id]);
+    var r=el("button","row"); r.type="button";
+    r.appendChild(el("span","t",q.q.length>30?q.q.slice(0,30)+"…":q.q));
+    r.appendChild(el("span","s "+(l===1?"ok":l===0?"ng":""),l===null?"未":(l===1?"正解":"不正解")));
+    r.addEventListener("click",function(){
+      var one=document.getElementById("allone"); clear(one);
+      var h=el("div","one"); one.appendChild(h);
+      renderQuestion(h,q,{done:function(){ renderRecord(); renderAllList(); if(!redoQueue) renderRedo(); }});
+      if(one.scrollIntoView) one.scrollIntoView({block:"nearest"});
+    });
+    list.appendChild(r);
+  });
+  if(!any) list.appendChild(el("p","sub","まだ配信された問題はありません。"));
+}
+function refreshAll(){ renderRecord(); if(!redoQueue) renderRedo(); renderAllList(); }
+
+document.getElementById("date").textContent = jpDate(TODAY);
+renderToday(); renderRecord(); renderRedo(); renderAll();
+
+/* サーバーから記録が届いたとき（別の端末の分が入ったとき）、画面を描き直す */
+function pgLoad(src){
+  return new Promise(function(ok, ng){
+    var sc = document.createElement("script"); sc.src = src; sc.async = true; sc.onload = ok; sc.onerror = ng; document.head.appendChild(sc);
+  });
+}
+function pgStart(){
+  var prod = location.hostname === "takken.mimiobo.com";
+  /* 本番の LIFF ID はロードマップと同じ。試し用のホストでは試し用の LIFF ID */
+  var liffId = prod ? "2012583516-7vmvMorb" : "2011606963-hH0DzETc";
+  var inLine = /\sLine\//i.test(navigator.userAgent || "");
+  (inLine ? pgLoad("https://static.line-scdn.net/liff/edge/2/sdk.js").catch(function(){}) : Promise.resolve())
+    .then(function(){ return pgLoad("/progress-sync.js"); })
+    .then(function(){
+      if(!window.TakkenProgress) return;
+      var p = TakkenProgress.init({ liffId: liffId, cookieHint: prod, onChange: function(){ renderToday(); refreshAll(); } });
+      pgReady = true;
+      pgQueue.splice(0).forEach(function(q){ TakkenProgress.set("ox", q[0], q[1]); });
+      return p;
+    }).catch(function(){});
+}
+if(document.readyState === "complete"){ setTimeout(pgStart, 0); } else { window.addEventListener("load", function(){ setTimeout(pgStart, 0); }); }
+})();
+</script>
+</body>
+</html>
