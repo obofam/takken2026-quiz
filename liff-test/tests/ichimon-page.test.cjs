@@ -110,6 +110,10 @@ test('ichimon page: 「この問題は〜から」links only aired episodes; una
   assert.ok(h.includes('}else if(q.epNo!=null){') && h.includes('"この問題は、詳しくは"') && h.includes('"日の放送予定です。"'));
 });
 
-test('the production ichimon folder is not created yet', () => {
-  assert.equal(fs.existsSync(path.resolve(root, '../ichimon')), false);
+test('the production ichimon folder is the same as the test copy (Kei 11/17「これでいこう」)', () => {
+  for (const f of ['index.html', 'questions.js']) {
+    const a = fs.readFileSync(path.resolve(root, '../ichimon', f), 'utf8').replace(/\r\n/g, '\n');
+    const b = fs.readFileSync(path.resolve(root, 'ichimon', f), 'utf8').replace(/\r\n/g, '\n');
+    assert.equal(a, b, f);
+  }
 });
