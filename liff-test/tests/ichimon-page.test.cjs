@@ -74,7 +74,7 @@ test('ichimon page: bottom tab bar, hash screens, review days kept per date, sma
   assert.match(h, /height:48px/);
   assert.ok(h.includes('DayPick.get(viewDay)') && h.includes('DayPick.set(viewDay,id)'));
   assert.ok(h.includes('"次の日の問題へ"') && !h.includes('"先取り"'));
-  assert.ok(h.includes('jpDate(viewDay)+"の1問"') && h.includes('if(!asked[q.id]) return;'));
+  assert.ok(h.includes('jpDate(viewDay)+"の1問"') && h.includes('if(!id || day>TODAY) return;') && h.includes('el("span","t",jpDate(day))'));
 });
 
 // 出題表の決まり（Kei 11/17）：前半 1/4〜3/31 は全分野ミックスのやさしい問題、後半は配信済みの古い順

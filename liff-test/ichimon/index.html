@@ -362,18 +362,16 @@ function renderAll(){
 }
 function renderAllList(){
   var list=document.getElementById("allq"); if(!list) return; clear(list);
-  var rec=IchimonStore.get(), lastEp=null, any=false, asked=askedIds();
-  QS.forEach(function(q){
-    if(!asked[q.id]) return;
+  /* 1行＝出題した日と、最後の結果（復習で正解すれば正解）。新しい日が上（Kei 11/17） */
+  var rec=IchimonStore.get(), any=false;
+  Object.keys(D.schedule).sort().reverse().forEach(function(day){
+    var id=D.schedule[day]; if(!id || day>TODAY) return;
+    var q=BY[id]; if(!q) return;
     if(allFilter!=="all" && q.f!==allFilter) return;
     any=true;
-    if(q.ep!==lastEp){
-      lastEp=q.ep;
-      list.appendChild(el("p","eph",(q.epNo!=null?"第"+q.epNo+"回　":"")+q.epTitle));
-    }
     var l=last(rec[q.id]);
     var r=el("button","row"); r.type="button";
-    r.appendChild(el("span","t",q.q.length>30?q.q.slice(0,30)+"…":q.q));
+    r.appendChild(el("span","t",jpDate(day)));
     r.appendChild(el("span","s "+(l===1?"ok":l===0?"ng":""),l===null?"未":(l===1?"正解":"不正解")));
     r.addEventListener("click",function(){
       var one=document.getElementById("allone"); clear(one);
