@@ -365,7 +365,7 @@ export function buildText(m) {
     '<div class="tx" data-part="2">' + p2 + '</div>' +
     (p3 ? '<div class="tx" data-part="3">' + p3 + '</div>' : '');
   const jsModule = `'use strict';\n// ${SCRIPT_NAME(ep)} が作る。手で直さない。やさしいテキスト第${ep}回（有料）。公開しない（api/_ は URL で取れない）。\nmodule.exports = ` + JSON.stringify(body) + ';\n';
-  return { html: body, jsModule, p1, p2, p3, n1, n2, css, raw, rs: [rsCount(p1), rsCount(p2), rsCount(p3)], symbols };
+  return { html: body, jsModule, p1, p2, p3, n1, n2, css, raw, rs: [rsCount(p1), rsCount(p2), rsCount(p3)], symbols, note: nt ? nt.file : null };
 }
 
 /* ============================================================ 図の抜粋（無料・LINE登録者向け）と、公開してよい部品 */
@@ -1119,6 +1119,9 @@ export function buildEp(ep, release, shared, opts = {}) {
     figs: ex.counts, figTotal: m.json.figures.length, rs: text.rs, rsTotal: text.rs.reduce((a, b) => a + b, 0),
     numbers: m.json.numbers.length, points: m.json.points.length, leakChecked: checked,
     pdfNote: m.json.files.pdf,
+    note: text.note,
+    /* 型（Kei 11/19）：やさしいテキストには noteの入口版の冒頭とひっかけあるあるが入る。入口版が無い回は、無いまま組んで警告する */
+    warn: text.note ? null : `第${ep}回：noteの入口版（3_note/2027_回ごとの入口記事/第${String(ep).padStart(2, '0')}回_*_入口版.md）が無いので、やさしいテキストに「はじめに」と「ひっかけあるある」が入っていない。入口版を作ってから組み直す`,
   };
   return { files, report, m, text, ex };
 }
