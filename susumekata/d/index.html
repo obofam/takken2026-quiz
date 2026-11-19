@@ -36,6 +36,19 @@
   .koma b{display:block;font-size:.8125rem;line-height:1.5;word-break:auto-phrase}
   .cic{flex:none;width:48px;height:48px}.cic svg{display:block;width:100%;height:100%}
   .card.ic{display:flex;gap:14px;align-items:flex-start}.card.ic>div:last-child{min-width:0;flex:1}
+  h2 .eg{font-size:.8125rem;font-weight:400;color:var(--muted)}
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px}
+  .dc{border:1px solid var(--line);border-radius:10px;min-height:66px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:5px 2px}
+  .dc span{font-size:.75rem;font-weight:700;color:var(--muted);line-height:1.2}
+  .dc.on{background:var(--soft);border-color:var(--cyan)}.dc.on span{color:var(--cyan-dark)}
+  .dc.we{grid-column:span 2}
+  .plan{list-style:none;display:grid;gap:8px}
+  .plan li{display:flex;gap:10px;align-items:flex-start;font-size:.9375rem;line-height:1.6}
+  .plan li>span:last-child{word-break:auto-phrase;text-wrap:pretty}
+  .dp{flex:none;min-width:2.9em;text-align:center;font-size:.75rem;font-weight:700;color:var(--cyan-dark);border:1.5px solid var(--cyan);border-radius:999px;padding:1px 8px;margin-top:2px;line-height:1.5}
+  .note{font-size:.8125rem;color:var(--muted);margin:-6px 0 8px}
+  .tl{display:block;width:100%;max-width:560px;height:auto}
+  .shot{display:block;width:100%;height:auto;aspect-ratio:16/10;border-radius:12px;border:1px solid var(--line);margin:4px 0 10px}
   .how{list-style:none;display:grid;gap:10px}
   .how{gap:4px}.how li{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:.875rem;line-height:1.6}
   .how .n{flex:none;width:1.6em;height:1.6em;border-radius:50%;background:var(--soft);color:var(--cyan-dark);display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900}
@@ -68,20 +81,22 @@
   </header>
 
   <section>
-    <h2>1週間の進め方</h2>
-    <div class="koma">
-      <div><svg viewBox="0 0 100 100"  aria-hidden="true"><circle cx="50" cy="50" r="50" fill="#E3F8FC"/><g transform="translate(9 9) scale(.82)" fill="#fff" stroke="#17C5E8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(32 26) scale(0.7)" stroke-width="8.57"><path d="M20 58 V50 A30 30 0 0 1 80 50 V58" fill="none"/><rect x="14" y="54" width="16" height="28" rx="8"/><rect x="70" y="54" width="16" height="28" rx="8"/></g><g transform="translate(2 2) scale(0.5)" stroke-width="12.00"><path d="M28 20 H72 A16 16 0 0 1 88 36 V52 A16 16 0 0 1 72 68 H50 L30 86 V68 H28 A16 16 0 0 1 12 52 V36 A16 16 0 0 1 28 20 Z"/><g fill="#17C5E8" stroke="none"><circle cx="36" cy="44" r="4.5"/><circle cx="50" cy="44" r="4.5"/><circle cx="64" cy="44" r="4.5"/></g></g></g></svg><b>届いた回を聴く</b></div>
-      <div><svg viewBox="0 0 100 100"  aria-hidden="true"><circle cx="50" cy="50" r="50" fill="#E3F8FC"/><g transform="translate(9 9) scale(.82)" fill="#fff" stroke="#17C5E8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="14" width="52" height="72" rx="8"/><path d="M36 34 H64 M36 48 H64 M36 62 H54" fill="none"/></g></svg><b>過去問を1問</b></div>
-      <div><svg viewBox="0 0 100 100"  aria-hidden="true"><circle cx="50" cy="50" r="50" fill="#E3F8FC"/><g transform="translate(9 9) scale(.82)" fill="#fff" stroke="#17C5E8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 46 H72 V58 A24 24 0 0 1 48 82 A24 24 0 0 1 24 58 Z"/><path d="M72 50 H78 A8 8 0 0 1 78 66 H69" fill="none"/><path d="M38 36 Q32 28 38 20 M54 36 Q48 28 54 20" fill="none"/></g></svg><b>忙しい週は<br>聴くだけ</b></div>
-    </div>
-    <ol class="how">
-      <li><span class="n">1</span><span>月曜にLINEで届く回を聴く</span></li>
-      <li><span class="n">2</span><span>過去問1選を1問解く</span></li>
-      <li><span class="n">3</span><span>時間が取れない週は、聴くだけにする</span></li>
-    </ol>
+    <h2>1週間の進め方 <span class="eg">（例）</span></h2>
+    <div class="week"><div class="dc on"><span>月</span><svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><g transform="translate(6 6) scale(.88)" fill="#fff" stroke="#17C5E8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(32 26) scale(0.7)" stroke-width="8.57"><path d="M20 58 V50 A30 30 0 0 1 80 50 V58" fill="none"/><rect x="14" y="54" width="16" height="28" rx="8"/><rect x="70" y="54" width="16" height="28" rx="8"/></g><g transform="translate(2 2) scale(0.5)" stroke-width="12.00"><path d="M28 20 H72 A16 16 0 0 1 88 36 V52 A16 16 0 0 1 72 68 H50 L30 86 V68 H28 A16 16 0 0 1 12 52 V36 A16 16 0 0 1 28 20 Z"/><g fill="#17C5E8" stroke="none"><circle cx="36" cy="44" r="4.5"/><circle cx="50" cy="44" r="4.5"/><circle cx="64" cy="44" r="4.5"/></g></g></g></svg></div><div class="dc "><span>火</span></div><div class="dc on"><span>水</span><svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><g transform="translate(6 6) scale(.88)" fill="#fff" stroke="#17C5E8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="14" width="52" height="72" rx="8"/><path d="M36 34 H64 M36 48 H64 M36 62 H54" fill="none"/></g></svg></div><div class="dc "><span>木</span></div><div class="dc "><span>金</span></div><div class="dc on we"><span>土日</span><svg viewBox="0 0 100 100" width="30" height="30" aria-hidden="true"><g transform="translate(6 6) scale(.88)" fill="#fff" stroke="#17C5E8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M50 32 C40 24 24 24 12 28 V74 C24 70 40 70 50 78 Z"/><path d="M50 32 C60 24 76 24 88 28 V74 C76 70 60 70 50 78 Z"/><rect x="60" y="16" width="18" height="24" rx="4" fill="#B9EEF8"/></g></svg></div></div>
+    <ul class="plan">
+      <li><span class="dp">月</span><span>LINEで届く放送と○×3問で、知識を確認する</span></li>
+      <li><span class="dp">水</span><span>過去問1選に挑戦する</span></li>
+      <li><span class="dp">土日</span><span>お手元のテキストで、論点を復習する</span></li>
+    </ul>
   </section>
 
   <p class="keep">学習が止まる週があっても問題ありません。その週は放送を聴くだけにして、翌週から再開してください。</p>
+
+  <section>
+    <h2>10月までの流れ</h2>
+    <p class="note">日程は予定です。</p>
+    <svg class="tl" viewBox="0 0 343 188" role="img" aria-label="10月までの流れ" font-family="Noto Sans JP,sans-serif"><text x="338" y="12" text-anchor="end" font-size="12" font-weight="700" fill="#0EA2C2">本試験（10月）</text><text x="24.4" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">1月</text><text x="57.1" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">2月</text><text x="89.8" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">3月</text><text x="122.5" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">4月</text><text x="155.2" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">5月</text><text x="187.9" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">6月</text><text x="220.6" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">7月</text><text x="253.3" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">8月</text><text x="286.0" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">9月</text><text x="318.7" y="31" text-anchor="middle" font-size="11" fill="#6B6B76">10月</text><line x1="8.0" y1="36" x2="8.0" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="40.7" y1="36" x2="40.7" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="73.4" y1="36" x2="73.4" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="106.1" y1="36" x2="106.1" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="138.8" y1="36" x2="138.8" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="171.5" y1="36" x2="171.5" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="204.2" y1="36" x2="204.2" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="236.9" y1="36" x2="236.9" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="269.6" y1="36" x2="269.6" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="302.3" y1="36" x2="302.3" y2="188" stroke="#f0f0f2" stroke-width="1"/><line x1="335.0" y1="36" x2="335.0" y2="188" stroke="#f0f0f2" stroke-width="1"/><text x="8" y="51" font-size="12" font-weight="700" fill="#141B21">放送（無料・毎週月曜）</text><rect x="8.0" y="56" width="312.3" height="10" rx="5" fill="#B9EEF8" stroke="#B9EEF8" stroke-width="1.5"/><line x1="8" y1="74" x2="335" y2="74" stroke="#e4e4e8" stroke-width="1"/><text x="8" y="89" font-size="12" font-weight="700" fill="#141B21">春の8週<tspan font-size="11" font-weight="400" fill="#6B6B76" dx="8">4月開始・週1回のナビ</tspan></text><rect x="106.1" y="94" width="65.4" height="10" rx="5" fill="#17C5E8" stroke="#17C5E8" stroke-width="1.5"/><line x1="8" y1="112" x2="335" y2="112" stroke="#e4e4e8" stroke-width="1"/><text x="8" y="127" font-size="12" font-weight="700" fill="#141B21">夏の8週<tspan font-size="11" font-weight="400" fill="#6B6B76" dx="8">7月中旬開始・3日に1回のナビ</tspan></text><rect x="220.6" y="132" width="59.8" height="10" rx="5" fill="#17C5E8" stroke="#17C5E8" stroke-width="1.5"/><line x1="8" y1="150" x2="335" y2="150" stroke="#e4e4e8" stroke-width="1"/><text x="8" y="165" font-size="12" font-weight="700" fill="#141B21">伴走<tspan font-size="11" font-weight="400" fill="#6B6B76" dx="8">毎週の小テスト＋担当者のアドバイス</tspan></text><rect x="266.3" y="170" width="54.0" height="10" rx="5" fill="#17C5E8" stroke="#17C5E8" stroke-width="1.5"/><circle cx="220.6" cy="175" r="6" fill="#17C5E8" stroke="#17C5E8" stroke-width="2"/><text x="209.6" y="179" text-anchor="end" font-size="11" fill="#6B6B76">募集</text><line x1="320.3" y1="36" x2="320.3" y2="188" stroke="#0EA2C2" stroke-width="2"/><circle cx="320.3" cy="36" r="3.5" fill="#0EA2C2"/></svg>
+  </section>
 
   <section>
     <h2>これからの進め方</h2>
@@ -100,7 +115,7 @@
       <span class="label">ナビがほしい方におすすめ</span>
       <p class="t">春の8週・夏の8週</p>
       <p>学習内容をこちらで決めてお届けする、8週間の配信です。</p>
-      <p>春は4月（週1回）、夏は7月中旬（3日に1回）に開始する予定です。開始前にLINEでお知らせします。</p>
+      <p>春は週1回、夏は3日に1回、やることをお届けします。開始前にLINEでお知らせします。</p>
       </div>
     </div>
     <div class="card ic">
@@ -108,8 +123,8 @@
       <div>
       <span class="label">人に見てほしい方へ</span>
       <p class="t">伴走</p>
-      <p>担当者が毎週の進捗を確認し、LINEでコメントをお返しします。</p>
-      <p>7月中旬に募集を開始する予定です。</p>
+      <p>毎週の小テストと、担当者からのアドバイスで、本試験まで伴走します。</p>
+      <p>7月中旬に募集し、8月末ごろに開始する予定です。</p>
       </div>
     </div>
   </section>
