@@ -847,7 +847,7 @@ export function buildSample(m, text, pages, shared) {
   [p1, p2].forEach((p, i) => { if (plain(keyText(p)) !== plain(cores[i].replace(/<h2>[^<]*<\/h2>/, ''))) throw new Error('見本ページ：今日のポイントが芯と違う ' + (i + 1)); });
   const road = read('../roadmap/index.html');
   const tiers = must(road.match(/<section class="tiers"[\s\S]*?<\/section>/), 'roadmap の表')[0].replace(/\s*<p class="tt-note">[\s\S]*?<\/p>/, '');
-  if ((tiers.match(/<tbody>[\s\S]*<\/tbody>/)[0].match(/<tr>/g) || []).length !== 8) throw new Error('見本ページ：表の行は8つのはず');
+  if ((tiers.match(/<tbody>[\s\S]*<\/tbody>/)[0].match(/<tr>/g) || []).length !== 7) throw new Error('見本ページ：表の行は7つのはず');
   /* ○×3問・過去問1選：本番（ep/1/index.html・ep/1/line-full.js）のデータと動きとCSSをそのまま取り込む（手で二重に持たない） */
   const idxHtml = pages.index, lineFullJs = pages.lineFullJs.replace(/\r\n?/g, '\n').trim();
   const quizScript = stripKiroku(must(idxHtml.match(/<script>\n(\(function \(\) \{\n  'use strict';\n  \/\* 3問のデータ[\s\S]*?\n\}\)\(\);)\n<\/script>/), 'ep/1/index.html の3問のスクリプト')[1]);
@@ -884,6 +884,7 @@ a{color:var(--ink);text-underline-offset:2px}
 .tt tbody th{text-align:left;font-weight:700;padding-left:0}
 .tt td.y{color:var(--cyan-dark);font-weight:900;font-size:1.15rem}
 .tt td.n{color:#8A949C}
+.tt td.w{color:var(--cyan-dark);font-weight:700;font-size:.875rem;line-height:1.35}
 /* 読む画面（購入者の画面と同じ部品） */
 .reader{display:flex;flex-direction:column;gap:12px}
 .thost{display:block}

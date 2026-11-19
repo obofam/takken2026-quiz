@@ -288,15 +288,16 @@ test('sample page (ep/1/text): wording rules - no 寄り道 as a selling point, 
   assert.match(html,/mimiobo\.substack\.com\/subscribe" target="_blank" rel="noopener" data-umami-event="text-mail" data-umami-event-ep="1">メールで受け取る/);
   assert.ok(fs.existsSync(path.join(sampleDir,'yasashii-text-01-a4.pdf')));
 });
-test('sample page (ep/1/text): the table has the 8 rows and the same marks as roadmap; the LINE/mail box has the same words',()=>{
+test('sample page (ep/1/text): the table has the 7 rows and the same marks as roadmap; the LINE/mail box has the same words',()=>{
   const html=sample(),road=fs.readFileSync(path.join(__dirname,'../../roadmap/index.html'),'utf8');
   const table=h=>h.match(/<section class="tiers"[\s\S]*?<\/section>/)[0].replace(/\s*<p class="tt-note">[\s\S]*?<\/p>/,'');
   assert.equal(table(html),table(road));
   const body=table(html).match(/<tbody>[\s\S]*<\/tbody>/)[0];
   const rows=[...body.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(m=>m[1]);
-  assert.deepEqual(rows.map(r=>plainText(r.match(/<th>([\s\S]*?)<\/th>/)[1])),['図解の最初の1枚','○×3問','図解の続き','過去問1選','図解ぜんぶ','今回の数字','赤シート','印刷用のA4版']);
-  assert.deepEqual(rows.map(r=>[...r.matchAll(/<td class="([yn])">/g)].map(m=>m[1]).join('')),['yyy','yyy','nyy','nyy','nny','nny','nny','nny']);
-  assert.doesNotMatch(table(html),/復習|使い方|まとめ|寄り道/);
+  assert.deepEqual(rows.map(r=>plainText(r.match(/<th>([\s\S]*?)<\/th>/)[1])),['図解','○×3問','過去問1選','ひっかけあるある','覚える数字まとめ','赤シート','印刷用のA4版']);
+  assert.deepEqual(rows.map(r=>[...r.matchAll(/<td class="([yn])">/g)].map(m=>m[1]).join('')),['','yyy','nyy','nny','nny','nny','nny']);
+  assert.deepEqual(plainText(rows[0]).replace(/^図解/,''),'最初の1枚続きまで全部');
+  assert.doesNotMatch(table(html),/復習|使い方|寄り道/);
   assert.match(plainText(table(html).match(/<thead>[\s\S]*?<\/thead>/)[0]),/^登録なしLINE・メール登録・無料やさしいテキスト有料・準備中$/);
   const cta=h=>h.match(/<section class="line-cta">[\s\S]*?<\/section>/)[0];
   const w=h=>plainText(cta(h).replace(/ data-umami[^>]*/g,''));
