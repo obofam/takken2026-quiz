@@ -32,6 +32,9 @@ a{color:var(--ink);text-underline-offset:2px}
 .btns{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .dbtn{appearance:none;-webkit-appearance:none;font:inherit;display:flex;align-items:center;justify-content:space-between;width:100%;min-height:52px;padding:0 20px;border-radius:999px;border:1.5px solid #D5DCE1;background:#EBEFF2;color:#8A949C;font-size:17px;font-weight:700;cursor:default}
 .dbtn .soon{font-size:14px;font-weight:700;color:#8A949C;white-space:nowrap}
+.dbtn.on{background:#17C5E8;border-color:#17C5E8;color:#fff;text-decoration:none;cursor:pointer}
+.dbtn.on .soon{color:#fff}
+.bnote{font-size:13px;line-height:1.7;color:#6B6B76;margin:-2px 0 4px}
 .back{display:flex;align-items:center;justify-content:center;min-height:48px;padding:0 16px;border-radius:999px;border:1.5px solid var(--sky);background:#fff;color:var(--ink);font-size:15px;font-weight:700;text-decoration:none}
 .back:active{background:var(--soft)}
 .back:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
@@ -74,7 +77,8 @@ a{color:var(--ink);text-underline-offset:2px}
 <p>「要点まとめと問題」は、宅建業法、権利関係、法令上の制限・税その他の3分野をまとめた3冊セットです。この見本は、宅建業法の第1回です。</p>
 <p>あとから追加した分も、購入した方に届きます。</p>
 <div class="btns">
-<button type="button" class="dbtn" disabled aria-disabled="true"><span>3冊セット</span><span class="soon">準備中</span></button>
+<a class="dbtn on" href="https://note.com/fond_bison5155/m/m373c85a7e952" target="_blank" rel="noopener" data-umami-event="mihon_set3_note"><span>3冊セット</span><span class="soon">noteで見る</span></a>
+<p class="bnote">いまは2026年版です。年が明けたら、同じ記事が2027年版に変わります。</p>
 <button type="button" class="dbtn" disabled aria-disabled="true"><span>全部入り</span><span class="soon">準備中</span></button>
 </div>
 </section>
