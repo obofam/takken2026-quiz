@@ -489,8 +489,16 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
 .nr{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px}
 .nv{font-size:24px;font-weight:900;color:var(--ink);line-height:1.3}
 .nr .nk{font-size:16px;line-height:1.5}
+
+/* noteの入口版から（はじめに・ひっかけあるある） */
+.ntl{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.ntl p,.hk p{font-size:16px;line-height:1.8}
+.ntl p+p,.hk p+p{margin-top:6px}
+.hk{margin-top:16px}
+.hkh{font-size:22px;font-weight:900;color:var(--ink);line-height:1.3;margin-bottom:8px}
+.hk .hkq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-weight:700}
 </style></template>
-<template id="tpl-1"><div class="tx" data-part="1"><div class="sec"><span class="sn">前半</span>宅建業と免許</div>
+<template id="tpl-1"><div class="tx" data-part="1"><div class="ntl"><p>宅建業法のいちばん最初の回です。</p><p>部屋を貸している大家さん、自宅を1回だけ売る会社員、畑を区画に分けて次々に売る地主さん。この3人のうち、免許がいるのは、次々に売る地主さんだけです。</p><p>この回では、免許がいる人といらない人の線の引き方と、免許をもらえない人の見方がわかります。</p></div><div class="sec"><span class="sn">前半</span>宅建業と免許</div>
   <div class="key"><span class="l">今日のポイント</span><span class="t"><span class="nw">「自分の物件を自分で貸す」</span>以外の取引を、<span class="nw">不特定多数にくり返し行うなら<span class="nb"><span class="rs" role="button" tabindex="0" data-hint="いる／いらない">免許がいる</span>。</span></span><span class="nw">事務所が1つの県だけなら<span class="nb"><span class="rs" role="button" tabindex="0" data-hint="知事／大臣">知事</span>、</span></span><span class="nw">2つ以上の県なら<span class="nb"><span class="rs" role="button" tabindex="0" data-hint="知事／大臣">大臣</span>。</span></span></span></div>
 
   
@@ -670,7 +678,7 @@ span.rs:not(.pill):not(.go),b.rs{padding:.1em 2px;margin:0 -1px}
       </div>
     </div>
   </figure></div></template>
-<template id="tpl-3"><div class="tx" data-part="3"><h2 class="numh">今回の数字</h2><div class="nl"><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○つ">1つ</span><span class="nk">知事免許になる事務所の県数</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○つ以上">2つ以上</span><span class="nk">大臣免許になる事務所の県数</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○年">5年</span><span class="nk">免許の有効期間</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○日前〜○日前">90日前〜30日前</span><span class="nk">更新の申請期間（満了日の）</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○年">5年</span><span class="nk">免許を受けられない期間</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○日以内">60日以内</span><span class="nk">聴聞の公示前に役員だった期間</span></div></div></div></template>
+<template id="tpl-3"><div class="tx" data-part="3"><h2 class="numh">今回の数字</h2><div class="nl"><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○つ">1つ</span><span class="nk">知事免許になる事務所の県数</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○つ以上">2つ以上</span><span class="nk">大臣免許になる事務所の県数</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○年">5年</span><span class="nk">免許の有効期間</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○日前〜○日前">90日前〜30日前</span><span class="nk">更新の申請期間（満了日の）</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○年">5年</span><span class="nk">免許を受けられない期間</span></div><div class="nr"><span class="nv rs" role="button" tabindex="0" data-hint="○日以内">60日以内</span><span class="nk">聴聞の公示前に役員だった期間</span></div></div><div class="hk"><h2 class="hkh">ひっかけあるある</h2><p>この回は、言葉を1つ入れ替えるだけで、本番のひっかけになる形が多いところです。その中から1つだけ。</p><p class="hkq">「地方公共団体が宅地を分譲する場合でも、反復継続して行うなら宅建業の免許が必要である」</p><p>答えは×です。国や地方公共団体には、宅建業法そのものが適用されないので、免許はいりません。</p></div></div></template>
 <script>
 (function () {
   'use strict';

@@ -68,7 +68,8 @@ test('build-ep: a find that is not unique in its page fails the build',{skip},as
 test('build-ep: the API serves any built episode and the paid dirs are git-ignored',{skip},()=>{
   for(const rel of ['api/_ep-text/ep1.js','liff-test/api/_ep-text/ep2.js'])execFileSync('git',['check-ignore','-q',rel],{cwd:prod});
   for(let n=1;n<=9;n++){const h=require('../api/_ep-text/ep'+n);assert.match(h,/data-part="1"/);assert.match(h,/data-part="2"/);}
-  assert.doesNotMatch(require('../api/_ep-text/ep8'),/data-part="3"/);// 今回の数字が0組の回は節を作らない
+  assert.doesNotMatch(require('../api/_ep-text/ep8'),/class="numh"/);// 今回の数字が0組の回は数字の見出しを作らない（節はひっかけあるあるだけ）
+  for(let n=1;n<=9;n++){const h=require('../api/_ep-text/ep'+n);assert.match(h,/<div class="ntl">/,n+' はじめに');assert.match(h,/<h2 class="hkh">ひっかけあるある<\/h2>/,n+' ひっかけ');}// noteの入口版の冒頭とひっかけ（Kei 11/19）
   assert.match(require('../api/_ep-text/ep2'),/○万円/);// 1,000万円 は ○万円
   assert.equal(JSON.parse(fs.readFileSync(path.join(root,'api/_ep-text/ep2.meta.json'),'utf8')).name,'やさしいテキスト_第2回_営業保証金と保証協会.pdf');
 });

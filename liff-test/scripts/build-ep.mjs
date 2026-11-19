@@ -262,6 +262,40 @@ const NUM_CSS = `
 .nv{font-size:24px;font-weight:900;color:var(--ink);line-height:1.3}
 .nr .nk{font-size:16px;line-height:1.5}
 `;
+/* noteの入口版（3_note/2027_回ごとの入口記事/第NN回_*_入口版.md）から、冒頭の数行と「ひっかけあるある」を取る（Kei 11/19）。
+   ポイント3つは「今日のポイント」と同じ文なので入れない。noteの文言はそのまま（足さない・削らない）。 */
+export const NOTE_DIR = path.resolve(PROD_ROOT, '..', '3_note', '2027_回ごとの入口記事');
+const NOTE_CSS = `
+/* noteの入口版から（はじめに・ひっかけあるある） */
+.ntl{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.ntl p,.hk p{font-size:16px;line-height:1.8}
+.ntl p+p,.hk p+p{margin-top:6px}
+.hk{margin-top:16px}
+.hkh{font-size:22px;font-weight:900;color:var(--ink);line-height:1.3;margin-bottom:8px}
+.hk .hkq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-weight:700}
+`;
+const mdInline = t => escText(t).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+export function noteParts(ep, dir = NOTE_DIR) {
+  const nn = String(ep).padStart(2, '0');
+  const names = fs.existsSync(dir) ? fs.readdirSync(dir).filter(n => n.startsWith(`第${nn}回_`) && n.endsWith('_入口版.md')) : [];
+  if (!names.length) return null;
+  if (names.length > 1) throw new Error(`第${ep}回：noteの入口版が ${names.length} 個（1個のはず）`);
+  const md = readText(path.join(dir, names[0]));
+  const lines = md.split('\n');
+  const at = re => lines.findIndex(l => re.test(l));
+  const iRule = at(/^─{5,}/), iPoint = at(/^## この回のポイント/), iHk = at(/^## ひっかけあるある/), iCheck = at(/^## 確かめるなら/);
+  if (iRule < 0 || iPoint < iRule || iHk < iPoint || iCheck < iHk) throw new Error(`第${ep}回：noteの入口版の形が読めない（─── → この回のポイント → ひっかけあるある → 確かめるなら の順のはず）：${names[0]}`);
+  const paras = (a, b) => lines.slice(a, b).map(l => l.trim()).filter(Boolean);
+  const lead = paras(iRule + 1, iPoint), hk = paras(iHk + 1, iCheck);
+  if (!lead.length || !hk.length) throw new Error(`第${ep}回：noteの入口版の冒頭かひっかけあるあるが空：${names[0]}`);
+  if (lead.concat(hk).some(l => /^[#\-*>]|\]\(/.test(l))) throw new Error(`第${ep}回：noteの入口版の冒頭・ひっかけに、見出し・箇条書き・リンクがある（そのまま載せられない）：${names[0]}`);
+  const p = l => (/^「.*」$/.test(l) ? `<p class="hkq">${mdInline(l)}</p>` : `<p>${mdInline(l)}</p>`);
+  return {
+    lead: '<div class="ntl">' + lead.map(l => `<p>${mdInline(l)}</p>`).join('') + '</div>',
+    hk: '<div class="hk"><h2 class="hkh">ひっかけあるある</h2>' + hk.map(p).join('') + '</div>',
+    file: names[0],
+  };
+}
 const spOverridesCss = () => {
   const css = readText(path.join(MATERIAL, '_tools', 'sp_overrides.css'));
   if (count(css, '.thost{') !== 1) throw new Error('sp_overrides.css の .thost{ が1つでない');
@@ -305,11 +339,11 @@ export function buildText(m) {
     if (/<use /.test(h)) throw new Error('use left');
     return withRs ? glue(h) : h;
   });
-  const [p1, p2] = make(true);
+  let [p1, p2] = make(true);
   const [n1, n2] = make(false);
   /* 今回の数字（有料だけ。無料の抜粋には入れない）。0組なら節そのものを作らない */
   const nums = json.numbers;
-  const p3 = nums.length
+  let p3 = nums.length
     ? '<h2 class="numh">今回の数字</h2><div class="nl">' + nums.map(x => `<div class="nr"><span class="nv rs"${RS} data-hint="${escAttr(hintOf(x.n, red.choice))}">${x.n}</span><span class="nk">${x.k}</span></div>`).join('') + '</div>'
     : '';
   /* 文言が変わっていないか */
@@ -319,8 +353,14 @@ export function buildText(m) {
   const rsCount = h => (h.match(/class="[^"]*\brs\b/g) || []).length;
   const expectRs = red.targets.length + nums.length;
   if (rsCount(p1) + rsCount(p2) + rsCount(p3) !== expectRs) throw new Error(`${ctx}：赤シートの数が合わない（${rsCount(p1)}+${rsCount(p2)}+${rsCount(p3)} と、対象${red.targets.length}＋今回の数字${nums.length}）`);
+  /* noteの入口版の本文（冒頭の数行＝テキストの頭、ひっかけあるある＝今回の数字の後ろ）。noteが無い回は入れない。赤シートは掛けない */
+  const nt = noteParts(ep);
+  if (nt) {
+    p1 = nt.lead + p1;
+    p3 = p3 + nt.hk;
+  }
   css = legacy ? css + EP1_CSS_TAIL : css + SP_HEAD + spOverridesCss();
-  const body = '<style>' + css + NUM_CSS + '</style>' +
+  const body = '<style>' + css + NUM_CSS + NOTE_CSS + '</style>' +
     '<div class="tx" data-part="1">' + p1 + '</div>' +
     '<div class="tx" data-part="2">' + p2 + '</div>' +
     (p3 ? '<div class="tx" data-part="3">' + p3 + '</div>' : '');
