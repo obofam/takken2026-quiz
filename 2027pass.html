@@ -122,6 +122,15 @@
   .peek figcaption{font-size:14px;font-weight:700;color:#0A6477;margin:0 0 8px}
   .peek img{display:block;width:100%;height:auto;border-radius:6px}
   @media(min-width:640px){.peek{grid-template-columns:1fr 1fr;align-items:start}}
+  .mihon{display:grid;grid-template-columns:118px 1fr;gap:18px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 8px rgba(20,27,33,.04);padding:16px;margin:0 0 12px;text-decoration:none;color:var(--text)}
+  .mihon-img{display:block;height:170px;overflow:hidden;border:1px solid var(--border);border-radius:8px;background:#fff}
+  .mihon-img img{display:block;width:100%;height:auto}
+  .mihon-body{display:block}
+  .mihon .label{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--accent);margin:0 0 4px}
+  .mihon .t{display:block;font-size:17px;font-weight:900;line-height:1.5}
+  .mihon .d{display:block;font-size:13.5px;color:var(--muted);line-height:1.7;margin:4px 0 12px}
+  .mihon .btn{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:14px;border-radius:999px;padding:9px 20px}
+  .p-ext a{color:#0A6477;font-weight:700;margin-left:4px}
   .sub-head{text-align:center;font-weight:700;margin:0 0 12px}
   .pills{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
   .pills li{background:#fff;border:1px solid var(--accent);color:#0A6477;font-size:14px;font-weight:700;border-radius:999px;padding:6px 14px;line-height:1.5}
@@ -174,7 +183,7 @@
           <p class="name">分野別 総まとめPDF 3冊セット（宅建業法・権利関係・法令制限＋税）＋一問一答・○×問題集</p>
           <div class="price"><div class="p-was">通常 <s>2,400円</s></div><div class="p-now"><strong>1,200<small>円</small></strong></div><span class="p-off">半額</span></div>
           <p class="p-ext">980円の単品をお持ちの方も、その記事がそのまま2027年度版に変わります。</p>
-          <p class="p-ext">LINEで「チラ見せ」と送ると、準備中の2027年度版の見本を見られます。</p>
+          <p class="p-ext">2027年度版の第1回を、まるごと見られます。<a href="/mihon/youten-1" data-umami-event="pass2027_mihon_click" data-umami-event-title="card">見本を見る</a></p>
           <a class="btn" href="https://note.com/fond_bison5155/m/m373c85a7e952" target="_blank" rel="noopener" data-umami-event="pass2027_note_click" data-umami-event-title="set3">noteで購入する</a>
         </div>
         <div class="card">
@@ -191,11 +200,16 @@
         <div class="card"><p class="t">スマホで読みやすい</p><p>字を大きく、文を短く。表で整理します。</p></div>
         <div class="card"><p class="t">本試験の形で確かめられる</p><p>回ごとに、本試験の過去問がつきます。</p></div>
       </div>
-      <div class="peek">
-        <figure><figcaption>いまの版</figcaption><img src="img/2027pass-ima.png" alt="いまの版の紙面。有効期間と更新が文章で書かれている" loading="lazy" width="780" height="872"></figure>
-        <figure><figcaption>2027年度版（準備中）</figcaption><img src="img/2027pass-2027.png" alt="2027年度版の紙面。有効期間と更新が表で整理されている" loading="lazy" width="718" height="553"></figure>
-      </div>
-      <p class="pills-note">準備中の画面です。仕上がりは変わることがあります。</p>
+      <a class="mihon" href="/mihon/youten-1" data-umami-event="pass2027_mihon_click" data-umami-event-title="block">
+        <span class="mihon-img"><img src="/mihon/youten-1/p01.webp" alt="2027年度版 第1回「宅建業と免許・免許の基準」の1ページ目" loading="lazy" width="860" height="1717"></span>
+        <span class="mihon-body">
+          <span class="label">SAMPLE</span>
+          <span class="t">2027年度版の見本</span>
+          <span class="d">第1回「宅建業と免許・免許の基準」の18ページを、まるごと載せています。</span>
+          <span class="btn">第1回をまるごと見る</span>
+        </span>
+      </a>
+      <p class="pills-note">準備稿です。仕上がりは変わることがあります。</p>
     </div>
   </section>
 
