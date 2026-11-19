@@ -4,6 +4,9 @@
 //
 // 試し用だけに書く：--shisaku を付ける（例：node scripts/build-ep.mjs 1-9 --shisaku）。本番（リポジトリ直下）には1バイトも書かない。
 //
+// 無料だけの回（やさしいテキストの材料がまだ無い回）：6_有料PDF/やさしいテキスト_2027/無料の1枚_2027/ の 第NN回_無料の1枚.json と .html（図1だけ）から、index.html（登録なしの見え方）だけを作る。
+//   流し込み材料 json がある回は今までどおり。無い回だけ、この材料を探す。
+//
 // 出し先（大事）
 //   試し用（liff-test が公開ルート）：liff-test/ep/N/（index.html・line-full.html・line-full.js・tsuzuki.html）と、有料の中身 liff-test/api/_ep-text/epN.js・epN.pdf。
 //   本番（リポジトリ直下）：ep-release.json の prod に入っている回だけ。ep/N/ と api/_ep-text/。入っていない回は本番へ書かない。
@@ -53,13 +56,42 @@ const jsJson = v => pyJson(v).replace(/<\//g, '<\\/');
 const SCRIPT_NAME = ep => (ep === 1 ? 'build-ep1-text.mjs' : 'build-ep.mjs'); /* 第1回の出力の注記は、いまの本番のまま（build-ep1-text.mjs は build-ep.mjs を呼ぶだけの入口として残る） */
 
 /* ============================================================ 材料を読む */
-export function loadMaterial(ep) {
+export const FREE_DIR = path.join(MATERIAL, '無料の1枚_2027');
+/* 無料だけの回の材料：json は直感図解の data.json と同じ形（ep・title・sub・date・sections・quizSets・prev2026）、html は図1だけ入ったテキストの html */
+export function loadFreeMaterial(ep, dir = FREE_DIR) {
   const nn = String(ep).padStart(2, '0');
+  const jp = path.join(dir, `第${nn}回_無料の1枚.json`), hp = path.join(dir, `第${nn}回_無料の1枚.html`);
+  const ctx = `第${nn}回（無料だけ）`;
+  if (!fs.existsSync(jp) || !fs.existsSync(hp)) throw new Error(`${ctx}：材料が無い（流し込み材料 json も、無料の1枚の json・html も）：${jp}`);
+  const json = readJson(jp);
+  if (json.ep !== ep) throw new Error(`${ctx}：json の ep が ${json.ep}（${ep} のはず）`);
+  if (typeof json.title !== 'string' || typeof json.sub !== 'string' || !json.title || !json.sub) throw new Error(ctx + '：title・sub が無い');
+  if (!/^\d{4}-\d\d-\d\d$/.test(String(json.date))) throw new Error(ctx + '：date が YYYY-MM-DD でない');
+  if (!Array.isArray(json.sections) || json.sections.length < 1 || json.sections.length > 3) throw new Error(ctx + '：sections は1〜3つのはず');
+  for (const x of json.sections) if (!x.label || !x.theme) throw new Error(ctx + '：sections に label・theme が無い');
+  checkQuizSets(json, ctx);
+  const html = readText(hp);
+  const figs = figsOf(html);
+  if (figs.length !== 1) throw new Error(`${ctx}：html の図が ${figs.length} 枚（図1の1枚だけのはず）`);
+  if (figNo(figs[0]) !== 1) throw new Error(`${ctx}：html の図の番号が ${figNo(figs[0])}（1のはず）`);
+  return { ep, nn, json, data: json, html, htmlName: path.basename(hp), freeOnly: true };
+}
+/* ○×の組：1〜3組・1組 2〜3問（第23・26回は1組3問、第30回は3組2問のことがある）。ラベルの「の3問」は問の数に合わせる */
+function checkQuizSets(data, ctx) {
+  if (!Array.isArray(data.quizSets) || data.quizSets.length < 1 || data.quizSets.length > 3) throw new Error(`${ctx}：○×の組は1〜3つのはず`);
+  for (const q of data.quizSets) {
+    if (!q.label || !q.theme) throw new Error(`${ctx}：○×の組に label・theme が無い`);
+    if (!Array.isArray(q.questions) || q.questions.length < 2 || q.questions.length > 3) throw new Error(`${ctx}：○×は1組2〜3問のはず`);
+    for (const x of q.questions) if (typeof x.text !== 'string' || typeof x.answer !== 'boolean' || typeof x.exp !== 'string') throw new Error(`${ctx}：○×の問に text・answer・exp が足りない`);
+  }
+}
+export function loadMaterial(ep, opts = {}) {
+  const nn = String(ep).padStart(2, '0');
+  const jsonPath = path.join(MATERIAL, `第${nn}回_流し込み材料.json`);
+  if (!fs.existsSync(jsonPath)) return loadFreeMaterial(ep, opts.freeDir); /* 流し込み材料が無い回は「無料だけ」の材料を探す */
   const names = fs.readdirSync(MATERIAL);
   const htmls = names.filter(n => n.startsWith('第' + nn + '回_') && n.endsWith('.html'));
   if (htmls.length !== 1) throw new Error(`第${nn}回の html が ${htmls.length} 個（1個のはず）`);
-  const jsonPath = path.join(MATERIAL, `第${nn}回_流し込み材料.json`);
-  if (!fs.existsSync(jsonPath)) throw new Error('流し込み材料 json が無い: ' + jsonPath);
   const json = readJson(jsonPath);
   if (json.ep !== ep) throw new Error(`json の ep が ${json.ep}（${ep} のはず）`);
   if (json.files.html !== htmls[0]) throw new Error('json の files.html が html と違う: ' + json.files.html + ' / ' + htmls[0]);
@@ -80,8 +112,7 @@ function validateMaterial(m) {
   if (json.figures.find(f => f.tier === 'free').half !== 1) throw new Error(`第${ep}回：free の図は前半にあるはず`);
   if (json.date !== data.date) throw new Error(`第${ep}回：日付が json と data.json で違う`);
   if (json.title !== data.title.replace(/\n/g, '')) throw new Error(`第${ep}回：題が json と data.json で違う`);
-  if (data.quizSets.length !== 2) throw new Error(`第${ep}回：○×3問の組は2つのはず`);
-  for (const q of data.quizSets) if (q.questions.length !== 3) throw new Error(`第${ep}回：○×は1組3問のはず`);
+  checkQuizSets(data, `第${ep}回`);
   for (const p of json.points) if (![1, 2].includes(p.half)) throw new Error(`第${ep}回：points の half が 1・2 以外`);
   if (json.points.length < 1 || json.points.length > 2) throw new Error(`第${ep}回：points は1〜2件のはず`);
   for (const x of json.numbers) if (/[<>&]/.test(x.n + x.k)) throw new Error(`第${ep}回：今回の数字に < > & がある`);
@@ -238,6 +269,17 @@ const spOverridesCss = () => {
   return '\n' + css.replace('.thost{', ':host{--sheet:#8E3B3B;');
 };
 
+/* テキストの html の <style> から、スマホ用に外す所（:root→:host・@page・@media print/screen）を外した CSS */
+const SP_HEAD = '\n/* ===== スマホ1列（材料の _tools/sp_overrides.css） ===== */';
+function baseCss(src, legacy) {
+  let css = src.match(/<style>([\s\S]*?)<\/style>/)[1];
+  css = css.replace(/:root\{/, ':host{');
+  css = stripBraceBlock(css, /@page\s*\{/);
+  if (legacy) css = css.replace(/@media print\{[\s\S]*?\n  \}\n/, '');
+  else { css = stripBraceBlock(css, /@media\s+print\s*\{/); css = stripBraceBlock(css, /@media\s+screen\s*\{/); }
+  return css;
+}
+
 /* ---- 1回ぶんのテキストを組む ----
    戻り値：{ html（API が返す文字列）, p1, p2, p3, n1, n2（赤シートなしの抜粋用）, css, raw（外した後の元）, … } */
 export function buildText(m) {
@@ -247,11 +289,7 @@ export function buildText(m) {
   const symbols = symbolsOf(src);
   const pages = [...src.matchAll(/<section class="page(?: p\d)?">([\s\S]*?)<\/section>\s*(?=<!--|<\/div>)/g)].map(x => x[1]);
   if (pages.length !== 2) throw new Error(ctx + '：ページが ' + pages.length + ' 個（2個のはず）');
-  let css = src.match(/<style>([\s\S]*?)<\/style>/)[1];
-  css = css.replace(/:root\{/, ':host{');
-  css = stripBraceBlock(css, /@page\s*\{/);
-  if (legacy) css = css.replace(/@media print\{[\s\S]*?\n  \}\n/, '');
-  else { css = stripBraceBlock(css, /@media\s+print\s*\{/); css = stripBraceBlock(css, /@media\s+screen\s*\{/); }
+  let css = baseCss(src, legacy);
   const raw = [stripPage(pages[0], true), stripPage(pages[1], false)];
   const before = raw.map(h => plain(inlineUse(h, symbols)));
   const red = json.redsheet;
@@ -281,7 +319,7 @@ export function buildText(m) {
   const rsCount = h => (h.match(/class="[^"]*\brs\b/g) || []).length;
   const expectRs = red.targets.length + nums.length;
   if (rsCount(p1) + rsCount(p2) + rsCount(p3) !== expectRs) throw new Error(`${ctx}：赤シートの数が合わない（${rsCount(p1)}+${rsCount(p2)}+${rsCount(p3)} と、対象${red.targets.length}＋今回の数字${nums.length}）`);
-  css = legacy ? css + EP1_CSS_TAIL : css + '\n/* ===== スマホ1列（材料の _tools/sp_overrides.css） ===== */' + spOverridesCss();
+  css = legacy ? css + EP1_CSS_TAIL : css + SP_HEAD + spOverridesCss();
   const body = '<style>' + css + NUM_CSS + '</style>' +
     '<div class="tx" data-part="1">' + p1 + '</div>' +
     '<div class="tx" data-part="2">' + p2 + '</div>' +
@@ -327,6 +365,21 @@ export function buildExcerpt(m, text) {
     '<div data-slot="cards1">\n' + seq(cards1) + '\n</div>\n' +
     '<div data-slot="cards2">\n' + seq(cards2) + '\n</div>\n';
   return { html, css, freeNo, fig1: fig(freeNo), orig, nuki, tier, counts: { free: 1, line: allNos.filter(n => tier[n] === 'line').length, paid: allNos.filter(n => tier[n] === 'paid').length } };
+}
+
+/* 無料だけの回：html の図1を、無料の図として取り出す（スマホ幅の手当ては第2〜9回と同じ：sp_overrides.css と図の幅の計算）。tsuzuki.html は作らない */
+export function buildFreeExcerpt(m) {
+  const { ep, html: src } = m;
+  const figs = figsOf(src);
+  if (figs.length !== 1) throw new Error(`第${ep}回（無料だけ）：図が ${figs.length} 枚（1枚のはず）`);
+  const symbols = symbolsOf(src);
+  const orig = figs[0];
+  const fig = inlineUse(planSvgs(orig), symbols);
+  if (/<use /.test(fig)) throw new Error('use left');
+  if (plain(inlineUse(orig, symbols)) !== plain(fig)) throw new Error(`第${ep}回（無料だけ）：図1の字が変わった`);
+  if (/\brs\b|role="button"/.test(fig.replace(/role="img"/g, ''))) throw new Error(`第${ep}回（無料だけ）：図1に赤シートの印がある`);
+  const css = noComments(baseCss(src, false) + SP_HEAD + spOverridesCss());
+  return { css, freeNo: 1, fig1: '<div class="tx" data-fig="1">' + fig + '</div>', orig: { 1: orig }, tier: { 1: 'free' }, counts: { free: 1, line: 0, paid: 0 } };
 }
 
 /* ============================================================ 回のページ（型に回の中身を入れる） */
@@ -485,7 +538,7 @@ const kakomonJs = (k, shuire) => {
   if (tail) out.tail = tail;
   return out;
 };
-const quizJs = data => data.quizSets.map(q => ({ label: `${q.label}　「${q.theme}」の3問`, questions: q.questions.map(x => ({ q: x.text, a: !!x.answer, exp: x.exp })) }));
+const quizJs = data => data.quizSets.map(q => ({ label: `${q.label}　「${q.theme}」の${q.questions.length}問`, questions: q.questions.map(x => ({ q: x.text, a: !!x.answer, exp: x.exp })) }));
 
 const y2026Section = prev => {
   if (!prev || !prev.length) return '';
@@ -500,13 +553,32 @@ const y2026Section = prev => {
 
 /* 配信日まで閉じる（第1回＝見本の回は閉じない）。条件は roadmap/index.html と同じ：端末の日付（new Date() の年月日）が配信日以上なら開く。
    試し用は、ふだんは開いたまま。?today=YYYY-MM-DD を付けたときだけ、その日として判定する（roadmap-an2.html と同じ言い方）。本番の型には today の上書きを入れない。 */
-function gateVals(ep, iso, dateLabel, test) {
-  if (CFG.SAMPLE_EPS.includes(ep)) return { GATE_SCRIPT: '', CLOSED_CSS: '', CLOSED_BOX: '', GUARD: '' };
+function gateVals(ep, iso, dateLabel, test, freeOnly) {
+  const noEarly = { EARLY_CSS: '', EARLY_NOTE: '', EARLY_RUN: '' };
+  if (CFG.SAMPLE_EPS.includes(ep)) return { GATE_SCRIPT: '', CLOSED_CSS: '', CLOSED_BOX: '', GUARD: '', ...noEarly };
   const k = Number(iso.replace(/-/g, ''));
   const now = test
     ? 'var m=/[?&]today=(\\d{4})-(\\d\\d)-(\\d\\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):k;'
     : 'var n=new Date(),t=n.getFullYear()*10000+(n.getMonth()+1)*100+n.getDate();';
+  /* 先に開ける回（YouTube講義を出す回・Kei 11/19）と、無料だけの回：配信日前は html.ep-early。閉じない（ep-closed を付けない）。
+     登録なしの見え方（図1枚＋○×）を、誰が開いても出す。LINEの判定・続き（line-full・tsuzuki）・/api/ep-text は読みに行かない。
+     無料だけの回は、日付に関係なく常に ep-early（続きの材料がまだ無い）。配信日以降の先に開ける回は、今までと同じ動き。 */
+  if (freeOnly || CFG.FREE_EARLY_EPS.includes(ep)) {
+    const md = fmtDate(iso).replace(/^\d+年/, '');
+    return {
+      GATE_SCRIPT: freeOnly
+        ? "\n<script>document.documentElement.className+=' ep-early';</script>"
+        : '\n<script>(function(){var k=' + k + ';' + now + "if(t<k){document.documentElement.className+=' ep-early';}})();</script>",
+      CLOSED_CSS: '',
+      CLOSED_BOX: '',
+      GUARD: '',
+      EARLY_CSS: '\n/* 配信日前（html.ep-early）：登録なしの見え方。登録済の方の入口は出さず、続きが開く日の一文を出す */\n.early-note{display:none}\n.ep-early .early-note{display:block;margin:0;font-size:14px;line-height:1.7;color:#4F5963;text-align:center}\n.ep-early .top-login,.ep-early .login-line{display:none}',
+      EARLY_NOTE: `\n    <p class="pnote early-note"><span class="nk">この回の図の続きと</span><span class="nk">過去問1選は、</span><span class="nk">${md}の配信から</span><span class="nk">開きます。</span></p>`,
+      EARLY_RUN: `\n  /* 先に開ける回の配信日前（html.ep-early）：登録なしの見え方のまま。LINEの判定・続き・テキストの確認はしない。記録の同期だけ動かす */\n  if (document.documentElement.classList.contains('ep-early')) {\n    tier = '登録なし'; say('配信日前（登録なしの見え方）'); pendView('open'); settleView();\n    try { if (window.__epProgressStart) { window.__epProgressStart(); } } catch (_) {}\n    return;\n  }`,
+    };
+  }
   return {
+    ...noEarly,
     GATE_SCRIPT: '\n<script>(function(){var k=' + k + ';' + now + "if(t<k){document.documentElement.className+=' ep-closed';}})();</script>",
     CLOSED_CSS: '\n/* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */\n.closed-box{display:none}\n.ep-closed .closed-box{display:block}\n.ep-closed .top-login{display:none}\n.ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}\n.next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}',
     CLOSED_BOX: '\n  <div class="next-box closed-box"><p>この回は、' + dateLabel + 'からです。</p><a class="lbtn" href="/roadmap">学習ロードマップへ</a></div>',
@@ -545,18 +617,24 @@ export function tcountHtml({ A, B }) {
   return '<span class="tcount">' + ['この回は、', ...parts.map((p, i) => p + (i < parts.length - 1 ? '、' : '。'))].map(x => `<span class="nk">${x}</span>`).join('') + '</span>';
 }
 /* 下の固定バーの前・次。ページが無い回（built に入っていない／TOTAL_EPS の外）は <span aria-disabled>。配信日がまだの回は、端末の日付で画面の側が <span> に替える（data-open＝材料 json の date。第1回は閉じないので付けない）。 */
-function navVals(ep, built, test) {
+function navVals(ep, built, test, selfDate) {
   /* 今日の日付（8桁）。配信日の比べ方は gateVals と同じ：試し用は ?today=YYYY-MM-DD だけ（付けなければ閉じない）、本番は端末の日付 */
   const now = test
     ? String.raw`var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):99999999;`
     : 'var n=new Date(),t=n.getFullYear()*10000+(n.getMonth()+1)*100+n.getDate();';
   const have = new Set(built || readRelease().prod);
-  const dateOf = n => { try { return Number(readJson(path.join(MATERIAL, `第${String(n).padStart(2, '0')}回_流し込み材料.json`)).date.replace(/-/g, '')); } catch { return 0; } };
+  const dateOf = n => {
+    if (n === ep && selfDate) return Number(selfDate.replace(/-/g, ''));
+    const nn = String(n).padStart(2, '0');
+    for (const f of [path.join(MATERIAL, `第${nn}回_流し込み材料.json`), path.join(FREE_DIR, `第${nn}回_無料の1枚.json`)]) { try { return Number(readJson(f).date.replace(/-/g, '')); } catch {} }
+    return 0;
+  };
   const item = (n, dir) => {
     const lab = `第${n}回`, chv = `<i class="chv ${dir === 'prev' ? 'l' : 'r'}" aria-hidden="true"></i>`;
     const inner = dir === 'prev' ? chv + lab : lab + chv;
     if (!have.has(n)) return `<span class="enb ${dir} off" aria-disabled="true" data-ep="${n}">${inner}</span>`;
-    const open = CFG.SAMPLE_EPS.includes(n) ? '' : ` data-open="${dateOf(n)}"`;
+    /* 第1回（見本の回）と、先に開ける回（登録なしの見え方が配信日前でも見られる）は、配信日前でもリンク（data-open を付けない） */
+    const open = CFG.SAMPLE_EPS.includes(n) || CFG.FREE_EARLY_EPS.includes(n) ? '' : ` data-open="${dateOf(n)}"`;
     return `<a class="enb ${dir}" href="/ep/${n}" data-ep="${n}"${open} data-umami-event="ep-nav" data-umami-event-to="${dir === 'prev' ? 'prev' : 'next'}" data-umami-event-ep="${ep}">${inner}</a>`;
   };
   /* 最新回へ：ページがある回のうち、配信日が来ている一番大きい回（第1回は日付0＝いつでも開いている）。いま開いている回が最新なら出さない（画面の側で決める） */
@@ -573,10 +651,10 @@ function epVals(m, text, ex, built, test) {
   return {
     OPEN_ALL: openAll ? 'true' : 'false',
     KIROKU_HREF: `/login?next=/ep/${ep}`, /* 試し用の「この記録を残す」は今までどおり /login?next=（本番と同じ形） */
-    ...navVals(ep, built, test),
+    ...navVals(ep, built, test, m.json.date),
     OPEN1_NOTE: openAll ? `<div class="next-box only-open1" id="open1-note"><p><span class="nk">第2回からは、</span><span class="nk">${a('https://lin.ee/r6uYtnE', 'LINE')}か${mailA}の</span><span class="nk">登録（無料）で</span><span class="nk">開きます。</span></p></div>` : '',
     OPEN1_LOGIN: openAll ? `<p class="login-line only-open1">${loginAnchor(loginHref, ep, 'open1')}</p>` : '',
-    TCOUNT: tcountHtml(tcountOf(m, text, ex)),
+    TCOUNT: m.freeOnly ? '' : tcountHtml(tcountOf(m, text, ex)), /* 無料だけの回は、やさしいテキストの実数が無いので一文を出さない（カードは残す） */
   };
 }
 
@@ -591,7 +669,7 @@ export function buildPages(m, text, ex, mode, built) {
   const { ep, json, data } = m;
   const test = mode === 'test';
   const sec = data.sections;
-  if (sec.length !== 2) throw new Error(`第${ep}回：data.json の sections は2つのはず`);
+  if (m.freeOnly ? (sec.length < 1 || sec.length > 3) : sec.length !== 2) throw new Error(`第${ep}回：data.json の sections は${m.freeOnly ? '1〜3' : '2'}つのはず`);
   const half = i => `${sec[i].label}　${sec[i].theme}`;
   const date = fmtDate(json.date);
   const episodeUrl = CFG.SPOTIFY_EPISODE[ep];
@@ -618,10 +696,11 @@ export function buildPages(m, text, ex, mode, built) {
     MIHON_EXPR: test ? "qs.get('mihon')" : "isLocal ? qs.get('mihon') : null",
     MIHON_EXPORT: test ? ' window.__epMihon = mihon;' : '',
     NO_WHO: test ? "!who && mihon !== 'kounyu'" : '!who',
-    ...gateVals(ep, json.date, date, test),
+    ...gateVals(ep, json.date, date, test, !!m.freeOnly),
     ...loginVals(ep, sample, test),
     MIHON_QS: test ? " + (mihon === 'kounyu' ? '&mihon=1' : '')" : '',
   });
+  if (m.freeOnly) return { index }; /* 無料だけの回は index.html（登録なしの見え方）だけ。line-full・tsuzuki は作らない */
   const corePoint = h => json.points.find(p => p.half === h);
   const c1 = corePoint(1), c2 = corePoint(2);
   const lineFullHtml = fill(template('ep-line-full.html'), {
@@ -964,7 +1043,8 @@ const ensureIgnored = rel => {
 /* 1回ぶんを全部組む（書かない）。{ files: [{rel（リポジトリ直下からの道）, data, secret?}], report } */
 /* shisaku＝試し用だけ（本番の分は作らない）。 */
 export function buildEp(ep, release, shared, opts = {}) {
-  const m = loadMaterial(ep);
+  const m = loadMaterial(ep, opts);
+  if (m.freeOnly) return buildFreeEp(m, release, opts);
   validateMaterial(m);
   const text = buildText(m);
   const ex = buildExcerpt(m, text);
@@ -1003,6 +1083,27 @@ export function buildEp(ep, release, shared, opts = {}) {
   return { files, report, m, text, ex };
 }
 
+/* 無料だけの回：index.html（登録なしの見え方）だけ。line-full.*・tsuzuki・api/_ep-text の出力・見本は作らない。
+   配信日が今日から14日以内（過ぎていても）なら、続きの材料がそろっていないまま配信日が来るので警告を返す。 */
+export function buildFreeEp(m, release, opts = {}) {
+  const { ep } = m;
+  const ex = buildFreeExcerpt(m);
+  const inProd = release.prod.includes(ep);
+  const modes = inProd && !opts.shisaku ? ['test', 'prod'] : ['test'];
+  const files = [];
+  for (const mode of modes) {
+    const pages = buildPages(m, null, ex, mode, mode === 'prod' ? release.prod : (opts.built || release.prod));
+    if (PAID_MARKUP.test(pages.index)) throw new Error(`第${ep}回（無料だけ）：公開側の index.html に赤シートの印・今回の数字の節が入っている`);
+    files.push({ rel: `${mode === 'prod' ? '' : 'liff-test/'}ep/${ep}/index.html`, data: pages.index });
+  }
+  const [y, mo, d] = m.json.date.split('-').map(Number);
+  const today = opts.today ? new Date(opts.today) : new Date();
+  const days = Math.round((Date.UTC(y, mo - 1, d) - Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())) / 86400000);
+  const warn = days <= 14 ? `第${ep}回（無料だけ）：配信日 ${m.json.date} が${days >= 0 ? `あと${days}日` : `${-days}日前`}。やさしいテキストの材料（流し込み材料 json）をそろえて、図の続き・過去問1選を出せるようにする` : null;
+  const report = { ep, sub: m.json.sub, prod: inProd, freeOnly: true, figs: ex.counts, figTotal: 1, rs: [0, 0, 0], rsTotal: 0, numbers: 0, points: 0, leakChecked: 0, pdfNote: '（無料だけ）', warn };
+  return { files, report, m, text: null, ex };
+}
+
 export function sharedFiles(shared, opts = {}) {
   return [
     { rel: 'ep/_shared/text-view.js', data: shared.viewJsOut, prodOnly: true },
@@ -1013,7 +1114,8 @@ export function sharedFiles(shared, opts = {}) {
 }
 
 export function parseEps(arg) {
-  const all = fs.readdirSync(MATERIAL).map(n => /^第(\d\d)回_流し込み材料\.json$/.exec(n)).filter(Boolean).map(x => Number(x[1])).sort((a, b) => a - b);
+  const listed = (dir, re) => (fs.existsSync(dir) ? fs.readdirSync(dir) : []).map(n => re.exec(n)).filter(Boolean).map(x => Number(x[1]));
+  const all = [...new Set([...listed(MATERIAL, /^第(\d\d)回_流し込み材料\.json$/), ...listed(FREE_DIR, /^第(\d\d)回_無料の1枚\.json$/)])].sort((a, b) => a - b);
   if (arg === 'all') return all;
   const out = new Set();
   for (const part of String(arg).split(',')) {
@@ -1023,7 +1125,7 @@ export function parseEps(arg) {
     else throw new Error('回の指定が読めない: ' + part);
   }
   const eps = [...out].sort((a, b) => a - b);
-  for (const n of eps) if (!all.includes(n)) throw new Error(`第${n}回の流し込み材料 json が無い`);
+  for (const n of eps) if (!all.includes(n)) throw new Error(`第${n}回の流し込み材料 json も、無料の1枚の json も無い`);
   return eps;
 }
 
@@ -1033,7 +1135,7 @@ export function main(argv) {
   if (!arg) { console.error('使い方: node scripts/build-ep.mjs <回の番号 | 1-9 | 2,3 | all> [--shisaku（試し用だけに書く）]'); process.exit(2); }
   const eps = parseEps(arg);
   const release = readRelease();
-  for (const n of release.prod) if (!fs.existsSync(path.join(MATERIAL, `第${String(n).padStart(2, '0')}回_流し込み材料.json`))) throw new Error(`ep-release.json の prod に、材料の無い回 ${n} がある`);
+  for (const n of release.prod) if (!fs.existsSync(path.join(MATERIAL, `第${String(n).padStart(2, '0')}回_流し込み材料.json`)) && !fs.existsSync(path.join(FREE_DIR, `第${String(n).padStart(2, '0')}回_無料の1枚.json`))) throw new Error(`ep-release.json の prod に、材料の無い回 ${n} がある`);
   ensureIgnored('api/_ep-text/ep1.js');
   ensureIgnored('liff-test/api/_ep-text/ep1.js');
   const shared = buildShared();
@@ -1062,6 +1164,7 @@ export function main(argv) {
   console.log(`written ${writes.size} files; prod=[${release.prod}]`);
   console.log('ep  sub                       図(無料/続き/テキストだけ)  赤シート(前/後/数字)  今回の数字  本番');
   for (const r of reports) {
+    if (r.warn) console.warn('警告：' + r.warn);
     console.log(`${String(r.ep).padStart(2)}  ${r.sub.padEnd(16, '　')}  ${r.figs.free}/${r.figs.line}/${r.figs.paid} (計${r.figTotal})  ${r.rs.join('/')} (計${r.rsTotal})  ${r.numbers}組  ${r.prod && !shisaku ? '本番に書いた' : '試し用だけ'}`);
   }
   return reports;

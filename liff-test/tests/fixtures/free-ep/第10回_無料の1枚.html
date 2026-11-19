@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>やさしいテキスト 第9回</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#17C5E8; --ink:#0A6477; --soft:#E3F8FC; --mark:#B8EEF8; --pale:#F6FCFE;
+    --text:#111820; --sub:#3D444C; --line:#D5DBE0; --gray:#F1F2F4; --gray-ink:#5A626B;
+    --font:"Noto Sans JP",system-ui,"Hiragino Sans","Yu Gothic",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:#e9ecef;font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiased;letter-spacing:.02em;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .intro{max-width:1640px;margin:20px auto 0;padding:0 16px;font-size:14px;line-height:1.8;color:var(--sub)}
+  .intro b{color:var(--text)}
+  .spread{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;padding:16px 16px 48px}
+
+  /* 1ページ＝A4縦。中は px で組み、画面では縮小して見せる */
+  .page{width:210mm;height:297mm;background:#fff;box-shadow:0 2px 12px rgba(17,24,32,.08);border-radius:4px;
+    padding:22px 38px 20px;display:flex;flex-direction:column;gap:8px;overflow:hidden;font-size:15px;line-height:1.6}
+  @media screen{ .page{zoom:var(--z,1)} }
+
+  .pbar{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:var(--ink);
+    border-bottom:1px solid var(--line);padding-bottom:7px;margin:0 0 2px}
+  .pbar .pg{color:var(--sub)}
+
+  /* タイトル */
+  .ttl .meta{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--sub)}
+  .ttl .no-h{display:inline-block;vertical-align:5px;font-size:14px;background:var(--ink);color:#fff;border-radius:999px;padding:1px 12px;font-weight:900;margin-right:10px}
+  .ttl h1{font-size:27px;font-weight:900;line-height:1.3;margin:0}
+  .ttl .sub{font-size:16px;font-weight:900;color:var(--ink);margin:2px 0 0}
+  .nw{display:inline-block;white-space:nowrap}
+  .scope{background:var(--soft);border-radius:10px;padding:6px 14px;font-size:13.5px;line-height:1.6}
+  .scope b{font-weight:900}
+
+  /* 前半／後半の見出しと芯 */
+  .sec{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900}
+  .sec .sn{font-size:13px;color:#fff;background:var(--accent);border-radius:6px;padding:1px 10px}
+  .key{border:3px solid var(--ink);border-radius:12px;padding:8px 16px 8px 14px;display:flex;gap:12px;align-items:flex-start}
+  .key .l{flex:0 0 auto;font-size:12px;font-weight:900;color:var(--ink);background:var(--soft);border-radius:6px;padding:2px 8px;margin-top:4px}
+  .key .t{font-size:19px;font-weight:900;line-height:1.55}
+  .key .t small{display:block;font-size:14px;font-weight:700;color:var(--sub);margin-top:2px}
+  .mk{box-shadow:inset 0 -0.42em 0 var(--mark);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+
+  /* 帯（今回の数字）の分を空けるため、余白を詰める（字の大きさは変えない） */
+  .page.p1,.page.p2{padding:12px 38px 20px;gap:2px}
+  .page.p1 .fig,.page.p2 .fig{padding-top:3px;padding-bottom:3px}
+  .page.p1 .fig > .cap,.page.p2 .fig > .cap{margin-bottom:2px}
+  /* 今回の数字（帯。1つの帯の中で2段に折り返してよい） */
+  .nband{flex:0 0 auto;display:flex;align-items:stretch;gap:0;border:1px solid var(--line);border-radius:12px;background:var(--pale);overflow:hidden}
+  .nband .nh{flex:0 0 52px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;font-weight:900;color:#fff;background:var(--ink);line-height:1.3;padding:0 4px}
+  .nband .nrows{flex:1;min-width:0;display:flex;flex-direction:column}
+  .nband .nrow{display:flex;align-items:stretch}
+  .nband .nrow + .nrow{border-top:1px solid var(--line)}
+  .nband .ni{flex:1 1 auto;min-width:0;padding:1px 8px 2px;border-left:1px solid var(--line)}
+  .nband .ni:first-of-type{border-left:0}
+  .nband .nv{display:block;font-size:16px;font-weight:900;color:var(--ink);line-height:1.3}
+  .nband .nk{display:block;font-size:11px;font-weight:700;line-height:1.35;color:var(--sub)}
+
+  /* 図の枠 */
+  .fig{margin:0;border:1px solid var(--line);border-radius:12px;padding:7px 14px 8px}
+  .fig > .cap{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:900;margin:0 0 6px}
+  .capsub{font-size:13px;font-weight:700;color:var(--sub);margin-left:4px}
+  .n{flex:0 0 24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:900;
+    display:inline-flex;align-items:center;justify-content:center}
+  .row{display:flex;gap:12px}
+  .row > *{flex:1;min-width:0}
+  svg.ic{width:36px;height:36px;flex:0 0 36px}
+  .chips{display:flex;gap:8px;margin-top:8px}
+  .chip{flex:1;background:var(--gray);border-radius:8px;padding:6px 10px;font-size:13px;line-height:1.55;font-weight:700}
+  .chip b{color:var(--ink);font-weight:900}
+
+  /* 1 場所 */
+  .pl{border-radius:10px;overflow:hidden}
+  .pl .h{font-size:15px;font-weight:900;color:#fff;padding:4px 12px}
+  .pl.ok{background:var(--pale);border:2px solid var(--ink)}
+  .pl.ok .h{background:var(--ink)}
+  .pl.ng{background:var(--gray);border:2px solid var(--gray-ink)}
+  .pl.ng .h{background:var(--gray-ink)}
+  .it{display:flex;align-items:center;gap:10px;padding:2px 12px;font-size:15px;font-weight:700;line-height:1.45}
+  .it small{display:block;font-size:12px;font-weight:700;color:var(--sub)}
+
+  /* 2 カレンダー */
+  .cal{position:relative;padding-top:24px}
+  .cal .br{position:absolute;top:4px;left:0;width:calc(100% * 8 / 9 - 4px);height:14px;border:2px solid var(--ink);border-bottom:0;border-radius:6px 6px 0 0}
+  .cal .br span{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#fff;padding:0 8px;font-size:13px;font-weight:900;color:var(--ink);white-space:nowrap}
+  .days{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
+  .d{border:2px solid var(--accent);border-radius:8px;text-align:center;padding:2px 0 4px;min-height:80px;display:flex;flex-direction:column;align-items:center}
+  .d .w{font-size:12px;font-weight:700;color:var(--sub)}
+  .d .v{font-size:22px;font-weight:900;line-height:1.15;color:var(--ink)}
+  .d .v small{font-size:11px;font-weight:900;margin-left:1px}
+  .d .s{font-size:11px;font-weight:900;line-height:1.35;margin-top:2px;padding:0 2px}
+  .d svg{width:26px;height:26px;margin-top:1px}
+  .d.first{background:var(--ink);border-color:var(--ink)}
+  .d.first .w,.d.first .v,.d.first .s{color:#fff}
+  .d.last{background:var(--soft)}
+  .d.after{border:2px dashed var(--line);background:#fff}
+  .d.after .v{color:var(--gray-ink);font-size:11px;font-weight:900;line-height:1.35;padding:2px 2px 0}
+
+  /* 3 できなくなるとき */
+  .and{display:flex;align-items:center;gap:6px}
+  .and .b{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--gray);border-radius:10px;padding:6px 4px;font-size:13px;font-weight:900;text-align:center;line-height:1.35}
+  .plus{font-size:20px;font-weight:900;color:var(--gray-ink)}
+  .eq{flex:0 0 auto;font-size:14px;font-weight:900;color:#fff;background:var(--gray-ink);border-radius:999px;padding:4px 12px}
+  .small{font-size:13px;font-weight:700;margin:5px 0 0;line-height:1.55}
+  .and svg.ic{width:28px;height:28px;flex:0 0 28px}
+  .small b{color:var(--ink);font-weight:900}
+  ul.dots{list-style:none;margin:0;padding:0}
+  ul.dots li{position:relative;padding-left:16px;font-size:14px;font-weight:700;line-height:1.55;margin:0 0 4px}
+  ul.dots li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--ink)}
+
+  /* 今日のワンポイント（寄り道） */
+  .aside{border:2px dashed var(--accent);background:var(--pale);border-radius:12px;padding:8px 16px 10px;display:flex;gap:14px}
+  .aside svg{width:56px;height:56px;flex:0 0 56px;margin-top:4px}
+  .aside .l{display:block;font-size:12px;font-weight:900;color:var(--ink)}
+  .aside h3{font-size:17px;font-weight:900;margin:0 0 2px}
+  .aside p{font-size:14px;line-height:1.62;margin:0 0 2px}
+  .aside p.land{font-weight:900;margin-top:4px}
+
+  /* 5 手付の上限 */
+  .formula{font-size:14px;font-weight:900;text-align:center;margin-top:2px}
+
+  /* 6 やめ方 */
+  .way{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--pale);border:2px solid var(--accent);border-radius:10px;padding:6px 6px 8px;font-size:13px;font-weight:900;line-height:1.4}
+  .way .who{font-size:12px;color:var(--ink)}
+  .way svg{width:80px;height:38px;margin:2px 0}
+  .way small{display:block;font-size:11px;font-weight:700;color:var(--sub);margin-top:2px}
+
+  /* 7 相手が動いたか */
+  .scene{display:flex;gap:12px;margin-bottom:6px}
+  .scene .p{flex:1;display:flex;align-items:center;gap:10px;border-radius:10px;padding:5px 12px;font-size:14px;font-weight:900;line-height:1.45}
+  .scene .p small{display:block;font-size:12px;font-weight:700;color:var(--sub)}
+  .scene .moved{background:var(--soft)}
+  .scene .still{background:var(--gray)}
+  .tag{display:inline-block;font-size:11px;font-weight:900;border-radius:999px;padding:0 8px;margin-left:4px;vertical-align:2px}
+  .tag.on{background:var(--ink);color:#fff}
+  .tag.off{background:#fff;color:var(--gray-ink);border:1px solid var(--gray-ink)}
+  .jd{display:grid;grid-template-columns:1.25fr 1.5fr auto;align-items:center;gap:8px 12px;font-size:14px;font-weight:700}
+  .jd .q{font-weight:900}
+  .jd .why{color:var(--sub)}
+  .pill{font-size:14px;font-weight:900;border-radius:999px;padding:3px 14px;text-align:center;white-space:nowrap}
+  .pill.ok{background:var(--ink);color:#fff}
+  .pill.ng{background:#fff;color:var(--gray-ink);border:2px solid var(--gray-ink)}
+  .jd hr{grid-column:1/-1;border:0;border-top:1px dashed var(--line);margin:0}
+  .big{font-size:16px;font-weight:900;text-align:center;margin:6px 0 0}
+
+  /* 8 特約 */
+  .tk{display:flex;align-items:center;gap:10px;border-radius:10px;padding:6px 12px;font-size:13px;font-weight:700;line-height:1.5}
+  .tk .pill{flex:0 0 auto}
+  .tk.ng{background:var(--gray)}
+  .tk.ok{background:var(--pale);border:1px solid var(--accent)}
+  .tk b{font-weight:900}
+
+  /* 9 コップ */
+  .cup{display:flex;gap:14px;align-items:center}
+  .cup svg{flex:0 0 240px;width:240px;height:146px}
+  .cup ul{flex:1}
+
+  /* ページ下 */
+  .grow{flex:1}
+  .foot{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:10px}
+  .foot .next{flex:1;font-size:13px;font-weight:700;line-height:1.6;color:var(--sub)}
+  .foot .next b{color:var(--text);font-weight:900}
+  .btn{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:999px;padding:8px 18px;font-size:14px;font-weight:900;text-decoration:none;line-height:1.35}
+  .btn small{display:block;font-size:12px;font-weight:700;opacity:.9}
+  .chev{width:8px;height:8px;border-right:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(-45deg);margin-left:2px}
+  .colophon{display:block;font-size:11px;font-weight:400;color:var(--sub);margin-top:2px}
+
+  @page{size:A4 portrait;margin:0}
+  @media print{
+    body{background:#fff}
+    .intro{display:none}
+    .spread{display:block;padding:0}
+    .page{box-shadow:none;border-radius:0;break-after:page;margin:0}
+    .page:last-child{break-after:auto}
+  }
+
+  /* 札「今日のポイント」は枠の右上に乗せる（本文の幅を取らない。2026-11-14） */
+  .key{position:relative}
+  .key .l{position:absolute;top:-10px;right:14px;margin:0;font-size:12px;line-height:1.5;padding:0 10px;border-radius:999px;background:var(--ink);color:#fff}
+</style>
+</head>
+<body>
+
+<!-- アイコン（線は濃い水色、面は薄い水色） -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-tent" viewBox="0 0 48 48"><path d="M5 40 L24 9 L43 40 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 9 L18 40 M24 9 L30 40" stroke="#0A6477" stroke-width="2.5"/><path d="M2 41 H46" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-cafe" viewBox="0 0 48 48"><path d="M10 20 H34 V30 C34 37 29 41 22 41 C15 41 10 37 10 30 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M34 23 C41 23 41 32 34 32" fill="none" stroke="#0A6477" stroke-width="2.5"/><path d="M6 44 H38" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/><path d="M17 15 C15 12 19 10 17 6 M25 15 C23 12 27 10 25 6" fill="none" stroke="#17C5E8" stroke-width="2.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-office" viewBox="0 0 48 48"><rect x="10" y="7" width="28" height="34" rx="2" fill="#fff" stroke="#3D444C" stroke-width="2.5"/><g fill="#3D444C"><rect x="15" y="12" width="5" height="5"/><rect x="28" y="12" width="5" height="5"/><rect x="15" y="21" width="5" height="5"/><rect x="28" y="21" width="5" height="5"/></g><rect x="20" y="31" width="8" height="10" fill="#3D444C"/><path d="M4 41 H44" stroke="#3D444C" stroke-width="2.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-annai" viewBox="0 0 48 48"><rect x="8" y="20" width="32" height="21" rx="2" fill="#fff" stroke="#3D444C" stroke-width="2.5"/><path d="M6 21 L24 12 L42 21" fill="none" stroke="#3D444C" stroke-width="2.5" stroke-linejoin="round"/><path d="M34 15 V4" stroke="#3D444C" stroke-width="2.5"/><path d="M34 4 H43 L40 7.5 L43 11 H34 Z" fill="#3D444C"/><rect x="14" y="26" width="9" height="7" fill="#3D444C"/><rect x="27" y="28" width="7" height="13" fill="#3D444C"/><path d="M4 41 H44" stroke="#3D444C" stroke-width="2.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-home-ng" viewBox="0 0 48 48"><path d="M7 22 L24 8 L41 22 V41 H7 Z" fill="#fff" stroke="#3D444C" stroke-width="2.5" stroke-linejoin="round"/><rect x="20" y="29" width="8" height="12" fill="#3D444C"/></symbol>
+    <symbol id="i-home-ok" viewBox="0 0 48 48"><path d="M7 22 L24 8 L41 22 V41 H7 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><rect x="20" y="29" width="8" height="12" fill="#0A6477"/></symbol>
+    <symbol id="i-person" viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-person-g" viewBox="0 0 48 48"><circle cx="24" cy="15" r="8" fill="#fff" stroke="#5A626B" stroke-width="2.5"/><path d="M9 43 C9 30 39 30 39 43" fill="#fff" stroke="#5A626B" stroke-width="2.5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-post" viewBox="0 0 48 48"><rect x="12" y="6" width="24" height="28" rx="5" fill="#fff" stroke="#0A6477" stroke-width="2.5"/><path d="M17 14 H31" stroke="#0A6477" stroke-width="3" stroke-linecap="round"/><path d="M20 34 V43 M28 34 V43" stroke="#0A6477" stroke-width="2.5"/><path d="M15 43 H33" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 48 48"><rect x="6" y="13" width="36" height="24" rx="3" fill="#fff" stroke="#5A626B" stroke-width="2.5"/><path d="M7 15 L24 28 L41 15" fill="none" stroke="#5A626B" stroke-width="2.5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 48 48"><path d="M12 5 H30 L38 13 V43 H12 Z" fill="#fff" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/><path d="M17 20 H33 M17 27 H33 M17 34 H27" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-key" viewBox="0 0 48 48"><circle cx="15" cy="24" r="8" fill="#fff" stroke="#3D444C" stroke-width="2.5"/><path d="M23 24 H42 M36 24 V31 M41 24 V29" stroke="#3D444C" stroke-width="2.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-bills" viewBox="0 0 48 48"><rect x="6" y="14" width="32" height="18" rx="2" fill="#fff" stroke="#3D444C" stroke-width="2.5"/><rect x="10" y="18" width="32" height="18" rx="2" fill="#fff" stroke="#3D444C" stroke-width="2.5"/><circle cx="26" cy="27" r="4" fill="none" stroke="#3D444C" stroke-width="2.5"/></symbol>
+    <symbol id="i-onsen" viewBox="0 0 56 56"><path d="M8 32 C8 46 48 46 48 32 Z" fill="#E3F8FC" stroke="#0A6477" stroke-width="2.5" stroke-linejoin="round"/><path d="M5 32 H51" stroke="#0A6477" stroke-width="2.5" stroke-linecap="round"/><path d="M18 26 C14 21 22 17 18 11 M28 26 C24 21 32 17 28 11 M38 26 C34 21 42 17 38 11" fill="none" stroke="#17C5E8" stroke-width="2.5" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="spread">
+
+<section class="page p1">
+  <div class="pbar"><span>耳で覚える宅建2027　やさしいテキスト</span><span class="pg">第9回　宅建業法　放送 2027年3月1日（月）予定　1／2</span></div>
+
+  <div class="ttl">
+    <h1><span class="no-h">第9回</span><span class="nw">テントで申し込んだら、</span><span class="nw">白紙に戻せる？</span></h1>
+    <p class="sub">クーリングオフと手付</p>
+  </div>
+
+  <div class="scope"><b>売主が宅建業者</b>、<b>買主が業者でない</b>ときのルール（8種制限）。業者どうし・媒介や代理だけなら対象外。</div>
+
+  <div class="sec"><span class="sn">前半</span>クーリングオフ</div>
+
+  <!-- 1 場所 -->
+  <figure class="fig">
+    <div class="cap"><span class="n">1</span>どこで申し込んだ？<span class="capsub">見るのは申込みの場所</span></div>
+    <div class="row">
+      <div class="pl ok">
+        <div class="h">できる</div>
+        <div class="it"><svg class="ic"><use href="#i-tent"/></svg><span>テント張りの案内所</span></div>
+        <div class="it"><svg class="ic"><use href="#i-tent"/></svg><span>テントで申し込み、契約は事務所</span></div>
+        <div class="it"><svg class="ic"><use href="#i-home-ok"/></svg><span>業者のほうから訪ねてきた自宅</span></div>
+        <div class="it"><svg class="ic"><use href="#i-cafe"/></svg><span>喫茶店・ホテルのロビー<small>自分で指定しても</small></span></div>
+      </div>
+      <div class="pl ng">
+        <div class="h">できない（事務所等）</div>
+        <div class="it"><svg class="ic"><use href="#i-office"/></svg><span>事務所</span></div>
+        <div class="it"><svg class="ic"><use href="#i-annai"/></svg><span>建物の中の案内所・展示会場<small>土地に定着し、宅建士を置くべき場所（実際にいるかは問わない）</small></span></div>
+        <div class="it"><svg class="ic"><use href="#i-home-ng"/></svg><span>自分から呼んだ自宅・勤務先</span></div>
+      </div>
+    </div>
+  </figure>
+</section>
+
+</div>
+</body>
+</html>

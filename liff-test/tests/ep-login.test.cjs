@@ -34,11 +34,12 @@ test('ep pages: 3 entrances for the not-registered view (top row, figure box, pa
       assert.equal((h.match(/<p class="login-line">/g)||[]).length,2);
       // 図の下の囲み・過去問1選の囲みの中（どちらも only-a）
       assert.match(h,/<div class="next-box only-a" id="zukai-next">[\s\S]*?<p class="login-line">[\s\S]*?<\/div>/);
-      assert.match(h,/<div class="next-box only-a"><p>[\s\S]*?<p class="login-line">[\s\S]*?<\/div>\s*<div class="slot" id="slot-kk">/);
+      assert.match(h,/<div class="next-box only-a"><p>[\s\S]*?<p class="login-line">[\s\S]*?<\/div>(?:\s*<p class="pnote early-note">[^\n]*<\/p>)?\s*<div class="slot" id="slot-kk">/);
       // 登録なしの見え方だけ：LINE・メール（is-friend）・購入者（is-buyer）では .only-a ごと出ない。第1回以外は、配信前の閉じた画面でも出ない
       assert.match(h,/\.is-friend \.only-a\{display:none !important\}/);
       assert.doesNotMatch(h,/\.only-a\{display:(?!none)/);
-      if(n>1)assert.match(h,/\.ep-closed \.top-login\{display:none\}/);
+      // 先に開ける回（第2〜9回）は、配信日前（html.ep-early）に「登録済の方はこちら」の入口を出さない
+      if(n>1){assert.match(h,/\.ep-early \.top-login,\.ep-early \.login-line\{display:none\}/);assert.doesNotMatch(h,/ep-closed/);}
     }
   }
   assert.match(read(path.join(prod,'ep/_shared/text-view.css')),/\.is-buyer \.only-a,\.is-buyer \.line-card\{display:none !important\}/);

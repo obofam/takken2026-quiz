@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<script>(function(){var k=20270201;var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):k;if(t<k){document.documentElement.className+=' ep-closed';}})();</script>
+<script>(function(){var k=20270201;var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):k;if(t<k){document.documentElement.className+=' ep-early';}})();</script>
 <title>第5回 媒介契約と広告のルール｜耳で覚える宅建2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
@@ -443,12 +443,10 @@ body.member .line-card{display:block}
 .top-login a,.login-line a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 .top-login a{display:inline-block;padding:11px 0;margin:-11px 0}
 .next-box .login-line{margin-top:4px;font-size:14px;line-height:1.7;color:#4F5963}
-/* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */
-.closed-box{display:none}
-.ep-closed .closed-box{display:block}
-.ep-closed .top-login{display:none}
-.ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}
-.next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}
+/* 配信日前（html.ep-early）：登録なしの見え方。登録済の方の入口は出さず、続きが開く日の一文を出す */
+.early-note{display:none}
+.ep-early .early-note{display:block;margin:0;font-size:14px;line-height:1.7;color:#4F5963;text-align:center}
+.ep-early .top-login,.ep-early .login-line{display:none}
 /* 第1回だけ全部開ける（登録なしでも続きを出した状態。body.is-open1）：案内の一文と、line-card の中の登録済の入口はこの状態のときだけ。下の登録の案内（line-card）は残す */
 .only-open1{display:none}
 .is-open1 .only-open1{display:block}
@@ -501,7 +499,6 @@ body{padding-bottom:calc(44px + env(safe-area-inset-bottom))}
     <div class="row"><span class="no">第5回</span><h1>だまされた人が<br>ゼロでも、広告は違反</h1></div>
     <div class="side">媒介契約と広告のルール</div>
   </div>
-  <div class="next-box closed-box"><p>この回は、2027年2月1日（月）からです。</p><a class="lbtn" href="/roadmap">学習ロードマップへ</a></div>
   <a class="listen" href="https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="5">音声番組を聴く（Spotify）</a>
   <p class="oapps">他：<a href="https://podcasts.apple.com/jp/podcast/id1886337945" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple">Apple</a> / <a href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon">Amazon</a> / <a href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm">stand.fm</a></p>
   <!-- 配信が始まったら（2027年2月1日以降）この注記は要らない。外す -->
@@ -940,6 +937,7 @@ figure.fig{min-width:0}
     <div class="over kk-over">チャレンジ！</div>
     <h2 class="sec-h">過去問1選</h2>
     <div class="next-box only-a"><p><a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a><span class="nk">か</span><a href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="5" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">メール</a><span class="nk">に登録すると、</span><span class="nk">この回のテーマに沿った過去問を</span><span class="nk">解いていただけます。</span></p><p class="login-line"><a href="/account.html" data-umami-event="ep-login" data-umami-event-ep="5">登録済の方はこちら</a></p></div>
+    <p class="pnote early-note"><span class="nk">この回の図の続きと</span><span class="nk">過去問1選は、</span><span class="nk">2月1日（月）の配信から</span><span class="nk">開きます。</span></p>
     <div class="slot" id="slot-kk"></div>
     <a class="tcard" href="https://takken.mimiobo.com/ep/1/text" data-umami-event="ep-text" data-umami-event-ep="5">
       <span class="tlab">有料版の見本</span>
@@ -976,14 +974,14 @@ figure.fig{min-width:0}
   <div class="foot">条文は2026年4月1日施行版で照合</div>
 </div>
 <nav class="epnav" aria-label="回の移動"><div class="epnav-in">
-  <div class="epnav-s"><a class="enb prev" href="/ep/4" data-ep="4" data-open="20270125" data-umami-event="ep-nav" data-umami-event-to="prev" data-umami-event-ep="5"><i class="chv l" aria-hidden="true"></i>第4回</a></div>
+  <div class="epnav-s"><a class="enb prev" href="/ep/4" data-ep="4" data-umami-event="ep-nav" data-umami-event-to="prev" data-umami-event-ep="5"><i class="chv l" aria-hidden="true"></i>第4回</a></div>
   <div class="epnav-c"><button type="button" class="enb top" id="navTop" data-umami-event="ep-nav" data-umami-event-to="top" data-umami-event-ep="5">上に戻る</button><a class="enb top latest" id="navLatest" href="/ep/5" style="display:none" data-cur="5" data-eps="1:0,2:20270112,3:20270118,4:20270125,5:20270201,6:20270208,7:20270215,8:20270222,9:20270301" data-umami-event="ep-nav" data-umami-event-to="latest" data-umami-event-ep="5">最新回へ</a></div>
-  <div class="epnav-s r"><a class="enb next" href="/ep/6" data-ep="6" data-open="20270208" data-umami-event="ep-nav" data-umami-event-to="next" data-umami-event-ep="5">第6回<i class="chv r" aria-hidden="true"></i></a></div>
+  <div class="epnav-s r"><a class="enb next" href="/ep/6" data-ep="6" data-umami-event="ep-nav" data-umami-event-to="next" data-umami-event-ep="5">第6回<i class="chv r" aria-hidden="true"></i></a></div>
 </div></nav>
 <script>(function(){var m=/[?&]today=(\d{4})-(\d\d)-(\d\d)/.exec(location.search),t=m?(+m[1]*10000+(+m[2])*100+(+m[3])):99999999;var as=document.querySelectorAll('.epnav a[data-open]');for(var i=0;i<as.length;i++){var a=as[i];if(t<+a.getAttribute('data-open')){var s=document.createElement('span');s.className=a.className+' off';s.setAttribute('aria-disabled','true');s.setAttribute('data-ep',a.getAttribute('data-ep'));s.innerHTML=a.innerHTML;a.parentNode.replaceChild(s,a);}}var b=document.getElementById('navTop');if(b){b.addEventListener('click',function(){var o=document.getElementById('toTop');if(o){o.click();}else{window.scrollTo(0,0);}});}var L=document.getElementById('navLatest');if(L){var k=0,ps=L.getAttribute('data-eps').split(',');for(var j=0;j<ps.length;j++){var q=ps[j].split(':');if(+q[1]<=t&&+q[0]>k)k=+q[0];}if(k&&k!==+L.getAttribute('data-cur')){L.href='/ep/'+k;L.style.display='';}}})();</script>
 <script>
 (function () {
-  'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }
+  'use strict';
   /* 3問のデータは build.py が data.json から差し込む（過去問1選はLINEで届けるため、このページには出さない） */
   var QUIZ = [{"label": "前半　「媒介契約」の3問", "questions": [{"q": "専任媒介契約の有効期間を6か月と定めた場合、有効期間は3か月となる。", "a": true, "exp": "契約が無効になるのではなく、3か月になります。"}, {"q": "専属専任媒介契約を結んだ業者は、休業日を除いて7日以内に、レインズに登録しなければならない。", "a": false, "exp": "専属専任は5日以内です。7日以内は専任です。"}, {"q": "業者が売買すべき価額について意見を述べるときは、根拠を明らかにしなければならないが、口頭で示してもよい。", "a": true, "exp": "口頭でも書面でもかまいません。"}]}, {"label": "後半　「広告のルール」の3問", "questions": [{"q": "誇大広告は、実際に誤解した人がおらず、取引が成立しなかった場合でも、違反になる。", "a": true, "exp": "表示をした時点で違反です。"}, {"q": "工事完了前の建物は、建築確認を受ける前でも、貸借の媒介の広告であればすることができる。", "a": false, "exp": "広告開始時期の制限は、貸借の広告も対象です。"}, {"q": "広告に取引態様を示していれば、注文を受けたときに改めて示す必要はない。", "a": false, "exp": "注文を受けたときも、遅滞なく明らかにします。"}]}];
   var esc = function (s) {
@@ -1147,7 +1145,7 @@ figure.fig{min-width:0}
    401・403・失敗は、いまの見え方のまま（何も出さない）。ログインの印が無い人は呼ばない。
    ?joutai=1 で「表示の状態（確認用）」を出す。?mihon=touroku は localhost／127.0.0.1 のときだけ効く（手元の確認用）。 */
 (function () {
-  'use strict'; if (document.documentElement.classList.contains('ep-closed')) { return; }
+  'use strict';
   var LIFF_ID = '2011606963-hH0DzETc';
   var body = document.body;
   var qs = new URLSearchParams(location.search);
@@ -1475,6 +1473,12 @@ figure.fig{min-width:0}
 
   if (showBox) { makeBox(); }
   render();
+  /* 先に開ける回の配信日前（html.ep-early）：登録なしの見え方のまま。LINEの判定・続き・テキストの確認はしない。記録の同期だけ動かす */
+  if (document.documentElement.classList.contains('ep-early')) {
+    tier = '登録なし'; say('配信日前（登録なしの見え方）'); pendView('open'); settleView();
+    try { if (window.__epProgressStart) { window.__epProgressStart(); } } catch (_) {}
+    return;
+  }
   var judged;
   try { judged = Promise.resolve(judge()); } catch (e) { fail(e); openView('確認できなかった（' + why(e) + '）'); judged = Promise.resolve(); }
   var goProgress = function () {

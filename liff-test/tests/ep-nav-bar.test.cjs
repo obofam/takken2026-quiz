@@ -16,7 +16,9 @@ const lib=async()=>{if(!B)B=await import(require('node:url').pathToFileURL(path.
 test('nav bar: episode 3 has prev=2 and next=4 with links, open dates and umami events',()=>{
   const b=bar(trial(3));
   assert.match(b,/<a class="enb prev" href="\/ep\/2"[^>]*data-umami-event="ep-nav" data-umami-event-to="prev" data-umami-event-ep="3">[\s\S]*?第2回<\/a>/);
-  assert.match(b,/<a class="enb next" href="\/ep\/4"[^>]* data-open="20270125"[^>]*data-umami-event-to="next" data-umami-event-ep="3">第4回/);
+  // 先に開ける回（第2〜33・37〜41回）は配信日前でもリンク＝data-open を付けない
+  assert.match(b,/<a class="enb next" href="\/ep\/4" data-ep="4" data-umami-event="ep-nav" data-umami-event-to="next" data-umami-event-ep="3">第4回/);
+  assert.doesNotMatch(b,/data-open=/);
   assert.match(b,/<button type="button" class="enb top" id="navTop" data-umami-event="ep-nav" data-umami-event-to="top" data-umami-event-ep="3">上に戻る<\/button>/);
   assert.match(b,/<a class="enb top latest" id="navLatest" href="\/ep\/3" style="display:none" data-cur="3" data-eps="1:0,2:20270112,3:20270118,4:20270125[^"]*" data-umami-event="ep-nav" data-umami-event-to="latest" data-umami-event-ep="3">最新回へ<\/a>/);
 });
@@ -34,6 +36,7 @@ test('nav bar: episode 1 has no prev (empty slot), the sample episode is never c
   assert.match(b,/<div class="epnav-s"><\/div>/);
   assert.doesNotMatch(b,/class="enb prev"/);
   assert.doesNotMatch(bar(trial(2)).match(/class="enb prev"[^>]*>/)[0],/data-open/);
+  assert.doesNotMatch(bar(trial(1)).match(/class="enb next"[^>]*>/)[0],/data-open/);
 });
 test('nav bar: the episode after the last built one (10) is a disabled span, not a link',()=>{
   const b=bar(trial(9));
@@ -55,8 +58,9 @@ test('nav bar: also in the production output (same prev/next/data-open, no arrow
     assert.doesNotMatch(bp,/購入|買|円/,'ep'+n);
   }
   assert.match(bar(prodHtml(3)),/<a class="enb prev" href="\/ep\/2"/);
-  assert.match(bar(prodHtml(3)),/<a class="enb next" href="\/ep\/4"[^>]* data-open="20270125"/);
-  assert.match(bar(prodHtml(1)),/<a class="enb next" href="\/ep\/2"[^>]* data-open="/);
+  assert.match(bar(prodHtml(3)),/<a class="enb next" href="\/ep\/4" data-ep="4" data-umami-event/);
+  assert.match(bar(prodHtml(1)),/<a class="enb next" href="\/ep\/2" data-ep="2" data-umami-event/);
+  assert.doesNotMatch(bar(prodHtml(3)),/data-open/);
   assert.match(bar(prodHtml(9)),/<span class="enb next off" aria-disabled="true" data-ep="10">第10回/);
   // 日付の比べ方：本番は端末の日付、試し用は ?today= だけ
   const m=b.loadMaterial(3),text=b.buildText(m),ex=b.buildExcerpt(m,text);

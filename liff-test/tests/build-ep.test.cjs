@@ -86,8 +86,8 @@ test('build-ep: trial pages carry the trial LIFF id and a buyer preview entrance
 });
 
 const gateOf=h=>{const m=h.match(/<script>(\(function\(\)\{var k=[\s\S]*?)<\/script>/);return m?m[1]:null;};
-const closedAt=(code,y,mo,d)=>{const html={className:''};const FD=function(){return {getFullYear:()=>y,getMonth:()=>mo-1,getDate:()=>d};};new Function('document','Date','location',code)({documentElement:html},FD,{search:''});return /ep-closed/.test(html.className);};
-test('build-ep: production ep/2-9 are closed until the delivery date (the same rule as roadmap: device date >= date), ep/1 has no gate, no today override',{skip},()=>{
+const closedAt=(code,y,mo,d,cls='ep-early')=>{const html={className:''};const FD=function(){return {getFullYear:()=>y,getMonth:()=>mo-1,getDate:()=>d};};new Function('document','Date','location',code)({documentElement:html},FD,{search:''});return html.className.includes(cls);};
+test('build-ep: production ep/2-9 (先に開ける回) get html.ep-early until the delivery date (the same rule as roadmap: device date >= date) and are never ep-closed, ep/1 has no gate, no today override',{skip},()=>{
   const dates={2:[2027,1,12],3:[2027,1,18],4:[2027,1,25],5:[2027,2,1],6:[2027,2,8],7:[2027,2,15],8:[2027,2,22],9:[2027,3,1]};
   for(let n=2;n<=9;n++){
     const h=fs.readFileSync(path.join(prod,'ep',String(n),'index.html'),'utf8');
@@ -99,8 +99,9 @@ test('build-ep: production ep/2-9 are closed until the delivery date (the same r
     assert.equal(closedAt(code,y,m,d),false,'当日は開');assert.equal(closedAt(code,y,m,d+1>28?d:d+1),false);
     assert.doesNotMatch(h,/today|__epMihon|kounyu/);
     assert.match(h,/2012583516-7vmvMorb/);assert.match(h,/cloud\.umami\.is/);
-    assert.match(h,/<div class="next-box closed-box"><p>この回は、\d+年\d+月\d+日（.）からです。<\/p><a class="lbtn" href="\/roadmap">学習ロードマップへ<\/a><\/div>/);
-    assert.equal((h.match(/ep-closed'\)\) \{ return; \}/g)||[]).length,2,'判定の script は閉じているとき動かない');
+    assert.doesNotMatch(h,/ep-closed|closed-box/,'先に開ける回は閉じない');
+    assert.match(h,/<p class="pnote early-note"><span class="nk">この回の図の続きと<\/span><span class="nk">過去問1選は、<\/span><span class="nk">\d+月\d+日（.）の配信から<\/span><span class="nk">開きます。<\/span><\/p>/);
+    assert.equal((h.match(/classList\.contains\('ep-early'\)/g)||[]).length,1,'LINEの判定・続き・テキストの確認の script だけが、配信日前は動かない（3問の script は動く）');
     assert.doesNotMatch(h,/class="[^"]*rs[^"]*"|role="button"|data-hint|data-part=|_ep-text/);
     for(const f of ['line-full.html','tsuzuki.html'])assert.doesNotMatch(fs.readFileSync(path.join(prod,'ep',String(n),f),'utf8'),/class="[^"]*rs[^"]*"|role="button"|data-hint|data-part=|今回の数字|ワンポイント/,n+f);
   }
@@ -109,8 +110,9 @@ test('build-ep: production ep/2-9 are closed until the delivery date (the same r
   // 試し用：ふだんは開いたまま。?today= を付けたときだけ判定
   const t2=fs.readFileSync(path.join(root,'ep/2/index.html'),'utf8');
   const code=gateOf(t2);
-  const run=search=>{const html={className:''};new Function('document','location',code)({documentElement:html},{search});return /ep-closed/.test(html.className);};
+  const run=search=>{const html={className:''};new Function('document','location',code)({documentElement:html},{search});return /ep-early/.test(html.className);};
   assert.equal(run(''),false);assert.equal(run('?today=2027-01-11'),true);assert.equal(run('?today=2027-01-12'),false);
+  assert.doesNotMatch(t2,/ep-closed/);
 });
 
 test('build-ep: the leak guard looks at classes (.key / .aside / .rs / numbers), not at label words, and does fail on a deliberate leak',{skip},async()=>{
