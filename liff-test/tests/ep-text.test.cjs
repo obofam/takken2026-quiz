@@ -296,7 +296,7 @@ test('sample page (ep/1/text): the table has the 7 rows and the same marks as ro
   const rows=[...body.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(m=>m[1]);
   assert.deepEqual(rows.map(r=>plainText(r.match(/<th>([\s\S]*?)<\/th>/)[1])),['図解','○×3問','過去問1選','ひっかけあるある','覚える数字まとめ','赤シート','印刷用のA4版']);
   assert.deepEqual(rows.map(r=>[...r.matchAll(/<td class="([yn])">/g)].map(m=>m[1]).join('')),['','yyy','nyy','nny','nny','nny','nny']);
-  assert.deepEqual(plainText(rows[0]).replace(/^図解/,''),'最初の1枚続きまで全部');
+  assert.deepEqual(plainText(rows[0]).replace(/^図解/,''),'最初の1枚続きあり全部');
   assert.doesNotMatch(table(html),/復習|使い方|寄り道/);
   assert.match(plainText(table(html).match(/<thead>[\s\S]*?<\/thead>/)[0]),/^登録なしLINE・メール登録・無料やさしいテキスト有料・準備中$/);
   const cta=h=>h.match(/<section class="line-cta">[\s\S]*?<\/section>/)[0];
