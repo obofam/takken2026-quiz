@@ -749,6 +749,17 @@ export function buildPages(m, text, ex, mode, built) {
     if (indexRaw.split(ch).length !== 2) throw new Error(`第${ep}回：「他：」の行の stand.fm が1つに決まらない`);
     index = indexRaw.replace(ch, `href="${escAttr(standfmUrl)}" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm-ep"`);
   }
+  /* Apple / Amazon も、回の住所が設定にある回はその回に向ける（計測の名前は apple-ep / amazon-ep） */
+  for (const [app, top, map] of [
+    ['apple', 'https://podcasts.apple.com/jp/podcast/id1886337945', CFG.APPLE_EPISODE],
+    ['amazon', 'https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d', CFG.AMAZON_EPISODE],
+  ]) {
+    const url = map && map[ep];
+    if (!url) continue;
+    const ch = `href="${top}" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="${app}"`;
+    if (index.split(ch).length !== 2) throw new Error(`第${ep}回：「他：」の行の ${app} が1つに決まらない`);
+    index = index.replace(ch, `href="${escAttr(url)}" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="${app}-ep"`);
+  }
   if (m.freeOnly) return { index }; /* 無料だけの回は index.html（登録なしの見え方）だけ。line-full・tsuzuki は作らない */
   const corePoint = h => json.points.find(p => p.half === h);
   const c1 = corePoint(1), c2 = corePoint(2);

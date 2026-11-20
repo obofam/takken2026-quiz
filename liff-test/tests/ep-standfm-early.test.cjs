@@ -24,7 +24,8 @@ test('ep 1 (prod and trial): main button = Spotify episode, stand.fm episode URL
     assert.doesNotMatch(h,/stand\.fm\/channels/);
     assert.doesNotMatch(h,/<p class="pnote haishin">/);
     assert.doesNotMatch(h,/いまは番組のページが開きます/);
-    assert.match(h,/podcasts\.apple\.com[\s\S]*music\.amazon\.co\.jp/);
+    assert.ok(row.includes('href="https://podcasts.apple.com/jp/podcast/id1886337945?i=1000803084241" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="apple-ep">Apple</a>'));
+    assert.ok(row.includes('href="https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d/episodes/99c78f0a-a419-443d-8002-fa5ab9b3f027" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="amazon-ep">Amazon</a>'));
   }
 });
 
@@ -33,6 +34,6 @@ test('ep 2-9 (prod and trial): unchanged listen / note',()=>{
     const h=read(path.join(base,'ep/'+n+'/index.html'));
     assert.match(h,new RegExp('data-umami-event="ep-spotify-show" data-umami-event-ep="'+n+'">音声番組を聴く（Spotify）</a>'));
     assert.match(h,/<p class="pnote haishin"><span class="nk">この回の配信は<\/span> <span class="nk">2027年\d+月\d+日（.）から（予定）。<\/span><span class="nk">いまは番組のページが開きます。<\/span><\/p>/);
-    assert.doesNotMatch(h,/stand\.fm\/episodes|standfm-ep/);
+    assert.doesNotMatch(h,/stand\.fm\/episodes|standfm-ep|apple-ep|amazon-ep/);
   }
 });

@@ -16,6 +16,14 @@ export const SPOTIFY_EPISODE = {
 // ここに足すと、その回は配信日前でも「配信後」と同じ表示になる（「聴く」＝この回を聴く（stand.fm）、「配信は○月○日から（予定）」の注記は出ない）。
 // 次に先行公開する回が出たら { 1: '…', 2: 'https://stand.fm/episodes/…' } と足して、build-ep.mjs を回し直す（材料側には書かない）。
 // Spotify の回の住所（SPOTIFY_EPISODE）が入っている回は、そちらを優先する。
+// 「他：」の行の Apple / Amazon を、番組ページでなくその回に向けたいときの住所（回番号 → URL）。無い回は番組ページのまま。
+// Apple は https://itunes.apple.com/lookup?id=1886337945&entity=podcastEpisode&country=jp の i= の番号、Amazon は番組ページの回のリンクで分かる。
+export const APPLE_EPISODE = {
+  1: 'https://podcasts.apple.com/jp/podcast/id1886337945?i=1000803084241', // 2026-11-20
+};
+export const AMAZON_EPISODE = {
+  1: 'https://music.amazon.co.jp/podcasts/79590722-f7ad-462f-bc00-a121b3affb1d/episodes/99c78f0a-a419-443d-8002-fa5ab9b3f027', // 2026-11-20
+};
 export const STANDFM_EPISODE = {
   1: 'https://stand.fm/episodes/6b00055673b676464a0eb4e1', // 2026-11-20 先行公開
 };
