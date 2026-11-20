@@ -14,14 +14,16 @@ test('STANDFM_EPISODE: ep 1 only',async()=>{
   assert.deepEqual(C.SPOTIFY_EPISODE,{});
 });
 
-test('ep 1 (prod and trial): listen button = stand.fm episode, no "予定" note, other apps stay show-level',()=>{
+test('ep 1 (prod and trial): main button = Spotify show, stand.fm episode URL in the other-apps row, no "予定" note',()=>{
   for(const h of [read(path.join(prod,'ep/1/index.html')),read(path.join(root,'ep/1/index.html'))]){
-    assert.match(h,new RegExp('<a class="listen" href="'+URL1+'"[^>]*data-umami-event="ep-app" data-umami-event-app="standfm-ep" data-umami-event-ep="1">この回を聴く（stand\.fm）</a>'));
+    assert.ok(h.includes('<a class="listen" href="'+SHOW+'" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="1">音声番組を聴く（Spotify）</a>'));
+    const row=h.match(/<p class="oapps">他：.*<\/p>/)[0];
+    assert.ok(row.includes('<a href="'+URL1+'" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm-ep">stand.fm</a>'));
+    assert.ok(!row.includes('Spotify'));
+    assert.doesNotMatch(h,/stand\.fm\/channels/);
     assert.doesNotMatch(h,/<p class="pnote haishin">/);
-    assert.doesNotMatch(h,/から（予定）。<\/span><span class="nk">いまは番組のページが開きます/);
-    assert.doesNotMatch(h,/音声番組を聴く（Spotify）/);
-    assert.match(h,new RegExp('<p class="oapps">他：<a href="'+SHOW.replace(/\./g,'\.')+'"'));
-    assert.match(h,/podcasts\.apple\.com[\s\S]*music\.amazon\.co\.jp[\s\S]*stand\.fm\/channels\//);
+    assert.doesNotMatch(h,/いまは番組のページが開きます/);
+    assert.match(h,/podcasts\.apple\.com[\s\S]*music\.amazon\.co\.jp/);
   }
 });
 

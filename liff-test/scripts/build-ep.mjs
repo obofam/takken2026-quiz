@@ -715,13 +715,10 @@ export function buildPages(m, text, ex, mode, built) {
   const date = fmtDate(json.date);
   const spotifyUrl = CFG.SPOTIFY_EPISODE[ep];
   const standfmUrl = !spotifyUrl && CFG.STANDFM_EPISODE ? CFG.STANDFM_EPISODE[ep] : undefined; /* 先行公開した回（stand.fm の回の住所） */
-  const episodeUrl = spotifyUrl || standfmUrl;
   const listen = spotifyUrl
     ? `<a class="listen" href="${escAttr(spotifyUrl)}" target="_blank" rel="noopener" data-umami-event="ep-spotify" data-umami-event-ep="${ep}">この回を聴く（Spotify）</a>`
-    : standfmUrl
-    ? `<a class="listen" href="${escAttr(standfmUrl)}" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm-ep" data-umami-event-ep="${ep}">この回を聴く（stand.fm）</a>`
     : `<a class="listen" href="${CFG.SPOTIFY_SHOW}" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="${ep}">音声番組を聴く（Spotify）</a>`;
-  const haishin = episodeUrl ? '' : `<p class="pnote haishin"><span class="nk">この回の配信は</span> <span class="nk">${date}から（予定）。</span><span class="nk">いまは番組のページが開きます。</span></p>`;
+  const haishin = (spotifyUrl || standfmUrl) ? '' : `<p class="pnote haishin"><span class="nk">この回の配信は</span> <span class="nk">${date}から（予定）。</span><span class="nk">いまは番組のページが開きます。</span></p>`;
   const sample = CFG.SAMPLE_EPS.includes(ep);
   const abs = p => (test ? CFG.SITE + p : p);
   const fig1Template = '<template id="nk-fig1"><style data-nk="css">' + ex.css + '</style>' + ex.fig1 + '</template>';
@@ -745,12 +742,12 @@ export function buildPages(m, text, ex, mode, built) {
     ...loginVals(ep, sample, test),
     MIHON_QS: test ? " + (mihon === 'kounyu' ? '&mihon=1' : '')" : '',
   });
-  /* 先行公開の回：主ボタンが stand.fm の回になるので、番組ページ向きの Spotify は「他」の行の先頭に残す（Apple・Amazon・stand.fm の番組は今までどおり） */
+  /* 先行公開の回：主ボタンは Spotify のまま。「他：」の行の stand.fm だけ、番組ページでなく stand.fm の回の住所に向ける */
   let index = indexRaw;
   if (standfmUrl) {
-    const row = '<p class="oapps">他：';
-    if (indexRaw.split(row).length !== 2) throw new Error(`第${ep}回：「他：」の行が1つに決まらない`);
-    index = indexRaw.replace(row, `${row}<a href="${CFG.SPOTIFY_SHOW}" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="${ep}">Spotify</a> / `);
+    const ch = 'href="https://stand.fm/channels/69b1fa4b75c28fe6990cf326" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm"';
+    if (indexRaw.split(ch).length !== 2) throw new Error(`第${ep}回：「他：」の行の stand.fm が1つに決まらない`);
+    index = indexRaw.replace(ch, `href="${escAttr(standfmUrl)}" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm-ep"`);
   }
   if (m.freeOnly) return { index }; /* 無料だけの回は index.html（登録なしの見え方）だけ。line-full・tsuzuki は作らない */
   const corePoint = h => json.points.find(p => p.half === h);
