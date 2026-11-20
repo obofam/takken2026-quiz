@@ -10,6 +10,14 @@ export const LIFF_ID = { prod: '2012583516-7vmvMorb', test: '2011606963-hH0DzETc
 export const SPOTIFY_SHOW = 'https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1';
 export const SPOTIFY_EPISODE = {};
 
+// 先行公開した回（配信日より前に音声を出した回）：回番号 → stand.fm の回の住所。
+// ここに足すと、その回は配信日前でも「配信後」と同じ表示になる（「聴く」＝この回を聴く（stand.fm）、「配信は○月○日から（予定）」の注記は出ない）。
+// 次に先行公開する回が出たら { 1: '…', 2: 'https://stand.fm/episodes/…' } と足して、build-ep.mjs を回し直す（材料側には書かない）。
+// Spotify の回の住所（SPOTIFY_EPISODE）が入っている回は、そちらを優先する。
+export const STANDFM_EPISODE = {
+  1: 'https://stand.fm/episodes/6b00055673b676464a0eb4e1', // 2026-11-20 先行公開
+};
+
 // 有料版の見本（/ep/1/text）。見本ページを作るのは第1回だけ。第2回以降の「有料版の見本」の札も、この第1回の見本を指す。
 export const SITE = 'https://takken.mimiobo.com';
 export const TEXT_SAMPLE_PATH = '/ep/1/text';
