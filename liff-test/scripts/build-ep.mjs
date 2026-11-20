@@ -714,7 +714,7 @@ export function buildPages(m, text, ex, mode, built) {
   const half = i => `${sec[i].label}　${sec[i].theme}`;
   const date = fmtDate(json.date);
   const spotifyUrl = CFG.SPOTIFY_EPISODE[ep];
-  const standfmUrl = !spotifyUrl && CFG.STANDFM_EPISODE ? CFG.STANDFM_EPISODE[ep] : undefined; /* 先行公開した回（stand.fm の回の住所） */
+  const standfmUrl = CFG.STANDFM_EPISODE ? CFG.STANDFM_EPISODE[ep] : undefined; /* 先行公開した回（stand.fm の回の住所） */
   const listen = spotifyUrl
     ? `<a class="listen" href="${escAttr(spotifyUrl)}" target="_blank" rel="noopener" data-umami-event="ep-spotify" data-umami-event-ep="${ep}">この回を聴く（Spotify）</a>`
     : `<a class="listen" href="${CFG.SPOTIFY_SHOW}" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="${ep}">音声番組を聴く（Spotify）</a>`;

@@ -6,17 +6,18 @@ const fs=require('node:fs'),path=require('node:path');
 const root=path.join(__dirname,'..'),prod=path.join(root,'..');
 const read=p=>fs.readFileSync(p,'utf8');
 const URL1='https://stand.fm/episodes/6b00055673b676464a0eb4e1';
+const SP1='https://open.spotify.com/episode/0hUKmbfs0MXA0Iwql6KpAd'; // 第1回は 2026-11-20 に Spotify に届いた
 const SHOW='https://open.spotify.com/show/4UjPh6TOoRFcVUATL9IiE1';
 
 test('STANDFM_EPISODE: ep 1 only',async()=>{
   const C=await import(require('node:url').pathToFileURL(path.join(root,'scripts','ep-config.mjs')).href);
   assert.deepEqual(C.STANDFM_EPISODE,{1:URL1});
-  assert.deepEqual(C.SPOTIFY_EPISODE,{});
+  assert.deepEqual(C.SPOTIFY_EPISODE,{1:SP1});
 });
 
-test('ep 1 (prod and trial): main button = Spotify show, stand.fm episode URL in the other-apps row, no "予定" note',()=>{
+test('ep 1 (prod and trial): main button = Spotify episode, stand.fm episode URL in the other-apps row, no "予定" note',()=>{
   for(const h of [read(path.join(prod,'ep/1/index.html')),read(path.join(root,'ep/1/index.html'))]){
-    assert.ok(h.includes('<a class="listen" href="'+SHOW+'" target="_blank" rel="noopener" data-umami-event="ep-spotify-show" data-umami-event-ep="1">音声番組を聴く（Spotify）</a>'));
+    assert.ok(h.includes('<a class="listen" href="'+SP1+'" target="_blank" rel="noopener" data-umami-event="ep-spotify" data-umami-event-ep="1">この回を聴く（Spotify）</a>'));
     const row=h.match(/<p class="oapps">他：.*<\/p>/)[0];
     assert.ok(row.includes('<a href="'+URL1+'" target="_blank" rel="noopener" data-umami-event="ep-app" data-umami-event-app="standfm-ep">stand.fm</a>'));
     assert.ok(!row.includes('Spotify'));
