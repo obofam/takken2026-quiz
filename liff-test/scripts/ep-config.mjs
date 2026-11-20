@@ -17,7 +17,8 @@ export const TEXT_SAMPLE_IMG = '/ep/1/text/a4-p1.webp';
 export const ART_PATH = '/ep/1/img/artwork2027.webp';
 
 // Umami（本番だけ。試し用のページには入れない）
-export const UMAMI_SCRIPT = '<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>\n';
+// 2つ目は、来た入口（ent・mark）と表示の種類（view）をイベントに付ける共通の部品（ep/_shared/umami-ctx.js）。トラッカーのあとに読む
+export const UMAMI_SCRIPT = '<script defer src="https://cloud.umami.is/script.js" data-website-id="99a5370c-5fbd-4ceb-9d35-7734d7c580ec"></script>\n<script defer src="/ep/_shared/umami-ctx.js"></script>\n';
 
 // 第1回にしかない言い方（見本の回）。第2回以降は出さない
 export const SAMPLE_EPS = [1];

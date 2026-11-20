@@ -56,7 +56,7 @@ export function buildYokoku(e) {
   const A = (href, ev, label, extra = '') => `<a ${extra}href="${href}" target="_blank" rel="noopener" data-umami-event="${ev}" data-umami-event-ep="${e.n}">${label}</a>`;
   const lineBtn = `<a class="lbtn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="${e.n}">LINEで受け取る</a>`;
   return `<!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-yokoku="1">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

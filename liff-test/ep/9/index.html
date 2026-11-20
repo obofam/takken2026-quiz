@@ -969,7 +969,7 @@ figure.fig{min-width:0}
   };
 
   /* ---------- 3問済の印：前半・後半の両方を解き終えたら、この端末の localStorage に残す（ログインしている人は、サーバーにも置く） ---------- */
-  var setsDone = {};
+  var setsDone = {}, oxDoneSent = false;
   function markSetDone(idx) {
     setsDone[idx] = true;
     for (var i = 0; i < QUIZ.length; i++) { if (!setsDone[i]) { return; } }
@@ -981,6 +981,11 @@ figure.fig{min-width:0}
       o[m[1]] = true;
       localStorage.setItem('takken2027-done', JSON.stringify(o));
     } catch (_) {} showKiroku();
+    /* 3問を解き終えたことを Umami に1回だけ送る（来た入口・表示の種類つき。umami-ctx.js が無ければ付けずに送る） */
+    if (!oxDoneSent) {
+      oxDoneSent = true;
+      try { if (window.umami && typeof window.umami.track === 'function') { var pp = {ep: m[1]}; window.umami.track('ep-ox-done', window.__epCtxProps ? window.__epCtxProps(pp) : pp); } } catch (_) {}
+    }
     /* ログインしている人は、サーバーにも置く（ログインしていない人は端末だけ）。同期の部品が動き出す前なら、動き出してから送る */
     progDoneKey = m[1];
     if (progReady) { try { window.TakkenProgress.set('done', progDoneKey, true); } catch (_) {} }
@@ -1205,11 +1210,13 @@ figure.fig{min-width:0}
      見え方（open / line / mail）はいったん覚えておき、テキストの確認が済んでから送る（買った人は text だけを送る。二重に数えない）。
      確認が長引いても、4秒たてば覚えておいた見え方を送る。 */
   var tracked = false, viewKind = null, trackTimer = null;
+  function ctxProps(o) { try { return window.__epCtxProps ? window.__epCtxProps(o) : o; } catch (_) { return o; } }
   function sendView(kind) {
     var n = 0;
     (function send() {
       try {
-        if (window.umami && typeof window.umami.track === 'function') { window.umami.track('ep-view', {ep: '9', tier: kind}); return; }
+        /* 来た入口（ent・mark）と表示の種類（view）は ep/_shared/umami-ctx.js が持つ。読み込みを少し待つ（無ければ付けずに送る） */
+        if (window.umami && typeof window.umami.track === 'function' && (window.__epCtxProps || n >= 8)) { window.umami.track('ep-view', ctxProps({ep: '9', tier: kind})); return; }
       } catch (_) { return; }
       if (++n < 20) { setTimeout(send, 250); }
     })();

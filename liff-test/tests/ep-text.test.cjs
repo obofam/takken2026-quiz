@@ -365,7 +365,7 @@ test('production ep/1/index.html: ep-text is called only after the login check, 
   assert.match(h,/who = window\.TakkenProgress && window\.TakkenProgress\.provider\(\)[\s\S]{0,200}if \(!who\) \{ setText\('呼んでいない/);
   assert.match(h,/if \(res\.status === 200 && typeof res\.json\.html === 'string'\) \{ return showText\(res\.json\.html\); \}/);
   assert.match(h,/\/ep\/_shared\/text-view\.css[\s\S]{0,60}\/ep\/_shared\/text-view\.js/);
-  assert.match(h,/window\.umami\.track\('ep-view', \{ep: '1', tier: kind\}\)/);assert.match(h,/sendView\('text'\)/);
+  assert.match(h,/window\.umami\.track\('ep-view', ctxProps\(\{ep: '1', tier: kind\}\)\)/);assert.match(h,/sendView\('text'\)/);
   assert.match(h,/\['text', textState\]/);
   // 二重にログインしない：progress-sync には liffId を渡さない・このページは /api/session を直接呼ばない
   assert.ok(!/TakkenProgress\.init\(\{liffId/.test(h));assert.doesNotMatch(h,/api\/session/);
