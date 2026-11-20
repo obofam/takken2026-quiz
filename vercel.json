@@ -1,6 +1,10 @@
 {
   "git": { "deploymentEnabled": false },
   "regions": ["hnd1"],
+  "redirects": [
+    { "source": "/ep/:n([0-9]+)/:mark((?!text$|img$|tsuzuki$|line-full$|index$)[A-Za-z0-9-]+)", "destination": "/ep/:n?utm_source=stf&utm_medium=to2027&utm_content=:mark", "permanent": false },
+    { "source": "/roadmap/:mark((?!index$)[A-Za-z0-9-]+)", "destination": "/roadmap?utm_source=stf&utm_content=:mark", "permanent": false }
+  ],
   "crons": [{ "path": "/api/products?keepalive=1", "schedule": "30 21 * * *" }],
   "functions": {
     "api/ep-text.js": { "includeFiles": "api/_ep-text/**" },
