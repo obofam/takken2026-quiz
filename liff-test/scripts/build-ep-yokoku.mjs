@@ -60,7 +60,7 @@ export function buildYokoku(e) {
   const mailBtn = `<a class="lbtn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="${e.n}">メールで受け取る</a>`;
   /* 出口は全部の回で同じ3つ：LINE・メール・第1回の図解と3問（見本として開いている）。ロードマップへのリンクは下に残す */
   const exits = `<div class="lbtns">${lineBtn}${mailBtn}</div>
-    <p class="to1"><a href="/ep/1" data-umami-event="ep-to1" data-umami-event-ep="${e.n}">第1回の図解と3問を見る</a></p>`;
+    <p class="to1"><a href="/ep/1" data-umami-event="ep-to1" data-umami-event-ep="${e.n}">第1回の「図解と3問」（見本）を見る</a></p>`;
   return `<!DOCTYPE html>
 <html lang="ja" data-yokoku="1">
 <head>

@@ -48,7 +48,7 @@ test('exits (Kei 11/20): yokoku pages and the pre-date view of early episodes ca
     const h=read(path.join(prod,'ep',String(n),'index.html'));
     for (const cls of ['before-only','after-only']) {
       const box=h.split(`<div class="box ${cls}">`)[1].split('\n  </div>')[0];
-      assert.ok(box.includes(LINE)&&box.includes(MAIL)&&box.includes(TO1)&&box.includes('第1回の図解と3問を見る'),`ep ${n} ${cls}`);
+      assert.ok(box.includes(LINE)&&box.includes(MAIL)&&box.includes(TO1)&&box.includes('第1回の「図解と3問」（見本）を見る'),`ep ${n} ${cls}`);
       assert.match(box,/data-umami-event="ep-mail"/);
     }
     assert.match(h,/href="\/roadmap"/);
