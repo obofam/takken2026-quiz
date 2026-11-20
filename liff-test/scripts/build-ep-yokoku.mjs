@@ -57,6 +57,10 @@ export function buildYokoku(e) {
   const verb = e.tentative ? `${date}に配信する予定です。` : `${date}に配信します。`;
   const A = (href, ev, label, extra = '') => `<a ${extra}href="${href}" target="_blank" rel="noopener" data-umami-event="${ev}" data-umami-event-ep="${e.n}">${label}</a>`;
   const lineBtn = `<a class="lbtn" href="https://lin.ee/q7FbZoo" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="${e.n}">LINEで受け取る</a>`;
+  const mailBtn = `<a class="lbtn" href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="${e.n}">メールで受け取る</a>`;
+  /* 出口は全部の回で同じ3つ：LINE・メール・第1回の図解と3問（見本として開いている）。ロードマップへのリンクは下に残す */
+  const exits = `<div class="lbtns">${lineBtn}${mailBtn}</div>
+    <p class="to1"><a href="/ep/1" data-umami-event="ep-to1" data-umami-event-ep="${e.n}">第1回の図解と3問を見る</a></p>`;
   return `<!DOCTYPE html>
 <html lang="ja" data-yokoku="1">
 <head>
@@ -87,6 +91,9 @@ body{font-family:var(--font);word-break:auto-phrase;overflow-wrap:anywhere;color
 .box p+p{margin-top:8px}
 .box .date{font-size:17px;font-weight:900;color:var(--ink)}
 .lbtn{display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:12px;text-align:center;font-weight:900;font-size:15px;line-height:1.4;color:var(--text);background:var(--sky);border-radius:999px;padding:8px 18px;text-decoration:none}
+.lbtns{display:flex;gap:8px;margin-top:12px}
+.lbtns .lbtn{flex:1 1 0;min-width:0;margin-top:0;padding:8px 6px;font-size:14px}
+.box .to1 a{display:inline-block;padding:10px 0;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 .listen{display:block;background:var(--sky);color:var(--text);border-radius:999px;padding:10px 16px;text-align:center;font-size:18px;font-weight:900;line-height:1.4;text-decoration:none}
 .oapps{font-size:14px;color:#4F5963;line-height:1.7;margin-top:6px;text-align:center}
 .oapps a{color:var(--ink);text-underline-offset:2px}
@@ -123,8 +130,8 @@ body{font-family:var(--font);word-break:auto-phrase;overflow-wrap:anywhere;color
     <p><span class="nk">この回の図解と</span><span class="nk">○×3問は、</span><span class="nk">準備中です。</span></p>
     <p class="date">音声は、${verb}</p>` : `
     <p class="date">${verb}</p>`}
-    <p><span class="nk">LINEに登録すると、</span><span class="nk">配信の日に</span><span class="nk">図解と○×3問が届きます。</span><br><span class="nk">登録は無料です。</span></p>
-    ${lineBtn}
+    <p><span class="nk">LINEかメールに登録すると、</span><span class="nk">配信の日に</span><span class="nk">図解と○×3問が届きます。</span><br><span class="nk">登録は無料です。</span></p>
+    ${exits}
   </div>
 
   <div class="after-only">
@@ -134,8 +141,8 @@ body{font-family:var(--font);word-break:auto-phrase;overflow-wrap:anywhere;color
   <div class="box after-only">
     <p><span class="nk">この回は、</span><span class="nk">${date}に配信しました。</span></p>
     <p><span class="nk">図解と○×3問は、</span><span class="nk">準備中です。</span></p>
-    <p><span class="nk">LINEに登録すると、</span><span class="nk">毎週月曜に</span><span class="nk">図解と○×3問が届きます。</span><br><span class="nk">登録は無料です。</span></p>
-    ${lineBtn}
+    <p><span class="nk">LINEかメールに登録すると、</span><span class="nk">毎週月曜に</span><span class="nk">図解と○×3問が届きます。</span><br><span class="nk">登録は無料です。</span></p>
+    ${exits}
   </div>
 
   <a class="prow" href="/roadmap" data-umami-event="ep-roadmap" data-umami-event-ep="${e.n}"><span class="pmid"><span class="pt">学習ロードマップ</span><span class="py">全41回の予定を見る</span></span><span class="go" aria-hidden="true"></span></a>

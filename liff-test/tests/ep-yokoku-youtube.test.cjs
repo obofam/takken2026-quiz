@@ -14,7 +14,7 @@ test('yokoku page: YouTube episode says 準備中 first, then the audio date; no
     const before=h.split('<div class="box before-only">')[1].split('</div>')[0];
     assert.match(before,/準備中です。/,`ep ${n}`);
     assert.ok(before.indexOf('準備中')<before.indexOf('音声は、'),`ep ${n}: 準備中 comes first`);
-    assert.ok(before.indexOf('音声は、')<before.indexOf('LINEに登録すると'),`ep ${n}: date before LINE`);
+    assert.ok(before.indexOf('音声は、')<before.indexOf('LINEかメールに登録すると'),`ep ${n}: date before LINE`);
   }
   for (const n of [34, 35, 36]) {
     const h=read(path.join(prod,'ep',String(n),'index.html'));
@@ -40,4 +40,31 @@ test('umami-ctx: utm_source=youtube is its own entrance (youtube), mark lecture 
   const code=read(path.join(prod,'ep','_shared','umami-ctx.js'));
   assert.match(code,/us === 'youtube'/);
   assert.match(code,/youtube: 1/);
+});
+
+test('exits (Kei 11/20): yokoku pages and the pre-date view of early episodes carry LINE / mail / ep1 / roadmap; ep 1 and the open view get nothing added',()=>{
+  const LINE='href="https://lin.ee/q7FbZoo"',MAIL='href="https://mimiobo.substack.com/subscribe"',TO1='<a href="/ep/1" data-umami-event="ep-to1"';
+  for (const n of [10, 34, 41]) {
+    const h=read(path.join(prod,'ep',String(n),'index.html'));
+    for (const cls of ['before-only','after-only']) {
+      const box=h.split(`<div class="box ${cls}">`)[1].split('\n  </div>')[0];
+      assert.ok(box.includes(LINE)&&box.includes(MAIL)&&box.includes(TO1)&&box.includes('第1回の図解と3問を見る'),`ep ${n} ${cls}`);
+      assert.match(box,/data-umami-event="ep-mail"/);
+    }
+    assert.match(h,/href="\/roadmap"/);
+    assert.doesNotMatch(h,/kounyu/);
+  }
+  for (const n of [2, 5, 9]) {
+    for (const base of [prod,path.join(prod,'liff-test')]) {
+      const h=read(path.join(base,'ep',String(n),'index.html'));
+      assert.equal(h.split(TO1).length-1,1,`ep ${n}`);
+      assert.match(h,/\.early-to1\{display:none\}/);
+      assert.match(h,/\.ep-early \.early-to1\{display:block/);
+      assert.ok(h.indexOf('class="early-to1"')>h.indexOf('class="line-card only-a"'),'ep-to1 sits in the LINE/mail card');
+    }
+  }
+  for (const f of [path.join(prod,'ep/1/index.html'),path.join(root,'ep/1/index.html')]) {
+    const h=read(f);
+    assert.doesNotMatch(h,/early-to1|ep-to1/);
+  }
 });

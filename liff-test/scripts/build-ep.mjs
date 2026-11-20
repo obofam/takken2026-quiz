@@ -594,7 +594,7 @@ const y2026Section = prev => {
 /* 配信日まで閉じる（第1回＝見本の回は閉じない）。条件は roadmap/index.html と同じ：端末の日付（new Date() の年月日）が配信日以上なら開く。
    試し用は、ふだんは開いたまま。?today=YYYY-MM-DD を付けたときだけ、その日として判定する（roadmap-an2.html と同じ言い方）。本番の型には today の上書きを入れない。 */
 function gateVals(ep, iso, dateLabel, test, freeOnly) {
-  const noEarly = { EARLY_CSS: '', EARLY_NOTE: '', EARLY_RUN: '' };
+  const noEarly = { EARLY_CSS: '', EARLY_NOTE: '', EARLY_RUN: '', EARLY_TO1: '' };
   if (CFG.SAMPLE_EPS.includes(ep)) return { GATE_SCRIPT: '', CLOSED_CSS: '', CLOSED_BOX: '', GUARD: '', ...noEarly };
   const k = Number(iso.replace(/-/g, ''));
   const now = test
@@ -612,8 +612,9 @@ function gateVals(ep, iso, dateLabel, test, freeOnly) {
       CLOSED_CSS: '',
       CLOSED_BOX: '',
       GUARD: '',
-      EARLY_CSS: '\n/* 配信日前（html.ep-early）：登録なしの見え方。登録済の方の入口は出さず、続きが開く日の一文を出す */\n.early-note{display:none}\n.ep-early .early-note{display:block;margin:0;font-size:14px;line-height:1.7;color:#4F5963;text-align:center}\n.ep-early .top-login,.ep-early .login-line{display:none}',
+      EARLY_CSS: '\n/* 配信日前（html.ep-early）：登録なしの見え方。登録済の方の入口は出さず、続きが開く日の一文を出す */\n.early-note{display:none}\n.ep-early .early-note{display:block;margin:0;font-size:14px;line-height:1.7;color:#4F5963;text-align:center}\n.ep-early .top-login,.ep-early .login-line{display:none}\n.early-to1{display:none}\n.ep-early .early-to1{display:block;margin:0;text-align:center;font-size:14px;line-height:1.5}\n.ep-early .early-to1 a{display:inline-block;padding:10px 0;color:var(--ink);text-decoration:underline;text-underline-offset:3px}',
       EARLY_NOTE: `\n    <p class="pnote early-note"><span class="nk">この回の図の続きと</span><span class="nk">過去問1選は、</span><span class="nk">${md}の配信から</span><span class="nk">開きます。</span></p>`,
+      EARLY_TO1: `\n    <p class="early-to1"><a href="/ep/1" data-umami-event="ep-to1" data-umami-event-ep="${ep}">第1回の図解と3問を見る</a></p>`,
       EARLY_RUN: `\n  /* 先に開ける回の配信日前（html.ep-early）：登録なしの見え方のまま。LINEの判定・続き・テキストの確認はしない。記録の同期だけ動かす */\n  if (document.documentElement.classList.contains('ep-early')) {\n    tier = '登録なし'; say('配信日前（登録なしの見え方）'); pendView('open'); settleView();\n    try { if (window.__epProgressStart) { window.__epProgressStart(); } } catch (_) {}\n    return;\n  }`,
     };
   }
