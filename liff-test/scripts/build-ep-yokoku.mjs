@@ -129,6 +129,7 @@ body{font-family:var(--font);word-break:auto-phrase;overflow-wrap:anywhere;color
   </div>
   <div class="box after-only">
     <p><span class="nk">この回は、</span><span class="nk">${date}に配信しました。</span></p>
+    <p><span class="nk">図解と○×3問は、</span><span class="nk">準備中です。</span></p>
     <p><span class="nk">LINEに登録すると、</span><span class="nk">毎週月曜に</span><span class="nk">図解と○×3問が届きます。</span><br><span class="nk">登録は無料です。</span></p>
     ${lineBtn}
   </div>
