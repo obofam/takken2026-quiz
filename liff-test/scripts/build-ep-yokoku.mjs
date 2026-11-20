@@ -52,6 +52,8 @@ export function buildYokoku(e) {
   const date = fmtDate(e.date);
   const k = Number(e.date.replace(/-/g, ''));
   const plainTitle = e.theme ? `${e.title} ── ${e.theme}` : e.title;
+  /* YouTube講義を出す回（ep-config.mjs の FREE_EARLY_EPS）は、動画を見て来た人にも合う言い方にする：図解と○×3問が準備中であること→音声の配信日→登録すると届くこと */
+  const early = CFG.FREE_EARLY_EPS.includes(e.n);
   const verb = e.tentative ? `${date}に配信する予定です。` : `${date}に配信します。`;
   const A = (href, ev, label, extra = '') => `<a ${extra}href="${href}" target="_blank" rel="noopener" data-umami-event="${ev}" data-umami-event-ep="${e.n}">${label}</a>`;
   const lineBtn = `<a class="lbtn" href="https://lin.ee/q7FbZoo" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="${e.n}">LINEで受け取る</a>`;
@@ -117,8 +119,10 @@ body{font-family:var(--font);word-break:auto-phrase;overflow-wrap:anywhere;color
     <div class="row"><span class="no">第${e.n}回</span><h1>${esc(e.title)}</h1></div>${e.theme ? `\n    <div class="side">${esc(e.theme)}</div>` : ''}
   </div>
 
-  <div class="box before-only">
-    <p class="date">${verb}</p>
+  <div class="box before-only">${early ? `
+    <p><span class="nk">この回の図解と</span><span class="nk">○×3問は、</span><span class="nk">準備中です。</span></p>
+    <p class="date">音声は、${verb}</p>` : `
+    <p class="date">${verb}</p>`}
     <p><span class="nk">LINEに登録すると、</span><span class="nk">配信の日に</span><span class="nk">図解と○×3問が届きます。</span><br><span class="nk">登録は無料です。</span></p>
     ${lineBtn}
   </div>

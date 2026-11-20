@@ -2,6 +2,9 @@
   "git": { "deploymentEnabled": false },
   "regions": ["hnd1"],
   "redirects": [
+    { "source": "/ep/:n([0-9]+)/yt", "destination": "/ep/:n?utm_source=youtube&utm_medium=lecture", "permanent": false },
+    { "source": "/ep/:n([0-9]+)/ytpin", "destination": "/ep/:n?utm_source=youtube&utm_medium=pin", "permanent": false },
+    { "source": "/roadmap/yt", "destination": "/roadmap?utm_source=youtube&utm_medium=lecture", "permanent": false },
     { "source": "/ep/:n([0-9]+)/:mark((?!text$|img$|tsuzuki$|line-full$|index$)[A-Za-z0-9-]+)", "destination": "/ep/:n?utm_source=stf&utm_medium=to2027&utm_content=:mark", "permanent": false },
     { "source": "/roadmap/:mark((?!index$)[A-Za-z0-9-]+)", "destination": "/roadmap?utm_source=stf&utm_content=:mark", "permanent": false }
   ],
