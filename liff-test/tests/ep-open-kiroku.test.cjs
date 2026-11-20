@@ -24,7 +24,7 @@ test('open-all: only episode 1 is opened to everyone (OPEN_ALL true + the one-li
   assert.ok(note,'一文の箱');
   assert.equal(strip(note[0]),'第2回からは、LINEかメールの登録（無料）で開きます。');
   // 今の過去問の next-box と同じリンク先・同じ見た目・同じイベント
-  assert.ok(note[0].includes('<a href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>'));
+  assert.ok(note[0].includes('<a href="https://lin.ee/q7FbZoo" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">LINE</a>'));
   assert.ok(note[0].includes('<a href="https://mimiobo.substack.com/subscribe" target="_blank" rel="noopener" data-umami-event="ep-mail" data-umami-event-ep="1" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">メール</a>'));
   assert.doesNotMatch(note[0],NG);
   // 置き場所：過去問1選（#slot-kk）のすぐ下、やさしいテキストのカードの上

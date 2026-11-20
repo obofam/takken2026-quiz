@@ -302,7 +302,7 @@ test('sample page (ep/1/text): the table has the 7 rows and the same marks as ro
   const cta=h=>h.match(/<section class="line-cta">[\s\S]*?<\/section>/)[0];
   const w=h=>plainText(cta(h).replace(/ data-umami[^>]*/g,''));
   assert.equal(w(html),w(road));
-  assert.deepEqual([...cta(html).matchAll(/class="btn" href="([^"]+)"/g)].map(m=>m[1]),[...cta(road).matchAll(/class="btn" href="([^"]+)"/g)].map(m=>m[1]));
+  assert.deepEqual([...cta(html).matchAll(/class="btn" href="([^"]+)"/g)].map(m=>m[1]),[...cta(road).matchAll(/class="btn" href="([^"]+)"/g)].map(m=>m[1].replace('lin.ee/NWbqUiR','lin.ee/r6uYtnE'))); /* ロードマップのLINEは経路つき（NWbqUiR）。見本ページは元の r6uYtnE のまま（Kei 11/20 指示の範囲外） */
   assert.match(html,/t < 20270104[\s\S]{0,400}始まったら、[\s\S]{0,200}LINEかメールでお知らせします[\s\S]{0,300}毎週月曜にお届けします（予定）。[\s\S]{0,100}登録無料です。/);
 });
 test('the paid text is public only in ep/1/text/: no other public file carries it, and the other 4 ep/1 files stay clean',()=>{

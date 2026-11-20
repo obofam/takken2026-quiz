@@ -692,7 +692,7 @@ function epVals(m, text, ex, built, test) {
     OPEN_ALL: openAll ? 'true' : 'false',
     KIROKU_HREF: `/login?next=/ep/${ep}`, /* 試し用の「この記録を残す」は今までどおり /login?next=（本番と同じ形） */
     ...navVals(ep, built, test, m.json.date),
-    OPEN1_NOTE: openAll ? `<div class="next-box only-open1" id="open1-note"><p><span class="nk">第2回からは、</span><span class="nk">${a('https://lin.ee/r6uYtnE', 'LINE')}か${mailA}の</span><span class="nk">登録（無料）で</span><span class="nk">開きます。</span></p></div>` : '',
+    OPEN1_NOTE: openAll ? `<div class="next-box only-open1" id="open1-note"><p><span class="nk">第2回からは、</span><span class="nk">${a('https://lin.ee/q7FbZoo', 'LINE')}か${mailA}の</span><span class="nk">登録（無料）で</span><span class="nk">開きます。</span></p></div>` : '',
     OPEN1_LOGIN: openAll ? `<p class="login-line only-open1">${loginAnchor(loginHref, ep, 'open1')}</p>` : '',
     TCOUNT: m.freeOnly ? '' : tcountHtml(tcountOf(m, text, ex)), /* 無料だけの回は、やさしいテキストの実数が無いので一文を出さない（カードは残す） */
   };

@@ -54,7 +54,7 @@ export function buildYokoku(e) {
   const plainTitle = e.theme ? `${e.title} ── ${e.theme}` : e.title;
   const verb = e.tentative ? `${date}に配信する予定です。` : `${date}に配信します。`;
   const A = (href, ev, label, extra = '') => `<a ${extra}href="${href}" target="_blank" rel="noopener" data-umami-event="${ev}" data-umami-event-ep="${e.n}">${label}</a>`;
-  const lineBtn = `<a class="lbtn" href="https://lin.ee/r6uYtnE" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="${e.n}">LINEで受け取る</a>`;
+  const lineBtn = `<a class="lbtn" href="https://lin.ee/q7FbZoo" target="_blank" rel="noopener" data-umami-event="ep-line" data-umami-event-ep="${e.n}">LINEで受け取る</a>`;
   return `<!DOCTYPE html>
 <html lang="ja" data-yokoku="1">
 <head>
