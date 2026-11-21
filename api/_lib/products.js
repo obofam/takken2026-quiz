@@ -4,7 +4,7 @@
 // DBには「買ったplan」を1行だけ書き、含む関係はサーバーで読むときに広げる（includes / has）。
 const PRODUCTS=[
   {code:'text',name:'やさしいテキスト',price:2980,plan:'text',sale:true,start:Object.freeze({price:2480,lookupKey:'takken2027_text_start'})},
-  {code:'haru8',name:'春の8週',price:4980,plan:'haru'},
+  {code:'haru8',name:'春の8週',price:2980,plan:'haru'},
   {code:'natsu8',name:'夏の8週',price:5980,plan:'natsu'},
   {code:'last30',name:'ラスト30日プログラム',price:9800,plan:'last30'},
   {code:'last30_hayawari',name:'ラスト30日プログラム（早割）',price:8800,plan:'last30'},

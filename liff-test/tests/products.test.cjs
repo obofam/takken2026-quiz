@@ -42,7 +42,7 @@ const ent=plan=>[{plan,valid_until:null}];
 // ---- 台帳 ----
 test('ledger: 8 products with plan, price and lookup_key takken2027_<code>',()=>{
   assert.deepEqual(products.PRODUCTS.map(p=>[p.code,p.price,p.plan,p.lookupKey]),[
-    ['text',2980,'text','takken2027_text'],['haru8',4980,'haru','takken2027_haru8'],['natsu8',5980,'natsu','takken2027_natsu8'],
+    ['text',2980,'text','takken2027_text'],['haru8',2980,'haru','takken2027_haru8'],['natsu8',5980,'natsu','takken2027_natsu8'],
     ['last30',9800,'last30','takken2027_last30'],['last30_hayawari',8800,'last30','takken2027_last30_hayawari'],
     ['zenbu',19800,'zenbu','takken2027_zenbu'],['bansou',39800,'bansou','takken2027_bansou'],['bansou_1ki',10000,'bansou','takken2027_bansou_1ki']]);
   assert.equal(products.find('nope'),null);
