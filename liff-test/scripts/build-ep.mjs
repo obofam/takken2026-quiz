@@ -18,6 +18,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import * as CFG from './ep-config.mjs';
+import { loadEpisodes } from './build-ep-yokoku.mjs';
 import { EP1_CSS_TAIL, ep1FixPage2, ep1WrapTm } from './ep-legacy.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -683,6 +684,14 @@ function navVals(ep, built, test, selfDate) {
   const latest = `<a class="enb top latest" id="navLatest" href="/ep/${ep}" style="display:none" data-cur="${ep}" data-eps="${eps}" data-umami-event="ep-nav" data-umami-event-to="latest" data-umami-event-ep="${ep}">最新回へ</a>`;
   return { NAV_NOW: now, NAV_LATEST: latest, NAV_PREV: ep > 1 ? item(ep - 1, 'prev') : '', NAV_NEXT: ep < CFG.TOTAL_EPS ? item(ep + 1, 'next') : '' };
 }
+/* 3問を解き終えた直後の「次は 第M回　題」と配信日。題・配信日は roadmap の EPS と配信日マップ（build-ep-yokoku.mjs の loadEpisodes）から。最後の回は出さない */
+let epListCache;
+function oxNextLink(ep) {
+  if (ep >= CFG.TOTAL_EPS) return '';
+  const e = (epListCache ??= loadEpisodes()).find(x => x.n === ep + 1);
+  if (!e) throw new Error(`第${ep + 1}回の題・配信日が見つからない`);
+  return `<a class="nxl" href="/ep/${e.n}" data-umami-event="ep-ox-next" data-umami-event-ep="${ep}">次は 第${e.n}回　${escText(e.title)}</a><p class="nxs">${fmtDate(e.date)}</p>`;
+}
 function epVals(m, text, ex, built, test) {
   const ep = m.ep;
   const loginHref = test ? '/account.html' : `/login?next=/ep/${ep}`;
@@ -691,6 +700,7 @@ function epVals(m, text, ex, built, test) {
   const mailA = a('https://mimiobo.substack.com/subscribe', 'メール', ` data-umami-event="ep-mail" data-umami-event-ep="${ep}"`);
   return {
     OPEN_ALL: openAll ? 'true' : 'false',
+    TOTAL_EPS: String(CFG.TOTAL_EPS), OX_NEXT_LINK: oxNextLink(ep),
     KIROKU_HREF: `/login?next=/ep/${ep}`, /* 試し用の「この記録を残す」は今までどおり /login?next=（本番と同じ形） */
     ...navVals(ep, built, test, m.json.date),
     OPEN1_NOTE: openAll ? `<div class="next-box only-open1" id="open1-note"><p><span class="nk">第2回からは、</span><span class="nk">${a('https://lin.ee/q7FbZoo', 'LINE')}か${mailA}の</span><span class="nk">登録（無料）で</span><span class="nk">開きます。</span></p></div>` : '',
@@ -703,7 +713,11 @@ function epVals(m, text, ex, built, test) {
 const stripKiroku = js => js
   .replace(' showKiroku();\n', '\n')
   .replace(/  \/\* 「この記録を残す」[\s\S]*?kirokuTimer = setInterval[^\n]*\n  \}\n/, '')
-  .replace(', onChange: updateKiroku', '');
+  .replace(', onChange: updateKiroku', '')
+  /* 3問を解き終えた直後の案内も、見本ページには入れない（見本は変えない） */
+  .replace(/  \/\* -{10} 3問を解き終えた直後の案内 -{10}[\s\S]*?attributeFilter: \['class'\]\}\); \} \} catch \(_\) \{\}\n/, '')
+  .replace('            oxSetDone(idx, correct, total);\n', '')
+  .replace(/    oxCount\(\);[^\n]*\n/, '');
 
 /* 回のページ一式（index.html・line-full.html・line-full.js）。mode は 'prod'（本番）か 'test'（試し用） */
 export function buildPages(m, text, ex, mode, built) {

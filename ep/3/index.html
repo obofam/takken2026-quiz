@@ -465,6 +465,11 @@ body.member .line-card{display:block}
 .kiroku p{margin:0;font-size:14px;line-height:1.65;color:#4F5963}
 a.pill.ghost{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
 @media print{.kiroku{display:none !important}}
+/* 3問を解き終えた直後の案内（全問正解＝進んだ数と次の回／間違いあり・購入者＝テキストへのリンク）。LINE登録者・購入者だけ、解き終えたあとに出る */
+.nx{margin-top:12px;text-align:left}
+.nxs{margin:0;font-size:14px;line-height:1.65;color:#4F5963}
+.nxl{display:inline-block;padding:10px 0;font-size:15px;line-height:1.5;color:var(--ink);text-decoration:underline;text-underline-offset:3px;max-width:100%;overflow-wrap:anywhere}
+@media print{.nx{display:none !important}}
 /* やさしいテキストのカードの「この回の中身」の実数（登録者の画面だけ。登録なし・購入者には出さない） */
 .tcard .tcount{display:none}
 .is-friend .tcard .tcount{display:block;margin-top:6px;font-size:14px;font-weight:700;line-height:1.65;color:var(--ink)}
@@ -910,6 +915,8 @@ figure.fig{min-width:0}
     <h2 class="sec-h">○×3問</h2>
     <div id="quizBox"></div>
     <div class="kiroku" id="kirokuBox" hidden><p>いまは、この端末にだけ残ります。</p><a class="pill ghost" href="/login?next=/ep/3" data-umami-event="ep-kiroku-nokosu" data-umami-event-ep="3">この記録を残す</a></div>
+    <div class="nx" id="oxNext" data-total="41" hidden><p class="nxs" id="oxCount"></p><a class="nxl" href="/ep/4" data-umami-event="ep-ox-next" data-umami-event-ep="3">次は 第4回　引っ越したのに名簿は古いまま？</a><p class="nxs">2027年1月25日（月）</p></div>
+    <div class="nx" id="oxKakunin" hidden><a class="nxl" id="oxKakuninA" href="#text1" data-umami-event="ep-ox-kakunin" data-umami-event-ep="3">テキストで確かめる</a></div>
   </section>
 
   <!-- 節3：過去問1選 -->
@@ -1010,6 +1017,7 @@ figure.fig{min-width:0}
   function updateKiroku() {
     var el = document.getElementById('kirokuBox');
     if (el) { el.hidden = !(kirokuOn && !isSynced()); }
+    oxCount(); /* 記録の同期で端末の記録が増えたら、「41回中 N回」も合わせる */
   }
   function showKiroku() {
     kirokuOn = true; updateKiroku();
@@ -1017,6 +1025,69 @@ figure.fig{min-width:0}
     var n = 0;
     kirokuTimer = setInterval(function () { updateKiroku(); if (++n >= 15) { clearInterval(kirokuTimer); } }, 1000);
   }
+  /* ---------- 3問を解き終えた直後の案内 ----------
+     全部の組を最初に解き終えた瞬間に1回だけ判定する（組が複数ある回は、全部の組を通した正解数）。
+       LINE登録者（購入者でない）＋間違いあり：過去問1選の末尾のやさしいテキストのカードを、3問の記録の箱（#kirokuBox）のすぐ後ろへ移す（複製しない）
+       LINE登録者・購入者＋全問正解：「41回中 N回」と次の回へのリンク（売らない）
+       購入者＋間違いあり：ページ内のテキスト（#text1／#text2）へのリンク
+       登録なし：何も変えない
+     見え方（is-friend／is-buyer）は解き終えたあとに決まることがある。body の class が変わるたびに同じ関数をもう一度呼ぶ。出した物は戻さず、二重にも出さない。「もう一度」で解き直しても判定は変えない */
+  var oxSets = {}, oxResult = null, oxDid = {card: false, next: false, kakunin: false};
+  function oxSetDone(idx, c, t) {
+    oxSets[idx] = {c: c, t: t};
+    if (oxResult) { return; }
+    var tc = 0, tt = 0, miss = -1;
+    for (var i = 0; i < QUIZ.length; i++) {
+      if (!oxSets[i]) { return; }
+      tc += oxSets[i].c; tt += oxSets[i].t;
+      if (miss < 0 && oxSets[i].c < oxSets[i].t) { miss = i; }
+    }
+    oxResult = {c: tc, t: tt, miss: miss};
+    oxApply();
+  }
+  function oxDoneCount() {
+    var n = 0;
+    try {
+      var o = JSON.parse(localStorage.getItem('takken2027-done') || '{}');
+      var tot = parseInt((document.getElementById('oxNext') || {getAttribute: function () { return '0'; }}).getAttribute('data-total'), 10) || 0;
+      if (o && typeof o === 'object') { for (var k in o) { if (o[k] && +k >= 1 && (!tot || +k <= tot)) { n++; } } }
+    } catch (_) {}
+    return n;
+  }
+  function oxCount() {
+    var box = document.getElementById('oxNext'), p = document.getElementById('oxCount');
+    if (!box || !p || box.hidden) { return; }
+    var tot = box.getAttribute('data-total'), n = oxDoneCount();
+    p.textContent = n > 0 ? (tot + '回中 ' + n + '回') : '';
+    p.hidden = n <= 0;
+  }
+  function oxApply() {
+    if (!oxResult) { return; }
+    var cl = document.body.classList, friend = cl.contains('is-friend'), buyer = cl.contains('is-buyer');
+    if (!friend && !buyer) { return; }
+    if (oxResult.miss < 0) {
+      if (oxDid.next) { return; }
+      var nx = document.getElementById('oxNext');
+      if (!nx) { return; }
+      oxDid.next = true; nx.hidden = false; oxCount();
+    } else if (buyer) {
+      if (oxDid.kakunin) { return; }
+      var kb = document.getElementById('oxKakunin'), ka = document.getElementById('oxKakuninA');
+      if (!kb || !ka) { return; }
+      oxDid.kakunin = true;
+      ka.setAttribute('href', '#text' + (oxResult.miss === 0 ? 1 : 2));
+      kb.hidden = false;
+    } else {
+      if (oxDid.card) { return; }
+      var card = document.querySelector('#honban a.tcard'), kr = document.getElementById('kirokuBox');
+      if (!card || !kr || !kr.parentNode) { return; }
+      oxDid.card = true;
+      card.setAttribute('data-umami-event', 'ep-ox-text');
+      card.setAttribute('data-umami-event-score', oxResult.c + '/' + oxResult.t);
+      kr.parentNode.insertBefore(card, kr.nextSibling);
+    }
+  }
+  try { if (window.MutationObserver) { new MutationObserver(oxApply).observe(document.body, {attributes: true, attributeFilter: ['class']}); } } catch (_) {}
   /* 記録の同期。LINEの判定（liff.init）はこのページがすでに済ませているので、ここでは二重に init しない（liffId を渡さない）。
      LINEの中でログイン済みなら ID トークンでサーバーのセッションに入り、メールのログインなどはクッキーのセッションがあるときだけ。なければ端末だけ。 */
   function startProgress() {
@@ -1090,6 +1161,7 @@ figure.fig{min-width:0}
             score.hidden = false;
             inv.hidden = false;
             markSetDone(idx);
+            oxSetDone(idx, correct, total);
           }
         });
       });
