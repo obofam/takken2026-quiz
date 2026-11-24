@@ -394,7 +394,7 @@ export function buildExcerpt(m, text) {
     }
   }
   const freeNo = json.figures.find(f => f.tier === 'free').no;
-  const card = n => '<div class="gcard"><span class="gno">' + n + '</span><span class="gm"><span class="gt">' + capTitle(orig[n]) + '</span><span class="gn">この図は、<a href="' + CFG.SITE + CFG.TEXT_SAMPLE_PATH + '" data-umami-event="ep-text" data-umami-event-ep="' + ep + '">やさしいテキスト（有料）</a>に</span></span></div>';
+  const card = n => '<div class="gcard"><span class="gno">' + n + '</span><span class="gm"><span class="gt">' + capTitle(orig[n]) + '</span><span class="gn">この図は、<a href="' + CFG.SITE + CFG.TEXT_SAMPLE_PATH + '" data-umami-event="ep-text" data-umami-event-ep="' + ep + '">やさしいテキスト（有料）</a>に <span style="white-space:nowrap">＊無料サンプルあり</span></span></span></div>';
   const fig = n => '<div class="tx" data-fig="' + n + '">' + nuki[n] + '</div>';
   const seq = nos => nos.map(n => (tier[n] !== 'paid' ? fig(n) : card(n))).join('\n');
   const cards1 = allNos.filter(n => half[n] === 1 && n !== freeNo), cards2 = allNos.filter(n => half[n] === 2);
