@@ -52,7 +52,28 @@ test('戻りに last_at（記録の最後）と listened_count（聴いた回の
     await db.query(`update public.progress set listened = '{"1":1,"2":2,"3":1}' where user_id = $1`, [U(1)]);
     const r = (await db.query('select * from public.nudge_candidates(21, $1::timestamptz)', [FLOOR_OLD])).rows[0];
     assert.equal(r.listened_count, 3);
+    assert.equal(r.display_name, null); // 名前が無くても候補には残る
+    assert.equal(r.subject, undefined);
     assert.ok(Math.abs(new Date(r.last_at).getTime() - (Date.now() - 30 * DAY)) < 60000);
+  } finally { await db.close(); }
+});
+test('set_line_name：upsert・前後の空白を取る・80字で切る・空なら何もしない／候補に名前が付く', async () => {
+  const db = await open();
+  try {
+    await person(db, 1, { daysAgo: 30 }); await person(db, 2, { daysAgo: 40 });
+    const name = n => db.query('select display_name, updated_at from public.line_names where user_id = $1', [U(n)]).then(r => r.rows[0]);
+    await db.query('select public.set_line_name($1, $2)', [U(1), '  花子  ']);
+    assert.equal((await name(1)).display_name, '花子');
+    await db.query('select public.set_line_name($1, $2)', [U(1), '太郎']);
+    assert.equal((await name(1)).display_name, '太郎');
+    assert.equal((await db.query('select count(*)::int as n from public.line_names')).rows[0].n, 1);
+    for (const empty of ['', '   ', null]) await db.query('select public.set_line_name($1, $2)', [U(1), empty]);
+    assert.equal((await name(1)).display_name, '太郎');
+    await db.query('select public.set_line_name($1, $2)', [U(1), 'あ'.repeat(100)]);
+    assert.equal((await name(1)).display_name.length, 80);
+    await db.query('select public.set_line_name($1, $2)', [U(1), '太郎']);
+    const rows = (await db.query('select user_id, display_name from public.nudge_candidates(21, $1::timestamptz)', [FLOOR_OLD])).rows;
+    assert.deepEqual(rows, [{ user_id: U(2), display_name: null }, { user_id: U(1), display_name: '太郎' }]); // 古い順・名前なしは null
   } finally { await db.close(); }
 });
 test('メールだけの人・記録が空の人・記録の行が無い人・floor より前の人は対象外', async () => {
@@ -70,7 +91,7 @@ test('メールだけの人・記録が空の人・記録の行が無い人・fl
 test('権限：service_role だけが呼べ、表は RLS・anon/authenticated は触れない', async () => {
   const db = await open();
   try {
-    const fns = ['nudge_candidates(int,timestamptz)', 'mark_nudged(uuid)'];
+    const fns = ['nudge_candidates(int,timestamptz)', 'mark_nudged(uuid)', 'set_line_name(uuid,text)'];
     for (const role of ['anon', 'authenticated']) {
       assert.equal((await db.query(`select has_table_privilege('${role}', 'public.nudges', 'select') as a`)).rows[0].a, false);
       for (const f of fns) assert.equal((await db.query(`select has_function_privilege('${role}', 'public.${f}', 'execute') as a`)).rows[0].a, false);
@@ -79,15 +100,18 @@ test('権限：service_role だけが呼べ、表は RLS・anon/authenticated �
     assert.equal((await db.query("select relrowsecurity from pg_class where oid = 'public.nudges'::regclass")).rows[0].relrowsecurity, true);
   } finally { await db.close(); }
 });
-test('2人を1人にまとめる処理のあとも壊れない（消える側の印は一緒に消える）', async () => {
+test('2人を1人にまとめる処理のあとも壊れない（消える側の印・名前は一緒に消える）', async () => {
   const db = await open();
   try {
     await person(db, 1, { daysAgo: 30, created: '2026-01-01' });                    // LINE（古い＝残る側）
     await person(db, 2, { daysAgo: 30, provider: 'email', created: '2026-02-01' }); // メール（消える側）
     await db.query('select public.mark_nudged($1)', [U(2)]);
+    await db.query('select public.set_line_name($1, $2)', [U(1), '残る側']);
+    await db.query('select public.set_line_name($1, $2)', [U(2), '消える側']);
     await db.query("insert into public.link_tickets(token_hash, user_id, provider, subject, expires_at) values ($1, $2, 'email', 'u2@example.com', now() + interval '10 minutes')", ['1'.repeat(64), U(1)]);
     const r = await db.query('select public.resolve_identity($1, $2, $3, true) as u', ['email', 'u2@example.com', '1'.repeat(64)]);
     assert.equal(r.rows[0].u, U(1));
+    assert.deepEqual((await db.query('select user_id, display_name from public.line_names')).rows, [{ user_id: U(1), display_name: '残る側' }]);
     assert.equal((await db.query('select count(*)::int as n from public.nudges')).rows[0].n, 0);
     assert.equal((await db.query('select count(*)::int as n from public.users')).rows[0].n, 1);
     assert.deepEqual(await cand(db), []); // まとめたあとは記録が今に更新される

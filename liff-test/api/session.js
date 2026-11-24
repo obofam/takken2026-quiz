@@ -11,5 +11,10 @@ module.exports=s.endpoint(['GET','POST','DELETE'],async(req,res)=>{
   if(!reply.ok)s.fail(401,'invalid_line_token');
   const claims=await reply.json();
   if(claims.aud!==channel||claims.iss!=='https://access.line.me'||typeof claims.sub!=='string'||!claims.sub||!Number.isFinite(claims.exp)||claims.exp<=Date.now()/1000)s.fail(401,'invalid_line_claims');
-  return res.status(200).json(await s.login(req,res,'line',s.hash(claims.sub),req.body.linkToken));
+  const session=await s.login(req,res,'line',s.hash(claims.sub),req.body.linkToken);
+  // NUDGE_NAME_COLLECT=1 のときだけ LINE の表示名を預かる（運営者への知らせ用）。失敗してもログインは成功のまま。名前はログに出さない。
+  if(process.env.NUDGE_NAME_COLLECT==='1'&&typeof claims.name==='string'&&claims.name.trim()){
+    try{await s.supabase('/rest/v1/rpc/set_line_name',{method:'POST',body:{p_user_id:session.userId,p_name:claims.name}});}catch{}
+  }
+  return res.status(200).json(session);
 });

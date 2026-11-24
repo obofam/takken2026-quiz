@@ -148,17 +148,19 @@ Kei の赤入れ「全体的にわかりづらい。全体の構成が把握し�
 既存の `SUPABASE_URL` `SUPABASE_SECRET_KEY` `SESSION_SECRET` `LINE_CHANNEL_ID` も引き続き必要。
 
 ### 記録があいた人を運営者に知らせる（`/api/products?nudge=1`・本番だけ）
-記録が3週間以上あいた LINE の人を、運営者1人に LINE で知らせる（あいたら1回だけ。また記録して、また3週間あいたらもう1回）。**本人には自動で送らない**。声がけは運営者が手でやる。環境変数が無ければ何もしない。**本番だけに入れる。試し用には入れない（DB が共用なので二重に知らせる）**。cron も直下の `vercel.json` だけ（日曜 23:00 UTC＝月曜8時ごろ）。知らせの文は `lib/nudge-message.js`。migration は `202611240001_nudges.sql`。表示名は保存しない。
+記録が3週間以上あいた LINE の人を、運営者1人に LINE で知らせる（あいたら1回だけ。また記録して、また3週間あいたらもう1回）。**本人には自動で送らない**。声がけは運営者が手でやる。環境変数が無ければ何もしない。**本番だけに入れる。試し用には入れない（DB が共用なので二重に知らせる）**。cron も直下の `vercel.json` だけ（日曜 23:00 UTC＝月曜8時ごろ）。知らせの文は `lib/nudge-message.js`。migration は `202611240001_nudges.sql`。
+名前は、ログインのとき LINE の IDトークンの `name` を `line_names` に預かって使う（公式アカウントが未認証で友だち一覧・プロフィールの API は使えない）。名前が無い人は「（名前なし）」。**表示名を預かり始める（`NUDGE_NAME_COLLECT=1` にする）前に、プライバシーポリシーへの追記が要る。**
 
 | 名前 | 用途 |
 |---|---|
-| `LINE_MESSAGING_TOKEN` | LINE Messaging API のチャネルアクセストークン。無ければ何もしない |
+| `NUDGE_NAME_COLLECT` | `1` のときだけ、LINE ログイン時に表示名を預かる。無ければ今までどおり（預からない） |
+| `LINE_MESSAGING_TOKEN` | LINE Messaging API のチャネルアクセストークン（運営者への push だけに使う）。無ければ何もしない |
 | `NUDGE_NOTIFY_TO` | 知らせる先（運営者）の LINE userId。無ければ何もしない |
 | `CRON_SECRET` | cron の合言葉（Vercel が `Authorization: Bearer` で付ける）。無い・違うなら404 |
 | `NUDGE_OPEN_FROM` | 知らせ始める日（YYYY-MM-DD・日本時間）。無い・まだなら何もしない |
 | `NUDGE_OPEN_UNTIL` | 任意。この日（日本時間）を過ぎたら何もしない |
 | `NUDGE_FLOOR` | 任意。これより前に最後の記録がある人は対象外。既定 `2027-01-04T00:00:00+09:00` |
-| `NUDGE_MAX` | 任意。1通に載せる最大人数（残りは次の週）。既定30 |
+| `NUDGE_MAX` | 任意。1通に載せる最大人数（古い順・残りは次の週）。既定30 |
 | `NUDGE_DRY_RUN` | `1` なら送らず・印もつけず、人数だけ返す |
 
 ### Sprint 2 の手動確認手順（ローカル）
