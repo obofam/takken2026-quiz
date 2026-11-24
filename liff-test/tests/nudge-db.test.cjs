@@ -45,6 +45,16 @@ test('送ったあと記録なし→対象外／送ったあと記録して22日
     assert.deepEqual(await cand(db), [U(1)]);
   } finally { await db.close(); }
 });
+test('戻りに last_at（記録の最後）と listened_count（聴いた回の数）がある', async () => {
+  const db = await open();
+  try {
+    await person(db, 1, { daysAgo: 30 });
+    await db.query(`update public.progress set listened = '{"1":1,"2":2,"3":1}' where user_id = $1`, [U(1)]);
+    const r = (await db.query('select * from public.nudge_candidates(21, $1::timestamptz)', [FLOOR_OLD])).rows[0];
+    assert.equal(r.listened_count, 3);
+    assert.ok(Math.abs(new Date(r.last_at).getTime() - (Date.now() - 30 * DAY)) < 60000);
+  } finally { await db.close(); }
+});
 test('メールだけの人・記録が空の人・記録の行が無い人・floor より前の人は対象外', async () => {
   const db = await open();
   try {
