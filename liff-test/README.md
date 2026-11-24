@@ -147,6 +147,19 @@ Kei の赤入れ「全体的にわかりづらい。全体の構成が把握し�
 
 既存の `SUPABASE_URL` `SUPABASE_SECRET_KEY` `SESSION_SECRET` `LINE_CHANNEL_ID` も引き続き必要。
 
+### 記録があいた人へのひとこと（`/api/products?nudge=1`・本番だけ）
+記録が3週間以上あいた LINE の人へ、あいたら1回だけ LINE でひとこと送る（また記録して、また3週間あいたらもう1回）。環境変数が無ければ何もしない。**本番だけに入れる。試し用には入れない（DB が共用なので二重に送る）**。cron も直下の `vercel.json` だけ（日曜 23:00 UTC＝月曜8時ごろ）。文面は `lib/nudge-message.js`。migration は `202611240001_nudges.sql`。
+
+| 名前 | 用途 |
+|---|---|
+| `LINE_MESSAGING_TOKEN` | LINE Messaging API のチャネルアクセストークン。無ければ何もしない |
+| `CRON_SECRET` | cron の合言葉（Vercel が `Authorization: Bearer` で付ける）。無い・違うなら404 |
+| `NUDGE_OPEN_FROM` | 送り始める日（YYYY-MM-DD・日本時間）。無い・まだなら何もしない |
+| `NUDGE_OPEN_UNTIL` | 任意。この日（日本時間）を過ぎたら何もしない |
+| `NUDGE_FLOOR` | 任意。これより前に最後の記録がある人は対象外。既定 `2027-01-04T00:00:00+09:00` |
+| `NUDGE_MAX` | 任意。1回に送る最大人数。既定30 |
+| `NUDGE_DRY_RUN` | `1` なら送らず・印もつけず、人数だけ返す |
+
 ### Sprint 2 の手動確認手順（ローカル）
 
 前提：Supabase に Sprint 2 の migration を適用済み、`.env.local` に上記4つを設定済み、Stripe CLI にログイン済み。
@@ -286,6 +299,6 @@ SQL・Auth設定は適用済み。A-13・A-14配信後、LINE連携から再確�
 
 ## 後続Sprint・保存期限
 
-Stripeテスト決済とentitlementsの書き込みは Sprint 2 で実装済み（冒頭参照）。学習カルテの `answers` 集計表示は Sprint 3 で実装済み。学習ナビ・伴走の購入、通知・配信は未実装。記録は「年内をめどに閲覧、消す前に案内」という設計メモのみで、閲覧期限・削除処理は今回追加しない。期限の具体値・削除案内の方法は今後決める。
+Stripeテスト決済とentitlementsの書き込みは Sprint 2 で実装済み（冒頭参照）。学習カルテの `answers` 集計表示は Sprint 3 で実装済み。学習ナビ・伴走の購入は未実装。通知は「記録があいた人へのひとこと」（上の節）だけ実装（止めた状態）で、それ以外の配信は未実装。記録は「年内をめどに閲覧、消す前に案内」という設計メモのみで、閲覧期限・削除処理は今回追加しない。期限の具体値・削除案内の方法は今後決める。
 
 参考： [Supabaseのメール認証](https://supabase.com/docs/guides/auth/auth-email-passwordless)、[メールテンプレート](https://supabase.com/docs/guides/auth/auth-email-templates)、[secret key](https://supabase.com/docs/guides/getting-started/api-keys)、[LIFF追加パラメータ](https://developers.line.biz/ja/tips/2026/07/16/liff-url-additional-info/)。

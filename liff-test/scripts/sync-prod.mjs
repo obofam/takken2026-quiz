@@ -10,7 +10,7 @@ const test = path.resolve(here, '..'), prod = path.resolve(here, '..', '..');
 const HEADER = '// 自動生成：liff-test/scripts/sync-prod.mjs。直さない（正本は liff-test 側）。\n';
 export function expected() {
   const out = new Map();
-  for (const f of ['server.js', 'stripe.js', 'products.js'])
+  for (const f of ['server.js', 'stripe.js', 'products.js', 'nudge.js', 'nudge-message.js'])
     out.set(path.join(prod, 'api/_lib', f), HEADER + fs.readFileSync(path.join(test, 'lib', f), 'utf8'));
   out.set(path.join(prod, 'api/_lib/quiz-catalog.js'), HEADER + fs.readFileSync(path.join(test, 'quiz-catalog.js'), 'utf8'));
   // 画面側の共通ファイル（本番のロードマップ・第1回が /progress-sync.js として読む）。中身は同じ、先頭に注記だけ足す。
