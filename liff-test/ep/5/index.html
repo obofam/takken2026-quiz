@@ -443,6 +443,8 @@ body.member .line-card{display:block}
 .top-login a,.login-line a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 .top-login a{display:inline-block;padding:11px 0;margin:-11px 0}
 .next-box .login-line{margin-top:4px;font-size:14px;line-height:1.7;color:#4F5963}
+/* 配信日前でも購入者には先に開ける回：購入者の見え方（body.is-buyer）のときは、配信日まで開かない旨の一文と第1回への案内を出さない */
+.is-buyer .early-note,.is-buyer .early-to1{display:none !important}
 /* 配信日前（html.ep-early）：登録なしの見え方。登録済の方の入口は出さず、続きが開く日の一文を出す */
 .early-note{display:none}
 .ep-early .early-note{display:block;margin:0;font-size:14px;line-height:1.7;color:#4F5963;text-align:center}
@@ -1556,10 +1558,12 @@ figure.fig{min-width:0}
 
   if (showBox) { makeBox(); }
   render();
-  /* 先に開ける回の配信日前（html.ep-early）：登録なしの見え方のまま。LINEの判定・続き・テキストの確認はしない。記録の同期だけ動かす */
+  /* 先に開ける回の配信日前（html.ep-early）で、購入者にも先に開ける回：まず登録なしの見え方。LINEの判定・続きはしない。記録の同期（ログインの確認）のあと、ログインのセッションがある人だけ /api/ep-text を確かめ、200 なら購入者の見え方（やさしいテキスト）。401・403・失敗は登録なしのまま */
   if (document.documentElement.classList.contains('ep-early')) {
-    tier = '登録なし'; say('配信日前（登録なしの見え方）'); pendView('open'); settleView();
-    try { if (window.__epProgressStart) { window.__epProgressStart(); } } catch (_) {}
+    tier = '登録なし'; say('配信日前（登録なしの見え方）'); pendView('open');
+    var ps = null;
+    try { if (window.__epProgressStart) { ps = window.__epProgressStart(); } } catch (_) {}
+    Promise.resolve(ps).catch(function () {}).then(textCheck).then(settleView, settleView);
     return;
   }
   var judged;

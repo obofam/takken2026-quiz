@@ -84,7 +84,7 @@
       th.className='card done-card';
       th.appendChild(txt('h2','','ご購入ありがとうございます'));
       th.appendChild(txt('p','','やさしいテキストをご利用いただけます。各回のページを開くと、テキストが表示されます。'));
-      const row=txt('div','btns','');row.appendChild(link('btn primary','/ep/1/','第1回を開く'));row.appendChild(link('btn ghost',v.roadmap,'学習ロードマップ'));th.appendChild(row);
+      const row=txt('div','btns','');for(let i=1;i<=5;i++)row.appendChild(link('btn ghost sm','/ep/'+i+'/','第'+i+'回'));th.appendChild(row);const row2=txt('div','btns','');row2.appendChild(link('btn ghost',v.roadmap,'学習ロードマップ'));th.appendChild(row2);
     }else if(v.thanks==='slow'){
       th.className='card';
       th.appendChild(txt('p','','反映に時間がかかっています。1分ほどおいて、このページを再読み込みしてください。'));

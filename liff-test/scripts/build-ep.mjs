@@ -613,13 +613,17 @@ function gateVals(ep, iso, dateLabel, test, freeOnly) {
       CLOSED_CSS: '',
       CLOSED_BOX: '',
       GUARD: '',
-      EARLY_CSS: '\n/* 配信日前（html.ep-early）：登録なしの見え方。登録済の方の入口は出さず、続きが開く日の一文を出す */\n.early-note{display:none}\n.ep-early .early-note{display:block;margin:0;font-size:14px;line-height:1.7;color:#4F5963;text-align:center}\n.ep-early .top-login,.ep-early .login-line{display:none}\n.early-to1{display:none}\n.ep-early .early-to1{display:block;margin:0;text-align:center;font-size:14px;line-height:1.5}\n.ep-early .early-to1 a{display:inline-block;padding:10px 0;color:var(--ink);text-decoration:underline;text-underline-offset:3px}',
+      EARLY_CSS: (buyer ? '\n/* 配信日前でも購入者には先に開ける回：購入者の見え方（body.is-buyer）のときは、配信日まで開かない旨の一文と第1回への案内を出さない */\n.is-buyer .early-note,.is-buyer .early-to1{display:none !important}' : '') + '\n/* 配信日前（html.ep-early）：登録なしの見え方。登録済の方の入口は出さず、続きが開く日の一文を出す */\n.early-note{display:none}\n.ep-early .early-note{display:block;margin:0;font-size:14px;line-height:1.7;color:#4F5963;text-align:center}\n.ep-early .top-login,.ep-early .login-line{display:none}\n.early-to1{display:none}\n.ep-early .early-to1{display:block;margin:0;text-align:center;font-size:14px;line-height:1.5}\n.ep-early .early-to1 a{display:inline-block;padding:10px 0;color:var(--ink);text-decoration:underline;text-underline-offset:3px}',
       EARLY_NOTE: `\n    <p class="pnote early-note"><span class="nk">この回の図の続きと</span><span class="nk">過去問1選は、</span><span class="nk">${md}の配信から</span><span class="nk">開きます。</span></p>`,
       EARLY_TO1: `\n    <p class="early-to1"><a href="/ep/1" data-umami-event="ep-to1" data-umami-event-ep="${ep}">第1回の「図解と3問」（見本）を見る</a></p>`,
-      EARLY_RUN: `\n  /* 先に開ける回の配信日前（html.ep-early）：登録なしの見え方のまま。LINEの判定・続き・テキストの確認はしない。記録の同期だけ動かす */\n  if (document.documentElement.classList.contains('ep-early')) {\n    tier = '登録なし'; say('配信日前（登録なしの見え方）'); pendView('open'); settleView();\n    try { if (window.__epProgressStart) { window.__epProgressStart(); } } catch (_) {}\n    return;\n  }`,
+      EARLY_RUN: buyer
+        ? `\n  /* 先に開ける回の配信日前（html.ep-early）で、購入者にも先に開ける回：まず登録なしの見え方。LINEの判定・続きはしない。記録の同期（ログインの確認）のあと、ログインのセッションがある人だけ /api/ep-text を確かめ、200 なら購入者の見え方（やさしいテキスト）。401・403・失敗は登録なしのまま */\n  if (document.documentElement.classList.contains('ep-early')) {\n    tier = '登録なし'; say('配信日前（登録なしの見え方）'); pendView('open');\n    var ps = null;\n    try { if (window.__epProgressStart) { ps = window.__epProgressStart(); } } catch (_) {}\n    Promise.resolve(ps).catch(function () {}).then(textCheck).then(settleView, settleView);\n    return;\n  }`
+        : `\n  /* 先に開ける回の配信日前（html.ep-early）：登録なしの見え方のまま。LINEの判定・続き・テキストの確認はしない。記録の同期だけ動かす */\n  if (document.documentElement.classList.contains('ep-early')) {\n    tier = '登録なし'; say('配信日前（登録なしの見え方）'); pendView('open'); settleView();\n    try { if (window.__epProgressStart) { window.__epProgressStart(); } } catch (_) {}\n    return;\n  }`,
     };
   }
   return {
+/* 購入者に配信日前から開ける回（第2回〜BUYER_EARLY_MAX。第1回は見本の回で最初から開いている）。先に開ける回（FREE_EARLY_EPS）の中だけ */
+const isBuyerEarly = ep => !CFG.SAMPLE_EPS.includes(ep) && ep <= CFG.BUYER_EARLY_MAX;
     ...noEarly,
     GATE_SCRIPT: '\n<script>(function(){var k=' + k + ';' + now + "if(t<k){document.documentElement.className+=' ep-closed';}})();</script>",
     CLOSED_CSS: '\n/* 配信前（html.ep-closed）：上の札と題と、この囲みだけ出す */\n.closed-box{display:none}\n.ep-closed .closed-box{display:block}\n.ep-closed .top-login{display:none}\n.ep-closed .page > *:not(.top):not(.title):not(.closed-box){display:none !important}\n.next-box.closed-box a.lbtn{display:flex;margin:10px 0 0;padding:8px 18px}',
@@ -630,8 +634,11 @@ function gateVals(ep, iso, dateLabel, test, freeOnly) {
 
 /* 登録なしの見え方に出す「登録済の方はこちら」の入口（上の行の右・図の下の囲み・過去問1選の囲み）。LINE・メール・購入者の見え方では .only-a ごと出ない。配信前で閉じているときも出さない。
    リンク先：本番は /login?next=/ep/N。試し用には /login が無いので、試し用のログインの画面 /account.html（next は付けない）。 */
+  if (!freeOnly && isBuyerEarly(ep) && !CFG.FREE_EARLY_EPS.includes(ep)) throw new Error(`第${ep}回：BUYER_EARLY_MAX の範囲の回は FREE_EARLY_EPS にも入れる（ep-config.mjs）`);
 function loginVals(ep, sample, test) {
   const href = test ? '/account.html' : `/login?next=/ep/${ep}`;
+    /* 購入者にも先に開ける回（BUYER_EARLY_MAX まで）：買っていない方の動きは変えず、記録の同期のあと /api/ep-text だけ確かめる。200 のときだけ購入者の見え方 */
+    const buyer = !freeOnly && isBuyerEarly(ep);
   const a = `<a href="${href}" data-umami-event="ep-login" data-umami-event-ep="${ep}">登録済の方はこちら</a>`;
   return {
     TOP_LOGIN: `<span class="top-login only-a${sample ? ' top-login2' : ''}">無料ページ（${a}）</span>`,
@@ -1126,8 +1133,8 @@ export function buildEp(ep, release, shared, opts = {}) {
   const files = [];
   const inProd = release.prod.includes(ep);
   const pdf = fs.readFileSync(m.pdfPath);
-  /* open＝配信日（日本時間のその日の 0:00 から API が返す）。第1回（見本の回）は open を入れない＝閉じない */
-  const meta = JSON.stringify(CFG.SAMPLE_EPS.includes(ep) ? { name: `やさしいテキスト_第${ep}回_${m.json.sub}.pdf` } : { name: `やさしいテキスト_第${ep}回_${m.json.sub}.pdf`, open: m.json.date }) + '\n';
+  /* open＝配信日（日本時間のその日の 0:00 から API が返す）。第1回（見本の回）は open を入れない＝閉じない。buyerEarly＝購入者には配信日前でも返す回（ep-config.mjs の BUYER_EARLY_MAX まで。API はこの印だけを読む） */
+  const meta = JSON.stringify(CFG.SAMPLE_EPS.includes(ep) ? { name: `やさしいテキスト_第${ep}回_${m.json.sub}.pdf` } : { name: `やさしいテキスト_第${ep}回_${m.json.sub}.pdf`, open: m.json.date, ...(isBuyerEarly(ep) ? { buyerEarly: true } : {}) }) + '\n';
   const modes = inProd && !opts.shisaku ? ['test', 'prod'] : ['test'];
   let checked = 0;
   const byMode = {};

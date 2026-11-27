@@ -37,8 +37,8 @@ test('early episode (ep 3): before the date only html.ep-early (never ep-closed)
   }
 });
 
-test('early episode (ep 3): the pre-date branch returns before LINE judge / line-full / ep-text; one note line right after the past-exam box; no login entrances while ep-early',{skip},()=>{
-  for(const h of [read(path.join(prod,'ep/3/index.html')),read(path.join(root,'ep/3/index.html'))]){
+test('early episode (ep 7, past the buyer-early range): the pre-date branch returns before LINE judge / line-full / ep-text; one note line right after the past-exam box; no login entrances while ep-early',{skip},()=>{
+  for(const h of [read(path.join(prod,'ep/7/index.html')),read(path.join(root,'ep/7/index.html'))]){
     const i=h.indexOf("document.documentElement.classList.contains('ep-early')");
     assert.ok(i>0);
     const j=h.indexOf('var judged;');
@@ -48,7 +48,7 @@ test('early episode (ep 3): the pre-date branch returns before LINE judge / line
     assert.doesNotMatch(block,/showFull|textCheck|ep-text|liff\.init|judge\(/);
     assert.match(block,/pendView\('open'\); settleView\(\);/);
     assert.match(block,/__epProgressStart/);
-    assert.match(h,/<div class="next-box only-a"><p>[\s\S]*?<\/div>\n    <p class="pnote early-note"><span class="nk">この回の図の続きと<\/span><span class="nk">過去問1選は、<\/span><span class="nk">1月18日（月）の配信から<\/span><span class="nk">開きます。<\/span><\/p>\n    <div class="slot" id="slot-kk">/);
+    assert.match(h,/<div class="next-box only-a"><p>[\s\S]*?<\/div>\n    <p class="pnote early-note"><span class="nk">この回の図の続きと<\/span><span class="nk">過去問1選は、<\/span><span class="nk">2月15日（月）の配信から<\/span><span class="nk">開きます。<\/span><\/p>\n    <div class="slot" id="slot-kk">/);
     assert.equal((h.match(/early-note/g)||[]).length,3);// CSS 2 + 本体 1
     assert.match(h,/\.early-note\{display:none\}/);
     assert.match(h,/\.ep-early \.top-login,\.ep-early \.login-line\{display:none\}/);

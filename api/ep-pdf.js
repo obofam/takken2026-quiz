@@ -7,7 +7,10 @@ const products=require('./_lib/products');
 // 実体は api/_ep-text/ep<N>.pdf（URLでは取れない場所。scripts/build-ep.mjs がコピーする）。ダウンロード名は ep<N>.meta.json の name（無ければ「やさしいテキスト_第N回.pdf」）。
 const DIR=path.join(__dirname,'_ep-text');
 // 配信日（ep<N>.meta.json の open。第1回は無い＝閉じない）の前は、権利があっても 404（日本時間のその日の 0:00 から開く）。mihon=1 は日付に関係なく返す。
-const closedYet=ep=>{try{const o=JSON.parse(fs.readFileSync(path.join(DIR,'ep'+ep+'.meta.json'),'utf8')).open;return !!o&&new Date(Date.now()+9*3600*1000).toISOString().slice(0,10)<o;}catch(e){return false;}};
+// ただし meta に buyerEarly:true がある回（購入者に先に開ける回＝scripts/ep-config.mjs の BUYER_EARLY_MAX まで。build-ep.mjs が書く）は、配信日前でも 404 にせず、
+// このあとの 401（未ログイン）・403（権利なし）の判定に進む。権利がある人にだけ返す。
+const metaOf=ep=>{try{return JSON.parse(fs.readFileSync(path.join(DIR,'ep'+ep+'.meta.json'),'utf8'));}catch(e){return {};}};
+const closedYet=ep=>{const m=metaOf(ep),o=m.open;return !!o&&m.buyerEarly!==true&&new Date(Date.now()+9*3600*1000).toISOString().slice(0,10)<o;};
 // テストで読み込みを差し替えられるようにする
 const source={
   exists:ep=>fs.existsSync(path.join(DIR,'ep'+ep+'.pdf')),
