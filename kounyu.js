@@ -34,7 +34,7 @@
       else if(offer.basis==='touroku'&&offer.until)out.note='登録から7日間は、この価格でご購入いただけます。（'+dateShort(offer.until)+'まで）';
     }else{
       out.amount=yen(offer.price);
-      if(!loggedIn&&typeof offer.startPrice==='number')out.lines.push('登録から7日間は、早割 '+yen(offer.startPrice)+' でご購入いただけます。対象かどうかは、ログイン後に表示されます。');
+      if(!loggedIn&&typeof offer.startPrice==='number')out.lines.push('登録から7日間は、早割 '+yen(offer.startPrice)+'でご購入いただけます。対象かどうかは、ログイン後に表示されます。');
     }
     if(validUntil)out.lines.push('利用期間は、'+dateLong(validUntil)+'（本試験日）までです。');
     out.lines.push('お支払いはクレジットカードです。決済はStripeの画面で行います。');

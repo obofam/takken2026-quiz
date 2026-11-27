@@ -49,7 +49,7 @@ test('ログイン中：スタート価格（touroku）と通常価格',()=>{
 
 test('通常価格：未ログインだけスタート価格の案内',()=>{
   const g=dec({data:data({offers:offer({kind:'tsujo',price:2980,basis:null,until:null})})});
-  assert.ok(g.price.lines.includes('登録から7日間は、早割 2,480円 でご購入いただけます。対象かどうかは、ログイン後に表示されます。'));
+  assert.ok(g.price.lines.includes('登録から7日間は、早割 2,480円でご購入いただけます。対象かどうかは、ログイン後に表示されます。'));
   assert.equal(g.button,'login');
 });
 
