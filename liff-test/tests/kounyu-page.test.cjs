@@ -30,9 +30,10 @@ test('読み込み中と API 失敗',()=>{
 test('未ログイン：スタート価格（open）',()=>{
   const v=dec({data:data()});
   assert.equal(v.state,'guest');assert.equal(v.button,'login');
-  assert.equal(v.price.label,'スタート価格');assert.equal(v.price.amount,'2,480円');
-  assert.equal(v.price.note,'通常価格 2,980円（税込）');
-  assert.ok(v.price.lines.includes('2027年1月11日までは、どなたでもスタート価格でご購入いただけます。以降は、登録から7日間が対象です。'));
+  assert.equal(v.price.early,true);assert.equal(v.price.amount,'2,480円');
+  assert.equal(v.price.was,'2,980円');assert.equal(v.price.off,'500円OFF');
+  assert.equal(v.price.note,'2027年1月11日までは、どなたでもこの価格です。以降は、登録から7日間が対象です。');
+  assert.equal(dec({data:data({offers:offer({price:2380})})}).price.off,'600円OFF','差額は計算で出す');
   assert.ok(v.price.lines.includes('利用期間は、2027年10月17日（本試験日）までです。'));
   assert.ok(v.price.lines.includes('お支払いはクレジットカードです。決済はStripeの画面で行います。'));
 });
@@ -40,15 +41,15 @@ test('未ログイン：スタート価格（open）',()=>{
 test('ログイン中：スタート価格（touroku）と通常価格',()=>{
   const t=dec({data:data({loggedIn:true,offers:offer({basis:'touroku',until:'2027-01-20'})})});
   assert.equal(t.state,'member');assert.equal(t.button,'buy');
-  assert.ok(t.price.lines.includes('登録から7日間はスタート価格でご購入いただけます。（1月20日まで）'));
+  assert.equal(t.price.note,'登録から7日間は、この価格でご購入いただけます。（1月20日まで）');
   const n=dec({data:data({loggedIn:true,offers:offer({kind:'tsujo',price:2980,basis:null,until:null})})});
-  assert.equal(n.price.amount,'2,980円');assert.equal(n.price.label,'');assert.equal(n.price.note,'');
-  assert.ok(!n.price.lines.some(l=>l.includes('スタート価格')));
+  assert.equal(n.price.amount,'2,980円');assert.equal(n.price.early,false);assert.equal(n.price.note,'');
+  assert.ok(!n.price.lines.some(l=>l.includes('早割')));
 });
 
 test('通常価格：未ログインだけスタート価格の案内',()=>{
   const g=dec({data:data({offers:offer({kind:'tsujo',price:2980,basis:null,until:null})})});
-  assert.ok(g.price.lines.includes('登録から7日間は、スタート価格 2,480円でご購入いただけます。対象かどうかは、ログイン後に表示されます。'));
+  assert.ok(g.price.lines.includes('登録から7日間は、早割 2,480円 でご購入いただけます。対象かどうかは、ログイン後に表示されます。'));
   assert.equal(g.button,'login');
 });
 
@@ -75,7 +76,13 @@ test('試し用の印・ログイン入口・ロードマップの出し分け',
 });
 
 test('ページ：値段の決め打ちが無い・リンク・禁止文字・noindex',()=>{
-  for(const n of ['2980','2480','2,980','2,480']){assert.ok(!html.includes(n),'html '+n);assert.ok(!js.includes(n),'js '+n);}
+  // html には通常価格の静的な表示（#price の最初の中身）だけがある。それ以外・js には決め打ちが無い
+  const staticPrice='<div id="price"><p class="price-amount">2,980<span>円（税込）</span></p></div>';
+  assert.ok(html.includes(staticPrice),'通常価格が最初から出ている');
+  const htmlRest=html.replace(staticPrice,'');
+  for(const n of ['2980','2480','2,980','2,480']){assert.ok(!htmlRest.includes(n),'html '+n);assert.ok(!js.includes(n),'js '+n);}
+  assert.ok(!html.includes('読み込み中です'));assert.ok(!js.includes('読み込み中です'));
+  assert.ok(js.includes("'price-arrow'")&&!js.includes('スタート価格'));
   assert.ok(html.includes('https://www.mimiobo.com/tokushoho'));
   assert.ok(html.includes('https://www.mimiobo.com/privacy'));
   assert.ok(/<meta name="robots" content="noindex"/.test(html));

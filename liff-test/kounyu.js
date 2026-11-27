@@ -25,15 +25,15 @@
   // 値段のカードの中身（行の並び）
   function priceLines(offer,validUntil,loggedIn){
     if(!offer||typeof offer.price!=='number')return null;
-    const out={label:'',amount:'',note:'',lines:[]};
+    const out={early:false,was:'',off:'',amount:'',note:'',lines:[]};
     if(offer.kind==='start'){
-      out.label='スタート価格';out.amount=yen(offer.price);
-      out.note='通常価格 '+yen(offer.listPrice)+'（税込）';
-      if(offer.basis==='open'&&offer.until)out.lines.push(dateLong(offer.until)+'までは、どなたでもスタート価格でご購入いただけます。以降は、登録から7日間が対象です。');
-      else if(offer.basis==='touroku'&&offer.until)out.lines.push('登録から7日間はスタート価格でご購入いただけます。（'+dateShort(offer.until)+'まで）');
+      out.early=true;out.amount=yen(offer.price);
+      out.was=yen(offer.listPrice);out.off=yen(offer.listPrice-offer.price)+'OFF';
+      if(offer.basis==='open'&&offer.until)out.note=dateLong(offer.until)+'までは、どなたでもこの価格です。以降は、登録から7日間が対象です。';
+      else if(offer.basis==='touroku'&&offer.until)out.note='登録から7日間は、この価格でご購入いただけます。（'+dateShort(offer.until)+'まで）';
     }else{
       out.amount=yen(offer.price);
-      if(!loggedIn&&typeof offer.startPrice==='number')out.lines.push('登録から7日間は、スタート価格 '+yen(offer.startPrice)+'でご購入いただけます。対象かどうかは、ログイン後に表示されます。');
+      if(!loggedIn&&typeof offer.startPrice==='number')out.lines.push('登録から7日間は、早割 '+yen(offer.startPrice)+' でご購入いただけます。対象かどうかは、ログイン後に表示されます。');
     }
     if(validUntil)out.lines.push('利用期間は、'+dateLong(validUntil)+'（本試験日）までです。');
     out.lines.push('お支払いはクレジットカードです。決済はStripeの画面で行います。');
@@ -73,6 +73,8 @@
   function link(cls,href,text){const a=txt('a',cls,text);a.href=href;return a;}
   function clear(e){while(e.firstChild)e.removeChild(e.firstChild);}
 
+  const STATIC_AMOUNT=$('price')&&$('price').firstElementChild?$('price').firstElementChild.cloneNode(true):null;
+
   function render(){
     const v=decide({data:S.data,failed:S.failed,loaded:S.loaded,checkout:S.checkout,verify:S.verify,host:location.hostname,boughtNow:S.boughtNow});
     // 買ったあと
@@ -92,16 +94,24 @@
     $('cancel').hidden=!v.cancel;
     $('priceCard').hidden=v.owned;
     $('trial').hidden=!v.trial||!v.price;
-    const pc=$('price');clear(pc);
+    const pc=$('price');
+    // 読み込み中は、HTML に最初からある通常価格の表示をそのまま残す
+    if(v.state!=='loading')clear(pc);
     const ownBox=$('owned');ownBox.hidden=!(v.owned&&v.thanks!=='ok');
     const buy=$('buy');clear(buy);
     pc.hidden=true;
-    if(v.state==='loading'){pc.hidden=false;pc.appendChild(txt('p','plain small','読み込み中です。'));}
-    else if(v.priceError){pc.hidden=false;pc.appendChild(txt('p','plain small err','価格を読み込めませんでした。時間をおいて、再読み込みしてください。'));}
+    if(v.state==='loading'){pc.hidden=false;}
+    else if(v.priceError){pc.hidden=false;if(STATIC_AMOUNT)pc.appendChild(STATIC_AMOUNT.cloneNode(true));pc.appendChild(txt('p','plain small err','価格を読み込めませんでした。時間をおいて、再読み込みしてください。'));}
     else if(v.price){
       pc.hidden=false;
-      if(v.price.label)pc.appendChild(txt('span','price-label',v.price.label));
-      const am=txt('p','price-amount',v.price.amount.replace(/円$/,''));am.appendChild(txt('span','','円'));if(!v.price.note)am.appendChild(txt('span','','（税込）'));pc.appendChild(am);
+      const am=txt('p','price-amount',v.price.amount.replace(/円$/,''));am.appendChild(txt('span','','円（税込）'));
+      if(v.price.early){
+        const row=txt('div','price-row','');
+        row.appendChild(txt('p','price-was',v.price.was));
+        const off=txt('p','price-off','');off.appendChild(txt('small','','早割'));off.appendChild(document.createTextNode(v.price.off));row.appendChild(off);
+        row.appendChild(txt('i','price-arrow',''));
+        row.appendChild(am);pc.appendChild(row);
+      }else pc.appendChild(am);
       if(v.price.note)pc.appendChild(txt('p','price-note',v.price.note));
       const ul=txt('ul','notes','');v.price.lines.forEach(t=>ul.appendChild(txt('li','',t)));pc.appendChild(ul);
       if(v.button==='login'){
