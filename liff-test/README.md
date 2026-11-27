@@ -36,7 +36,7 @@
 - API `/api/progress`：`GET` は `{listened, done, kako, ox, updatedAt}`。`POST {kind:'ox', key, value}`。`POST {merge:true, listened, done, kako, ox}`（ox は省略可・空なら `p_ox` を付けない）。ox の列がまだ無い表でも GET は動く（ox を外して読み直し、`ox:{}`）。api のファイルは増やしていない（無料プランの上限12個）。
 - `progress-sync.js`：ox を4つ目の種類として扱う（端末キー `takken2027-ichimon`・待ち行列・`set('ox', key, value)`）。端末側の合わせ込みは、同じキーなら t が新しいほうを残す（同じ t ならサーバーの値）。端末のほうが新しいキーはサーバーへ送り直す。サーバーが ox を返さないときは端末の ox にさわらない。ox の 400 は kako と同じく待ち行列に残す。`takken2027-ichimon-day`（復習の日の出題の固定）は端末だけ。
 - ページ：`4_LINE運用\1日1問_公開待ち\ichimon\index.html`。答えるたびに `IchimonStore.set` → `TakkenProgress.set('ox', id, 値)`。LIFF ID は本番（`takken.mimiobo.com`）が `2012583516-7vmvMorb`、それ以外のホストは試し用。サーバーから記録が届いたら今日の1問・記録・復習・一覧を描き直す。`/progress-sync.js` が読めなくても画面は今までどおり。
-- 試し用サイトの写し：`liff-test\ichimon\index.html` と `questions.js`（中身は公開待ちフォルダと同じ）。**ページを作り直したら写す先は2か所**（公開待ち `ichimon\` と `liff-test\ichimon\`）。本番の直下（`7_クイズと進捗トラッカー\ichimon\`）にはまだ置かない。
+- 試し用サイトの写し：`liff-test\ichimon\index.html` と `questions.js`（中身は公開待ちフォルダと同じ）。**ページを作り直したら写す先は2か所**（`liff-test\ichimon\` と本番直下 `ichimon\`）。本番の直下（`7_クイズと進捗トラッカー\ichimon\`）にも同じ2ファイルを置く（3か所とも同じ中身）。開始は 2026-11-28（先行の期間 〜2027-01-03、通常の出題は 2027-01-04〜）。
 - 適用の順：migration を先に、そのあとデプロイ。テストは `tests/progress-ox-db.test.cjs` ほか（`progress-api`・`progress-sync`・`ichimon-page`）。
 
 ## 過去問1選の結果（kako）（2026-11-13）
@@ -305,3 +305,9 @@ SQL・Auth設定は適用済み。A-13・A-14配信後、LINE連携から再確�
 Stripeテスト決済とentitlementsの書き込みは Sprint 2 で実装済み（冒頭参照）。学習カルテの `answers` 集計表示は Sprint 3 で実装済み。学習ナビ・伴走の購入は未実装。通知は「記録があいた人を運営者に知らせる」（上の節）だけ実装（止めた状態）で、それ以外の配信は未実装。記録は「年内をめどに閲覧、消す前に案内」という設計メモのみで、閲覧期限・削除処理は今回追加しない。期限の具体値・削除案内の方法は今後決める。
 
 参考： [Supabaseのメール認証](https://supabase.com/docs/guides/auth/auth-email-passwordless)、[メールテンプレート](https://supabase.com/docs/guides/auth/auth-email-templates)、[secret key](https://supabase.com/docs/guides/getting-started/api-keys)、[LIFF追加パラメータ](https://developers.line.biz/ja/tips/2026/07/16/liff-url-additional-info/)。
+
+## 販売パートナー経由の権限付与（帳簿には入らない）
+
+`scripts/partner-grant.mjs` は、パートナー経由で売れたお客さまにメールアドレスで教材の権限（text / last30 / bansou）を付ける道具。会社相手の請求で別に記帳するので `purchases`（帳簿）には入らない。
+付与 `node scripts/partner-grant.mjs <メール> <plan> --partner <名前> [--until YYYY-MM-DD] [--dry-run]`、取り消し `… --revoke`、一覧 `node scripts/partner-grant.mjs --list --partner <名前>`（メールは伏せ字）。
+そのメールの identities が無ければ users と identities を先に作る（あとでメールでログインすると同じ利用者に入る）。期限の既定は日本時間 2027-10-17 23:59:59。使う前に `--dry-run` で確認する。

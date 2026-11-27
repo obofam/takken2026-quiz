@@ -85,7 +85,7 @@ a{color:var(--cyan-dark)}
 <script>
 (function(){
 "use strict";
-var D = window.ICHIMON || {questions:[],schedule:{},start:"2027-01-04",end:"2027-10-16",exam:"2027-10-17"};
+var D = window.ICHIMON || {questions:[],schedule:{},start:"2026-11-28",end:"2027-10-16",exam:"2027-10-17"};
 var QS = D.questions, BY = {}, i;
 for(i=0;i<QS.length;i++) BY[QS[i].id]=QS[i];
 var FIELDS = [{k:"gyoho",n:"業法",c:"p1"},{k:"kenri",n:"権利関係",c:"p2"},{k:"horei",n:"法令上の制限",c:"p3"},{k:"zei",n:"税・その他",c:"p4"}];
@@ -252,7 +252,7 @@ function renderToday(){
   var isToday = (viewDay===TODAY);
   card.appendChild(el("p","lab",isToday?"TODAY":"DAY"));
   var h = el("h2",null,isToday?"今日の1問":jpDate(viewDay)+"の1問"); card.appendChild(h);
-  if(TODAY < D.start && viewDay < D.start){ card.appendChild(el("p",null,"1月4日から、毎日1問。")); return; }
+  if(TODAY < D.start && viewDay < D.start){ var sp=D.start.split("-"); card.appendChild(el("p",null,(+sp[1])+"月"+(+sp[2])+"日から、毎日1問。")); return; }
   if(viewDay >= D.exam){ card.appendChild(el("p",null,"試験、おつかれさまでした。")); return; }
   var review = (D.schedule[viewDay]==null), id;
   if(review){
@@ -372,7 +372,8 @@ function renderAllList(){
     var q=BY[id]; if(!q) return;
     if(allFilter!=="all" && q.f!==allFilter) return;
     any=true;
-    var l=last(rec[q.id]);
+    /* 同じ問題が別の日にも出る（先行の期間→1月以降）。その日より前の記録はこの日の結果ではないので「未」 */
+    var rq=rec[q.id], l=(rq && (rq.t||"")>=day)?last(rq):null;
     var r=el("button","row"); r.type="button";
     r.appendChild(el("span","t",jpDate(day)));
     r.appendChild(el("span","s "+(l===1?"ok":l===0?"ng":""),l===null?"未":(l===1?"正解":"不正解")));

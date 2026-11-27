@@ -52,16 +52,18 @@ function navRules(today) {
   return sandbox.api;
 }
 
-test('ichimon page: day navigation (prev back to 2027-01-04; next only up to today, no 先取り)', () => {
+test('ichimon page: day navigation (prev back to 2026-11-28; next only up to today, no 先取り)', () => {
   const n = navRules('2027-01-12');
   const at = d => { n.set(d); return [n.canPrev(), n.canNext()]; };
-  assert.deepEqual(at('2027-01-04'), [false, true]);
+  assert.deepEqual(at('2026-11-28'), [false, true]);
+  assert.deepEqual(at('2027-01-04'), [true, true]);
   assert.deepEqual(at('2027-01-09'), [true, true]);    // 1/10 は今日以前
   assert.deepEqual(at('2027-01-11'), [true, true]);    // 1/12 は今日
   assert.deepEqual(at('2027-01-12'), [true, false]);   // 今日より先へは進めない（Kei 11/17）
   const t2 = navRules('2027-01-09');
   t2.set('2027-01-09'); assert.equal(t2.canNext(), false); // 1/10 は今日より先
   assert.equal(navRules('2026-11-17').canPrev(), false);
+  const t3 = navRules('2026-11-28'); t3.set('2026-11-28'); assert.equal(t3.canPrev(), false); assert.equal(t3.canNext(), false);
 });
 
 test('ichimon page: bottom tab bar, hash screens, review days kept per date, small type', () => {
@@ -84,7 +86,7 @@ test('ichimon schedule: first half (1/4-3/31) is easy mixed-field review, second
   const D = sb.window.ICHIMON, BY = {}; D.questions.forEach(q => { BY[q.id] = q; });
   assert.equal(D.questions.length, 281);
   const grp = q => (q.f === 'zei' ? ([37, 38, 39].includes(q.epNo) ? 'other' : null) : q.f);
-  const first = Object.keys(D.schedule).filter(d => d <= '2027-03-31').sort().map(d => BY[D.schedule[d]]);
+  const first = Object.keys(D.schedule).filter(d => d >= '2027-01-04' && d <= '2027-03-31').sort().map(d => BY[D.schedule[d]]);
   assert.equal(first.length, 87);
   assert.ok(first.every(q => q), '前半に復習の日は無い');
   assert.equal(new Set(first.map(q => q.id)).size, 87);
@@ -94,6 +96,16 @@ test('ichimon schedule: first half (1/4-3/31) is easy mixed-field review, second
   for (let i = 2; i < first.length; i++) assert.ok(!(grp(first[i]) === grp(first[i - 1]) && grp(first[i]) === grp(first[i - 2])), '同じ分野が3日続かない');
   const cnt = {}; first.forEach(q => { cnt[grp(q)] = (cnt[grp(q)] || 0) + 1; });
   assert.ok(cnt.gyoho > cnt.kenri && cnt.kenri > cnt.horei && cnt.horei > cnt.other, '業法>権利>法令>その他');
+  // 先行の期間 11/28〜1/3（37日）：前半の87問の中から重複なし・同じ回が2日続かない（1/4との境目も）
+  assert.equal(D.start, '2026-11-28');
+  const pre = Object.keys(D.schedule).filter(d => d < '2027-01-04').sort();
+  assert.equal(pre.length, 37); assert.equal(pre[0], '2026-11-28'); assert.equal(pre[36], '2027-01-03');
+  const preIds = pre.map(d => D.schedule[d]);
+  assert.equal(new Set(preIds).size, 37, '先行の期間は重複なし');
+  const firstIds = new Set(first.map(q => q.id));
+  assert.ok(preIds.every(id => firstIds.has(id)), '先行の期間は1/4〜3/31に割り当てた87問の中から');
+  const seqEp = preIds.concat([first[0].id]).map(id => BY[id].ep);
+  for (let i = 1; i < seqEp.length; i++) assert.notEqual(seqEp[i], seqEp[i - 1]);
   // 後半：その日までに配信された回の、まだ出していない最も古い（id順）問題
   const used = new Set(first.map(q => q.id));
   Object.keys(D.schedule).filter(d => d > '2027-03-31').sort().forEach(d => {
