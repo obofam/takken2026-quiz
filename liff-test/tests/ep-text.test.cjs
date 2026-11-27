@@ -410,13 +410,13 @@ test('sample page: the 6 true/false questions and the past-exam question come fr
 
 // ---- 配信日まで閉じる：ep<N>.meta.json の open（日本時間のその日の 0:00 から）。第1回は閉じない。mihon=1（ALLOW_TEXT_PREVIEW=1）は日付に関係なく返す ----
 async function atTime(iso,fn){const real=Date.now;Date.now=()=>Date.parse(iso);try{return await fn();}finally{Date.now=real;}}
-test('ep-text / ep-pdf: before the delivery date (JST) 404 even with the right (ep6, past the buyer-early range); from 0:00 JST 200; ep1 is never closed',async()=>{
+test('ep-text / ep-pdf: before 7 days ahead of the delivery date (JST) 404 even with the right (ep6, past the buyer-early range); from 0:00 JST of that day 200; ep1 is never closed',async()=>{
   const meta=JSON.parse(fs.readFileSync(path.join(__dirname,'../api/_ep-text/ep6.meta.json'),'utf8'));
-  assert.equal(meta.open,'2027-02-08');
+  assert.equal(meta.open,'2027-02-08');assert.equal(meta.buyerOpen,'2027-02-01');
   assert.equal(JSON.parse(fs.readFileSync(path.join(__dirname,'../api/_ep-text/ep1.meta.json'),'utf8')).open,undefined);
   const orig=pdfApi.source.read;pdfApi.source.read=()=>Buffer.from('%PDF-test');
   try{
-    await atTime('2027-02-07T14:59:59Z',async()=>{// 2027-02-07 23:59:59 JST
+    await atTime('2027-01-31T14:59:59Z',async()=>{// 2027-01-31 23:59:59 JST（配信日の8日前の終わり）
       database();
       const a=response();await textApi(request('ep=6'),a);assert.equal(a.code,404);assert.deepEqual(a.data,{error:'not_found'});
       const b=pdfResponse();await pdfApi(request('ep=6',{},'/api/ep-pdf'),b);assert.equal(b.code,404);
@@ -425,7 +425,7 @@ test('ep-text / ep-pdf: before the delivery date (JST) 404 even with the right (
       const d=response();await textApi(request('ep=6&mihon=1',{cookie:undefined}),d);assert.equal(d.code,200);
       delete process.env.ALLOW_TEXT_PREVIEW;
     });
-    await atTime('2027-02-07T15:00:00Z',async()=>{// 2027-02-08 0:00:00 JST
+    await atTime('2027-01-31T15:00:00Z',async()=>{// 2027-02-01 0:00:00 JST（配信日の7日前）
       database();
       const a=response();await textApi(request('ep=6'),a);assert.equal(a.code,200);
       const b=pdfResponse();await pdfApi(request('ep=6',{},'/api/ep-pdf'),b);assert.equal(b.code,200);

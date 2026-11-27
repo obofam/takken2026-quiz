@@ -65,3 +65,8 @@ export const FREE_EARLY_EPS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1
 // この1か所だけが元。build-ep.mjs が、その回の ep<N>.meta.json に buyerEarly:true を書き、api/ep-text.js・api/ep-pdf.js はそれを読む（API 側に数字は持たない）。
 // 回のページ側（配信日前の購入者の見え方）もここから決まる。ここに入れる回は FREE_EARLY_EPS にも入っていること（build が確かめる）。買っていない方の見え方・第6回以降は今までどおり。
 export const BUYER_EARLY_MAX = 5;
+
+// 第6回以降は、買った方には「配信日の何日前」から開くか（Kei 11/27「予習に使うので、放送の1週間前から」）。日本時間のその日の 0:00 から。
+// この1か所だけが元。build-ep.mjs が ep<N>.meta.json に buyerOpen（その日の日付）を書き、api/ep-text.js・api/ep-pdf.js はそれを読む（API 側に数字は持たない）。
+// 回のページ側（買った方の確認を始める日）も同じ値から決まる。買っていない方の見え方・API の返し方は変わらない。
+export const BUYER_EARLY_DAYS = 7;

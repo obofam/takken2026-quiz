@@ -37,7 +37,7 @@ test('early episode (ep 3): before the date only html.ep-early (never ep-closed)
   }
 });
 
-test('early episode (ep 7, past the buyer-early range): the pre-date branch returns before LINE judge / line-full / ep-text; one note line right after the past-exam box; no login entrances while ep-early',{skip},()=>{
+test('early episode (ep 7, past the buyer-early range): the pre-date branch returns before LINE judge / line-full; /api/ep-text is checked only from 7 days before the date (ep-buyer-open); one note line right after the past-exam box; no login entrances while ep-early',{skip},()=>{
   for(const h of [read(path.join(prod,'ep/7/index.html')),read(path.join(root,'ep/7/index.html'))]){
     const i=h.indexOf("document.documentElement.classList.contains('ep-early')");
     assert.ok(i>0);
@@ -45,11 +45,11 @@ test('early episode (ep 7, past the buyer-early range): the pre-date branch retu
     assert.ok(i<j,'判定より前で return');
     const block=h.slice(i,j);
     assert.match(block,/return;/);
-    assert.doesNotMatch(block,/showFull|textCheck|ep-text|liff\.init|judge\(/);
-    assert.match(block,/pendView\('open'\); settleView\(\);/);
+    assert.doesNotMatch(block,/showFull|ep-text|liff\.init|judge\(/);
+    assert.match(block,/pendView\('open'\);\n    if \(document\.documentElement\.classList\.contains\('ep-buyer-open'\)\) \{[\s\S]*?\} else \{\n      settleView\(\);/);
     assert.match(block,/__epProgressStart/);
     assert.match(h,/<div class="next-box only-a"><p>[\s\S]*?<\/div>\n    <p class="pnote early-note"><span class="nk">この回の図の続きと<\/span><span class="nk">過去問1選は、<\/span><span class="nk">2月15日（月）の配信から<\/span><span class="nk">開きます。<\/span><\/p>\n    <div class="slot" id="slot-kk">/);
-    assert.equal((h.match(/early-note/g)||[]).length,3);// CSS 2 + 本体 1
+    assert.equal((h.match(/early-note/g)||[]).length,4);// CSS 3（購入者に隠す1つを含む）+ 本体 1
     assert.match(h,/\.early-note\{display:none\}/);
     assert.match(h,/\.ep-early \.top-login,\.ep-early \.login-line\{display:none\}/);
     assert.match(h,/id="kirokuBox" hidden/);// 「この記録を残す」は今のまま

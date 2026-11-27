@@ -13,7 +13,8 @@ const exists=ep=>fs.existsSync(path.join(DIR,'ep'+ep+'.js'));
 // ただし meta に buyerEarly:true がある回（購入者に先に開ける回＝scripts/ep-config.mjs の BUYER_EARLY_MAX まで。build-ep.mjs が書く）は、配信日前でも 404 にせず、
 // このあとの 401（未ログイン）・403（権利なし）の判定に進む。権利がある人にだけ返す。
 const metaOf=ep=>{try{return JSON.parse(fs.readFileSync(path.join(DIR,'ep'+ep+'.meta.json'),'utf8'));}catch(e){return {};}};
-const closedYet=ep=>{const m=metaOf(ep),o=m.open;return !!o&&m.buyerEarly!==true&&new Date(Date.now()+9*3600*1000).toISOString().slice(0,10)<o;};
+// 第6回以降は meta の buyerOpen（買った方に開く日＝配信日の BUYER_EARLY_DAYS 日前。build-ep.mjs が書く）の 0:00（日本時間）から同じ判定に進む。それより前は誰でも 404。
+const closedYet=ep=>{const m=metaOf(ep),o=m.open;return !!o&&m.buyerEarly!==true&&new Date(Date.now()+9*3600*1000).toISOString().slice(0,10)<(m.buyerOpen||o);};
 module.exports=s.endpoint(['GET'],async(req,res)=>{
   const url=new URL(req.url||'/','http://localhost'),ep=url.searchParams.get('ep');
   if(!/^[1-9]\d{0,2}$/.test(ep||'')||!exists(Number(ep)))s.fail(404,'not_found');
